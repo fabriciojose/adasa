@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.Pane?>
+
+<fx:root fx:id="pFiscalizacao" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="628.0" prefWidth="1140.0" type="javafx.scene.layout.Pane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TabPane fx:id="tpFiscalizacao" layoutY="-3.0" prefHeight="628.0" prefWidth="1140.0" tabClosingPolicy="UNAVAILABLE" tabMinHeight="30.0" tabMinWidth="100.0">
+        <tabs>
+        
+          <Tab fx:id="tpTabDemanda" styleClass="tabPaneClass" text="  Demanda  " />
+          <Tab fx:id="tpTabEndereco" styleClass="tabPaneClass" text="  Endereco  " />
+          <Tab fx:id="tpTabInterferencia" styleClass="tabPaneClass" text="Interferencia" />
+          <Tab fx:id="tpTabUsuario" styleClass="tabPaneClass" text="  Usuário  " /> 
+          <Tab fx:id="tpTabVistoria" styleClass="tabPaneClass" text="  Vistoria  " />
+          <Tab fx:id="tpTabAto" styleClass="tabPaneClass" text="    Ato    " />
+         
+        </tabs>
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
+      </TabPane>
+   </children>
+</fx:root>
