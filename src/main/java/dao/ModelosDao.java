@@ -5,7 +5,6 @@ import java.util.List;
 import org.hibernate.Session;
 
 import entidades.HibernateUtil;
-import entidades.Interferencia;
 import entidades.ModelosHTML;
 
 public class ModelosDao {

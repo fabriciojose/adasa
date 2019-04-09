@@ -411,7 +411,7 @@ function mostrarDemandas (strEndereco, strInfoDemandas) {
 	// criar infoWindow
 	var infowindow = new google.maps.InfoWindow({
 			 content: table,
-			 pixelOffset: new google.maps.Size(-200,0)
+			 
 	});
    
 	// abrir automaticamente infoWidows

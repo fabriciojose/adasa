@@ -51,11 +51,12 @@ public void salvarDemanda (Demanda demanda) {
 		crit.createAlias("e.endRAFK", "ra", JoinType.LEFT_OUTER_JOIN);
 		
 		
-		Criterion demDoc = Restrictions.like("demDocumento", '%' + strPesquisa + '%');
-		Criterion demDocSei = Restrictions.like("demDocumentoSEI", '%' + strPesquisa + '%');
-		Criterion demProcSei = Restrictions.like("demProcessoSEI", '%' + strPesquisa + '%');
+		Criterion demTipo = Restrictions.like("demTipo", '%' + strPesquisa + '%');
+		Criterion demNumero = Restrictions.like("demNumero", '%' + strPesquisa + '%');
+		Criterion demDemandaSEI = Restrictions.like("demNumeroSEI", '%' + strPesquisa + '%');
+		Criterion demProcessoSEI = Restrictions.like("demProcesso", '%' + strPesquisa + '%');
 		
-		Disjunction orExp = Restrictions.or(demDoc,demProcSei, demDocSei);
+		Disjunction orExp = Restrictions.or(demTipo, demNumero,demDemandaSEI, demProcessoSEI);
 		
 		crit.add(orExp);
 		

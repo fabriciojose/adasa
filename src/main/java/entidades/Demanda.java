@@ -1,8 +1,8 @@
 package entidades;
 
-
 import java.io.Serializable;
-
+import java.sql.Date;
+import java.sql.Timestamp;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,116 +13,141 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class Demanda implements Serializable {
+public class Demanda
+  implements Serializable
+{
+  private static final long serialVersionUID = 3416480064860473637L;
+  
+  @Id
+  @GeneratedValue(strategy=GenerationType.IDENTITY)
+  @Column(name="dem_ID")
+  private int demID;
+  
+  @ManyToOne
+  @JoinColumn(name="dem_Endereco_FK")
+  private Endereco demEnderecoFK;
+  
+  @ManyToOne
+  @JoinColumn(name="dem_Processo_FK")
+  private Processo demProcessoFK;
+  
+  @Column(name="dem_Tipo", columnDefinition="varchar(40)")
+  private String demTipo;
+ 
+  @Column(name="dem_Numero", columnDefinition="varchar(40)")
+  private String demNumero;
+  
+  @Column(name="dem_Numero_SEI", columnDefinition="varchar(25)")
+  private String demNumeroSEI;
+  
+  @Column(name="dem_Processo", columnDefinition="varchar(25)")
+  private String demProcesso;
+ 
+  @Basic
+  @Column(name="dem_Distribuicao")
+  private Date demDistribuicao;
+  
+  @Basic
+  @Column(name="dem_Recebimento")
+  private Date demRecebimento;
+  
+  @Basic
+  @Column(name="dem_Atualizacao")
+  private Timestamp demAtualizacao;
+  
+  public int getDemID()
+  {
+    return this.demID;
+  }
+  
+  public void setDemID(int demID)
+  {
+    this.demID = demID;
+  }
+  
+  public Endereco getDemEnderecoFK()
+  {
+    return this.demEnderecoFK;
+  }
+  
+  public void setDemEnderecoFK(Endereco demEnderecoFK)
+  {
+    this.demEnderecoFK = demEnderecoFK;
+  }
+  
+  
+  public Date getDemDistribuicao()
+  {
+    return this.demDistribuicao;
+  }
+  
+  public void setDemDistribuicao(Date demDistribuicao)
+  {
+    this.demDistribuicao = demDistribuicao;
+  }
+  
+  public Date getDemRecebimento()
+  {
+    return this.demRecebimento;
+  }
+  
+  public Processo getDemProcessoFK()
+  {
+    return this.demProcessoFK;
+  }
+  
+  public void setDemProcessoFK(Processo demProcessoFK)
+  {
+    this.demProcessoFK = demProcessoFK;
+  }
+  
+  public void setDemRecebimento(Date demRecebimento)
+  {
+    this.demRecebimento = demRecebimento;
+  }
+  
+  public Timestamp getDemAtualizacao()
+  {
+    return this.demAtualizacao;
+  }
+  
+  public void setDemAtualizacao(Timestamp demAtualizacao)
+  {
+    this.demAtualizacao = demAtualizacao;
+  }
 
-	
-	private static final long serialVersionUID = 1L;
-	
-
-	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column (name="dem_ID")
-	private int demID;
-	
-	@ManyToOne //(fetch = FetchType.LAZY) 
-	@JoinColumn (name = "dem_Endereco_FK")
-	private Endereco demEnderecoFK;
-	
-	@Column (name="dem_Documento", columnDefinition="varchar(80)")
-	private String demDocumento;
-	
-	@Column (name="dem_Documento_SEI", columnDefinition="varchar(25)")
-	private String demDocumentoSEI; 
-				// demDocumentoSEI
-	
-	@Column (name="dem_Processo_SEI", columnDefinition="varchar(25)")
-	private String demProcessoSEI;
-	
-	@Basic
-	@Column (name="dem_Distribuicao")
-	private java.sql.Date demDistribuicao;
-	
-	@Basic
-	@Column (name="dem_Recebimento")
-	private java.sql.Date  demRecebimento;
-	
-	@Basic
-	@Column (name="dem_Atualizacao")
-	private java.sql.Timestamp demAtualizacao;
-	
-	
-	//CONSTRUTOR PADRÃO
-	public Demanda () {
-		
+	public String getDemTipo() {
+		return demTipo;
 	}
 	
-	// GETTERS / SETTERS
+	public void setDemTipo(String demTipo) {
+		this.demTipo = demTipo;
+	}
 	
-	public int getDemID() {
-		return demID;
+	public String getDemNumero() {
+		return demNumero;
 	}
-
-	public void setDemID(int demID) {
-		this.demID = demID;
-	}
-
-	public Endereco getDemEnderecoFK() {
-		return demEnderecoFK;
-	}
-
-	public void setDemEnderecoFK(Endereco demEnderecoFK) {
-		this.demEnderecoFK = demEnderecoFK;
-	}
-
-	public String getDemDocumento() {
-		return demDocumento;
-	}
-
-	public void setDemDocumento(String demDocumento) {
-		this.demDocumento = demDocumento;
-	}
-
-	public String getDemDocumentoSEI() {
-		return demDocumentoSEI;
-	}
-
-	public void setDemDocumentoSEI(String demDocumentoSEI) {
-		this.demDocumentoSEI = demDocumentoSEI;
-	}
-
-	public String getDemProcessoSEI() {
-		return demProcessoSEI;
-	}
-
-	public void setDemProcessoSEI(String demProcessoSEI) {
-		this.demProcessoSEI = demProcessoSEI;
-	}
-
 	
-	public java.sql.Date getDemDistribuicao() {
-		return demDistribuicao;
+	public void setDemNumero(String demNumero) {
+		this.demNumero = demNumero;
 	}
-
-	public void setDemDistribuicao(java.sql.Date demDistribuicao) {
-		this.demDistribuicao = demDistribuicao;
-	}
-
-	public java.sql.Date getDemRecebimento() {
-		return demRecebimento;
-	}
-
-	public void setDemRecebimento(java.sql.Date demRecebimento) {
-		this.demRecebimento = demRecebimento;
-	}
-
-	public java.sql.Timestamp getDemAtualizacao() {
-		return demAtualizacao;
-	}
-
-	public void setDemAtualizacao(java.sql.Timestamp demAtualizacao) {
-		this.demAtualizacao = demAtualizacao;
-	}
-
 	
+	public String getDemNumeroSEI() {
+		return demNumeroSEI;
+	}
 	
-		
+	public void setDemNumeroSEI(String demNumeroSEI) {
+		this.demNumeroSEI = demNumeroSEI;
+	}
+	
+	public String getDemProcesso() {
+		return demProcesso;
+	}
+	
+	public void setDemProcesso(String demProcesso) {
+		this.demProcesso = demProcesso;
+	}
+	  
+  
+  
 }

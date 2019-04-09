@@ -61,9 +61,9 @@ public class TabEnderecoControlador implements Initializable {
 		TabEnderecoControlador.demanda = demanda;
 		// preencher o label com a demanda selecionada //
 		TabEnderecoControlador.lblDemanda.setText(
-				demanda.getDemDocumento() 
-				+ ", Sei n° " + demanda.getDemDocumentoSEI()
-				+ ", Processo n° " + demanda.getDemProcessoSEI()
+				demanda.getDemTipo() 
+				+ ", Sei n° " + demanda.getDemNumeroSEI()
+				+ ", Processo n° " + demanda.getDemProcesso()
 				);
 	}
 	

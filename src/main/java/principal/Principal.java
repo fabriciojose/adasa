@@ -24,7 +24,7 @@ public class Principal extends Application{
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/principal/Principal.fxml"));
         rootNode = fxmlLoader.load();
         
-        }
+    }
 
 	public void start(Stage stage) throws Exception {
 		

@@ -572,7 +572,7 @@ public class EditarEnderecoControlador implements Initializable {
 	
 		if (objetoDeEdicao.getClass().getName().equals("entidades.Demanda")) {
 			
-			lblDemanda2.setText(((Demanda) objetoDeEdicao).getDemDocumento()); //
+			lblDemanda2.setText(((Demanda) objetoDeEdicao).getDemNumeroSEI()); //
 			System.out.println("teste demanda selecionada");
 		} 
 		

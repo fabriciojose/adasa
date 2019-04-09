@@ -18,10 +18,11 @@
 
 
 /* tamanho da fonte */
-.clFonteGeral { /* tamanho da fonte (letra) */
+.root { 
     -fx-font		: 12px "Arial";
-	-fx-font-family: "cursive", "Arial", sans-serif;
+	-fx-font-family	: "Arial", sans-serif;
 }
+
 
 /* cor background ao chamar o programa */
 .button {

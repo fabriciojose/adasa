@@ -42,6 +42,7 @@
 		
 		<!-- MAPEAMENTO DAS ENTIDADES -->
 		<mapping class="entidades.Demanda"/>
+		<mapping class="entidades.Processo"/>
 		<mapping class="entidades.Endereco"/>
 		<mapping class="entidades.RA"/>
 		<mapping class="entidades.Interferencia"/>
