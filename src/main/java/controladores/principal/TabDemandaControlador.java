@@ -449,7 +449,7 @@ public class TabDemandaControlador implements Initializable {
     
 			    			listNodesPersistencia.add(tfPesquisar = new TextField());
     
-    listNodesPersistencia.add(btnPesquisar = new Button("PESQUISAR"));
+			    				listNodesPersistencia.add(btnPesquisar = new Button("PESQUISAR"));
     
     prefSizeWHeLayXY = new Double[][] { 
     	
@@ -852,6 +852,8 @@ public class TabDemandaControlador implements Initializable {
 			//Levar a demanda para cadastrar o endereco //
 			//tabEndCon.setDemanda(demanda);
 			//enditarEnderecoControlador.setObjetoDeEdicao(demanda);
+			
+			TabEnderecoControlador.tabEndCon.setDemanda(dem);
 			
 			// copiar número sei da demanda ao selecionar //
 			Clipboard clip = Clipboard.getSystemClipboard();

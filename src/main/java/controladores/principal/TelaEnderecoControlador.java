@@ -160,7 +160,6 @@ public class TelaEnderecoControlador implements Initializable {
 	
 	ObservableList<Endereco> obsList = FXCollections.observableArrayList();
 	
-	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 	
@@ -241,13 +240,13 @@ public class TelaEnderecoControlador implements Initializable {
 	    
 	    prefSizeWHeLayXY = new Double[][] { 
 	    	{900.0,60.0,25.0,225.0}, 
-	    		{85.0,20.0,15.0,15.0}, 
-	    			{85.0,20.0,111.0,15.0}, 
-	    				{85.0,20.0,207.0,15.0}, 
-					    	{85.0,20.0,303.0,15.0}, 
-					    		{85.0,20.0,399.0,15.0}, 
-					    			{295.0,20.0,495.0,15.0}, 
-					    				{85.0,20.0,801.0,15.0} }; 
+	    		{95.0,25.0,13.0,18.0}, 
+	    			{95.0,25.0,118.0,18.0}, 
+	    				{95.0,25.0,223.0,18.0}, 
+					    	{95.0,25.0,328.0,18.0}, 
+					    		{95.0,25.0,433.0,18.0}, 
+					    			{245.0,25.0,538.0,18.0}, 
+					    				{95.0,25.0,793.0,18.0} }; 
 					    				
 					    				 com = new Componentes();
 					    				    com.popularTela(listNodesPersistencia, prefSizeWHeLayXY, pTelaEndereco);
