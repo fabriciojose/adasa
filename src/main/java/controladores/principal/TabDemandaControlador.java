@@ -379,20 +379,20 @@ public class TabDemandaControlador implements Initializable {
 	    			listNodesDemanda.add(dpDataDistribuicao = new DatePicker());
     
     prefSizeWHeLayXY = new Double[][] { 
-    	{530.0,150.0,15.0,80.0}, 
-    		{180.0,30.0,15.0,13.0}, // TIPO
-    		{180.0,30.0,15.0,43.0}, 
-				{150.0,30.0,206.0,13.0}, // NUMERO
-				{150.0,30.0,206.0,43.0}, 
-    				{150.0,30.0,366.0,13.0}, // SEI
-    				{150.0,30.0,366.0,43.0}, 
-    					{160.0,30.0,15.0,75.0}, // PROCESSO
-    					{160.0,30.0,15.0,108.0}, 
-							{160.0,30.0,185.0,78.0}, // DATA RECEBIMENTO
-							{165.0,30.0,185.0,108.0},
-								{160.0,30.0,355.0,78.0}, // DATA DISTRIBUICAO
-								{165.0,30.0,355.0,108.0} 
-    										};
+    	{530.0,150.0,15.0,80.0},
+    	{200.0,30.0,15.0,13.0},
+    	{200.0,30.0,15.0,43.0},
+    	{130.0,30.0,225.0,13.0},
+    	{130.0,30.0,225.0,43.0},
+    	{150.0,30.0,366.0,13.0},
+    	{150.0,30.0,366.0,43.0},
+    	{160.0,30.0,15.0,75.0},
+    	{160.0,30.0,15.0,108.0},
+    	{160.0,30.0,185.0,78.0},
+    	{160.0,30.0,185.0,108.0},
+    	{160.0,30.0,355.0,78.0},
+    	{160.0,30.0,355.0,108.0},
+    	};
     	
     com = new Componentes();
     com.popularTela(listNodesDemanda, prefSizeWHeLayXY, p1);
@@ -526,7 +526,11 @@ public class TabDemandaControlador implements Initializable {
     
     btnTelaProcesso.setOnAction(new EventHandler<ActionEvent>() {
         @Override public void handle(ActionEvent e) {
+        	
+        	
         	inicializarTelaProcesso ();
+        	
+        	TelaProcessoControlador.telaProCon.setDemanda(demanda);
         }
     });
     

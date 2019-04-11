@@ -7,41 +7,18 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.text.Font?>
 
 <Pane prefHeight="680.0" prefWidth="980.0" stylesheets="@../../css/principal_mapa_azul.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Pane fx:id="pPersistencia" layoutX="25.0" layoutY="225.0" prefHeight="60.0" prefWidth="930.0" styleClass="panes">
+      <Pane fx:id="pDemanda" layoutX="15.0" layoutY="10.0" prefHeight="60.0" prefWidth="950.0" styleClass="panes">
          <children>
-            <Button fx:id="btnNovo" layoutX="48.0" layoutY="18.0" mnemonicParsing="false" onAction="#btnNovoHab" prefHeight="25.0" prefWidth="85.0" text="Novo" />
-            <Button fx:id="btnSalvar" layoutX="143.0" layoutY="18.0" mnemonicParsing="false" onAction="#btnSalvarHab" prefHeight="25.0" prefWidth="85.0" text="Salvar" />
-            <Button fx:id="btnEditar" layoutX="238.0" layoutY="18.0" mnemonicParsing="false" onAction="#btnEditarHab" prefHeight="25.0" prefWidth="85.0" text="Editar" />
-            <Button fx:id="btnExcluir" layoutX="333.0" layoutY="18.0" mnemonicParsing="false" onAction="#btnExcluirHab" prefHeight="25.0" prefWidth="85.0" text="Excluir" />
-            <Button fx:id="btnCancelar" layoutX="428.0" layoutY="18.0" mnemonicParsing="false" onAction="#btnCancelarHab" prefHeight="25.0" prefWidth="85.0" text="Cancelar" />
-            <Button fx:id="btnPesquisar" layoutX="798.0" layoutY="18.0" mnemonicParsing="false" onAction="#btnPesquisarHab" prefHeight="25.0" prefWidth="85.0" text="Pesquisar" />
-            <TextField fx:id="tfPesquisar" layoutX="523.0" layoutY="18.0" prefHeight="25.0" prefWidth="265.0" />
-         </children>
-      </Pane>
-      <TableView fx:id="tvLista" layoutX="25.0" layoutY="300.0" prefHeight="185.0" prefWidth="930.0">
-         <columns>
-            <TableColumn fx:id="tcDesEnd" prefWidth="440.0" text="Endereço" />
-            <TableColumn fx:id="tcEndRA" minWidth="0.0" prefWidth="232.0" text="RA" />
-            <TableColumn fx:id="tcEndCid" prefWidth="232.0" text="CEP" />
-         </columns>
-      </TableView>
-      <Label fx:id="lblEndereco" layoutX="207.0" layoutY="38.0" prefHeight="17.0" prefWidth="252.0" />
-      <Pane fx:id="p_lblDemanda" layoutX="15.0" layoutY="10.0" prefHeight="60.0" prefWidth="950.0" styleClass="panes">
-         <children>
-            <Label fx:id="lblDemanda1" layoutX="105.0" layoutY="15.0" prefHeight="30.0" prefWidth="740.0">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
+            <Label fx:id="lblDemanda" layoutX="105.0" layoutY="15.0" prefHeight="30.0" prefWidth="740.0">
+               
             </Label>
             <Label layoutX="18.0" layoutY="15.0" prefHeight="30.0" prefWidth="85.0" text="DEMANDA:" />
-            <Button fx:id="btnEndCoord" layoutX="854.0" layoutY="17.0" mnemonicParsing="false" onAction="#btnEndCoordHab" prefHeight="25.0" prefWidth="75.0" text="&lt;&lt;&lt;" />
+            <Button fx:id="btnDemanda" layoutX="854.0" layoutY="17.0" mnemonicParsing="false" onAction="#btnEndCoordHab" prefHeight="25.0" prefWidth="75.0" text="&lt;&lt;&lt;" />
          </children>
       </Pane>
-      <Label fx:id="lblDataAtualizacao" layoutX="664.0" layoutY="415.0" prefHeight="22.0" prefWidth="247.0" />
       <Pane fx:id="pDadosBasicos" layoutX="25.0" layoutY="83.0" prefHeight="130.0" prefWidth="930.0" styleClass="panes">
          <children>
             <TextField fx:id="tfEnd" layoutX="15.0" layoutY="35.0" prefHeight="30.0" prefWidth="420.0" />
@@ -61,6 +38,24 @@
             <ComboBox layoutX="840.0" layoutY="35.0" prefHeight="30.0" prefWidth="75.0" />
          </children>
       </Pane>
+      <Pane fx:id="pPersistencia" layoutX="25.0" layoutY="225.0" prefHeight="60.0" prefWidth="930.0" styleClass="panes">
+         <children>
+            <Button fx:id="btnNovo" layoutX="18.0" layoutY="18.0" mnemonicParsing="false" onAction="#btnNovoHab" prefHeight="25.0" prefWidth="95.0" text="Novo" />
+            <Button fx:id="btnSalvar" layoutX="123.0" layoutY="18.0" mnemonicParsing="false" onAction="#btnSalvarHab" prefHeight="25.0" prefWidth="95.0" text="Salvar" />
+            <Button fx:id="btnEditar" layoutX="228.0" layoutY="18.0" mnemonicParsing="false" onAction="#btnEditarHab" prefHeight="25.0" prefWidth="95.0" text="Editar" />
+            <Button fx:id="btnExcluir" layoutX="333.0" layoutY="18.0" mnemonicParsing="false" onAction="#btnExcluirHab" prefHeight="25.0" prefWidth="95.0" text="Excluir" />
+            <Button fx:id="btnCancelar" layoutX="438.0" layoutY="18.0" mnemonicParsing="false" onAction="#btnCancelarHab" prefHeight="25.0" prefWidth="95.0" text="Cancelar" />
+            <Button fx:id="btnPesquisar" layoutX="818.0" layoutY="18.0" mnemonicParsing="false" onAction="#btnPesquisarHab" prefHeight="25.0" prefWidth="95.0" text="Pesquisar" />
+            <TextField fx:id="tfPesquisar" layoutX="543.0" layoutY="18.0" prefHeight="25.0" prefWidth="265.0" />
+         </children>
+      </Pane>
+      <TableView fx:id="tvLista" layoutX="25.0" layoutY="300.0" prefHeight="185.0" prefWidth="930.0">
+         <columns>
+            <TableColumn fx:id="tcDesEnd" prefWidth="440.0" text="Endereço" />
+            <TableColumn fx:id="tcEndRA" minWidth="0.0" prefWidth="232.0" text="RA" />
+            <TableColumn fx:id="tcEndCid" prefWidth="232.0" text="CEP" />
+         </columns>
+      </TableView>
       <Label fx:id="lblDataAtualizacao1" layoutX="707.0" layoutY="500.0" prefHeight="22.0" prefWidth="247.0" />
       <Pane layoutX="25.0" layoutY="530.0" prefHeight="400.0" prefWidth="930.0" />
    </children>

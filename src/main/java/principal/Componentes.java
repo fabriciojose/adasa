@@ -6,6 +6,13 @@ import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 
+
+/* Classe para adicionar prefWidth, prefHeight, LayoutX e LayoutY nos componentes de cada tela ou tab 
+ * @arrayList listNodes , array de componentes 'nodes' como botoes, caixas de texto etc
+ * @array prefSizeWHeLayXY com posiçoes pref Width e Height e layout x y
+ * @Pane p1, pane principal que recebe os componentes
+ * */
+
 public class Componentes
 {
   public void popularTela(ArrayList<Node> listNodes, Double[][] prefSizeWHeLayXY, Pane p1)

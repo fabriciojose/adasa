@@ -20,18 +20,18 @@
       </Pane>
       <Pane fx:id="pDadosDemanda" layoutX="15.0" layoutY="80.0" prefHeight="150.0" prefWidth="530.0" styleClass="panes">
          <children>
-            <ComboBox layoutX="15.0" layoutY="43.0" prefHeight="30.0" prefWidth="180.0" />
-            <Label layoutX="15.0" layoutY="13.0" prefHeight="30.0" prefWidth="180.0" text="TIPO:" />
-            <Label layoutX="206.0" layoutY="13.0" prefHeight="30.0" prefWidth="150.0" text="NÚMERO:" />
-            <TextField layoutX="206.0" layoutY="43.0" prefHeight="30.0" prefWidth="150.0" promptText="15/2015" />
+            <Label layoutX="15.0" layoutY="13.0" prefHeight="30.0" prefWidth="200.0" text="TIPO:" />
+            <ComboBox layoutX="15.0" layoutY="43.0" prefHeight="30.0" prefWidth="200.0" />
+            <Label layoutX="225.0" layoutY="13.0" prefHeight="30.0" prefWidth="130.0" text="NÚMERO:" />
+            <TextField layoutX="225.0" layoutY="43.0" prefHeight="30.0" prefWidth="130.0" promptText="15/2015" />
             <Label layoutX="366.0" layoutY="13.0" prefHeight="30.0" prefWidth="150.0" text="SEI:" />
             <TextField layoutX="366.0" layoutY="43.0" prefHeight="30.0" prefWidth="150.0" promptText="123456789" />
             <Label layoutX="15.0" layoutY="75.0" prefHeight="30.0" prefWidth="160.0" text="PROCESSO:" />
             <TextField layoutX="15.0" layoutY="108.0" prefHeight="30.0" prefWidth="160.0" promptText="197.555.666/2015" />
-            <DatePicker layoutX="185.0" layoutY="108.0" prefHeight="30.0" prefWidth="160.0" promptText="12/08/2015" />
-            <DatePicker layoutX="355.0" layoutY="108.0" prefHeight="30.0" prefWidth="160.0" promptText="13/05/2016" />
             <Label layoutX="185.0" layoutY="78.0" prefHeight="30.0" prefWidth="160.0" text="DATA DE RECEBIMENTO:" />
+            <DatePicker layoutX="185.0" layoutY="108.0" prefHeight="30.0" prefWidth="160.0" promptText="12/08/2015" />
             <Label layoutX="355.0" layoutY="78.0" prefHeight="30.0" prefWidth="160.0" text="DATA DE DISTRIBUIÇÃO:" />
+            <DatePicker layoutX="355.0" layoutY="108.0" prefHeight="30.0" prefWidth="160.0" promptText="13/05/2016" />
          </children>
       </Pane>
       <Pane layoutX="580.0" layoutY="100.0" prefHeight="110.0" prefWidth="380.0" styleClass="panes">

@@ -170,7 +170,7 @@ public class TelaEnderecoControlador implements Initializable {
 		listNodesDemanda.add(pDemanda = new Pane());
 			listNodesDemanda.add(new Label("DEMANDA:"));
 				listNodesDemanda.add(lblDemanda = new Label());
-					listNodesDemanda.add(btnDemanda = new Button("<<<"));
+					listNodesDemanda.add(btnDemanda = new Button(">>>"));
 	    
 	    prefSizeWHeLayXY = new Double [][] { 
     		{930.0,60.0,10.0,10.0}, 

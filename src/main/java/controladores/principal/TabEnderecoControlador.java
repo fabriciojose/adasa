@@ -72,7 +72,6 @@ public class TabEnderecoControlador implements Initializable {
 	
 	Pane pMap;
 
-	Button btnMaps = new Button();
 	
 	Label lblDataAtualizacao = new Label();
 	
@@ -93,8 +92,6 @@ public class TabEnderecoControlador implements Initializable {
 
 	};
 	
-	@FXML
-	ChoiceBox<String> cbEndRA = new ChoiceBox<String>();
 	
 	ObservableList<String> olEndRA = FXCollections
 	.observableArrayList(
@@ -134,8 +131,8 @@ public class TabEnderecoControlador implements Initializable {
 		
 		//-- combobox - unidade federal --//
 
-		ChoiceBox<String> cbEndUF = new ChoiceBox<String>();
-			ObservableList<String> olEndUF = FXCollections
+	
+		ObservableList<String> olEndUF = FXCollections
 				.observableArrayList("DF" , "GO", "Outro");
 
 		
@@ -154,24 +151,24 @@ public class TabEnderecoControlador implements Initializable {
 		
 		tfLogradouro.setText("");
 		
-		cbEndRA.setValue(null);
+		cbRA.setValue(null);
 		
 		tfCEP.setText("");
 		tfCidade.setText("Brasília");
 		
-		cbEndUF.setValue("DF");
+		cbUF.setValue("DF");
 		
 		tfLatitude.setText("");
 		tfLongitude.setText("");
 		
 		
 		tfLogradouro.setDisable(false);
-		cbEndRA.setDisable(false);
+		cbRA.setDisable(false);
 		
 		
 		tfCEP.setDisable(false);
 		tfCidade.setDisable(false);
-		cbEndUF.setDisable(false);
+		cbUF.setDisable(false);
 		tfLatitude.setDisable(false);
 		tfLongitude.setDisable(false);
 	
@@ -220,7 +217,7 @@ public class TabEnderecoControlador implements Initializable {
 									
 								end.setEndCEP(tfCEP.getText());
 								end.setEndCidade(tfCidade.getText());
-								end.setEndUF(cbEndUF.getValue());
+								end.setEndUF(cbUF.getValue());
 							
 							try {
 								
@@ -290,10 +287,10 @@ public class TabEnderecoControlador implements Initializable {
 	if (tfLogradouro.isDisable()) {
 		
 		tfLogradouro.setDisable(false);
-		cbEndRA.setDisable(false);
+		cbRA.setDisable(false);
 		tfCEP.setDisable(false);
 		tfCidade.setDisable(false);
-		cbEndUF.setDisable(false);
+		cbUF.setDisable(false);
 		tfLatitude.setDisable(false);
 		tfLongitude.setDisable(false);
 	
@@ -325,7 +322,7 @@ public class TabEnderecoControlador implements Initializable {
 				end.setEndRAFK(ra);
 				end.setEndCEP(tfCEP.getText());
 				end.setEndCidade(tfCidade.getText());
-				end.setEndUF(cbEndUF.getValue());
+				end.setEndUF(cbUF.getValue());
 				
 				end.setEndDDLatitude(Double.parseDouble(tfLatitude.getText()));
 				end.setEndDDLongitude(Double.parseDouble(tfLongitude.getText()));
@@ -423,11 +420,11 @@ public class TabEnderecoControlador implements Initializable {
 		
 		tfLogradouro.setText("");
 		
-		cbEndRA.setValue(null);
+		cbRA.setValue(null);
 		
 		tfCEP.setText("");
 		
-		cbEndUF.setValue(null);
+		cbUF.setValue(null);
 		
 		tfLatitude.setText("");
 		tfLongitude.setText("");
@@ -448,7 +445,7 @@ public class TabEnderecoControlador implements Initializable {
 	/*
 	 * capturar as coordenadas clicadas no mapa e trazer para o cadastro do endereco
 	 */
-	public void btnMapsHab () {
+	public void capturarLatitudeLongitude () {
 		
 		tfLatitude.setText( ControladorPrincipal.capturarGoogleMaps().getLat() );
 		tfLongitude.setText( ControladorPrincipal.capturarGoogleMaps().getLon());
@@ -543,7 +540,8 @@ public class TabEnderecoControlador implements Initializable {
     		{950.0,60.0,15.0,10.0}, 
     			{85.0,30.0,18.0,15.0}, 
     				{740.0,30.0,105.0,15.0}, 
-    					{75.0,25.0,854.0,17.0}};
+    					{75.0,25.0,854.0,17.0}
+    				};
 	    	
 	    com = new Componentes();
 	    com.popularTela(listNodesDemanda, prefSizeWHeLayXY, p1);
@@ -594,6 +592,9 @@ public class TabEnderecoControlador implements Initializable {
 	    	
 	    com = new Componentes();
 	    com.popularTela(listNodeDadosEndereco, prefSizeWHeLayXY, p1);
+	    
+	    cbRA.setItems(olEndRA);
+	    cbUF.setItems(olEndUF);
 	    
 	    
 	    listNodesPersistencia.add(pPersistencia = new Pane());
@@ -651,9 +652,9 @@ public class TabEnderecoControlador implements Initializable {
 		// para trazer o valor da entidade principal, no caso Endereco
 		//tcEndCid.setCellValueFactory(new PropertyValueFactory<Endereco, String>("endCEP")); // endCEP
 	    
-	    cbEndRA.setItems(olEndRA);
-	    cbEndRA.setValue("Plano Piloto");
-	    cbEndUF.setItems(olEndUF);
+	    cbRA.setItems(olEndRA);
+	    cbRA.setValue("Plano Piloto");
+	    cbUF.setItems(olEndUF);
 	    
 	    
 	    pEnderecoMapa.setPrefSize(930, 400);
@@ -667,7 +668,7 @@ public class TabEnderecoControlador implements Initializable {
 	    
 	    p1.getChildren().addAll(tvLista,lblDataAtualizacao, pEnderecoMapa);
 	    
-	    cbEndRA.getSelectionModel().selectedIndexProperty().addListener(new
+	    cbRA.getSelectionModel().selectedIndexProperty().addListener(new
 	            ChangeListener<Number>() {
 	    	public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
 	    		Number value, Number new_value) {
@@ -678,7 +679,7 @@ public class TabEnderecoControlador implements Initializable {
             }
 	    });
 	    
-	    cbEndRA.getSelectionModel()
+	    cbRA.getSelectionModel()
 	    	.selectedItemProperty()
 	    	.addListener( 
 	    	(ObservableValue<? extends String> observable, String oldValue, String newValue) ->
@@ -731,11 +732,11 @@ public class TabEnderecoControlador implements Initializable {
 	        }
 	    });
 	    
-	    btnMaps.setOnAction(new EventHandler<ActionEvent>() {
+	    btnLatLon.setOnAction(new EventHandler<ActionEvent>() {
 
 	        @Override
 	        public void handle(ActionEvent event) {
-	        	 btnMapsHab ();
+	        	capturarLatitudeLongitude ();
 	        }
 	    });
 	    
@@ -752,16 +753,14 @@ public class TabEnderecoControlador implements Initializable {
 	}
 	
 	
-	
-	
 	//-- Modular os botoes na inicializacao do programa --//
 	private void modularBotoesInicial () {
 		
 		tfLogradouro.setDisable(true);
-		cbEndRA.setDisable(true);
+		cbRA.setDisable(true);
 		tfCEP.setDisable(true);
 		tfCidade.setDisable(true);
-		cbEndUF.setDisable(true);
+		cbUF.setDisable(true);
 		tfLatitude.setDisable(true);
 		tfLongitude.setDisable(true);
 		
@@ -837,12 +836,12 @@ public class TabEnderecoControlador implements Initializable {
 					// -- preencher os campos -- //
 					tfLogradouro.setText(end.getEndLogradouro());
 					
-					cbEndRA.setValue(end.getEndRAFK().getRaNome()); 
+					cbRA.setValue(end.getEndRAFK().getRaNome()); 
 					
 					tfCEP.setText(end.getEndCEP());
 					tfCidade.setText(end.getEndCidade());
 					
-					cbEndUF.setValue(end.getEndUF());
+					cbUF.setValue(end.getEndUF());
 					
 					tfLatitude.setText(end.getEndDDLatitude().toString());
 					tfLongitude.setText(end.getEndDDLongitude().toString());

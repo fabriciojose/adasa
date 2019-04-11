@@ -8,12 +8,16 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 
 import dao.ProcessoDao;
 import entidades.Demanda;
+import entidades.Endereco;
 import entidades.Processo;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -30,15 +34,31 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import principal.Alerta;
 import principal.Componentes;
+import principal.FormatoData;
 
 public class TelaProcessoControlador implements Initializable {
 	
 	@FXML Pane pTelaProcesso;
 	
 	Demanda demanda;
+	
+	/* recebimento da demanda e preenchimento na parte superior - DOCUMENTO: ... */
+	public void setDemanda (Demanda demanda)  {
+		
+		this.demanda = demanda;
+		// preencher o label com a demanda selecionada //
+		lblDemanda.setText(
+				demanda.getDemTipo() 
+				+ ", Sei n° " + demanda.getDemNumeroSEI()
+				+ ", Processo n° " + demanda.getDemProcesso()
+				);
+	}
 	
 	Pane pDemanda;
 		Label lblDemanda;
@@ -65,20 +85,22 @@ public class TelaProcessoControlador implements Initializable {
 	  							
 	  								ArrayList<Node> listNodesPersistencia= new ArrayList<Node>();
 	  								
-	  TableView<Processo> tvListaProcessos = new TableView<Processo>();
+	  TableView<Processo> tvProcessos = new TableView<Processo>();
 	  	TableColumn<Processo, String> tcNumeroProcesso = new TableColumn<Processo, String>("Processo");
 	  		TableColumn<Processo, String> tcDataCriacao = new TableColumn<Processo, String>("Data de Criação");
 	  			TableColumn<Processo, String> tcInteressado = new TableColumn<Processo, String>("Interessado");
 	  				ObservableList<Processo> obsListProcessos = FXCollections.observableArrayList();
 	  
-	  				Label lblDataAtualizacaoProcesso;
+	  				Label lblDataAtualizacao;
 	  
 	  				TableView<Demanda> tvDemandas = new TableView<Demanda>();
-	  					TableColumn<Demanda, String> tcDemanda = new TableColumn<Demanda, String>("Documento");
-	  						TableColumn<Demanda, String> tcDemandaSEI = new TableColumn<Demanda, String>("Número SEI");
-	  							TableColumn<Demanda, String> tcDemandaProcessoSEI = new TableColumn<Demanda, String>("Processo");
+	  				 TableColumn<Demanda, String> tcTipoDemanda = new TableColumn<Demanda, String>("Tipo");
+	  			  		TableColumn<Demanda, String> tcNumeroDemanda = new TableColumn<Demanda, String>("Número");
+	  			  			TableColumn<Demanda, String> tcNumeroDemandaSEI = new TableColumn<Demanda, String>("Número SEI");
+	  			  				TableColumn<Demanda, String> tcNumeroProcessoSEI = new TableColumn<Demanda, String>("Número do Processo");
+	  		    
 	  								ObservableList<Demanda> obsListDemandas = FXCollections.observableArrayList();
-	  
+	  							
 	  
   Double prefSizeWHeLayXY [][];
   String strPesquisa = "";
@@ -100,10 +122,12 @@ public class TelaProcessoControlador implements Initializable {
 	    listNodesEditorProcesso.add(btnDemanda = new Button(">>>"));
 	    
 	    prefSizeWHeLayXY = new Double [][] { 
-    		{930.0,60.0,10.0,10.0}, 
-    			{75.0,30.0,14.0,15.0}, 
-    				{730.0,30.0,99.0,15.0}, 
-    					{75.0,20.0,841.0,17.0}};
+	    	{930.0,60.0,10.0,10.0},
+	    	{100.0,30.0,25.0,15.0},
+	    	{720.0,30.0,115.0,15.0},
+	    	{60.0,25.0,845.0,18.0},
+    				
+	    };
 	    	
 	    Componentes comEditorProcesso = new Componentes();
 	    comEditorProcesso.popularTela(listNodesEditorProcesso, prefSizeWHeLayXY, pTelaProcesso);
@@ -117,13 +141,16 @@ public class TelaProcessoControlador implements Initializable {
 				    			listNodesTelaProcessoDados.add(tfProcInteressado = new TextField());
 	    
 	    prefSizeWHeLayXY =  new Double [][] { 
-	    	{930.0,60.0,10.0,85.0}, 
-    			{75.0,20.0,14.0,19.0}, 
-    				{160.0,20.0,95.0,16.0}, 
-    					{120.0,20.0,270.0,19.0}, 
-    						{126.0,20.0,402.0,16.0}, 
-    							{100.0,20.0,540.0,19.0}, 
-    								{265.0,20.0,638.0,16.0} };
+	    	
+	    	{930.0,60.0,7.0,82.0},
+	    	{95.0,30.0,8.0,15.0},
+	    	{130.0,30.0,113.0,15.0},
+	    	{130.0,30.0,253.0,15.0},
+	    	{140.0,30.0,383.0,15.0},
+	    	{100.0,30.0,533.0,15.0},
+	    	{280.0,30.0,643.0,15.0},
+    							
+	    };
 	   
 	    Componentes comDadosProcesso = new Componentes();
 	    comDadosProcesso.popularTela(listNodesTelaProcessoDados, prefSizeWHeLayXY, pTelaProcesso);
@@ -138,14 +165,16 @@ public class TelaProcessoControlador implements Initializable {
 	    listNodesPersistencia.add(btnPesquisar = new Button("PESQUISAR"));
 	    
 	    prefSizeWHeLayXY = new Double[][] { 
-	    	{900.0,60.0,25.0,155.0}, 
-	    		{85.0,20.0,15.0,15.0}, 
-	    			{85.0,20.0,111.0,15.0}, 
-	    				{85.0,20.0,207.0,15.0}, 
-					    	{85.0,20.0,303.0,15.0}, 
-					    		{85.0,20.0,399.0,15.0}, 
-					    			{295.0,20.0,495.0,15.0}, 
-					    				{85.0,20.0,801.0,15.0} }; 
+	    	{930.0,60.0,7.0,153.0},
+	    	{95.0,25.0,18.0,18.0},
+	    	{95.0,25.0,123.0,18.0},
+	    	{95.0,25.0,228.0,18.0},
+	    	{95.0,25.0,333.0,18.0},
+	    	{95.0,25.0,438.0,18.0},
+	    	{265.0,25.0,543.0,18.0},
+	    	{95.0,25.0,818.0,18.0},
+					    			
+	    }; 
 					    				
 	    Componentes comPersistencia = new Componentes();
 	    comPersistencia.popularTela(listNodesPersistencia, prefSizeWHeLayXY, pTelaProcesso);
@@ -154,45 +183,49 @@ public class TelaProcessoControlador implements Initializable {
 	    tcDataCriacao.setCellValueFactory(new PropertyValueFactory<Processo, String>("proDataCriacao"));
 	    tcInteressado.setCellValueFactory(new PropertyValueFactory<Processo, String>("proInteressado"));
 	    
-	    tcNumeroProcesso.setPrefWidth(200.0D);
-	    tcDataCriacao.setPrefWidth(200.0D);
-	    tcInteressado.setPrefWidth(480.0D);
 	    
-	    tvListaProcessos.setPrefSize(900.0D, 185.0D);
-	    tvListaProcessos.setLayoutX(25.0D);
-	    tvListaProcessos.setLayoutY(228.0D);
+	    tcNumeroProcesso.setPrefWidth(200.0);
+	    tcDataCriacao.setPrefWidth(200.0);
+	    tcInteressado.setPrefWidth(480.0);
 	    
-	    tvListaProcessos.getColumns().add(tcNumeroProcesso);
-	    tvListaProcessos.getColumns().add(tcDataCriacao);
-	    tvListaProcessos.getColumns().add(tcInteressado);
+	    tvProcessos.setPrefSize(900.0, 185.0);
+	    tvProcessos.setLayoutX(25.0D);
+	    tvProcessos.setLayoutY(228.0);
 	    
-	    tvListaProcessos.setItems(obsListProcessos);
+	    tvProcessos.getColumns().add(tcNumeroProcesso);
+	    tvProcessos.getColumns().add(tcDataCriacao);
+	    tvProcessos.getColumns().add(tcInteressado);
 	    
-	    pTelaProcesso.getChildren().add(tvListaProcessos);
+	    tvProcessos.setItems(obsListProcessos);
 	    
-	    lblDataAtualizacaoProcesso = new Label();
+	    pTelaProcesso.getChildren().add(tvProcessos);
 	    
-	    lblDataAtualizacaoProcesso.setPrefSize(247.0D, 22.0D);
-	    lblDataAtualizacaoProcesso.setLayoutX(677.0D);
-	    lblDataAtualizacaoProcesso.setLayoutY(425.0D);
+	    lblDataAtualizacao = new Label();
 	    
-	    pTelaProcesso.getChildren().add(lblDataAtualizacaoProcesso);
+	    lblDataAtualizacao.setPrefSize(247.0, 22.0);
+	    lblDataAtualizacao.setLayoutX(692.0);
+	    lblDataAtualizacao.setLayoutY(425.0);
 	    
-	    tcDemanda.setCellValueFactory(new PropertyValueFactory<Demanda, String>("demDocumento"));
-	    tcDemandaSEI.setCellValueFactory(new PropertyValueFactory<Demanda, String>("demDocumentoSEI"));
-	    tcDemandaProcessoSEI.setCellValueFactory(new PropertyValueFactory<Demanda, String>("demProcessoSEI"));
+	    pTelaProcesso.getChildren().add(lblDataAtualizacao);
 	    
-	    tcDemanda.setPrefWidth(330.0D);
-	    tcDemandaSEI.setPrefWidth(190.0D);
-	    tcDemandaProcessoSEI.setPrefWidth(220.0D);
+	    tcTipoDemanda.setCellValueFactory(new PropertyValueFactory<Demanda, String>("demTipo"));
+	    tcNumeroDemanda.setCellValueFactory(new PropertyValueFactory<Demanda, String>("demNumero"));
+	    tcNumeroDemandaSEI.setCellValueFactory(new PropertyValueFactory<Demanda, String>("demNumeroSEI"));
+	    tcNumeroProcessoSEI.setCellValueFactory(new PropertyValueFactory<Demanda, String>("demProcesso"));
 	    
-	    tvDemandas.setPrefSize(765.0D, 150.0D);
-	    tvDemandas.setLayoutX(93.0D);
-	    tvDemandas.setLayoutY(460.0D);
+	    tcTipoDemanda.setPrefWidth(200.0);
+    		tcNumeroDemanda.setPrefWidth(200.0);
+    			tcNumeroDemandaSEI.setPrefWidth(200.0);
+    				tcNumeroProcessoSEI.setPrefWidth(220.0);
 	    
-	    tvDemandas.getColumns().add(tcDemanda);
-	    tvDemandas.getColumns().add(tcDemandaSEI);
-	    tvDemandas.getColumns().add(tcDemandaProcessoSEI);
+	    tvDemandas.setPrefSize(840.0, 185.0);
+	    tvDemandas.setLayoutX(55.0);
+	    tvDemandas.setLayoutY(458.0);
+	    
+	    tvDemandas.getColumns().add(tcTipoDemanda);
+	    tvDemandas.getColumns().add(tcNumeroDemanda);
+	    tvDemandas.getColumns().add(tcNumeroDemandaSEI);
+	    tvDemandas.getColumns().add(tcNumeroProcessoSEI);
 	    
 	    tvDemandas.setItems(obsListDemandas);
 	    
@@ -201,6 +234,8 @@ public class TelaProcessoControlador implements Initializable {
 	    modularBotoesProcesso();
 	    
 	    acionarBotoes ();
+	    
+	    selecionarDemanda ();
 	
 	} // FIM INITIALIZE
 	
@@ -212,8 +247,51 @@ public class TelaProcessoControlador implements Initializable {
 	        	TabDemandaControlador.tabDemCon.movimentarTelaProcesso(15.0);
 	        }
 	    });
+	    
+
+	    btnNovo.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override public void handle(ActionEvent e) {
+	        	habilitarProcesso();
+	        }
+	    });
+	    
+	    btnSalvar.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override public void handle(ActionEvent e) {
+	        	salvarProcesso();
+	        }
+	    });
+	    
+	    
+	    btnEditar.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override public void handle(ActionEvent e) {
+	        	editarProcesso();
+	        }
+	    });
+	    
+	    
+	    
+	    btnExcluir.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override public void handle(ActionEvent e) {
+	        	excluiProcesso();
+	        }
+	    });
+	    
+	    
+	    btnCancelar.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override public void handle(ActionEvent e) {
+	        	cancelarProcesso();
+	        }
+	    });
+	    
+	    btnPesquisar.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override public void handle(ActionEvent e) {
+	        	pesquisarProcesso();
+	        }
+	    });
+	    
 	  
   }
+  
   public void habilitarProcesso()	{
 		  
 		    tfProcNumero.setText("");
@@ -307,7 +385,7 @@ public class TelaProcessoControlador implements Initializable {
 	    }
 		    else {
 		    	
-		      Processo pro = (Processo)tvListaProcessos.getSelectionModel().getSelectedItem();
+		      Processo pro = (Processo) tvProcessos.getSelectionModel().getSelectedItem();
 		      
 		      pro.setProSEI(tfProcNumero.getText());
 		      if (dpProcDataCriacao.getValue() == null) {
@@ -364,7 +442,7 @@ public class TelaProcessoControlador implements Initializable {
 	  
     try {
     	
-	      Processo pro = (Processo)tvListaProcessos.getSelectionModel().getSelectedItem();
+	      Processo pro = (Processo) tvProcessos.getSelectionModel().getSelectedItem();
 	      
 	      int id = pro.getProID();
 	      
@@ -406,7 +484,6 @@ public class TelaProcessoControlador implements Initializable {
     
   }
   
-		 
   private void modularBotoesProcesso() {
 	 
     tfProcNumero.setDisable(true);
@@ -431,15 +508,86 @@ public class TelaProcessoControlador implements Initializable {
     }
     
     for (Processo p : proList) {
-    	
-      p.getProID();
-      p.getProSEI();
-      
+    
       obsListProcessos.add(p);
     }
     
-    tvListaProcessos.setItems(obsListProcessos);
+    tvProcessos.setItems(obsListProcessos);
  }
-		  
+	
+//-- selecionar demandas -- //
+  public void selecionarDemanda () {
+		
+	// TableView - selecionar demandas ao clicar //
+	  tvProcessos.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Object>() {
+		
+		public void changed(ObservableValue<?> observable , Object oldValue, Object newValue) {
+		
+		Processo pro = (Processo) newValue;
+		
+		if (pro == null) {
+			
+			tfProcNumero.setText("");
+			tfProcInteressado.setText("");
+			dpProcDataCriacao.getEditor().clear();
+		
+			btnNovo.setDisable(true);
+			btnSalvar.setDisable(true);
+			btnEditar.setDisable(false);
+			btnExcluir.setDisable(false);
+			btnCancelar.setDisable(false);
+			
+		} else {
 
+			// preencher os campos //
+			
+			tfProcNumero.setText(pro.getProSEI());
+			tfProcInteressado.setText(pro.getProInteressado());
+			dpProcDataCriacao.getEditor().clear();
+			
+			if (pro.getProDataCriacao() == null) {
+				dpProcDataCriacao.setValue(null);
+				
+ 				} else {
+ 					Date dataDis = pro.getProDataCriacao();
+ 							dpProcDataCriacao.setValue(dataDis.toLocalDate());
+ 				}
+			
+			obsListDemandas.clear();
+			obsListDemandas.addAll(pro.getDemandas());
+			
+			for (Demanda d : pro.getDemandas()) {
+				System.out.println(d.getDemNumero());
+			}
+			
+			// mostrar data de atualizacao //
+			FormatoData d = new FormatoData();
+			try {lblDataAtualizacao.setText("Data de Atualização: " + d.formatarData(pro.getProAtualizacao()));  // d.formatarData(demanda.getDemAtualizacao())
+					lblDataAtualizacao.setTextFill(Color.BLACK);
+			}catch (Exception e) {lblDataAtualizacao.setText("Não há data de atualização!");
+					lblDataAtualizacao.setTextFill(Color.RED);}
+			
+			
+			// copiar número sei da demanda ao selecionar //
+			Clipboard clip = Clipboard.getSystemClipboard();
+            ClipboardContent conteudo = new ClipboardContent();
+            conteudo.putString(pro.getProSEI());
+            clip.setContent(conteudo);
+			
+			// habilitar e desabilitar botões //
+			btnNovo.setDisable(true);
+			btnSalvar.setDisable(true);
+			btnEditar.setDisable(false);
+			btnExcluir.setDisable(false);
+			btnCancelar.setDisable(false);
+			
+		} // fim do else
+		
+	} // fim do metodo changed
+			
+			
+	}); // fim do selection model
+		
+	}
+  
 }
