@@ -1,13 +1,19 @@
 package controladores.principal;
 
 import java.net.URL;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
+import dao.EnderecoDao;
 import entidades.Demanda;
 import entidades.Endereco;
-import entidades.Processo;
+import entidades.RA;
+import entidades.Usuario;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,19 +22,40 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.util.Callback;
+import principal.Alerta;
 import principal.Componentes;
+import principal.FormatoData;
 
 public class TelaEnderecoControlador implements Initializable {
+	
+		
+	Object objetoDeEdicao = new Object();
+	
+	public void setObjetoDeEdicao (Object objetoDeEdicao) {
+		
+		EditarEnderecoControlador.objetoDeEdicao = objetoDeEdicao;
+		
+		if (objetoDeEdicao.getClass().getName() == "entidades.Demanda")
+		
+		lblDemanda.setText(
+				((Demanda) objetoDeEdicao).getDemTipo() 
+				+ ", Sei n° " + ((Demanda) objetoDeEdicao).getDemNumeroSEI()
+				+ ", Processo n° " + ((Demanda) objetoDeEdicao).getDemProcesso()
+				);
+		
+	}
 	
 	@FXML Pane pTelaEndereco;
 	
@@ -70,6 +97,8 @@ public class TelaEnderecoControlador implements Initializable {
 	TableColumn<Endereco, String> tcDesEnd = new TableColumn<>("Endereço");
 	TableColumn<Endereco, String> tcEndRA = new TableColumn<>("Região Administrativa");
 	TableColumn<Endereco, String> tcEndCid = new TableColumn<>("CEP");
+	
+	Label lblDataAtualizacao = new Label();
 												
 	int intRA = 1;
 	String strRA = "Plano Piloto";
@@ -151,7 +180,7 @@ public class TelaEnderecoControlador implements Initializable {
 	ObservableList<String> olEndUF = FXCollections
 			.observableArrayList("DF" , "GO", "Outro");
 	
-	TelaEnderecoControlador tabEndCon;
+	public static TelaEnderecoControlador tabEndCon;
 	
 	/* array de posicoes prefWidth prefHeight Layout Y e X */
 	Double prefSizeWHeLayXY [][];
@@ -201,28 +230,22 @@ public class TelaEnderecoControlador implements Initializable {
 	    
 	
 	    prefSizeWHeLayXY = new Double [][] { 
-			{900.0,130.0,25.0,83.0}, 
-			
-				{380.0,30.0,16.0,0.0}, 
-				{380.0,30.0,16.0,30.0}, // tfLogradouro
-					{150.0,30.0,407.0,0.0}, 
-					{150.0,30.0,407.0,30.0}, // comboBox RA
-						{100.0,30.0,570.0,0.0}, 
-						{100.0,30.0,570.0,30.0}, // tfCEP
-						
-							{90.0,30.0,682.0,0.0}, 
-							{90.0,30.0,682.0,30.0}, // tfCidade
-							
-								{100.0,30.0,784.0,0.0}, 
-								{100.0,30.0,784.0,30.0}, // comobobx UF
-						
-									{100.0,30.0,185.0,78.0}, 
-									{140.0,30.0,284.0,78.0},
-									
-										{100.0,30.0,435.0,78.0}, 
-										{140.0,30.0,538.0,78.0},
-				
-											{25.0,25.0,689.0,81.0},
+	    	{900.0,130.0,25.0,83.0},
+	    	{380.0,30.0,18.0,0.0},
+	    	{370.0,30.0,18.0,30.0},
+	    	{160.0,30.0,398.0,0.0},
+	    	{160.0,30.0,398.0,30.0},
+	    	{100.0,30.0,568.0,0.0},
+	    	{100.0,30.0,568.0,30.0},
+	    	{90.0,30.0,680.0,0.0},
+	    	{90.0,30.0,680.0,30.0},
+	    	{100.0,30.0,782.0,0.0},
+	    	{100.0,30.0,782.0,30.0},
+	    	{100.0,30.0,183.0,79.0},
+	    	{140.0,30.0,283.0,79.0},
+	    	{100.0,30.0,438.0,79.0},
+	    	{140.0,30.0,538.0,79.0},
+	    	{25.0,25.0,693.0,82.0},
 	    };
 	    	
 	    com = new Componentes();
@@ -275,33 +298,497 @@ public class TelaEnderecoControlador implements Initializable {
 		tvLista.setLayoutX(25);
 		tvLista.setLayoutY(305);
 		
-		pTelaEndereco.getChildren().add(tvLista);
+		lblDataAtualizacao.setPrefSize(247, 22);
+		lblDataAtualizacao.setLayoutX(677);
+		lblDataAtualizacao.setLayoutY(500);
+		
+		pTelaEndereco.getChildren().addAll(tvLista, lblDataAtualizacao);
 		
 		
-    
 	    acionarBotoes ();
+	    
+	    selecionarEndereco();
 		
 	} // FIM INITIALIZE
 	
 	public void acionarBotoes () {
 		  
-
 	    btnDemanda.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override public void handle(ActionEvent e) {
 	        	TabDemandaControlador.tabDemCon.movimentarTelaEndereco(15.0);
 	        }
 	    });
+	    
+	    btnNovo.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override public void handle(ActionEvent e) {
+	        	
+	        }
+	    });
+	    
+	    btnSalvar.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override public void handle(ActionEvent e) {
+	        	salvarEndereco(objetoDeEdicao);
+	        }
+	    });
+	    
+	    btnEditar.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override public void handle(ActionEvent e) {
+	        	editarEndereco(objetoDeEdicao);
+	        }
+	    });
+	    btnExcluir.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override public void handle(ActionEvent e) {
+	        	excluirEndereco();
+	        }
+	    });
+	    
+	    btnCancelar.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override public void handle(ActionEvent e) {
+	        	cancelarEndereco();
+	        }
+	    });
+	    
+	    btnPesquisar.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override public void handle(ActionEvent e) {
+	        	pesquisarEndereco();
+	        }
+	    });
 	  
   }
 	
-	Object objetoDeEdicao = new Object();
-	
-	public void setObjetoDeEdicao (Object objetoDeEdicao) {
+	public void btnNovoHab (ActionEvent event) {
 		
-		EditarEnderecoControlador.objetoDeEdicao = objetoDeEdicao;
+		tfLogradouro.setText("");
+		
+		cbRA.setValue(null);
+		
+		tfCEP.setText("");
+		tfCidade.setText("Brasília");
+		
+		cbUF.setValue("DF");
+	
+		tfLatitude.setText("");
+		tfLongitude.setText("");
+		
+		
+		tfLogradouro.setDisable(false);
+		cbRA.setDisable(false);
+		
+		
+		tfCEP.setDisable(false);
+		tfCidade.setDisable(false);
+		cbUF.setDisable(false);
+		tfLatitude.setDisable(false);
+		tfLongitude.setDisable(false);
+	
+		btnSalvar.setDisable(false);
+		btnEditar.setDisable(true);
+		btnExcluir.setDisable(true);
+		btnEditar.setDisable(true);
+		
+	}
+
+	public void salvarEndereco (Object obj) {
+	
+	/*
+		
+		if (tfLatitude.getText().isEmpty() || 
+				tfLongitude.getText().isEmpty()) {
+			
+			Alerta a = new Alerta ();
+			a.alertar(new Alert(Alert.AlertType.ERROR, "Coordenadas inválidas!!!", ButtonType.OK));
+			
+		} 
+		
+			else if (obj == null) {
+				
+				Alerta a = new Alerta ();
+				a.alertar(new Alert(Alert.AlertType.ERROR, "Não há demanda selecionada!!!", ButtonType.OK));
+				
+			} 
+		
+				else {
+				
+				
+					if (tfLogradouro.getText().isEmpty()) {
+						
+						Alerta a = new Alerta ();
+						a.alertar(new Alert(Alert.AlertType.ERROR, "Informe o logadouro do empreendimento!!!", ButtonType.OK));
+						
+					} else {
+					
+						RA ra = new RA ();
+						ra.setRaID(intRA);
+						ra.setRaNome(strRA);
+						
+						Endereco end = new Endereco();
+							
+							end.setEndLogradouro(tfLogradouro.getText());
+							end.setEndRAFK(ra);
+								
+							end.setEndCEP(tfCEP.getText());
+							end.setEndCidade(tfCidade.getText());
+							end.setEndUF(cbUF.getValue());
+							
+							try {
+								
+								end.setEndDDLatitude(Double.parseDouble(tfLatitude.getText()));
+								end.setEndDDLongitude(Double.parseDouble(tfLongitude.getText()));
+								
+								end.setEndAtualizacao(Timestamp.valueOf((LocalDateTime.now())));
+										
+										Demanda dem = new Demanda ();
+										
+											dem = EditarEnderecoControlador.getDemanda();
+											dem.setDemEnderecoFK(end);
+											end.getDemandas().add(dem);
+										
+										EnderecoDao endDao = new EnderecoDao();
+										
+											endDao.salvarEndereco(end); //solução para recuperar o id do endereço
+											endDao.mergeEndereco(end); // assim adiciona o id end na demanda dem
+										
+										//-- modular botoes--//
+										modularBotoesInicial ();
+										
+										obsList.remove(end);
+										obsList.add(end);
+										
+										
+										selecionarEndereco();
+										
+										modularBotoesInicial();
+										
+										Alerta a = new Alerta ();
+										a.alertar(new Alert(Alert.AlertType.INFORMATION, "Cadastro salvo com sucesso!!!", ButtonType.OK));
+										
+								} 
+							
+								catch (Exception e) {
+									
+									Alerta a = new Alerta ();
+									a.alertar(new Alert(Alert.AlertType.ERROR, "erro ao salvar!!!", ButtonType.OK));
+									
+									e.printStackTrace();
+								}
+				}
+			
+		}
+		
+		*/
+			
+	}
+	
+
+	public void editarEndereco (Object objetoDeEdicao) {
+		
+		if (tfLogradouro.isDisable()) {
+			
+			tfLogradouro.setDisable(false);
+			cbRA.setDisable(false);
+			tfCEP.setDisable(false);
+			tfCidade.setDisable(false);
+			cbUF.setDisable(false);
+			tfLatitude.setDisable(false);
+			tfLongitude.setDisable(false);
+		
+				
+		} else {
+			
+			if (tfLatitude.getText().isEmpty()|| tfLongitude.getText().isEmpty() ) {
+				Alerta a = new Alerta ();
+				a.alertar(new Alert(Alert.AlertType.ERROR, "Coordenadas inválidas!!!", ButtonType.OK));
+				// colocar para não aceitar texto e somente número
+				} 
+				
+				else if (objetoDeEdicao == null) {
+					Alerta a = new Alerta ();
+					a.alertar(new Alert(Alert.AlertType.ERROR, "não selecionado(a)!!!", ButtonType.OK));
+				}
+			
+				else {
+					
+					RA ra = new RA ();
+					ra.setRaID(intRA);
+					ra.setRaNome(strRA);
+	
+					Endereco end = new Endereco ();
+					
+					end = tvLista.getSelectionModel().getSelectedItem();
+						
+					end.setEndLogradouro(tfLogradouro.getText());
+					end.setEndRAFK(ra);
+					end.setEndCEP(tfCEP.getText());
+					end.setEndCidade(tfCidade.getText());
+					end.setEndUF(cbUF.getValue());
+					end.setEndDDLatitude(Double.parseDouble(tfLatitude.getText()));
+					end.setEndDDLongitude(Double.parseDouble(tfLongitude.getText()));
+					
+					end.setEndAtualizacao(
+							Timestamp.valueOf((LocalDateTime.now())));
+					
+					Demanda dem = new Demanda();
+					Usuario us = new Usuario();
+					
+					if (objetoDeEdicao.getClass().getName().equals("entidades.Demanda")) {
+						
+						dem = (Demanda) objetoDeEdicao;
+						dem.setDemEnderecoFK(end);
+						
+						// para não dar repeticao de objetos //
+						for (int i = 0 ; i < end.getDemandas().size(); i++) {
+							if (end.getDemandas().get(i).getDemID() == (dem.getDemID())) {
+								end.getDemandas().remove(end.getDemandas().get(i));
+							}
+						}
+						
+						// adicionar a demanda editada //
+						end.getDemandas().add(dem);
+						
+					}
+					
+					else if (objetoDeEdicao.getClass().getName().equals("entidades.Usuario")) {
+						
+						us = (Usuario) objetoDeEdicao;
+						//us.setUsDataAtualizacao(Timestamp.valueOf((LocalDateTime.now())));
+						// adiciona neste endereco o id usuario selecionado
+						end.setEndUsuarioFK(us);
+						// adiciona este endereco no setEnderecos do usuario
+						//us.getEnderecos().add(end);
+						
+					}
+					
+					// dao //
+					EnderecoDao enderecoDao = new EnderecoDao();
+				
+					enderecoDao.mergeEndereco(end);
+					
+					// atualizar a tableview //
+					obsList.remove(end);
+					obsList.add(end);
+					
+					modularBotoesInicial (); 
+					
+					Alerta a = new Alerta ();
+					a.alertar(new Alert(Alert.AlertType.INFORMATION, "Cadastro editado com sucesso!!!", ButtonType.OK));
+						
+				}
+		
+		}
 		
 	}
 	
+	public void excluirEndereco () {
+		
+		Endereco end = tvLista.getSelectionModel().getSelectedItem();
+		
+		int id = end.getEndID();
+		
+		EnderecoDao endDao = new EnderecoDao();
+		
+			try {
+				
+				endDao.removerEndereco(id);
+				
+				obsList.remove(end);
+				
+				modularBotoesInicial();
+				
+				Alerta a = new Alerta ();
+				a.alertar(new Alert(Alert.AlertType.INFORMATION, "Cadastro deletado com sucesso!!!", ButtonType.OK));
+				
+		
+					}
+		
+					catch (Exception e) {
+						
+						Alerta a = new Alerta ();
+						a.alertar(new Alert(Alert.AlertType.ERROR, "Há denúncia associada a este endereço!", ButtonType.OK));
+						
+					}
+			
+	}
 	
+	public void cancelarEndereco () {
+		
+		modularBotoesInicial ();
+		
+		tfLogradouro.setText("");
+		
+		cbRA.setValue(null);
+		
+		tfCEP.setText("");
+		
+		cbUF.setValue(null);
+		
+		tfLatitude.setText("");
+		tfLongitude.setText("");
+		
+	}
 
+	public void pesquisarEndereco () {
+		
+		strPesquisa = tfPesquisar.getText();
+		
+		listarEnderecos (strPesquisa);
+		
+		selecionarEndereco () ;
+		
+		modularBotoesInicial (); 
+		
+	}
+	
+	String strPesquisa = "";
+	
+	//-- Modular os botoes na inicializacao do programa --//
+	private void modularBotoesInicial () {
+		
+		tfLogradouro.setDisable(true);
+		cbRA.setDisable(true);
+		tfCEP.setDisable(true);
+		tfCidade.setDisable(true);
+		cbUF.setDisable(true);
+		tfLatitude.setDisable(true);
+		tfLongitude.setDisable(true);
+		
+		btnSalvar.setDisable(true);
+		btnEditar.setDisable(true);
+		btnExcluir.setDisable(true);
+		btnNovo.setDisable(false);
+		
+	}
+	
+	// --- metodo para listar endereco --- //
+ 	public void listarEnderecos (String strPesquisa) {
+ 		
+	 	// --- conexao - listar enderecos --- //
+		EnderecoDao enderecoDao = new EnderecoDao();
+		List<Endereco> enderecoList = enderecoDao.listarEndereco(strPesquisa);
+		//obsList = FXCollections.observableArrayList();
+		
+		if (!obsList.isEmpty()) {
+			obsList.clear();
+		}
+			
+		// funcionando
+		List<Endereco> iList = enderecoList;
+		
+		
+		for (Endereco e : iList) {
+			
+			obsList.add(e);
+			
+		}
+			
+		tvLista.setItems(obsList); 
+	
+	}
+		
+	// método selecionar endereço -- //
+ 	public void selecionarEndereco () {
+	
+		tvLista.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Object>() {
+			
+			public void changed(ObservableValue<?> observable , Object oldValue, Object newValue) {
+			
+			Endereco end = (Endereco) newValue;
+			
+			if (end == null) {
+				
+				tfLogradouro.setText("");
+				
+				tfCEP.setText("");
+				tfCidade.setText("");
+				tfLatitude.setText("");
+				tfLongitude.setText("");
+				
+				btnNovo.setDisable(true);
+				btnSalvar.setDisable(true);
+				btnEditar.setDisable(false);
+				btnExcluir.setDisable(false);
+				btnCancelar.setDisable(false);
+				
+			} else {
+
+				// -- preencher os campos -- //
+				tfLogradouro.setText(end.getEndLogradouro());
+				
+				cbRA.setValue(end.getEndRAFK().getRaNome()); 
+				
+				tfCEP.setText(end.getEndCEP());
+				tfCidade.setText(end.getEndCidade());
+				
+				cbUF.setValue(end.getEndUF());
+				
+				tfLatitude.setText(end.getEndDDLatitude().toString());
+				tfLongitude.setText(end.getEndDDLongitude().toString());
+				
+				// -- habilitar e desabilitar botoes -- //
+				btnNovo.setDisable(true);
+				btnSalvar.setDisable(true);
+				btnEditar.setDisable(false);
+				btnExcluir.setDisable(false);
+				btnCancelar.setDisable(false);
+				
+				
+				FormatoData d = new FormatoData();
+				
+				// mostrar data de atualizacao //
+				
+				try {lblDataAtualizacao.setText("Data de Atualização: " + d.formatarData(end.getEndAtualizacao()));
+						lblDataAtualizacao.setTextFill(Color.BLACK);
+				}catch (Exception e) {lblDataAtualizacao.setText("Não há data de atualização!");
+						lblDataAtualizacao.setTextFill(Color.RED);}
+				
+				// atualizar o valor da demanda //
+				/*
+				if (end.getDemandas().size() != 0) { // colocar regra de só pode enditar escolhendo uma demanda...
+					demanda = end.getDemandas().get(0);
+				}
+				*/
+				
+				
+				//eGeral = new Endereco(endTab);
+				
+				//main.pegarEnd(eGeral);
+				
+				
+				//Double lat = Double.parseDouble(tfEndLat.getText());
+				//Double  lng = Double.parseDouble(tfEndLon.getText() );
+				
+				/*
+				if (wv1 == null) {
+					
+					String strMarcador = "" +
+	                        "window.lat = " + lat + ";" +
+	                        "window.lon = " + lng + ";" +
+	                        "document.goToLocation(window.lat, window.lon);";
+					
+					abrirMapa(strMarcador);
+					
+				} else
+				{
+					webEng.executeScript("" +
+	                        "window.lat = " + lat + ";" +
+	                        "window.lon = " + lng + ";" +
+	                        "document.goToLocation(window.lat, window.lon);"
+	                    );
+			
+				}
+				*/
+				
+			}
+			
+			}
+			
+		});
+		
+		
+	}
+	
 }
+
+
+
+
+

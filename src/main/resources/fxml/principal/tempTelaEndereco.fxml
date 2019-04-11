@@ -37,23 +37,24 @@
       </TableView>
       <Pane fx:id="pDadosBasicos" layoutX="25.0" layoutY="83.0" prefHeight="130.0" prefWidth="900.0" styleClass="panes">
          <children>
-            <TextField fx:id="tfEnd" layoutX="16.0" layoutY="30.0" prefHeight="30.0" prefWidth="380.0" />
-            <TextField fx:id="tfEndCep" layoutX="570.0" layoutY="30.0" prefHeight="30.0" prefWidth="100.0" />
-            <TextField fx:id="tfEndCid" layoutX="682.0" layoutY="30.0" prefHeight="30.0" prefWidth="90.0" />
-            <Label layoutX="16.0" prefHeight="30.0" prefWidth="380.0" text="Endereço do  Empreendimento: " />
-            <Label layoutX="407.0" prefHeight="30.0" prefWidth="150.0" text="Região Administrativa: " />
-            <Label layoutX="570.0" prefHeight="30.0" prefWidth="100.0" text="Cep: " />
-            <Label layoutX="682.0" prefHeight="30.0" prefWidth="90.0" text="Cidade: " />
-            <Label layoutX="784.0" prefHeight="30.0" prefWidth="100.0" text="UF: " />
-            <TextField fx:id="tfEndLat" layoutX="284.0" layoutY="78.0" prefHeight="30.0" prefWidth="140.0" promptText="-15.7754084" />
-            <TextField fx:id="tfEndLon" layoutX="538.0" layoutY="78.0" prefHeight="30.0" prefWidth="140.0" promptText="-47.9411395" />
-            <Label layoutX="185.0" layoutY="78.0" prefHeight="30.0" prefWidth="100.0" text="Latitude (Y): " />
-            <Label layoutX="437.0" layoutY="78.0" prefHeight="30.0" prefWidth="100.0" text="Longitude (X): " />
-            <Button fx:id="btnEndMaps" layoutX="689.0" layoutY="81.0" mnemonicParsing="false" onAction="#btnEndMapsHab" prefHeight="25.0" prefWidth="25.0" />
-            <ComboBox layoutX="407.0" layoutY="30.0" prefHeight="30.0" prefWidth="150.0" />
-            <ComboBox layoutX="784.0" layoutY="30.0" prefHeight="30.0" prefWidth="100.0" />
+            <Label layoutX="18.0" prefHeight="30.0" prefWidth="380.0" text="Endereço do  Empreendimento: " />
+            <TextField fx:id="tfEnd" layoutX="18.0" layoutY="30.0" prefHeight="30.0" prefWidth="370.0" />
+            <Label layoutX="398.0" prefHeight="30.0" prefWidth="160.0" text="Região Administrativa: " />
+            <ComboBox layoutX="398.0" layoutY="30.0" prefHeight="30.0" prefWidth="160.0" />
+            <Label layoutX="568.0" prefHeight="30.0" prefWidth="100.0" text="Cep: " />
+            <TextField fx:id="tfEndCep" layoutX="568.0" layoutY="30.0" prefHeight="30.0" prefWidth="100.0" />
+            <Label layoutX="680.0" prefHeight="30.0" prefWidth="90.0" text="Cidade: " />
+            <TextField fx:id="tfEndCid" layoutX="680.0" layoutY="30.0" prefHeight="30.0" prefWidth="90.0" />
+            <Label layoutX="782.0" prefHeight="30.0" prefWidth="100.0" text="UF: " />
+            <ComboBox layoutX="782.0" layoutY="30.0" prefHeight="30.0" prefWidth="100.0" />
+            <Label layoutX="183.0" layoutY="79.0" prefHeight="30.0" prefWidth="100.0" text="Latitude (Y): " />
+            <TextField fx:id="tfEndLat" layoutX="283.0" layoutY="79.0" prefHeight="30.0" prefWidth="140.0" promptText="-15.7754084" />
+            <Label layoutX="438.0" layoutY="79.0" prefHeight="30.0" prefWidth="100.0" text="Longitude (X): " />
+            <TextField fx:id="tfEndLon" layoutX="538.0" layoutY="79.0" prefHeight="30.0" prefWidth="140.0" promptText="-47.9411395" />
+            <Button fx:id="btnEndMaps" layoutX="693.0" layoutY="82.0" mnemonicParsing="false" onAction="#btnEndMapsHab" prefHeight="25.0" prefWidth="25.0" />
          </children>
       </Pane>
       <Label fx:id="lblDataAtualizacao1" layoutX="677.0" layoutY="508.0" prefHeight="22.0" prefWidth="247.0" />
+      <Label fx:id="lblDataAtualizacao11" layoutX="677.0" layoutY="500.0" prefHeight="22.0" prefWidth="247.0" />
    </children>
 </Pane>

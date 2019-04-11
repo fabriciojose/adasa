@@ -520,6 +520,8 @@ public class TabDemandaControlador implements Initializable {
     btnTelaEndereco.setOnAction(new EventHandler<ActionEvent>() {
         @Override public void handle(ActionEvent e) {
         	inicializarTelaEndereco();
+        	
+        	TelaEnderecoControlador.tabEndCon.setObjetoDeEdicao(demanda);
         }
     });
    

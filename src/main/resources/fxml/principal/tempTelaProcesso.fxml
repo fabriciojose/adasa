@@ -48,11 +48,12 @@
          </children>
       </Pane>
       <Label fx:id="lblDataAtualizacao11" layoutX="692.0" layoutY="425.0" prefHeight="22.0" prefWidth="247.0" />
-      <TableView fx:id="tvLista1" layoutX="55.0" layoutY="460.0" prefHeight="185.0" prefWidth="841.0">
+      <TableView fx:id="tvLista1" layoutX="55.0" layoutY="458.0" prefHeight="185.0" prefWidth="840.0">
          <columns>
-            <TableColumn fx:id="tcDesEnd1" prefWidth="420.0" text="Documento" />
-            <TableColumn fx:id="tcEndRA1" minWidth="0.0" prefWidth="200.0" text="Número SEI" />
-            <TableColumn fx:id="tcEndCid1" prefWidth="200.0" text="Processo" />
+            <TableColumn fx:id="tcDesEnd1" prefWidth="200.0" text="Tipo" />
+            <TableColumn fx:id="tcEndRA1" minWidth="0.0" prefWidth="200.0" text="Número" />
+            <TableColumn fx:id="tcEndCid1" prefWidth="200.0" text="SEI" />
+            <TableColumn fx:id="tcEndCid11" prefWidth="220.0" text="Processo" />
          </columns>
       </TableView>
    </children>
