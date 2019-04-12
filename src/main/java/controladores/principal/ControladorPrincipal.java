@@ -2,8 +2,6 @@ package controladores.principal;
 
 import java.io.IOException;
 
-import controladores.atendimento.ControladorAtendimento;
-import controladores.fiscalizacao.ControladorFiscalizacao;
 import controladores.modelosHTML.ControladorModelosHTML;
 import de.jensd.fx.glyphs.GlyphsDude;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;

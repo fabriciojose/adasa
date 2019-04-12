@@ -1,11 +1,7 @@
-package controladores.fiscalizacao;
+package controladores.principal;
 
 import java.io.IOException;
 
-import controladores.principal.TabDemandaControlador;
-import controladores.principal.TabEnderecoControlador;
-import controladores.principal.TabInterferenciaControlador;
-import controladores.principal.TabUsuarioControlador;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Tab;
@@ -81,6 +77,7 @@ public class ControladorFiscalizacao {
 		p.minHeightProperty().bind(pFiscalizacao.heightProperty());
 		
 		t.setContent(p);
+		
 	}
 
 }

@@ -51,10 +51,9 @@ import principal.FormatoData;
 
 public class TabDemandaControlador implements Initializable {
 	
-  TabEnderecoControlador tabEndCon = new TabEnderecoControlador();
-  TelaEnderecoControlador telaEndCon;
   TelaProcessoControlador telaProCon;
-  
+  TelaEnderecoControlador telaEndCon;
+	
   String strPesquisa = "";
   String strPesquisaProcesso = "";
   
@@ -204,10 +203,10 @@ public class TabDemandaControlador implements Initializable {
 			      
 			      obsList.remove(dem);
 			      obsList.add(dem);
-			      
-			      tabEndCon.setDemanda(dem);
-			     //enditarEnderecoControlador.setObjetoDeEdicao(dem);
-			      
+			     
+			     /* transmitir demanda para a tab endereco */
+			     TabEnderecoControlador.tabEndCon.setDemanda(dem);
+			   
 			      modularBotoesDemanda();
 			      
 			      Alerta a = new Alerta();
@@ -748,7 +747,7 @@ public class TabDemandaControlador implements Initializable {
     btnNovo.setDisable(false);
   }
   
-//-- selecionar demandas -- //
+  //-- selecionar demandas -- //
   public void selecionarDemanda () {
 		
 	// TableView - selecionar demandas ao clicar //
@@ -804,46 +803,64 @@ public class TabDemandaControlador implements Initializable {
 			// endereço relacionado //
 			if (dem.getDemEnderecoFK() != null) {
 				
-				lblLogradouro.setText(dem.getDemEnderecoFK().getEndLogradouro());
-				lblRegiaoAdministrativa.setText(dem.getDemEnderecoFK().getEndRAFK().getRaNome());
-				lblLatitude.setText(dem.getDemEnderecoFK().getEndDDLatitude().toString());
-				lblLongitude.setText(dem.getDemEnderecoFK().getEndDDLongitude().toString());
-				 		
-				lblLogradouro.setStyle("-fx-text-fill: #4A4A4A;"); 
-				
-				
-			// listar as interferencias
-			List<Demanda> iList = dem.getDemEnderecoFK().getDemandas();
-			Endereco end = dem.getDemEnderecoFK();
-				
-			// preparar strings para transmitir para o javascript pelo metodo 'setEnderecoInterferencias()'
-				
-				String strInfoDemandas = "";
-			
-					String strEndereco = end.getEndDDLatitude() + "," + end.getEndDDLongitude();
+					lblLogradouro.setText(dem.getDemEnderecoFK().getEndLogradouro());
+					lblRegiaoAdministrativa.setText(dem.getDemEnderecoFK().getEndRAFK().getRaNome());
+					lblLatitude.setText(dem.getDemEnderecoFK().getEndDDLatitude().toString());
+					lblLongitude.setText(dem.getDemEnderecoFK().getEndDDLongitude().toString());
+					 		
+					lblLogradouro.setStyle("-fx-text-fill: #4A4A4A;"); 
 					
-			for(Demanda d : iList) {
 				
-				strInfoDemandas += "|" + d.getDemTipo() + "," + d.getDemNumero() + "," + d.getDemNumeroSEI();
-				
-				
-			} // fim loop for
-			
-			/* chamar os metodo necessarios, primeiro as coordenadas e detalhes, 
-				zoom do mapa e deois centralizar o mapa de acordo com o endereco
-				*/
-			googleMaps.mostrarDemandas(strEndereco, strInfoDemandas);
-			googleMaps.setZoom (11);
-			googleMaps.setMapCenter(end.getEndDDLatitude(), end.getEndDDLongitude());
+					// listar as interferencias
+					List<Demanda> iList = dem.getDemEnderecoFK().getDemandas();
+					Endereco end = dem.getDemEnderecoFK();
+						
+					// preparar strings para transmitir para o javascript pelo metodo 'setEnderecoInterferencias()'
+						
+						String strInfoDemandas = "";
+					
+							String strEndereco = end.getEndDDLatitude() + "," + end.getEndDDLongitude();
+							
+						for(Demanda d : iList) {
+							
+							strInfoDemandas += "|" + d.getDemTipo() + "," + d.getDemNumeroSEI() + "," + d.getDemProcesso();
+							
+							
+						} // fim loop for
+					
+					/* chamar os metodo necessarios, primeiro as coordenadas e detalhes, 
+						zoom do mapa e deois centralizar o mapa de acordo com o endereco
+						*/
+					googleMaps.mostrarDemandas(strEndereco, strInfoDemandas);
+					googleMaps.setZoom (11);
+					googleMaps.setMapCenter(end.getEndDDLatitude(), end.getEndDDLongitude());
 				
 				
 			} else {
-				lblLogradouro.setText("Sem endereço cadastrado!");
-				lblRegiaoAdministrativa.setText("");
-				lblLatitude.setText("");
-				lblLongitude.setText("");
 				
-				lblLogradouro.setStyle("-fx-text-fill: #FF0000;"); // fonte color: vermelho
+					lblLogradouro.setText("Sem endereço cadastrado!");
+					lblRegiaoAdministrativa.setText("");
+					lblLatitude.setText("");
+					lblLongitude.setText("");
+				
+					lblLogradouro.setStyle("-fx-text-fill: #FF0000;"); // fonte color: vermelho
+			}
+			
+			if (dem.getDemProcessoFK() != null) {
+				
+				lblProcessoPrincipal.setText(
+						
+						dem.getDemProcessoFK().getProSEI()
+						+ ", Interessado n° " + dem.getDemProcessoFK().getProInteressado()
+						
+						);
+				lblProcessoPrincipal.setStyle("-fx-text-fill: #4A4A4A;"); 
+		
+				
+			} else {
+				
+				lblProcessoPrincipal.setText("Não está relacionado a nenhum processo principal!");
+				lblProcessoPrincipal.setStyle("-fx-text-fill: #FF0000;");
 			}
 			
 			
@@ -859,7 +876,7 @@ public class TabDemandaControlador implements Initializable {
 			//tabEndCon.setDemanda(demanda);
 			//enditarEnderecoControlador.setObjetoDeEdicao(demanda);
 			
-			TabEnderecoControlador.tabEndCon.setDemanda(dem);
+			((TabEnderecoControlador) TabEnderecoControlador.tabEndCon).setDemanda(dem);
 			
 			// copiar número sei da demanda ao selecionar //
 			Clipboard clip = Clipboard.getSystemClipboard();

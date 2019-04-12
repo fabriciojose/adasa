@@ -1,11 +1,7 @@
-package controladores.atendimento;
+package controladores.principal;
 
 import java.io.IOException;
 
-import controladores.principal.TabDemandaControlador;
-import controladores.principal.TabEnderecoControlador;
-import controladores.principal.TabInterferenciaControlador;
-import controladores.principal.TabUsuarioControlador;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Tab;
@@ -18,22 +14,22 @@ public class ControladorAtendimento {
 	@FXML TabPane tpAtendimento = new TabPane();
 	
 	@FXML Tab tpTabDemanda;
-	Pane pDemanda = new Pane();
+	Pane pDemanda_Aten = new Pane();
 	TabDemandaControlador tabDem = new TabDemandaControlador();
 	String strDem = "/fxml/principal/TabDemanda.fxml";
 	
 		@FXML Tab tpTabEndereco;
-		Pane pEndereco = new Pane();
+		Pane pEndereco_Aten = new Pane();
 		TabEnderecoControlador tabEnd = new TabEnderecoControlador();
 		String strEnd = "/fxml/principal/TabEndereco.fxml";
 
 			@FXML Tab tpTabInterferencia;
-			Pane pInterferencia = new Pane();
+			Pane pInterferencia_Aten = new Pane();
 			TabInterferenciaControlador tabInt = new TabInterferenciaControlador();
 			String strInt = "/fxml/principal/TabInterferencia.fxml";
 			
 				@FXML Tab tpTabUsuario;
-				Pane pUsuario = new Pane();
+				Pane pUsuario_Aten = new Pane();
 				TabUsuarioControlador tabUs = new TabUsuarioControlador();
 				String strUs = "/fxml/principal/TabUsuario.fxml";
 	
@@ -43,10 +39,10 @@ public class ControladorAtendimento {
 		tpAtendimento.prefWidthProperty().bind(pAtendimento.widthProperty());
 		tpAtendimento.prefHeightProperty().bind(pAtendimento.heightProperty());
 		
-		abrirTab (pDemanda ,  tabDem, strDem, tpTabDemanda );
-			abrirTab (pEndereco ,  tabEnd, strEnd, tpTabEndereco );
-				abrirTab (pInterferencia ,  tabInt, strInt, tpTabInterferencia );
-					abrirTab (pUsuario ,  tabUs, strUs, tpTabUsuario );
+		abrirTab (pDemanda_Aten ,  tabDem, strDem, tpTabDemanda );
+			abrirTab (pEndereco_Aten ,  tabEnd, strEnd, tpTabEndereco );
+				abrirTab (pInterferencia_Aten ,  tabInt, strInt, tpTabInterferencia );
+					abrirTab (pUsuario_Aten ,  tabUs, strUs, tpTabUsuario );
 		
 		
 		

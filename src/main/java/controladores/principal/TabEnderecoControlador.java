@@ -11,7 +11,6 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 
-import controladores.fiscalizacao.TabVistoriaControlador;
 import dao.EnderecoDao;
 import entidades.Demanda;
 import entidades.Endereco;
@@ -129,19 +128,12 @@ public class TabEnderecoControlador implements Initializable {
 			"Vicente Pires"	
 			); 	
 		
-		//-- combobox - unidade federal --//
-
-	
-		ObservableList<String> olEndUF = FXCollections
+	ObservableList<String> olEndUF = FXCollections
 				.observableArrayList("DF" , "GO", "Outro");
 
-		
 		Label lblEndereco = new Label();
-		
 		//-- string para chamar as coordenadas corretas do mapa --//
 		String strHTMLMap;
-		
-		
 		//-- String de pesquisa de enderecos --//
 		String strPesquisa = "";
 		
@@ -442,9 +434,7 @@ public class TabEnderecoControlador implements Initializable {
 	
 }
 
-	/*
-	 * capturar as coordenadas clicadas no mapa e trazer para o cadastro do endereco
-	 */
+	/* capturar as coordenadas clicadas no mapa e trazer para o cadastro do endereco */
 	public void capturarLatitudeLongitude () {
 		
 		tfLatitude.setText( ControladorPrincipal.capturarGoogleMaps().getLat() );
@@ -491,7 +481,7 @@ public class TabEnderecoControlador implements Initializable {
 			
 	
 	public static TabEnderecoControlador tabEndCon;
-	
+
 	@FXML Pane pEndereco;
 	  
 	  Pane p1 = new Pane();
@@ -752,7 +742,6 @@ public class TabEnderecoControlador implements Initializable {
 	    	
 	}
 	
-	
 	//-- Modular os botoes na inicializacao do programa --//
 	private void modularBotoesInicial () {
 		
@@ -772,7 +761,7 @@ public class TabEnderecoControlador implements Initializable {
 	}
 	
 	// --- metodo para listar endereco --- //
-	 	public void listarEnderecos (String strPesquisa) {
+	public void listarEnderecos (String strPesquisa) {
 	 		
 	 	// --- conexao - listar enderecos --- //
 		EnderecoDao enderecoDao = new EnderecoDao();
@@ -789,16 +778,6 @@ public class TabEnderecoControlador implements Initializable {
     	
     	for (Endereco e : iList) {
     		
-    		e.getEndID();
-    		e.getEndLogradouro();
-    		e.getEndRAFK();
-    		e.getEndCEP();
-    		e.getEndCidade();
-    		e.getEndUF();
-    		e.getEndDDLatitude();
-    		e.getEndDDLongitude();
-    		e.getDemandas();
-    		
     		obsList.add(e);
     		
 		}
@@ -808,7 +787,7 @@ public class TabEnderecoControlador implements Initializable {
 	GoogleMap googleMaps = new GoogleMap();
 	
 	// método selecionar endereço -- //
-	 	public void selecionarEndereco () {
+	public void selecionarEndereco () {
 		
 			tvLista.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Object>() {
 				

@@ -40,20 +40,20 @@ import principal.FormatoData;
 
 public class TelaEnderecoControlador implements Initializable {
 	
-		
 	Object objetoDeEdicao = new Object();
 	
 	public void setObjetoDeEdicao (Object objetoDeEdicao) {
 		
-		EditarEnderecoControlador.objetoDeEdicao = objetoDeEdicao;
+		this.objetoDeEdicao = objetoDeEdicao;
 		
 		if (objetoDeEdicao.getClass().getName() == "entidades.Demanda")
+			
+			lblDemanda.setText(
+					((Demanda) objetoDeEdicao).getDemTipo() 
+					+ ", Sei n° " + ((Demanda) objetoDeEdicao).getDemNumeroSEI()
+					+ ", Processo n° " + ((Demanda) objetoDeEdicao).getDemProcesso()
+					);
 		
-		lblDemanda.setText(
-				((Demanda) objetoDeEdicao).getDemTipo() 
-				+ ", Sei n° " + ((Demanda) objetoDeEdicao).getDemNumeroSEI()
-				+ ", Processo n° " + ((Demanda) objetoDeEdicao).getDemProcesso()
-				);
 		
 	}
 	
@@ -479,8 +479,7 @@ public class TelaEnderecoControlador implements Initializable {
 			
 	}
 	
-
-	public void editarEndereco (Object objetoDeEdicao) {
+	public void editarEndereco (Object objetodeEdicao) {
 		
 		if (tfLogradouro.isDisable()) {
 			
@@ -530,6 +529,8 @@ public class TelaEnderecoControlador implements Initializable {
 					Demanda dem = new Demanda();
 					Usuario us = new Usuario();
 					
+					System.out.println(objetoDeEdicao.getClass().getName());
+					
 					if (objetoDeEdicao.getClass().getName().equals("entidades.Demanda")) {
 						
 						dem = (Demanda) objetoDeEdicao;
@@ -544,6 +545,9 @@ public class TelaEnderecoControlador implements Initializable {
 						
 						// adicionar a demanda editada //
 						end.getDemandas().add(dem);
+						
+						
+						System.out.println("editar demanda e endereco");
 						
 					}
 					
@@ -729,8 +733,7 @@ public class TelaEnderecoControlador implements Initializable {
 				btnEditar.setDisable(false);
 				btnExcluir.setDisable(false);
 				btnCancelar.setDisable(false);
-				
-				
+			
 				FormatoData d = new FormatoData();
 				
 				// mostrar data de atualizacao //
@@ -741,41 +744,14 @@ public class TelaEnderecoControlador implements Initializable {
 						lblDataAtualizacao.setTextFill(Color.RED);}
 				
 				// atualizar o valor da demanda //
+				
+				
 				/*
 				if (end.getDemandas().size() != 0) { // colocar regra de só pode enditar escolhendo uma demanda...
 					demanda = end.getDemandas().get(0);
 				}
 				*/
 				
-				
-				//eGeral = new Endereco(endTab);
-				
-				//main.pegarEnd(eGeral);
-				
-				
-				//Double lat = Double.parseDouble(tfEndLat.getText());
-				//Double  lng = Double.parseDouble(tfEndLon.getText() );
-				
-				/*
-				if (wv1 == null) {
-					
-					String strMarcador = "" +
-	                        "window.lat = " + lat + ";" +
-	                        "window.lon = " + lng + ";" +
-	                        "document.goToLocation(window.lat, window.lon);";
-					
-					abrirMapa(strMarcador);
-					
-				} else
-				{
-					webEng.executeScript("" +
-	                        "window.lat = " + lat + ";" +
-	                        "window.lon = " + lng + ";" +
-	                        "document.goToLocation(window.lat, window.lon);"
-	                    );
-			
-				}
-				*/
 				
 			}
 			

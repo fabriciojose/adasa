@@ -9,7 +9,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-import controladores.fiscalizacao.TabAtoControlador;
 import dao.ModelosDao;
 import dao.UsuarioDao;
 import entidades.Endereco;
