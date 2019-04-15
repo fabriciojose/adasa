@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 
+import org.junit.internal.InexactComparisonCriteria;
+
 import dao.ProcessoDao;
 import entidades.Demanda;
 import entidades.Endereco;
@@ -107,7 +109,8 @@ public class TelaProcessoControlador implements Initializable {
 	
   /* para movimentar dados entre as telas */
   public static TelaProcessoControlador telaProCon;
-	
+  
+ 
   @Override
   public void initialize(URL url, ResourceBundle rb) {
 		
@@ -238,13 +241,30 @@ public class TelaProcessoControlador implements Initializable {
 	    selecionarDemanda ();
 	
 	} // FIM INITIALIZE
+
+	/*@intControlador - valor referente ao controlador chamado. 0 para atendimento e 1 para fiscalizacao
+	 *  Utilizado no método acionarBotoes e assim movimentar a tela a partir do controlador chamado
+	 */
+	int intControlador;
+	
+	/* construtor para trazer o intControlador correto. 0 para atendimento e 1 para fiscalizacao */
+	public TelaProcessoControlador (int intControlador) {
+		  this.intControlador = intControlador;
+	}
 	
   public void acionarBotoes () {
 	  
-
 	    btnDemanda.setOnAction(new EventHandler<ActionEvent>() {
+	    	
 	        @Override public void handle(ActionEvent e) {
-	        	TabDemandaControlador.tabDemCon.movimentarTelaProcesso(15.0);
+	     
+	        	if (intControlador == 0) {
+	        		TabDemandaControlador.controladorAtendimento.movimentarTelaProcesso(15.0);
+	        	}
+	        	if (intControlador == 1) {
+	        		TabDemandaControlador.controladorFiscalizacao.movimentarTelaProcesso(15.0);
+	        	}
+	        	
 	        }
 	    });
 	    
@@ -364,7 +384,7 @@ public class TelaProcessoControlador implements Initializable {
       ex.printStackTrace();
       
       Alerta a = new Alerta();
-      a.alertar(new Alert(Alert.AlertType.ERROR, "erro na conex�o, tente novamente!", new ButtonType[] { ButtonType.OK }));
+      a.alertar(new Alert(Alert.AlertType.ERROR, "erro na conexão, tente novamente!", new ButtonType[] { ButtonType.OK }));
       
     }
     

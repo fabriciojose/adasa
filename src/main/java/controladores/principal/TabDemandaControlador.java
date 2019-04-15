@@ -40,6 +40,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -148,7 +149,7 @@ public class TabDemandaControlador implements Initializable {
 		  ex.printStackTrace();
       
       Alerta a = new Alerta();
-      a.alertar(new Alert(Alert.AlertType.ERROR, "erro na conex�o, tente novamente!", new ButtonType[] { ButtonType.OK }));
+      a.alertar(new Alert(Alert.AlertType.ERROR, "erro na conexão, tente novamente!", new ButtonType[] { ButtonType.OK }));
       
     }
 	  
@@ -205,13 +206,24 @@ public class TabDemandaControlador implements Initializable {
 			      obsList.add(dem);
 			     
 			     /* transmitir demanda para a tab endereco */
-			     TabEnderecoControlador.tabEndCon.setDemanda(dem);
-			   
-			      modularBotoesDemanda();
-			      
-			      Alerta a = new Alerta();
-			      a.alertar(new Alert(Alert.AlertType.ERROR, "Cadastro editado com sucesso!!!", new ButtonType[] { ButtonType.OK }));
+			    // TabEnderecoControlador.tabEndCon.setDemanda(dem);
+			     
+
+			    if (intControlador == 0) {
+			    	TabEnderecoControlador.controladorAtendimento.setDemanda(dem);
+		
+			 	}
+			     
+			    if (intControlador == 1) {
+			 			TabEnderecoControlador.controladorFiscalizacao.setDemanda(dem);
 			    }
+				
+			    modularBotoesDemanda();
+			      
+			    Alerta a = new Alerta();
+			    a.alertar(new Alert(Alert.AlertType.ERROR, "Cadastro editado com sucesso!!!", new ButtonType[] { ButtonType.OK }));
+			    
+			    } // fim else
 	    
   }
   
@@ -232,7 +244,7 @@ public class TabDemandaControlador implements Initializable {
 		      modularBotoesDemanda();
 		      
 		      Alerta a = new Alerta();
-		      a.alertar(new Alert(Alert.AlertType.INFORMATION, "Cadastro exclu�do com sucesso!!!", new ButtonType[] { ButtonType.OK }));
+		      a.alertar(new Alert(Alert.AlertType.INFORMATION, "Cadastro excluído com sucesso!!!", new ButtonType[] { ButtonType.OK }));
 		    }
 	  
     catch (Exception e)	{
@@ -281,10 +293,25 @@ public class TabDemandaControlador implements Initializable {
   
   Componentes com;
   
+  public static TabDemandaControlador controladorAtendimento;
+  	public static TabDemandaControlador controladorFiscalizacao;
+  		int intControlador;
+	
+  public TabDemandaControlador (int i) {
+		
+		if (i==0) {
+			controladorAtendimento = this;
+			intControlador = i;
+		}
+		if(i==1) {
+			controladorFiscalizacao = this;
+			intControlador = i;
+		}
+	
+	}
+
   public void initialize(URL url, ResourceBundle rb) {
 	  
-	tabDemCon = this;
-    
     bp1.minWidthProperty().bind(pDemanda.widthProperty());
     bp1.maxHeightProperty().bind(pDemanda.heightProperty().subtract(60));
     
@@ -342,7 +369,7 @@ public class TabDemandaControlador implements Initializable {
     googleMaps.setHeight(400.0);
     googleMaps.switchHybrid();
     
-    p1.getChildren().addAll(new Node[] { tvLista, lblDataAtualizacao, pMapa });
+    p1.getChildren().addAll(tvLista, lblDataAtualizacao, pMapa);
     
     listNodesProcesso.add(pProcesso = new Pane());
     listNodesProcesso.add(new Label("PROCESSO PRINCIPAL:"));
@@ -521,17 +548,26 @@ public class TabDemandaControlador implements Initializable {
         	inicializarTelaEndereco();
         	
         	TelaEnderecoControlador.tabEndCon.setObjetoDeEdicao(demanda);
+        	
         }
     });
+    
+    
+    tfPesquisar.setOnKeyReleased(event -> {
+		  if (event.getCode() == KeyCode.ENTER){
+		     btnPesquisar.fire();
+		  }
+		});
    
     
     btnTelaProcesso.setOnAction(new EventHandler<ActionEvent>() {
         @Override public void handle(ActionEvent e) {
         	
-        	
         	inicializarTelaProcesso ();
-        	
+        
         	TelaProcessoControlador.telaProCon.setDemanda(demanda);
+        	
+        	
         }
     });
     
@@ -598,7 +634,6 @@ public class TabDemandaControlador implements Initializable {
     
   }
   
-  
   TranslateTransition transicao_TE_Direita;
   TranslateTransition transicao_TE_Esquerda;
   Pane pTelaEndereco;
@@ -617,11 +652,11 @@ public class TabDemandaControlador implements Initializable {
     	
     	p.setStyle("-fx-background-color: blue;");
     	
-    	
-		telaProCon = new TelaProcessoControlador();
+    	System.out.println("intControlador na tab Demanda " + intControlador);
+		//telaProCon = new TelaProcessoControlador();
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/principal/TelaProcesso.fxml"));
 		loader.setRoot(p);
-		loader.setController(telaProCon);
+		loader.setController(new TelaProcessoControlador(intControlador));
 	
 		try {
 			loader.load();
@@ -687,10 +722,9 @@ public class TabDemandaControlador implements Initializable {
       pTelaEndereco.setPrefSize(500.0, 500.0);
       
       Pane p = new Pane();
-      telaEndCon = new TelaEnderecoControlador();
       FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/principal/TelaEndereco.fxml"));
       loader.setRoot(p);
-      loader.setController(telaEndCon);
+      loader.setController(new TelaEnderecoControlador(intControlador));
       try
       {
         loader.load();
@@ -729,7 +763,7 @@ public class TabDemandaControlador implements Initializable {
     
   }
   
-  private void modularBotoesDemanda() {
+  public void modularBotoesDemanda() {
 	  
     cbTipoDemanda.setDisable(true);
     tfNumeroDemanda.setDisable(true);
@@ -876,7 +910,15 @@ public class TabDemandaControlador implements Initializable {
 			//tabEndCon.setDemanda(demanda);
 			//enditarEnderecoControlador.setObjetoDeEdicao(demanda);
 			
-			((TabEnderecoControlador) TabEnderecoControlador.tabEndCon).setDemanda(dem);
+		    if (intControlador == 0) {
+		    	TabEnderecoControlador.controladorAtendimento.setDemanda(dem);
+	
+		 	}
+		     
+		    if (intControlador == 1) {
+		 			TabEnderecoControlador.controladorFiscalizacao.setDemanda(dem);
+		    }
+			
 			
 			// copiar número sei da demanda ao selecionar //
 			Clipboard clip = Clipboard.getSystemClipboard();
@@ -895,9 +937,7 @@ public class TabDemandaControlador implements Initializable {
 		
 	} // fim do metodo changed
 			
-			
 	}); // fim do selection model
 		
 	}
- 
-}
+  }

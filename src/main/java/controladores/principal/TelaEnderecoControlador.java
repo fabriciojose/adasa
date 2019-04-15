@@ -185,15 +185,16 @@ public class TelaEnderecoControlador implements Initializable {
 	/* array de posicoes prefWidth prefHeight Layout Y e X */
 	Double prefSizeWHeLayXY [][];
 	
+	/* classe necessaria para atribuir as medidas pref width e heigh layout x e y para os componentes de cada tab ou tela */
 	Componentes com;
-	
+	/* lista de enderecos para adicionar a tableview */
 	ObservableList<Endereco> obsList = FXCollections.observableArrayList();
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-	
-		tabEndCon = this;
 		
+		tabEndCon = this;
+	
 		pTelaEndereco.setStyle("-fx-background-color:#FFFFFF;");
 	    
 		listNodesDemanda.add(pDemanda = new Pane());
@@ -311,11 +312,26 @@ public class TelaEnderecoControlador implements Initializable {
 		
 	} // FIM INITIALIZE
 	
+	/*@intControlador - valor referente ao controlador chamado. 0 para atendimento e 1 para fiscalizacao
+	 *  Utilizado no método acionarBotoes e assim movimentar a tela a partir do controlador chamado
+	 */
+	int intControlador;
+	
+	public TelaEnderecoControlador (int intControlador) {
+		  this.intControlador = intControlador;
+	}
+	 
 	public void acionarBotoes () {
 		  
 	    btnDemanda.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override public void handle(ActionEvent e) {
-	        	TabDemandaControlador.tabDemCon.movimentarTelaEndereco(15.0);
+	        	
+	        	if (intControlador == 0) {
+	        		TabDemandaControlador.controladorAtendimento.movimentarTelaEndereco(15.0);
+	        	}
+	        	if(intControlador == 1) {
+	        		TabDemandaControlador.controladorFiscalizacao.movimentarTelaEndereco(15.0);
+	        	}
 	        }
 	    });
 	    

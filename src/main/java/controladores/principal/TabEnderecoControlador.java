@@ -1,5 +1,6 @@
 package controladores.principal;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -16,6 +17,8 @@ import entidades.Demanda;
 import entidades.Endereco;
 import entidades.Interferencia;
 import entidades.RA;
+import javafx.animation.TranslateTransition;
+import javafx.application.Preloader;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -24,13 +27,13 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -42,6 +45,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
+import javafx.util.Duration;
 import mapas.GoogleMap;
 import principal.Alerta;
 import principal.Componentes;
@@ -56,6 +60,7 @@ public class TabEnderecoControlador implements Initializable {
 	
 	// para trazer a demanda cadastrada e relacionado com o endereco //
 	Demanda demanda = new Demanda ();
+	Endereco endereco = new Endereco();
 	
 	/* recebimento da demanda e preenchimento na parte superior - DOCUMENTO: ... */
 	public void setDemanda (Demanda demanda)  {
@@ -71,7 +76,6 @@ public class TabEnderecoControlador implements Initializable {
 	
 	Pane pMap;
 
-	
 	Label lblDataAtualizacao = new Label();
 	
 	//-- TableView endereco --//
@@ -139,7 +143,7 @@ public class TabEnderecoControlador implements Initializable {
 		
 		ObservableList<Endereco> obsList = FXCollections.observableArrayList();
 		
-	public void btnNovoHab () {
+	public void habilitarEndereco () {
 		
 		tfLogradouro.setText("");
 		
@@ -171,7 +175,7 @@ public class TabEnderecoControlador implements Initializable {
 		
 	}
 	
-	public void btnSalvarHab () {
+	public void salvarEndereco () {
 		
 		if (tfLatitude.getText().isEmpty() || 
 				tfLongitude.getText().isEmpty()) {
@@ -273,7 +277,7 @@ public class TabEnderecoControlador implements Initializable {
 			
 	}
 	
-	public void btnEditarHab () {
+	public void editarEndereco () {
 	
 	
 	if (tfLogradouro.isDisable()) {
@@ -371,7 +375,7 @@ public class TabEnderecoControlador implements Initializable {
 	
 }
 
-	public void btnExcluirHab () {
+	public void excluirEndereco () {
 	
 		Endereco end = tvLista.getSelectionModel().getSelectedItem();
 		
@@ -406,7 +410,7 @@ public class TabEnderecoControlador implements Initializable {
 		
 }
 
-	public void btnCancelarHab () {
+	public void cancelarEndereco () {
 	
 		modularBotoesInicial ();
 		
@@ -423,7 +427,7 @@ public class TabEnderecoControlador implements Initializable {
 	
 }
 
-	public void btnPesquisarHab () {
+	public void pesquisarEndereco () {
 	
 	
 		strPesquisa = tfPesquisar.getText();
@@ -441,7 +445,6 @@ public class TabEnderecoControlador implements Initializable {
 		tfLongitude.setText( ControladorPrincipal.capturarGoogleMaps().getLon());
 		
 	}
-
 
 	// pane para o mapa
 	Pane pEnderecoMapa = new Pane();
@@ -476,28 +479,43 @@ public class TabEnderecoControlador implements Initializable {
 										  							
 										  								ArrayList<Node> listNodesPersistencia= new ArrayList<Node>();
 										  								
-			
+		
+	public static TabEnderecoControlador controladorAtendimento;
+		public static TabEnderecoControlador controladorFiscalizacao;
+			int intControlador;
 	
-			
+	/* transmitir valores entre as tabs 
+	 * @controladorAtendimento - caso o atendimento seja chamado
+	 * @controladorFiscalizacao - caso a fiscalizacao seja chamada
+	 * 		Resolve o problema de chamar as duas abas (atendimento e fiscalizacao) e os valores se confundirem ente elas
+	 */
+	public TabEnderecoControlador (int i) {
+		
+		if (i==0) {
+			controladorAtendimento = this;
+			intControlador = i;
+		}
+		if(i==1) {
+			controladorFiscalizacao = this;
+			intControlador = i;
+		}
 	
-	public static TabEnderecoControlador tabEndCon;
-
+	}
+	
 	@FXML Pane pEndereco;
 	  
-	  Pane p1 = new Pane();
-	  BorderPane bp1 = new BorderPane();
-	  BorderPane bp2 = new BorderPane();
-	  ScrollPane sp = new ScrollPane();
-	  Pane pMapa = new Pane();
+	Pane p1 = new Pane();
+	BorderPane bp1 = new BorderPane();
+	BorderPane bp2 = new BorderPane();
+	ScrollPane sp = new ScrollPane();
+	Pane pMapa = new Pane();
 	  
-	  /* array de posicoes prefWidth prefHeight Layout Y e X */
-		Double prefSizeWHeLayXY [][];
+	/* array de posicoes prefWidth prefHeight Layout Y e X */
+	Double prefSizeWHeLayXY [][];
 		
-	  Componentes com;
+	Componentes com;
 	  
 	public void initialize(URL url, ResourceBundle rb) {
-		
-		tabEndCon = this;
 		
 		 bp1.minWidthProperty().bind(pEndereco.widthProperty());
 		    bp1.maxHeightProperty().bind(pEndereco.heightProperty().subtract(60));
@@ -527,10 +545,10 @@ public class TabEnderecoControlador implements Initializable {
 					listNodesDemanda.add(btnDemanda = new Button("<<<"));
 	    
 	    prefSizeWHeLayXY = new Double [][] { 
-    		{950.0,60.0,15.0,10.0}, 
-    			{85.0,30.0,18.0,15.0}, 
-    				{740.0,30.0,105.0,15.0}, 
-    					{75.0,25.0,854.0,17.0}
+	    	{950.0,60.0,15.0,10.0},
+	    	{75.0,30.0,27.0,15.0},
+	    	{740.0,30.0,109.0,15.0},
+	    	{65.0,25.0,859.0,17.0},
     				};
 	    	
 	    com = new Componentes();
@@ -556,28 +574,22 @@ public class TabEnderecoControlador implements Initializable {
 	    
 	
 	    prefSizeWHeLayXY = new Double [][] { 
-			{930.0,130.0,25.0,83.0}, 
-			
-				{380.0,30.0,16.0,0.0}, 
-				{380.0,30.0,16.0,30.0}, // tfLogradouro
-					{150.0,30.0,407.0,0.0}, 
-					{150.0,30.0,407.0,30.0}, // comboBox RA
-						{100.0,30.0,570.0,0.0}, 
-						{100.0,30.0,570.0,30.0}, // tfCEP
-						
-							{90.0,30.0,682.0,0.0}, 
-							{90.0,30.0,682.0,30.0}, // tfCidadeade
-							
-								{100.0,30.0,784.0,0.0}, 
-								{100.0,30.0,784.0,30.0}, // comobobx UF
-						
-									{100.0,30.0,185.0,78.0}, 
-									{140.0,30.0,284.0,78.0},
-									
-										{100.0,30.0,435.0,78.0}, 
-										{140.0,30.0,538.0,78.0},
-				
-											{25.0,25.0,689.0,81.0},
+	    	{930.0,130.0,25.0,85.0},
+	    	{425.0,30.0,15.0,5.0},
+	    	{420.0,30.0,15.0,35.0},
+	    	{165.0,30.0,445.0,5.0},
+	    	{165.0,30.0,445.0,35.0},
+	    	{100.0,30.0,620.0,5.0},
+	    	{100.0,30.0,620.0,35.0},
+	    	{100.0,30.0,730.0,5.0},
+	    	{100.0,30.0,730.0,35.0},
+	    	{60.0,30.0,840.0,5.0},
+	    	{75.0,30.0,840.0,35.0},
+	    	{110.0,30.0,180.0,80.0},
+	    	{140.0,30.0,300.0,80.0},
+	    	{110.0,30.0,450.0,80.0},
+	    	{140.0,30.0,570.0,80.0},
+	    	{25.0,25.0,725.0,83.0},
 	    };
 	    	
 	    com = new Componentes();
@@ -597,17 +609,18 @@ public class TabEnderecoControlador implements Initializable {
 	    listNodesPersistencia.add(btnPesquisar = new Button("PESQUISAR"));
 	    
 	    prefSizeWHeLayXY = new Double[][] { 
-	    	{930.0,60.0,25.0,225.0}, 
-	    		{95.0,25.0,18.0,18.0}, 
-	    			{95.0,25.0,123.0,18.0}, 
-	    				{95.0,25.0,228.0,18.0}, 
-					    	{95.0,25.0,333.0,18.0}, 
-					    		{95.0,25.0,438.0,18.0}, 
-					    			{265.0,25.0,543.0,18.0}, 
-					    				{95.0,25.0,818.0,18.0} }; 
+	    	{930.0,60.0,25.0,230.0},
+	    	{95.0,25.0,18.0,18.0},
+	    	{95.0,25.0,123.0,18.0},
+	    	{95.0,25.0,228.0,18.0},
+	    	{95.0,25.0,333.0,18.0},
+	    	{95.0,25.0,438.0,18.0},
+	    	{265.0,25.0,543.0,18.0},
+	    	{95.0,25.0,818.0,18.0},
+	    };
 					    				
-					    				 com = new Componentes();
-					    				    com.popularTela(listNodesPersistencia, prefSizeWHeLayXY, p1);    
+		 com = new Componentes();
+		    com.popularTela(listNodesPersistencia, prefSizeWHeLayXY, p1);    
 		    
 	    
 	    // para trazer o valor da entidade principal, no caso Endereco
@@ -631,11 +644,11 @@ public class TabEnderecoControlador implements Initializable {
 	    
 					    tvLista.setPrefSize(930, 185);
 							tvLista.setLayoutX(25);
-								tvLista.setLayoutY(300);
+								tvLista.setLayoutY(305);
 								
 	    
 	    lblDataAtualizacao.setPrefSize(247, 22);
-	    lblDataAtualizacao.setLayoutX(707);
+	    lblDataAtualizacao.setLayoutX(705);
 	    lblDataAtualizacao.setLayoutY(500);
 	  
 	    
@@ -677,16 +690,24 @@ public class TabEnderecoControlador implements Initializable {
 	    	strRA = (String) newValue 
 	    );
 	    
+	    habilitarAcoesDosBotoes ();
 	    // ao abrir fechar os campos para edicao //
 	    modularBotoesInicial();
 	    // ativar na tableview a possibilidade e selecionar uma opcao //
 	    selecionarEndereco();
 	   
+	    	
+	}
+	
+	/* ativar metodo onAction para os botoes */
+	
+	public void habilitarAcoesDosBotoes () {
+		
 	    btnNovo.setOnAction(new EventHandler<ActionEvent>() {
 
 	        @Override
 	        public void handle(ActionEvent event) {
-	            btnNovoHab();
+	        	habilitarEndereco ();
 	        }
 	    });
 		    
@@ -694,7 +715,7 @@ public class TabEnderecoControlador implements Initializable {
 
 	        @Override
 	        public void handle(ActionEvent event) {
-	            btnSalvarHab();
+	            salvarEndereco();
 	        }
 	    });
 	    
@@ -702,7 +723,7 @@ public class TabEnderecoControlador implements Initializable {
 
 	        @Override
 	        public void handle(ActionEvent event) {
-	            btnEditarHab();
+	           editarEndereco();
 	        }
 	    });
 	    
@@ -710,7 +731,7 @@ public class TabEnderecoControlador implements Initializable {
 
 	        @Override
 	        public void handle(ActionEvent event) {
-	            btnCancelarHab();
+	            cancelarEndereco();
 	        }
 	    });
 	    
@@ -718,7 +739,15 @@ public class TabEnderecoControlador implements Initializable {
 
 	        @Override
 	        public void handle(ActionEvent event) {
-	            btnPesquisarHab();
+	            pesquisarEndereco();
+	        }
+	    });
+	    
+	    btnExcluir.setOnAction(new EventHandler<ActionEvent>() {
+
+	        @Override
+	        public void handle(ActionEvent event) {
+	            excluirEndereco();
 	        }
 	    });
 	    
@@ -730,18 +759,95 @@ public class TabEnderecoControlador implements Initializable {
 	        }
 	    });
 	    
-	    btnExcluir.setOnAction(new EventHandler<ActionEvent>() {
+	    btnDemanda.setOnAction(new EventHandler<ActionEvent>() {
 
 	        @Override
 	        public void handle(ActionEvent event) {
-	            btnExcluirHab();
+	            inicializarTelaDemanda();
+	            
+	            TelaDemandaControlador.telaDemCon.setEndereco(endereco);
+	            
 	        }
 	    });
 	    
 	   
-	    	
+		
 	}
 	
+	TranslateTransition transDireita;
+	TranslateTransition transEsquerda;
+	Pane pTelaDemanda;
+	Double dblTransicaoDemanda;
+	  
+	public void inicializarTelaDemanda () {
+		  
+	    if (pTelaDemanda == null) {
+	    	
+	    	pTelaDemanda = new Pane();
+	    	pTelaDemanda.setPrefSize(500.0, 500.0);
+	
+	    	Pane p = new Pane();
+	    	
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/principal/TelaDemanda.fxml"));
+				loader.setRoot(p);
+					loader.setController(new TelaDemandaControlador(intControlador));
+		
+			try {
+				loader.load();
+			}
+				catch (IOException e)	{
+					System.out.println("erro leitura do pane");
+					e.printStackTrace();
+				}
+		
+			pTelaDemanda.getChildren().add(p);
+			
+			p1.getChildren().add(pTelaDemanda);
+		
+				transEsquerda = new TranslateTransition(new Duration(350.0), pTelaDemanda);
+					transEsquerda.setToX(15.0);
+				  
+				transDireita = new TranslateTransition(new Duration(350.0), pTelaDemanda);
+					transDireita.setToX(1300.0);
+		  
+					pTelaDemanda.setTranslateX(1300.0);
+		  
+		}
+	    
+	    movimentarTelaDemanda (15.0);
+	    
+	  }
+	  
+	public void movimentarTelaDemanda (Double dbltransEsquerda)	{
+		  
+		  
+		  /*
+	    if (demanda.getDemID() == 0) {
+	    	
+	      lbl_TP_Demanda.setText("Não há demanda selecionada!!!");
+	      lbl_TP_Demanda.setTextFill(Color.RED);
+	      
+	    }
+	    else {
+	    	
+	      lbl_TP_Demanda.setText(demanda
+	        .getDemDocumento() + ", Sei nº" + demanda
+	        	.getDemDocumentoSEI() + ", Processo nº " + demanda
+	        		.getDemProcessoSEI());
+	      
+	      	lbl_TP_Demanda.setTextFill(Color.BLACK);
+	    }*/
+	    
+		  dblTransicaoDemanda = Double.valueOf(pTelaDemanda.getTranslateX());
+	    
+	    if (dblTransicaoDemanda.equals(dbltransEsquerda)) {
+	    	transDireita.play();
+	    } else {
+	    		transEsquerda.play();
+	    }
+	    
+	  }
+
 	//-- Modular os botoes na inicializacao do programa --//
 	private void modularBotoesInicial () {
 		
@@ -811,6 +917,8 @@ public class TabEnderecoControlador implements Initializable {
 					btnCancelar.setDisable(false);
 					
 				} else {
+					
+					endereco = end;
 
 					// -- preencher os campos -- //
 					tfLogradouro.setText(end.getEndLogradouro());
@@ -912,6 +1020,5 @@ public class TabEnderecoControlador implements Initializable {
 			
 		}
 	
-
 }
 

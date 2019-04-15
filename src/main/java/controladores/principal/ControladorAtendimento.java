@@ -14,22 +14,18 @@ public class ControladorAtendimento {
 	@FXML TabPane tpAtendimento = new TabPane();
 	
 	@FXML Tab tpTabDemanda;
-	Pane pDemanda_Aten = new Pane();
-	TabDemandaControlador tabDem = new TabDemandaControlador();
-	String strDem = "/fxml/principal/TabDemanda.fxml";
+		String strDem = "/fxml/principal/TabDemanda.fxml";
 	
 		@FXML Tab tpTabEndereco;
-		Pane pEndereco_Aten = new Pane();
-		TabEnderecoControlador tabEnd = new TabEnderecoControlador();
-		String strEnd = "/fxml/principal/TabEndereco.fxml";
+			String strEnd = "/fxml/principal/TabEndereco.fxml";
 
 			@FXML Tab tpTabInterferencia;
-			Pane pInterferencia_Aten = new Pane();
+			Pane pInterferencia = new Pane();
 			TabInterferenciaControlador tabInt = new TabInterferenciaControlador();
 			String strInt = "/fxml/principal/TabInterferencia.fxml";
 			
 				@FXML Tab tpTabUsuario;
-				Pane pUsuario_Aten = new Pane();
+				Pane pUsuario = new Pane();
 				TabUsuarioControlador tabUs = new TabUsuarioControlador();
 				String strUs = "/fxml/principal/TabUsuario.fxml";
 	
@@ -39,10 +35,10 @@ public class ControladorAtendimento {
 		tpAtendimento.prefWidthProperty().bind(pAtendimento.widthProperty());
 		tpAtendimento.prefHeightProperty().bind(pAtendimento.heightProperty());
 		
-		abrirTab (pDemanda_Aten ,  tabDem, strDem, tpTabDemanda );
-			abrirTab (pEndereco_Aten ,  tabEnd, strEnd, tpTabEndereco );
-				abrirTab (pInterferencia_Aten ,  tabInt, strInt, tpTabInterferencia );
-					abrirTab (pUsuario_Aten ,  tabUs, strUs, tpTabUsuario );
+		abrirTab (new Pane() ,  new TabDemandaControlador(0), strDem, tpTabDemanda );
+			abrirTab (new Pane()  ,  new TabEnderecoControlador(0), strEnd, tpTabEndereco );
+				abrirTab (pInterferencia ,  tabInt, strInt, tpTabInterferencia );
+					abrirTab (pUsuario ,  tabUs, strUs, tpTabUsuario );
 		
 		
 		

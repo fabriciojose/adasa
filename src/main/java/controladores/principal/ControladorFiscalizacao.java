@@ -14,14 +14,10 @@ public class ControladorFiscalizacao {
 	@FXML TabPane tpFiscalizacao = new TabPane();
 	
 	@FXML Tab tpTabDemanda;
-	Pane pDemanda = new Pane();
-	TabDemandaControlador tabDem = new TabDemandaControlador();
-	String strDem = "/fxml/principal/TabDemanda.fxml";
+		String strDem = "/fxml/principal/TabDemanda.fxml";
 	
 		@FXML Tab tpTabEndereco;
-		Pane pEndereco = new Pane();
-		TabEnderecoControlador tabEnd = new TabEnderecoControlador();
-		String strEnd = "/fxml/principal/TabEndereco.fxml";
+			String strEnd = "/fxml/principal/TabEndereco.fxml";
 	
 			@FXML Tab tpTabInterferencia;
 			Pane pInterferencia = new Pane();
@@ -50,13 +46,14 @@ public class ControladorFiscalizacao {
 		tpFiscalizacao.prefWidthProperty().bind(pFiscalizacao.widthProperty());
 		tpFiscalizacao.prefHeightProperty().bind(pFiscalizacao.heightProperty());
 		
-		abrirTab (pDemanda ,  tabDem, strDem, tpTabDemanda );
-			abrirTab (pEndereco ,  tabEnd, strEnd, tpTabEndereco );
-				abrirTab (pInterferencia ,  tabInt, strInt, tpTabInterferencia );
-					abrirTab (pUsuario ,  tabUs, strUs, tpTabUsuario );
-						abrirTab (pVistoria ,  tabVis, strVis, tpTabVistoria );
-							abrirTab (pAto ,  tabAto, strAto, tpTabAto );
-			
+		abrirTab (new Pane() , new TabDemandaControlador(1), strDem, tpTabDemanda );
+			abrirTab (new Pane() ,  new TabEnderecoControlador(1), strEnd, tpTabEndereco );
+				abrirTab (new Pane() ,  tabInt, strInt, tpTabInterferencia );
+					abrirTab (new Pane() ,  tabUs, strUs, tpTabUsuario );
+						abrirTab (new Pane() ,  tabVis, strVis, tpTabVistoria );
+							abrirTab (new Pane(),  tabAto, strAto, tpTabAto );
+							
+							
 		
 	}
 	
