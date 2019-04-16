@@ -5,12 +5,9 @@ import java.net.URL;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Point;
 
 import dao.InterferenciaDao;
 import entidades.BaciasHidrograficas;
@@ -34,45 +31,40 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import principal.Alerta;
+import principal.Componentes;
 import principal.FormatoData;
-
 
 public class TabInterferenciaControlador  implements Initializable{
 	
  	TabSubterraneaController tabSubCon;
 	TabSuperficialController tabSupCon;
  	
- 	static Endereco endereco = new Endereco ();
- 	
- 	static Label lblEndereco = new Label();
-
-	public void setEndereco (Endereco end) {
+ 	Endereco endereco = new Endereco ();
+ 
+	public void setEndereco (Endereco endereco) {
 		
-		TabInterferenciaControlador.endereco = end;
+		this.endereco = endereco;
 		// preencher o label com a demanda selecionada //
 		
-		TabInterferenciaControlador.lblEndereco.setText(
+		lblEndereco.setText(
 				
 				endereco.getEndLogradouro()
 				+ ", CEP n°: " + endereco.getEndCEP()
@@ -82,21 +74,9 @@ public class TabInterferenciaControlador  implements Initializable{
 			
 	}
 	
-	public static Endereco getEndereco () {
-		return endereco;
-	}
-	
 	ObservableList<Interferencia> obsList = FXCollections.observableArrayList();
 	
 	int tipoCaptacao = 3;
-	
-	Button btnNovo = new Button("Novo");
-	Button btnSalvar = new Button("Salvar");
-	Button btnEditar = new Button("Editar");
-	Button btnExcluir = new Button("Excluir");
-	Button btnCancelar = new Button("Cancelar");
-	Button btnPesquisar = new Button("Pesquisar");
-	TextField tfPesquisar = new TextField();
 	
 	
 	//Button btnEndCoord;
@@ -136,53 +116,45 @@ public class TabInterferenciaControlador  implements Initializable{
 	
 	int situacaoProcessoID = 1;
 	final int [] listaSituacaoProcessoID = new int [] { 1,2,3,4,5,6,7,8 };
+	
 
 	public void btnNovoHab () {
 					
-			cbTipoInterferencia.setDisable(false);
-			cbBacia.setDisable(false);
-			cbUnidHid.setDisable(false);
-			cbTipoOutorga.setDisable(false);
-			cbTipoAto.setDisable(false);
-			cbSituacaoProcesso.setDisable(false);
-			
-			dpDataPublicacao.setDisable(false);
-			dpDataVencimento.setDisable(false);
-			tfNumeroAto.setDisable(false);
-			tfProcessoRenovacao.setDisable(false);
-			tfDespachoRenovacao.setDisable(false);
-			
-			tfLat.setDisable(false);
-			tfLon.setDisable(false);
-			
-			tfLat.setText("");
-			tfLon.setText("");
-			
-			btnNovo.setDisable(true);
-			btnSalvar.setDisable(false);
-			btnEditar.setDisable(true);
-			btnExcluir.setDisable(true);
-			tfPesquisar.setDisable(false);
-			
-			btnPesquisar.setDisable(false);
-			
-			//-- choice box --//
-			cbTipoInterferencia.setItems(olTipoInterferencia);
-			cbBacia.setItems(olBacia);
+		cbTipoInterferencia.setDisable(false);
+		cbTipoOutorga.setDisable(false);
+		cbSubtipoOutorga.setDisable(false);
+		cbTipoAto.setDisable(false);
+		cbSituacao.setDisable(false);
+		
+		dpDataPublicacao.setDisable(false);
+		dpDataVencimento.setDisable(false);
+		tfNumeroAto.setDisable(false);
+		tfProcesoOutorga.setDisable(false);
+		tfDespachoOutorga.setDisable(false);
+		
+		btnNovo.setDisable(true);
+		btnSalvar.setDisable(false);
+		btnEditar.setDisable(true);
+		btnExcluir.setDisable(true);
+		tfPesquisar.setDisable(false);
+		
+		btnPesquisar.setDisable(false);
+	
+		//cbTipoInterferencia.setItems(olTipoInterferencia);
+
 					
 	}
 
-	
 	public void btnSalvarHab () {
 		
 		TipoInterferencia tipoInterferencia = new TipoInterferencia();
 		tipoInterferencia.setTipoInterID(tipoInterferenciaID);
 
-		BaciasHidrograficas baciaHid = new BaciasHidrograficas();
-		baciaHid.setBaciaID(baciaID);
+		//BaciasHidrograficas baciaHid = new BaciasHidrograficas();
+		//baciaHid.setBaciaID(baciaID);
 		
-		UnidadeHidrografica UniHid = new UnidadeHidrografica();
-		UniHid.setUhID(unidHidID);
+		//UnidadeHidrografica UniHid = new UnidadeHidrografica();
+		//UniHid.setUhID(unidHidID);
 		
 		TipoOutorga tipoOutorga = new TipoOutorga();
 		tipoOutorga.setTipoOutorgaID(tipoOutorgaID);
@@ -193,8 +165,8 @@ public class TabInterferenciaControlador  implements Initializable{
 		SituacaoProcesso situacaoProcesso = new  SituacaoProcesso();
 		situacaoProcesso.setSituacaoProcessoID(situacaoProcessoID);
 		
-		
-		if (tfLat.getText().isEmpty() || tfLon.getText().isEmpty()
+		// coloca if combobox nulo ou algo assim
+		if (endereco == null
 				) { // ver de aceitar somente número 
 			
 				Alerta a = new Alerta ();
@@ -227,15 +199,11 @@ public class TabInterferenciaControlador  implements Initializable{
 											sub = tabSubCon.obterSubterranea();
 											
 											sub.setInterTipoInterferenciaFK(tipoInterferencia);
-											sub.setInterBaciaFK(baciaHid);
-											sub.setInterUHFK(UniHid);
+											
 											sub.setInterTipoOutorgaFK(tipoOutorga);
 											sub.setInterTipoAtoFK(tipoAto);
 											sub.setInterSituacaoProcessoFK(situacaoProcesso);
 											
-											sub.setInterDDLatitude(Double.parseDouble(tfLat.getText()));
-											sub.setInterDDLongitude(Double.parseDouble(tfLon.getText()));
-												
 											sub.setIntAtualizacao(Timestamp.valueOf((LocalDateTime.now())));
 											
 											sub.setInterDataPublicacao(Date.valueOf(dpDataPublicacao.getValue()));
@@ -243,11 +211,11 @@ public class TabInterferenciaControlador  implements Initializable{
 											
 											sub.setInterNumeroAto(tfNumeroAto.getText());
 											
-											sub.setInterProcRenovacao(tfProcessoRenovacao.getText());
-											sub.setInterDespachoRenovacao(tfDespachoRenovacao.getText());
+											sub.setInterProcRenovacao(tfProcesoOutorga.getText());
+											sub.setInterDespachoRenovacao(tfDespachoOutorga.getText());
 											
 											sub.setInterEnderecoFK(endereco);
-												
+												/*
 												GeometryFactory geoFac = new GeometryFactory();
 												
 												Point p = geoFac.createPoint(new Coordinate(
@@ -258,6 +226,7 @@ public class TabInterferenciaControlador  implements Initializable{
 												p.setSRID(4674);
 													
 												sub.setInterGeom(p);
+												*/
 											
 											InterferenciaDao interferenciaDao = new InterferenciaDao ();
 											
@@ -294,14 +263,14 @@ public class TabInterferenciaControlador  implements Initializable{
 												sup = tabSupCon.obterSuperficial();
 												
 												sup.setInterTipoInterferenciaFK(tipoInterferencia);
-												sup.setInterBaciaFK(baciaHid);
-												sup.setInterUHFK(UniHid);
+												//sup.setInterBaciaFK(baciaHid);
+												//sup.setInterUHFK(UniHid);
 												sup.setInterTipoOutorgaFK(tipoOutorga);
 												sup.setInterTipoAtoFK(tipoAto);
 												sup.setInterSituacaoProcessoFK(situacaoProcesso);
 												
-												sup.setInterDDLatitude(Double.parseDouble(tfLat.getText()));
-												sup.setInterDDLongitude(Double.parseDouble(tfLon.getText()));
+												//sup.setInterDDLatitude(Double.parseDouble(tfLat.getText()));
+												//sup.setInterDDLongitude(Double.parseDouble(tfLon.getText()));
 													
 												sup.setIntAtualizacao(Timestamp.valueOf((LocalDateTime.now())));
 												
@@ -310,11 +279,12 @@ public class TabInterferenciaControlador  implements Initializable{
 												
 												sup.setInterNumeroAto(tfNumeroAto.getText());
 												
-												sup.setInterProcRenovacao(tfProcessoRenovacao.getText());
-												sup.setInterDespachoRenovacao(tfDespachoRenovacao.getText());
+												sup.setInterProcRenovacao(tfProcesoOutorga.getText());
+												sup.setInterDespachoRenovacao(tfDespachoOutorga.getText());
 												
 												sup.setInterEnderecoFK(endereco);
 													
+												/*
 													GeometryFactory geoFac = new GeometryFactory();
 													
 													Point p = geoFac.createPoint(new Coordinate(
@@ -325,6 +295,7 @@ public class TabInterferenciaControlador  implements Initializable{
 													p.setSRID(4674);
 														
 													sup.setInterGeom(p);
+													*/
 												
 											InterferenciaDao interferenciaDao = new InterferenciaDao ();
 											interferenciaDao.salvaInterferencia(sup);
@@ -347,24 +318,25 @@ public class TabInterferenciaControlador  implements Initializable{
 							Interferencia inter = new Interferencia();
 							
 							inter.setInterTipoInterferenciaFK(tipoInterferencia);
-							inter.setInterBaciaFK(baciaHid);
-							inter.setInterUHFK(UniHid);
+							//inter.setInterBaciaFK(baciaHid);
+							//inter.setInterUHFK(UniHid);
 							inter.setInterTipoOutorgaFK(tipoOutorga);
 							inter.setInterTipoAtoFK(tipoAto);
 							inter.setInterSituacaoProcessoFK(situacaoProcesso);
 							
-							inter.setInterDDLatitude(Double.parseDouble(tfLat.getText()));
-							inter.setInterDDLongitude(Double.parseDouble(tfLon.getText()));
+							//inter.setInterDDLatitude(Double.parseDouble(tfLat.getText()));
+							//inter.setInterDDLongitude(Double.parseDouble(tfLon.getText()));
 							
 							inter.setInterNumeroAto(tfNumeroAto.getText());
 							
-							inter.setInterProcRenovacao(tfProcessoRenovacao.getText());
-							inter.setInterDespachoRenovacao(tfDespachoRenovacao.getText());
+							inter.setInterProcRenovacao(tfProcesoOutorga.getText());
+							inter.setInterDespachoRenovacao(tfDespachoOutorga.getText());
 							
 							inter.setIntAtualizacao(Timestamp.valueOf((LocalDateTime.now())));
 						
 							inter.setInterEnderecoFK(endereco);
 							
+							/*
 							GeometryFactory geoFac = new GeometryFactory();
 							
 							Point p = geoFac.createPoint(new Coordinate(
@@ -375,6 +347,7 @@ public class TabInterferenciaControlador  implements Initializable{
 							p.setSRID(4674);
 								
 							inter.setInterGeom(p);
+							*/
 							
 							
 							InterferenciaDao interferenciaDao = new InterferenciaDao ();
@@ -427,24 +400,23 @@ public class TabInterferenciaControlador  implements Initializable{
 		if (cbTipoInterferencia.isDisable()) {
 					
 			cbTipoInterferencia.setDisable(false);
-			cbBacia.setDisable(false);
-			cbUnidHid.setDisable(false);
 			cbTipoOutorga.setDisable(false);
+			cbSubTipoOutorga.setDisable(false);
 			cbTipoAto.setDisable(false);
+			cbSituacao.setDisable(false);
 			
-			tfLat.setDisable(false);
-			tfLon.setDisable(false);
 			
-			cbSituacaoProcesso.setDisable(false);
 			dpDataPublicacao.setDisable(false);
 			dpDataVencimento.setDisable(false);
 			tfNumeroAto.setDisable(false);
-			tfProcessoRenovacao.setDisable(false);
-			tfDespachoRenovacao.setDisable(false);		
+			tfProcesoOutorga.setDisable(false);
+			tfDespachoOutorga.setDisable(false);	
+			
 		}
 		
+		// arrumar if combobox null ou tf proces etc
 		// verificar se foi preenchido o campo das coordenadas //
-		else if (tfLat.getText().isEmpty()|| tfLon.getText().isEmpty()) { // ver de aceitar somente número 
+		else if (dpDataPublicacao == null) { // ver de aceitar somente número 
 			
 			Alerta a = new Alerta ();
 			a.alertar(new Alert(Alert.AlertType.ERROR, "Coordenadas inválidas!!!", ButtonType.OK));
@@ -477,8 +449,8 @@ public class TabInterferenciaControlador  implements Initializable{
 											sub.setInterTipoAtoFK(tipoAto);
 											sub.setInterSituacaoProcessoFK(situacaoProcesso);
 										
-											sub.setInterDDLatitude(Double.parseDouble(tfLat.getText()));
-											sub.setInterDDLongitude(Double.parseDouble(tfLon.getText()));
+											//sub.setInterDDLatitude(Double.parseDouble(tfLat.getText()));
+											//sub.setInterDDLongitude(Double.parseDouble(tfLon.getText()));
 											
 											if (dpDataPublicacao.getValue() == null) {
 												sub.setInterDataPublicacao(null);;}
@@ -496,13 +468,14 @@ public class TabInterferenciaControlador  implements Initializable{
 											
 											sub.setInterNumeroAto(tfNumeroAto.getText());
 											
-											sub.setInterProcRenovacao(tfProcessoRenovacao.getText());
-											sub.setInterDespachoRenovacao(tfDespachoRenovacao.getText());
+											sub.setInterProcRenovacao(tfProcesoOutorga.getText());
+											sub.setInterDespachoRenovacao(tfDespachoOutorga.getText());
 											
 											sub.setIntAtualizacao(Timestamp.valueOf((LocalDateTime.now())));
 											
 											sub.setInterEnderecoFK(endereco);
 												
+											/*
 												GeometryFactory geoFac = new GeometryFactory();
 												
 												Point p = geoFac.createPoint(new Coordinate(
@@ -513,6 +486,7 @@ public class TabInterferenciaControlador  implements Initializable{
 												p.setSRID(4674);
 													
 												sub.setInterGeom(p);
+												*/
 											
 											InterferenciaDao interferenciaDao = new InterferenciaDao ();
 													
@@ -556,8 +530,8 @@ public class TabInterferenciaControlador  implements Initializable{
 												sup.setInterTipoAtoFK(tipoAto);
 												sup.setInterSituacaoProcessoFK(situacaoProcesso);
 												
-												sup.setInterDDLatitude(Double.parseDouble(tfLat.getText()));
-												sup.setInterDDLongitude(Double.parseDouble(tfLon.getText()));
+												//sup.setInterDDLatitude(Double.parseDouble(tfLat.getText()));
+												//sup.setInterDDLongitude(Double.parseDouble(tfLon.getText()));
 												
 												if (dpDataPublicacao.getValue() == null) {
 													sup.setInterDataPublicacao(null);;}
@@ -575,13 +549,14 @@ public class TabInterferenciaControlador  implements Initializable{
 												
 												sup.setInterNumeroAto(tfNumeroAto.getText());
 												
-												sup.setInterProcRenovacao(tfProcessoRenovacao.getText());
-												sup.setInterDespachoRenovacao(tfDespachoRenovacao.getText());
+												sup.setInterProcRenovacao(tfProcesoOutorga.getText());
+												sup.setInterDespachoRenovacao(tfDespachoOutorga.getText());
 												
 												sup.setIntAtualizacao(Timestamp.valueOf((LocalDateTime.now())));
 											
 												sup.setInterEnderecoFK(endereco);
 												
+												/*
 												GeometryFactory geoFac = new GeometryFactory();
 												
 												Point p = geoFac.createPoint(new Coordinate(
@@ -592,6 +567,7 @@ public class TabInterferenciaControlador  implements Initializable{
 												p.setSRID(4674);
 												
 												sup.setInterGeom(p);
+												*/
 											
 											InterferenciaDao interferenciaDao = new InterferenciaDao ();
 											
@@ -628,8 +604,8 @@ public class TabInterferenciaControlador  implements Initializable{
 							inter.setInterTipoAtoFK(tipoAto);
 							inter.setInterSituacaoProcessoFK(situacaoProcesso);
 					
-							inter.setInterDDLatitude(Double.parseDouble(tfLat.getText()));
-							inter.setInterDDLongitude(Double.parseDouble(tfLon.getText()));
+							//inter.setInterDDLatitude(Double.parseDouble(tfLat.getText()));
+							//inter.setInterDDLongitude(Double.parseDouble(tfLon.getText()));
 							
 							if (dpDataPublicacao.getValue() == null) {
 								inter.setInterDataPublicacao(null);;}
@@ -647,13 +623,14 @@ public class TabInterferenciaControlador  implements Initializable{
 							
 							inter.setInterNumeroAto(tfNumeroAto.getText());
 							
-							inter.setInterProcRenovacao(tfProcessoRenovacao.getText());
-							inter.setInterDespachoRenovacao(tfDespachoRenovacao.getText());
+							inter.setInterProcRenovacao(tfProcesoOutorga.getText());
+							inter.setInterDespachoRenovacao(tfDespachoOutorga.getText());
 								
 							inter.setIntAtualizacao(Timestamp.valueOf((LocalDateTime.now())));
 							
 							inter.setInterEnderecoFK(endereco);
 								
+							/*
 								GeometryFactory geoFac = new GeometryFactory();
 								
 								Point p = geoFac.createPoint(new Coordinate(
@@ -664,6 +641,7 @@ public class TabInterferenciaControlador  implements Initializable{
 								p.setSRID(4674);
 								
 								inter.setInterGeom(p);
+								*/
 								
 								/*
 								GeometryFactory geoFac = new GeometryFactory();
@@ -726,51 +704,48 @@ public class TabInterferenciaControlador  implements Initializable{
 	Pane pInterTipo = new Pane();
 	
 	@FXML Pane pInterferencia;
-	AnchorPane apPrincipal = new AnchorPane();
-	BorderPane bpPrincipal = new BorderPane();
-	ScrollPane spPrincipal = new ScrollPane();
-	Pane p1 = new Pane ();
 	
-	Pane p_lblEndereco = new Pane();
-
-	Pane pPersistencia = new Pane();
+	Pane p1 = new Pane();
+	BorderPane bp1 = new BorderPane();
+	BorderPane bp2 = new BorderPane();
+	ScrollPane sp = new ScrollPane();
+	Pane pMapa = new Pane();
+	  
+	/* array de posicoes prefWidth prefHeight Layout Y e X */
+	Double prefSizeWHeLayXY [][];
+		
+	Componentes com;
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 		
-		pInterferencia.getChildren().add(apPrincipal);
-		
-		apPrincipal.minWidthProperty().bind(pInterferencia.widthProperty());
-		apPrincipal.minHeightProperty().bind(pInterferencia.heightProperty());
-		
-		apPrincipal.getChildren().add(spPrincipal);
-		
-		spPrincipal.setHbarPolicy(ScrollBarPolicy.NEVER);
-		spPrincipal.setVbarPolicy(ScrollBarPolicy.ALWAYS);
-		
-	    AnchorPane.setLeftAnchor(spPrincipal, 0.0);
-		AnchorPane.setRightAnchor(spPrincipal, 0.0);
-		AnchorPane.setTopAnchor(spPrincipal, 0.0);
-		AnchorPane.setBottomAnchor(spPrincipal, 47.0);
-		
-		spPrincipal.setPrefSize(200, 200);
-		
-	    bpPrincipal.minWidthProperty().bind(spPrincipal.widthProperty());
-	    bpPrincipal.setPrefHeight(1200);
-
-	    spPrincipal.setContent(bpPrincipal);
-	    
-	    p1.setMaxSize(1140, 680);
-	    p1.setMinSize(1140, 680);
-	    
-		bpPrincipal.setTop(p1);
-	    BorderPane.setAlignment(p1, Pos.CENTER);
-	    
-	   
-	    tcTipoInterferencia.setPrefWidth(232);
-	    tcLogradouro.setPrefWidth(409);
-	    tcSituacao.setPrefWidth(232);
+		 bp1.minWidthProperty().bind(pInterferencia.widthProperty());
+		    bp1.maxHeightProperty().bind(pInterferencia.heightProperty().subtract(60));
+		    
+		    bp1.getStyleClass().add("border-pane");
+		    
+		    bp2.setPrefHeight(800.0);
+		    bp2.minWidthProperty().bind(pInterferencia.widthProperty());
+		    
+		    sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		    
+		    sp.setContent(bp2);
+		    
+		    bp1.setCenter(sp);
+		    
+		    pInterferencia.getChildren().add(bp1);
+		    
+		    p1.setMaxSize(1030.0, 1200.0);
+		    p1.setMinSize(1030.0, 1200.0);
+		    
+		    bp2.setTop(p1);
+		    BorderPane.setAlignment(p1, Pos.CENTER);
+		    
+		inicializarComponentes ();
+		    
+		tcLogradouro.setPrefWidth(445);
+	    tcTipoInterferencia.setPrefWidth(230);
+	    tcSituacao.setPrefWidth(230);
 		
 	    tcTipoInterferencia.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Interferencia, String>, ObservableValue<String>>() {
 		    public ObservableValue<String> call(TableColumn.CellDataFeatures<Interferencia, String> i) {
@@ -778,8 +753,6 @@ public class TabInterferenciaControlador  implements Initializable{
 		       
 		    }
 		});
-	    
-	  //  tcLogradouro.setCellValueFactory(new PropertyValueFactory<Interferencia, String>("interLogradouro")); 
 	    
 	    tcLogradouro.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Interferencia, String>, ObservableValue<String>>() {
 		    public ObservableValue<String> call(TableColumn.CellDataFeatures<Interferencia, String> i) {
@@ -795,29 +768,30 @@ public class TabInterferenciaControlador  implements Initializable{
 		    }
 		});
 	    
-	    tvLista.getColumns().addAll(tcTipoInterferencia, tcLogradouro, tcSituacao);
-	    tvLista.setItems(obsList);
+	    tvLista.getColumns().add(tcTipoInterferencia);
+	    	tvLista.getColumns().add(tcLogradouro);
+	    		tvLista.getColumns().add(tcSituacao);
+	
+	    			tvLista.setItems(obsList);
 	    
-	    tvLista.setPrefSize(900, 185);
-		tvLista.setLayoutX(120);
-		tvLista.setLayoutY(352);
+	    tvLista.setPrefSize(930, 185);
+		tvLista.setLayoutX(50);
+		tvLista.setLayoutY(335);
 	    
 		lblDataAtualizacao.setPrefSize(247, 22);
-	    lblDataAtualizacao.setLayoutX(772);
-	    lblDataAtualizacao.setLayoutY(547);
+	    lblDataAtualizacao.setLayoutX(730);
+	    lblDataAtualizacao.setLayoutY(530);
 	 
 	    obterEndereco ();
-	    obterDadosBasicos();
-	    obterPersistencia();
-	    
+	  
 	    // para trazer os dados do tipo de interferencia especifico //
 	    pInterTipo.setPrefSize(960, 410);
 	    pInterTipo.setLayoutX(90);
 	    pInterTipo.setLayoutY(580);
 	    
-		p1.getChildren().addAll(p_lblEndereco, pDadosBasicos, pPersistencia, lblDataAtualizacao, tvLista, pInterTipo);
+		p1.getChildren().addAll(lblDataAtualizacao, tvLista);
 		
-		olTipoInterferencia= FXCollections.observableArrayList(
+		olTipoInterferencia = FXCollections.observableArrayList(
 				
 				"Superficial",
 				"Subterrânea" ,
@@ -829,6 +803,7 @@ public class TabInterferenciaControlador  implements Initializable{
 				
 				);
 		
+		/*
 		olBacia = FXCollections
 				.observableArrayList(
 						
@@ -850,6 +825,8 @@ public class TabInterferenciaControlador  implements Initializable{
 						"21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41"
 						); 
 		
+		
+		*/
 		olTipoOutorga = FXCollections
 				.observableArrayList(
 						
@@ -882,7 +859,7 @@ public class TabInterferenciaControlador  implements Initializable{
 						
 						); 
 		
-		olSituacaoProcesso = FXCollections
+		olSituacao = FXCollections
 				.observableArrayList(
 						
 						"Arquivado",
@@ -896,8 +873,8 @@ public class TabInterferenciaControlador  implements Initializable{
 		); 
 		
 		cbTipoInterferencia.setItems(olTipoInterferencia);
-		cbBacia.setItems(olBacia);
-		cbUnidHid.setItems(olUniHid);
+		//cbBacia.setItems(olBacia);
+		//cbUnidHid.setItems(olUniHid);
 		cbTipoOutorga.setItems(olTipoOutorga);
 		
 		cbTipoOutorga.setCellFactory(
@@ -945,7 +922,7 @@ public class TabInterferenciaControlador  implements Initializable{
 	        });
 		
 		cbTipoAto.setItems(olTipoAto);
-		cbSituacaoProcesso.setItems(olSituacaoProcesso);
+		cbSituacao.setItems(olSituacao);
 		
 		// capturar o id do tipo de interferencia //
 		cbTipoInterferencia.getSelectionModel().selectedIndexProperty().addListener(new
@@ -973,6 +950,7 @@ public class TabInterferenciaControlador  implements Initializable{
 	    	tipoInterferenciaDescricao = (String) newValue
 	     );
 		
+		/*
 		cbBacia.getSelectionModel().selectedIndexProperty().addListener(new
 	            ChangeListener<Number>() {
 	    	public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
@@ -986,6 +964,7 @@ public class TabInterferenciaControlador  implements Initializable{
 	    		
             }
 	    });
+	    */
 		
 		cbTipoOutorga.getSelectionModel().selectedIndexProperty().addListener(new
 	            ChangeListener<Number>() {
@@ -1011,7 +990,7 @@ public class TabInterferenciaControlador  implements Initializable{
             }
 	    });
 		
-		cbSituacaoProcesso.getSelectionModel().selectedIndexProperty().addListener(new
+		cbSituacao.getSelectionModel().selectedIndexProperty().addListener(new
 	            ChangeListener<Number>() {
 	    	public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
 	    		Number value, Number new_value) {
@@ -1034,6 +1013,7 @@ public class TabInterferenciaControlador  implements Initializable{
 	    );
 	    */
 		
+		/*
 		cbUnidHid.getSelectionModel().selectedIndexProperty().addListener(new
 	            ChangeListener<Number>() {
 	    	public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
@@ -1046,6 +1026,7 @@ public class TabInterferenciaControlador  implements Initializable{
 	    		
             }
 	    });
+	    */
 		
 		modularBotoes ();
 		selecionarInterferencia();
@@ -1086,10 +1067,12 @@ public class TabInterferenciaControlador  implements Initializable{
 
 		        @Override
 		        public void handle(ActionEvent event) {
-		            btnPesquisarHab();
+		            //btnPesquisarHab();
 		        }
 		    });
 		    
+		    
+		    /*
 		    btnCapturarCoord.setOnAction(new EventHandler<ActionEvent>() {
 
 		        @Override
@@ -1097,6 +1080,7 @@ public class TabInterferenciaControlador  implements Initializable{
 		        	 btnIntMapsHab(); 
 		        }
 		    });
+		    */
 		    
 		    btnExcluir.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -1105,6 +1089,187 @@ public class TabInterferenciaControlador  implements Initializable{
 		        	btnExcluirHab();
 		        }
 		    });
+		    
+	} // FIM INITIALIZE 
+	
+	ObservableList<String> olTipoInterferencia;
+	ObservableList<String> olTipoOutorga;
+	ObservableList<String> olSituacao;
+	ObservableList<String> olTipoAto;
+
+	Pane pEndereco;
+	
+		Label lblEndereco;
+		Button btnEndereco;
+	
+		ArrayList<Node> listComponentesEndereco = new ArrayList<Node>();
+			
+	Pane pDadosInterferencia;
+
+		ComboBox<String> cbTipoInterferencia;
+		ComboBox<String> cbTipoOutorga;
+		ComboBox<String> cbSubtipoOutorga;
+		ComboBox<String> cbSubTipoOutorga;
+		ComboBox<String> cbTipoAto;
+		ComboBox<String> cbSituacao;
+		
+		ArrayList<Node> listComponentesInterferencia = new ArrayList<Node>();
+		
+		Pane pDI1;
+		DatePicker dpDataPublicacao;
+		DatePicker dpDataVencimento;
+		TextField tfNumeroAto;
+		
+		ArrayList<Node> listComponentesInterferenciaInterno1 = new ArrayList<Node>();
+		
+		Pane pDI2;
+		TextField tfProcesoOutorga;
+		TextField tfDespachoOutorga;
+			
+		ArrayList<Node> listComponentesInterferenciaInterno2 = new ArrayList<Node>();
+		
+		
+		Pane pPersistencia;
+		  	Button btnNovo;
+		  	Button btnSalvar;
+		  	Button btnEditar;
+		  	Button btnExcluir;
+		  	Button btnCancelar;
+		  	Button btnPesquisar;
+		  	
+		  	TextField tfPesquisar;
+		  							
+		  	ArrayList<Node> listComponentesPersistencia = new ArrayList<Node>();
+		  	
+		Pane pTipoInterferencia;  	
+	  								
+										
+			
+	public void inicializarComponentes () {
+		
+	   listComponentesEndereco.add(pEndereco = new Pane());
+		   listComponentesEndereco.add(new Label("ENDERECO:"));
+		   listComponentesEndereco.add(lblEndereco = new Label());
+		   listComponentesEndereco.add(btnEndereco = new Button("<<<"));
+		    
+		    prefSizeWHeLayXY = new Double [][] { 
+		    	{950.0,60.0,40.0,10.0},
+		    	{740.0,30.0,105.0,15.0},
+		    	{70.0,30.0,30.0,15.0},
+		    	{65.0,25.0,855.0,18.0},
+	    	};
+		    	
+			    com = new Componentes();
+			    com.popularTela(listComponentesEndereco, prefSizeWHeLayXY, p1);
+				    
+		listComponentesInterferencia.add(pDadosInterferencia = new Pane());		    
+			listComponentesInterferencia.add(new Label ("Tipo de Interferência:"));
+			listComponentesInterferencia.add(cbTipoInterferencia = new ComboBox<>());
+			listComponentesInterferencia.add(new Label ("Tipo de Outorga:"));
+			listComponentesInterferencia.add(cbTipoOutorga = new ComboBox<>());
+			listComponentesInterferencia.add(new Label ("Subtipo de Outorga:"));
+			listComponentesInterferencia.add(cbSubTipoOutorga = new ComboBox<>());
+			listComponentesInterferencia.add(new Label ("Tipo de Ato:"));
+			listComponentesInterferencia.add(cbTipoAto = new ComboBox<>());
+			listComponentesInterferencia.add(new Label ("Situação:"));
+			listComponentesInterferencia.add(cbSituacao = new ComboBox<>());
+		
+		
+			 prefSizeWHeLayXY = new Double [][] { 
+				 {930.0,165.0,50.0,85.0},
+				 {160.0,30.0,65.0,6.0},
+				 {160.0,30.0,65.0,36.0},
+				 {150.0,30.0,235.0,6.0},
+				 {150.0,30.0,235.0,36.0},
+				 {150.0,30.0,395.0,5.0},
+				 {150.0,30.0,395.0,37.0},
+				 {150.0,30.0,555.0,6.0},
+				 {150.0,30.0,555.0,36.0},
+				 {150.0,30.0,715.0,5.0},
+				 {150.0,30.0,715.0,35.0},
+		    	};
+			    	
+				    com = new Componentes();
+				    com.popularTela(listComponentesInterferencia, prefSizeWHeLayXY, p1);
+			    
+		
+		
+	    listComponentesInterferenciaInterno1.add(pDI1 = new Pane());	
+		    listComponentesInterferenciaInterno1.add(new Label ("Data de Publicação:"));
+		    listComponentesInterferenciaInterno1.add(dpDataPublicacao = new DatePicker());
+		    listComponentesInterferenciaInterno1.add(new Label ("Data de Vencimento:"));
+		    listComponentesInterferenciaInterno1.add(dpDataVencimento = new DatePicker());
+		    listComponentesInterferenciaInterno1.add(new Label ("Número do Ato:"));
+		    listComponentesInterferenciaInterno1.add(tfNumeroAto = new TextField());
+			
+			 prefSizeWHeLayXY = new Double [][] { 
+				 {400.0,80.0,120.0,79.0},
+				 {130.0,30.0,10.0,10.0},
+				 {130.0,30.0,10.0,40.0},
+				 {130.0,30.0,150.0,10.0},
+				 {130.0,30.0,150.0,40.0},
+				 {100.0,30.0,290.0,10.0},
+				 {100.0,30.0,290.0,40.0},
+		    	};
+			    	
+				    com = new Componentes();
+				    com.popularTela(listComponentesInterferenciaInterno1, prefSizeWHeLayXY, pDadosInterferencia);
+			
+		
+	    listComponentesInterferenciaInterno2.add(pDI1 = new Pane());	
+		    listComponentesInterferenciaInterno2.add(new Label ("Processo de Outorga:"));
+		    listComponentesInterferenciaInterno2.add(tfProcesoOutorga = new TextField());
+		    listComponentesInterferenciaInterno2.add(new Label ("Depacho de outorga:"));
+		    listComponentesInterferenciaInterno2.add(tfDespachoOutorga = new TextField());
+				
+			 prefSizeWHeLayXY = new Double [][] { 
+				 {290.0,80.0,530.0,79.0},
+				 {130.0,30.0,10.0,10.0},
+				 {130.0,30.0,10.0,40.0},
+				 {130.0,30.0,150.0,10.0},
+				 {130.0,30.0,150.0,40.0},
+		    	};
+			    	
+				    com = new Componentes();
+				    com.popularTela(listComponentesInterferenciaInterno2, prefSizeWHeLayXY, pDadosInterferencia);
+		
+		
+				    
+	    listComponentesPersistencia.add(pPersistencia = new Pane());
+		    listComponentesPersistencia.add(btnNovo = new Button("NOVO"));
+		    listComponentesPersistencia.add(btnSalvar = new Button("SALVAR"));
+		    listComponentesPersistencia.add(btnEditar = new Button("EDITAR"));
+		    listComponentesPersistencia.add(btnExcluir = new Button("EXCLUIR"));
+		    listComponentesPersistencia.add(btnCancelar = new Button("CANCELAR"));
+		    listComponentesPersistencia.add(tfPesquisar = new TextField());
+		    listComponentesPersistencia.add(btnPesquisar = new Button("PESQUISAR"));
+				    
+		    prefSizeWHeLayXY = new Double[][] { 
+		    	{930.0,60.0,50.0,260.0},
+		    	{95.0,25.0,18.0,18.0},
+		    	{95.0,25.0,123.0,18.0},
+		    	{95.0,25.0,228.0,18.0},
+		    	{95.0,25.0,333.0,18.0},
+		    	{95.0,25.0,438.0,18.0},
+		    	{265.0,25.0,543.0,18.0},
+		    	{95.0,25.0,818.0,18.0},
+		    };
+								    				
+			 com = new Componentes();
+			    com.popularTela(listComponentesPersistencia, prefSizeWHeLayXY, p1);    
+			    
+		pTipoInterferencia = new Pane();
+		
+		pTipoInterferencia.setPrefSize(1030, 640);
+		pTipoInterferencia.setLayoutX(0.0);
+		pTipoInterferencia.setLayoutY(558.0);
+		pTipoInterferencia.setStyle("-fx-background-color: red;");
+		
+		p1.getChildren().add(pTipoInterferencia);
+		
+		
+		    
+		
 	}
 	
 	/*
@@ -1124,10 +1289,10 @@ public class TabInterferenciaControlador  implements Initializable{
 	
 	public void obterEndereco () {
 		
-		p_lblEndereco.setPrefSize(900, 50);
-		p_lblEndereco.setLayoutX(120);
-		p_lblEndereco.setLayoutY(20);
-		p_lblEndereco.setStyle("-fx-background-color: #E9E9E9;");
+		//p_lblEndereco.setPrefSize(900, 50);
+		//p_lblEndereco.setLayoutX(120);
+		//p_lblEndereco.setLayoutY(20);
+		//p_lblEndereco.setStyle("-fx-background-color: #E9E9E9;");
 		
 		Label lblEnd = new Label ("Endereco: ");
 		lblEnd.setLayoutX(25);
@@ -1143,274 +1308,22 @@ public class TabInterferenciaControlador  implements Initializable{
 	    btnBuscarEnd.setLayoutX(851);
 	    btnBuscarEnd.setLayoutY(13);
 		
-		p_lblEndereco.getChildren().addAll(lblEnd, lblEndereco, btnBuscarEnd);
+		//p_lblEndereco.getChildren().addAll(lblEnd, lblEndereco, btnBuscarEnd);
 	}
 	
-		Pane pDadosBasicos = new Pane();
-		Button btnCapturarCoord = new Button();
-		
-		//-- capturar latitude e longitude --//
-		TextField tfLat = new TextField();
-		TextField tfLon = new TextField();
-		
-		ChoiceBox<String> cbTipoInterferencia  = new ChoiceBox<String>();
-		ObservableList<String> olTipoInterferencia; 
-		
-			ChoiceBox<String> cbBacia  = new ChoiceBox<String>();
-			ObservableList<String> olBacia;
-			
-				ChoiceBox<String> cbUnidHid  = new ChoiceBox<String>();
-				ObservableList<String> olUniHid; 
-				
-					ComboBox<String>  cbTipoOutorga  = new ComboBox<String>();
-					ObservableList<String> olTipoOutorga; 
-					
-						ChoiceBox<String> cbTipoAto  = new ChoiceBox<String>();
-						ObservableList<String> olTipoAto; 
-						
-							ChoiceBox<String> cbSituacaoProcesso  = new ChoiceBox<String>();
-							ObservableList<String> olSituacaoProcesso; 
-							
-							DatePicker dpDataPublicacao = new DatePicker();
-							DatePicker dpDataVencimento = new DatePicker();
-							TextField tfNumeroAto = new TextField();
-							TextField tfProcessoRenovacao = new TextField();
-							TextField tfDespachoRenovacao = new TextField();
-		
-			
-	public void obterDadosBasicos () {
-		
-		pDadosBasicos.setPrefSize(900, 205);
-		pDadosBasicos.setLayoutX(120);
-		pDadosBasicos.setLayoutY(83);
-		pDadosBasicos.setStyle("-fx-background-color: #E9E9E9;");
-		
-		Label lblInter = new Label ("Tipo de Interferência: ");
-		lblInter.setLayoutX(15);
-		lblInter.setLayoutY(6);
-		
-			cbTipoInterferencia.setPrefSize(215	, 25);
-			cbTipoInterferencia.setLayoutX(14);
-			cbTipoInterferencia.setLayoutY(32);
 
-		Label lblBacia = new Label ("Bacia: ");
-		lblBacia.setLayoutX(241);
-		lblBacia.setLayoutY(6);
-		
-			cbBacia.setPrefSize(160	, 25);
-			cbBacia.setLayoutX(240);
-			cbBacia.setLayoutY(32);
-		
-		Label lblUH = new Label ("UH: ");
-		lblUH.setLayoutX(411);
-		lblUH.setLayoutY(6);
-		
-			cbUnidHid.setPrefSize(55, 25);
-			cbUnidHid.setLayoutX(411);
-			cbUnidHid.setLayoutY(32);
-			
-				Label lblTipoOutorga = new Label ("Tipo de Outorga: ");
-				lblTipoOutorga.setLayoutX(478);
-				lblTipoOutorga.setLayoutY(6);
-				
-					cbTipoOutorga.setPrefSize(238, 25);
-					cbTipoOutorga.setLayoutX(477);
-					cbTipoOutorga.setLayoutY(32);
-					
-						Label lblTipoAto = new Label ("Tipo de Ato: ");
-						lblTipoAto.setLayoutX(726);
-						lblTipoAto.setLayoutY(6);
-						
-							cbTipoAto.setPrefSize(149, 25);
-							cbTipoAto.setLayoutX(725);
-							cbTipoAto.setLayoutY(32);
-		
-		Label lblLat = new Label ("Latitude (Y): ");
-		lblLat.setLayoutX(219);
-		lblLat.setLayoutY(86);
-		
-			tfLat.setPrefSize(140, 25);
-			tfLat.setPromptText("-15.7754084");
-			tfLat.setLayoutX(296);
-			tfLat.setLayoutY(82);
-		
-		Label lblLon = new Label ("Longitude (X): ");
-		lblLon.setLayoutX(447);
-		lblLon.setLayoutY(86);
-			
-			tfLon.setPrefSize(140, 25);
-			tfLon.setPromptText("-47.9411395");
-			tfLon.setLayoutX(535);
-			tfLon.setLayoutY(82);
-			
-			btnCapturarCoord.setPrefSize(25, 25);	
-			btnCapturarCoord.setLayoutX(686);
-			btnCapturarCoord.setLayoutY(82);
-			
-				Label lblRenovacao = new Label ("* no caso de renovação de outorga. "); // EBEBEB
-				lblRenovacao.setStyle("-fx-background-color: EBEBEB;-fx-font-size: 7.5pt ;");
-				lblRenovacao.setLayoutX(589);
-				lblRenovacao.setLayoutY(126);
-			
-			Label lblSituacaoProcesso = new Label ("Situação: ");
-			lblSituacaoProcesso.setLayoutX(51);
-			lblSituacaoProcesso.setLayoutY(143);
-			
-				cbSituacaoProcesso.setPrefSize(168, 25);
-				cbSituacaoProcesso.setLayoutX(51);
-				cbSituacaoProcesso.setLayoutY(170);
-				
-				Label lblDataPublicacao = new Label ("Data de Publicação: ");
-				lblDataPublicacao.setLayoutX(229);
-				lblDataPublicacao.setLayoutY(143);
-				
-					dpDataPublicacao.setPrefSize(120, 25);
-					dpDataPublicacao.setLayoutX(229);
-					dpDataPublicacao.setLayoutY(170);
-			
-						Label lblDataVencimento = new Label ("Data de Vencimento: ");
-						lblDataVencimento.setLayoutX(358);
-						lblDataVencimento.setLayoutY(143);
-						
-							dpDataVencimento.setPrefSize(120, 25);
-							dpDataVencimento.setLayoutX(358);
-							dpDataVencimento.setLayoutY(170);
-							
-								Label lblNumeroAto = new Label ("Número do Ato: ");
-								lblNumeroAto.setLayoutX(489);
-								lblNumeroAto.setLayoutY(143);
-								
-									tfNumeroAto.setPrefSize(89, 25);
-									tfNumeroAto.setLayoutX(489);
-									tfNumeroAto.setLayoutY(170);
-									
-									Label lblProcOutorga = new Label ("Processo de Outorga: "); // EBEBEB
-									lblProcOutorga.setLayoutX(589);
-									lblProcOutorga.setLayoutY(143);
-									
-										tfProcessoRenovacao.setPrefSize(125, 25);
-										tfProcessoRenovacao.setLayoutX(589);
-										tfProcessoRenovacao.setLayoutY(170);
-										
-										Label lblDespachoRenovacao = new Label ("Depacho de outorga: "); // EBEBEB
-										lblDespachoRenovacao.setLayoutX(725);
-										lblDespachoRenovacao.setLayoutY(143);
-										
-											tfDespachoRenovacao.setPrefSize(125, 25);
-											tfDespachoRenovacao.setLayoutX(725);
-											tfDespachoRenovacao.setLayoutY(170);
-									
-									
-		
-		pDadosBasicos.getChildren().addAll(
-				
-				lblInter, cbTipoInterferencia, lblBacia, cbBacia, lblUH, cbUnidHid, 
-				lblTipoOutorga, cbTipoOutorga, lblTipoAto, cbTipoAto,
-				lblLat, tfLat, lblLon, tfLon, btnCapturarCoord,
-				lblSituacaoProcesso, cbSituacaoProcesso,  lblDataPublicacao, dpDataPublicacao, 
-				lblDataVencimento, dpDataVencimento, lblNumeroAto, tfNumeroAto,
-				lblRenovacao, lblProcOutorga, tfProcessoRenovacao, lblDespachoRenovacao, tfDespachoRenovacao
-				);
-	}
-	
-    public void obterPersistencia () {
-    	
-   	    pPersistencia.setPrefSize(900, 50);
-   	    pPersistencia.setLayoutX(110);
-   	    pPersistencia.setLayoutY(291);
-   
-		btnNovo.setPrefSize(76, 25);
-		btnNovo.setLayoutX(42);
-		btnNovo.setLayoutY(12);
-	
-	    btnSalvar.setPrefSize(76, 25);
-	    btnSalvar.setLayoutX(129);
-	    btnSalvar.setLayoutY(12);
-	
-	    btnEditar.setPrefSize(76, 25);
-	    btnEditar.setLayoutX(216);
-	    btnEditar.setLayoutY(12);
-	
-	    btnExcluir.setPrefSize(76, 25);
-	    btnExcluir.setLayoutX(303);
-	    btnExcluir.setLayoutY(12);
-	    
-	    btnCancelar.setPrefSize(76, 25);
-	    btnCancelar.setLayoutX(390);
-	    btnCancelar.setLayoutY(12);
-	    
-	    btnPesquisar.setPrefSize(76, 25);
-	    btnPesquisar.setLayoutX(783);
-	    btnPesquisar.setLayoutY(12);
-	    
-	    tfPesquisar.setPrefSize(295, 25);
-	    tfPesquisar.setLayoutX(477);
-	    tfPesquisar.setLayoutY(12);
-	    
-	    pPersistencia.getChildren().addAll( 
-	    		btnNovo, btnSalvar, btnEditar, btnExcluir,
-	    		btnCancelar, tfPesquisar, btnPesquisar
-	    		
-	    		);
-	    
-	    
-    }
-	
-	
 	public void btnCancelarHab () {
 		
 			modularBotoes ();
 			
 			cbTipoInterferencia.getSelectionModel().clearSelection();
-			cbBacia.setValue(null);
-
-			tfLat.setText("");
-			tfLon.setText("");
 			
 			pInterTipo.getChildren().clear();
 		
 		
 	}
 	
-	//-- String de pesquisa de enderecos --//
-		String strPesquisa = "";
-		
-	public void btnPesquisarHab () {
-		
-		strPesquisa = tfPesquisar.getText();
-		
-		listarInterferencias(strPesquisa);
-		
-		modularBotoes ();
-		
-		cbTipoInterferencia.getSelectionModel().clearSelection();
-		cbBacia.setValue(null);
-
-		tfLat.setText("");
-		tfLon.setText("");
-		
-	}
 	
-	public void btnCapturarCroqui (ActionEvent event) {
-		
-		
-	}
-	
-	public void btnLatLngHab (ActionEvent event) {
-			
-	}
-	
-	public void setLatLng (double lat, double lng) {
-		
-		
-	}
-	
-	public void btnIntMapsHab () {
-		
-		tfLat.setText( ControladorPrincipal.capturarGoogleMaps().getLat() );
-		tfLon.setText( ControladorPrincipal.capturarGoogleMaps().getLon());
-		
-	}
 	
 	public void abrirTabs (int ti) throws IOException {
 		
@@ -1452,7 +1365,7 @@ public class TabInterferenciaControlador  implements Initializable{
 	}
 	
 	// --- método para listar interferencias --- //
-	 	public void listarInterferencias (String strPesquisa) {
+	public void listarInterferencias (String strPesquisa) {
 	 	
 		 	// --- conexao - listar enderecos --- //
 			InterferenciaDao interferenciaDao = new InterferenciaDao();
@@ -1497,7 +1410,7 @@ public class TabInterferenciaControlador  implements Initializable{
 	 }
 	 	
 	 	// metodo selecionar interferencia -- //
-	 	public void selecionarInterferencia () {
+	public void selecionarInterferencia () {
 		
 	 		tvLista.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Object>() {
 				
@@ -1517,15 +1430,11 @@ public class TabInterferenciaControlador  implements Initializable{
 				} else {
 					
 					cbTipoInterferencia.setValue(inter.getInterTipoInterferenciaFK().getTipoInterDescricao());
-					cbBacia.setValue(inter.getInterBaciaFK().getBaciaNome());
-					cbUnidHid.setValue(String.valueOf(inter.getInterUHFK().getUhID()));
-					cbTipoOutorga.setValue(inter.getInterTipoOutorgaFK().getTipoOutorgaDescricao());
-					cbTipoAto.setValue(inter.getInterTipoAtoFK().getTipoAtoDescricao());
-					cbSituacaoProcesso.setValue(inter.getInterSituacaoProcessoFK().getSituacaoProcessoDescricao());
 					
-					// latitude e longitude
-					tfLat.setText(inter.getInterDDLatitude().toString());
-					tfLon.setText(inter.getInterDDLongitude().toString());
+					cbTipoOutorga.setValue(inter.getInterTipoOutorgaFK().getTipoOutorgaDescricao());
+					//cbSubTipoOutorga.setValue(inter.getInterTipoOutorgaFK().getTipoOutorgaDescricao());
+					cbTipoAto.setValue(inter.getInterTipoAtoFK().getTipoAtoDescricao());
+					cbSituacao.setValue(inter.getInterSituacaoProcessoFK().getSituacaoProcessoDescricao());
 					
 					Date dPub = inter.getInterDataPublicacao();
 					dpDataPublicacao.setValue(dPub.toLocalDate());
@@ -1534,8 +1443,8 @@ public class TabInterferenciaControlador  implements Initializable{
 					dpDataVencimento.setValue(dVen.toLocalDate());
 					
 					tfNumeroAto.setText(inter.getInterNumeroAto());
-					tfProcessoRenovacao.setText(inter.getInterProcRenovacao());
-					tfDespachoRenovacao.setText(inter.getInterDespachoRenovacao());
+					tfProcesoOutorga.setText(inter.getInterProcRenovacao());
+					tfDespachoOutorga.setText(inter.getInterDespachoRenovacao());
 					
 					// mostrar data de atualizacao //
 					FormatoData d = new FormatoData();
@@ -1629,30 +1538,27 @@ public class TabInterferenciaControlador  implements Initializable{
 			});
 		}
 	 	
-	 	public void modularBotoes () {
+	public void modularBotoes () {
 		
-	 		cbTipoInterferencia.setDisable(true);
-			cbBacia.setDisable(true);
-			cbUnidHid.setDisable(true);
-			cbTipoOutorga.setDisable(true);
-			cbTipoAto.setDisable(true);
-			cbSituacaoProcesso.setDisable(true);
-			
-			dpDataPublicacao.setDisable(true);
-			dpDataVencimento.setDisable(true);
-			tfNumeroAto.setDisable(true);
-			tfProcessoRenovacao.setDisable(true);
-			tfDespachoRenovacao.setDisable(true);
-			
-			tfLat.setDisable(true);
-			tfLon.setDisable(true);
-			
-			btnSalvar.setDisable(true);
-			btnEditar.setDisable(true);
-			btnExcluir.setDisable(true);
-			
-			btnNovo.setDisable(false);
-		}
+ 		cbTipoInterferencia.setDisable(true);
+		
+		cbTipoOutorga.setDisable(true);
+		cbSubTipoOutorga.setDisable(true);
+		cbTipoAto.setDisable(true);
+		cbSituacao.setDisable(true);
+		
+		dpDataPublicacao.setDisable(true);
+		dpDataVencimento.setDisable(true);
+		tfNumeroAto.setDisable(true);
+		tfProcesoOutorga.setDisable(true);
+		tfDespachoOutorga.setDisable(true);
+		
+		btnSalvar.setDisable(true);
+		btnEditar.setDisable(true);
+		btnExcluir.setDisable(true);
+		
+		btnNovo.setDisable(false);
+	}
 	
 
 }

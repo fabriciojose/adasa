@@ -366,6 +366,18 @@ public class TelaDemandaControlador implements Initializable {
 			        
 			        dao.salvarDemanda(dem);
 			        
+			        
+			        /* passar a demanda para a tabEndereco e preencher a lblDemanda */ 
+				    if (intControlador == 0) {
+				    	TabEnderecoControlador.controladorAtendimento.setDemanda(dem);
+			
+				 	}
+				     
+				    if (intControlador == 1) {
+				 			TabEnderecoControlador.controladorFiscalizacao.setDemanda(dem);
+				    }
+				    
+			        
 			        obsList.add(dem);
 			        
 			        modularBotoesDemanda();
@@ -412,13 +424,11 @@ public class TelaDemandaControlador implements Initializable {
 				    {
 				      Demanda dem = (Demanda)tvLista.getSelectionModel().getSelectedItem();
 				      
-				      /*
-				      demanda.setDemTipo(cbTipoDemanda.getValue());
-				      demanda.setDemNumero(tfNumeroDemanda.getText());
-				      demanda.setDemNumeroSEI(tfDemandaSei.getText());
-				      demanda.setDemProcesso(tfProcessoSei.getText());
-				      */
-				        
+				      dem.setDemTipo(cbTipoDemanda.getValue());
+				      dem.setDemNumero(tfNumeroDemanda.getText());
+				      dem.setDemNumeroSEI(tfDemandaSei.getText());
+				      dem.setDemProcesso(tfProcessoSei.getText());
+				     
 				      if (dpDataDistribuicao.getValue() == null) {
 				        dem.setDemDistribuicao(null);
 				      } else {
@@ -434,12 +444,18 @@ public class TelaDemandaControlador implements Initializable {
 				      
 				      DemandaDao dDao = new DemandaDao();
 				      
+				      /* teste salvamento demanda com endereco */ 
+				        if (!(endereco.getEndLogradouro() == null)) {
+				        	
+					        dem.setDemEnderecoFK(endereco);
+				        }
+				      
 				      dDao.mergeDemanda(dem);
 				      
 				      obsList.remove(dem);
 				      obsList.add(dem);
 				     
-
+				    /* passar a demanda para a tabEndereco e preencher a lblDemanda */ 
 				    if (intControlador == 0) {
 				    	TabEnderecoControlador.controladorAtendimento.setDemanda(dem);
 			

@@ -32,8 +32,6 @@ public class Principal extends Application{
 		
         stage.setScene(scene);
         
-        
-        
         stage.setTitle("Welcome to JavaFX!"); 
         
         // para o programacao abrir de acordo com a dimensao da tela do computador

@@ -238,7 +238,7 @@ public class TelaProcessoControlador implements Initializable {
 	    
 	    acionarBotoes ();
 	    
-	    selecionarDemanda ();
+	    selecionarProcesso ();
 	
 	} // FIM INITIALIZE
 
@@ -419,7 +419,9 @@ public class TelaProcessoControlador implements Initializable {
 		      for (Demanda d : pro.getDemandas()) {
 		        System.out.println(" ++ antes " + d.getDemNumeroSEI());
 		      }
+		      
 		      Iterator<Demanda> iteratorDemanda;
+		      
 		      if (demanda.getDemID() != 0)
 		      {
 		        Demanda dem = new Demanda();
@@ -427,7 +429,8 @@ public class TelaProcessoControlador implements Initializable {
 		        dem.setDemProcessoFK(pro);
 		        
 		        Set<Demanda> setDemandas = new HashSet<Demanda>();
-		        setDemandas = pro.getDemandas();
+		        	setDemandas = pro.getDemandas();
+		        	
 		        for (iteratorDemanda = setDemandas.iterator(); iteratorDemanda.hasNext();)
 		        {
 		          Demanda d = (Demanda)iteratorDemanda.next();
@@ -435,6 +438,7 @@ public class TelaProcessoControlador implements Initializable {
 		            iteratorDemanda.remove();
 		          }
 		        }
+		        
 		        setDemandas.add(dem);
 		        for (Demanda d : setDemandas) {
 		          System.out.println("                 -----------------------                    depois " + d.getDemNumeroSEI());
@@ -475,7 +479,7 @@ public class TelaProcessoControlador implements Initializable {
 	      modularBotoesProcesso();
 	      
 	      Alerta a = new Alerta();
-	      a.alertar(new Alert(Alert.AlertType.INFORMATION, "Cadastro exclu�do com sucesso!!!", new ButtonType[] { ButtonType.OK }));
+	      a.alertar(new Alert(Alert.AlertType.INFORMATION, "Cadastro excluÍdo com sucesso!!!", new ButtonType[] { ButtonType.OK }));
 	      
 	 }
 	  catch (Exception e)	{
@@ -536,7 +540,7 @@ public class TelaProcessoControlador implements Initializable {
  }
 	
 //-- selecionar demandas -- //
-  public void selecionarDemanda () {
+  public void selecionarProcesso () {
 		
 	// TableView - selecionar demandas ao clicar //
 	  tvProcessos.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Object>() {

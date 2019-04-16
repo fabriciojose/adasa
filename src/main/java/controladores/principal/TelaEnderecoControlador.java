@@ -4,8 +4,11 @@ import java.net.URL;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import dao.EnderecoDao;
 import entidades.Demanda;
@@ -495,6 +498,8 @@ public class TelaEnderecoControlador implements Initializable {
 			
 	}
 	
+	int contador = 0;
+	
 	public void editarEndereco (Object objetodeEdicao) {
 		
 		if (tfLogradouro.isDisable()) {
@@ -547,20 +552,50 @@ public class TelaEnderecoControlador implements Initializable {
 					
 					System.out.println(objetoDeEdicao.getClass().getName());
 					
+					System.out.println("contador " + contador++);
+					
 					if (objetoDeEdicao.getClass().getName().equals("entidades.Demanda")) {
 						
 						dem = (Demanda) objetoDeEdicao;
 						dem.setDemEnderecoFK(end);
 						
+						for(Demanda d : end.getDemandas()) {
+							System.out.println("antes --- demandas " + d.getDemID());
+						}
+						
+						
+						/* retirar na lista de demandas do endereco uma demanda repetida */
+						Iterator<Demanda> iDemanda;
+						
+						Set<Demanda> hashsetDemandas = new HashSet<Demanda>();
+							hashsetDemandas = end.getDemandas();
+						
+						for (iDemanda = hashsetDemandas.iterator(); iDemanda.hasNext();)
+				        {
+				          Demanda d = (Demanda)iDemanda.next();
+				          if (d.getDemID() == dem.getDemID()) {
+				        	  iDemanda.remove();
+				          }
+				        }
+						
+						
+						/*
 						// para não dar repeticao de objetos //
 						for (int i = 0 ; i < end.getDemandas().size(); i++) {
 							if (end.getDemandas().get(i).getDemID() == (dem.getDemID())) {
 								end.getDemandas().remove(end.getDemandas().get(i));
 							}
 						}
+						*/
 						
 						// adicionar a demanda editada //
 						end.getDemandas().add(dem);
+						
+
+						for(Demanda d : end.getDemandas()) {
+							System.out.println("depois -------------------- demandas " + d.getDemID());
+						}
+						
 						
 						
 						System.out.println("editar demanda e endereco");

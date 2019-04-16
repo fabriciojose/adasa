@@ -5,8 +5,11 @@ import java.net.URL;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -67,11 +70,24 @@ public class TabEnderecoControlador implements Initializable {
 		
 		this.demanda = demanda;
 		// preencher o label com a demanda selecionada //
-		lblDemanda.setText(
-				demanda.getDemTipo() 
-				+ ", Sei n° " + demanda.getDemNumeroSEI()
-				+ ", Processo n° " + demanda.getDemProcesso()
-				);
+	
+		
+		if(!(demanda == null)) {
+			lblDemanda.setText(
+					demanda.getDemTipo() 
+					+ ", Sei n° " + demanda.getDemNumeroSEI()
+					+ ", Processo n° " + demanda.getDemProcesso()
+					);
+			
+			lblDemanda.setStyle("-fx-text-fill: #4A4A4A;"); 
+		} else {
+			
+			lblDemanda.setText(
+					"Não há demanda relacionada a este endereco! "
+					);
+			lblDemanda.setStyle("-fx-text-fill: #FF0000;");
+		}
+		
 	}
 	
 	Pane pMap;
@@ -294,6 +310,7 @@ public class TabEnderecoControlador implements Initializable {
 	} else {
 		
 		if (tfLatitude.getText().isEmpty()|| tfLongitude.getText().isEmpty() ) {
+			
 			Alerta a = new Alerta ();
 			a.alertar(new Alert(Alert.AlertType.ERROR, "Coordenadas inválidas!!!", ButtonType.OK));
 			// colocar para não aceitar texto e somente número
@@ -341,12 +358,19 @@ public class TabEnderecoControlador implements Initializable {
 				dem = demanda;
 				dem.setDemEnderecoFK(end);
 				
-				// para não dar repeticao de objetos //
-				for (int i = 0 ; i < end.getDemandas().size(); i++) {
-					if (end.getDemandas().get(i).getDemID() == (dem.getDemID())) {
-						end.getDemandas().remove(end.getDemandas().get(i));
-					}
-				}
+				/* retirar na lista de demandas do endereco uma demanda repetida */
+				Iterator<Demanda> iDemanda;
+				
+				Set<Demanda> hashsetDemandas = new HashSet<Demanda>();
+				hashsetDemandas = end.getDemandas();
+				
+				for (iDemanda = hashsetDemandas.iterator(); iDemanda.hasNext();)
+		        {
+		          Demanda d = (Demanda)iDemanda.next();
+		          if (d.getDemID() == dem.getDemID()) {
+		        	  iDemanda.remove();
+		          }
+		        }
 				
 				// adicionar a demanda editada //
 				end.getDemandas().add(dem);
@@ -944,42 +968,34 @@ public class TabEnderecoControlador implements Initializable {
 					btnExcluir.setDisable(false);
 					btnCancelar.setDisable(false);
 					
-					
-					/*
-					if (end.getDemandas().size() != 0) { // colocar regra de só pode enditar escolhendo uma demanda...
-						demanda = end.getDemandas().get(0);
-					}
-					*/
-					
-					
 					// mostrar data de atualizacao //
 					FormatoData d = new FormatoData();
 					try {lblDataAtualizacao.setText("Data de Atualização: " + d.formatarData(end.getEndAtualizacao()));
 							lblDataAtualizacao.setTextFill(Color.BLACK);
 					}catch (Exception e) {lblDataAtualizacao.setText("Não há data de atualização!");
 							lblDataAtualizacao.setTextFill(Color.RED);}
-						
-//aquii 	ao excluir um endereco  Index: 0, Size: 0	
 					
-					try {
-					// setar a demanda 0 do endereco selecionado // 
-						setDemanda (end.getDemandas().get(0)); 
-					
-					} catch (IndexOutOfBoundsException ex) {
+					/* caso não haja demanda relacionada ao endereco, setar demanda vazia */
+					if (end.getDemandas().size() == 0) {
+						setDemanda (null);
 						
-						Alerta a = new Alerta ();
-						a.alertar(new Alert(Alert.AlertType.ERROR, "Não há demandas cadastradas para este endereço!!!", ButtonType.OK));
+						System.out.println("lista de demandas size " + end.getDemandas().size());
 					}
 					
+					/* havendo demandas, setar uma delas no lblDemanda */
+					for (Demanda dem : end.getDemandas()) {
+						
+						setDemanda (dem); 
+						
+					}
+						
 					// setar na interferencia (tabinterferencia) este endereco selecinado //
-					tabIntCon.setEndereco(end);
-					tabUsCon.setEndereco(end);
-					tabVisCon.setEndereco(end);
+					//tabIntCon.setEndereco(end);
+					//tabUsCon.setEndereco(end);
+					//tabVisCon.setEndereco(end);
 					
-					// Abrir o mapa com o endereco selecionado e interferencias
-					
-						// listar as interferencias
-						List<Interferencia> iList = end.getInterferencias();
+					// listar as interferencias
+					List<Interferencia> iList = end.getInterferencias();
 						
 							// preparar strings para transmitir para o javascript pelo metodo 'setEnderecoInterferencias()'
 							String strInterferencias = "";
@@ -988,22 +1004,18 @@ public class TabEnderecoControlador implements Initializable {
 							/* string para os detalhes das  interferencias como tipo 
 							de interferencia, bacia hid, uh e situação do processo */
 							String strDetalhes = "";
-					
-					for(Interferencia i : iList) {
-						
-						strInterferencias += "|" + i.getInterDDLatitude() + "," + i.getInterDDLongitude() ;
-						
-						strDetalhes += "|" + i.getInterTipoInterferenciaFK().getTipoInterDescricao() 
-										+ "," + i.getInterBaciaFK().getBaciaNome()
-										+ "," + i.getInterUHFK().getUhID()
-										+ "," +  i.getInterSituacaoProcessoFK().getSituacaoProcessoDescricao();
-						
-						
-						System.out.println("strInterferencias: " + strInterferencias);
-						
-						System.out.println("str detalhes: " + strDetalhes);
-						
-					} // fim loop for
+							
+							/* concatenacao de strings para levar dados das interferencias para o mapa */
+							for(Interferencia i : iList) {
+								
+								strInterferencias += "|" + i.getInterDDLatitude() + "," + i.getInterDDLongitude() ;
+								
+								strDetalhes += "|" + i.getInterTipoInterferenciaFK().getTipoInterDescricao() 
+												+ "," + i.getInterBaciaFK().getBaciaNome()
+												+ "," + i.getInterUHFK().getUhID()
+												+ "," +  i.getInterSituacaoProcessoFK().getSituacaoProcessoDescricao();
+								
+							} // fim loop for
 					
 					/* chamar os metodo necessarios, primeiro as coordenadas e detalhes, 
 						zoom do mapa e deois centralizar o mapa de acordo com o endereco

@@ -3,6 +3,7 @@ package entidades;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -63,7 +64,7 @@ public class Endereco implements Serializable{
 	@OneToMany (mappedBy = "demEnderecoFK", cascade = CascadeType.MERGE,
 			 fetch = FetchType.EAGER, targetEntity = Demanda.class)
 	@Fetch(FetchMode.SUBSELECT) 
-	private List<Demanda> demandas = new ArrayList<Demanda>();
+	private Set<Demanda> demandas;
 	
 	
 		//-- Lista de interferencias vinculadas --//
@@ -174,13 +175,11 @@ public class Endereco implements Serializable{
 		this.endDDLongitude = endLongitude;
 	}
 
-
-	public List<Demanda> getDemandas() {
+	public Set<Demanda> getDemandas() {
 		return demandas;
 	}
 
-
-	public void setDemandas(List<Demanda> demandas) {
+	public void setDemandas(Set<Demanda> demandas) {
 		this.demandas = demandas;
 	}
 

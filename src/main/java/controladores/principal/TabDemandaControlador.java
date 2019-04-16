@@ -846,7 +846,7 @@ public class TabDemandaControlador implements Initializable {
 					
 				
 					// listar as interferencias
-					List<Demanda> iList = dem.getDemEnderecoFK().getDemandas();
+					Set<Demanda> setDem = dem.getDemEnderecoFK().getDemandas();
 					Endereco end = dem.getDemEnderecoFK();
 						
 					// preparar strings para transmitir para o javascript pelo metodo 'setEnderecoInterferencias()'
@@ -855,7 +855,7 @@ public class TabDemandaControlador implements Initializable {
 					
 							String strEndereco = end.getEndDDLatitude() + "," + end.getEndDDLongitude();
 							
-						for(Demanda d : iList) {
+						for(Demanda d : setDem) {
 							
 							strInfoDemandas += "|" + d.getDemTipo() + "," + d.getDemNumeroSEI() + "," + d.getDemProcesso();
 							

@@ -64,7 +64,7 @@ import principal.MalaDireta;
 public class TabUsuarioControlador implements Initializable {
 	
 	TabAtoControlador tabAtoControlador = new TabAtoControlador ();
-	EditarEnderecoControlador enditarEnderecoControlador = new EditarEnderecoControlador();
+	//EditarEnderecoControlador enditarEnderecoControlador = new EditarEnderecoControlador();
 	
 	Usuario usuario = new Usuario();
 	Interferencia interferencia = new Interferencia();
@@ -1180,7 +1180,7 @@ public class TabUsuarioControlador implements Initializable {
 					
 					usuario = us;
 					
-					enditarEnderecoControlador.setObjetoDeEdicao(us);
+					//enditarEnderecoControlador.setObjetoDeEdicao(us);
 				
 					obsListEnderecoEmpreendimento.clear();
 					
@@ -1267,15 +1267,15 @@ public class TabUsuarioControlador implements Initializable {
 	//}
 	
 	
-	EditarEnderecoControlador editarEnderecoControlador;
+	//EditarEnderecoControlador editarEnderecoControlador;
 	
 	public void abrirPaneEditarEndereco () {
 		
 		Pane pEndereco = new Pane();
-		editarEnderecoControlador = new EditarEnderecoControlador();
+		//editarEnderecoControlador = new EditarEnderecoControlador();
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/principal/EditarEndereco.fxml"));
 		loader.setRoot(pEndereco);
-		loader.setController(editarEnderecoControlador);
+		//loader.setController(editarEnderecoControlador);
 		
 		try {
 			loader.load();

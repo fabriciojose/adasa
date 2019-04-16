@@ -197,7 +197,6 @@ TabAtoControlador tabAtoControlador = new TabAtoControlador ();
 		
 	}
 	
-	
 	public void btnEditarHab () {
 		
 		if (tfNumVistoria.isDisable()) {
@@ -327,7 +326,6 @@ TabAtoControlador tabAtoControlador = new TabAtoControlador ();
 			
 }
 
-	
 	public void btnCancelarHab () {
 		
 		modularBotoes();
@@ -335,7 +333,6 @@ TabAtoControlador tabAtoControlador = new TabAtoControlador ();
 		LimparCheckBox();
 		
 	}
-	
 	
 	public void btnPesquisarHab () {
 		

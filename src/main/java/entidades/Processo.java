@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Set;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -22,7 +23,6 @@ public class Processo
   private static final long serialVersionUID = 8270253030770436947L;
   @Id
   @GeneratedValue(strategy=GenerationType.IDENTITY)
-  
   @Column(name="pro_ID")
   private int proID;
   
@@ -40,7 +40,7 @@ public class Processo
   @Column(name="pro_Atualizacao")
   private Timestamp proAtualizacao;
   
-  @OneToMany(mappedBy="demProcessoFK", cascade={javax.persistence.CascadeType.MERGE}, fetch=FetchType.EAGER, targetEntity=Demanda.class)
+  @OneToMany(mappedBy="demProcessoFK", cascade= CascadeType.MERGE, fetch=FetchType.EAGER, targetEntity=Demanda.class)
   @Fetch(FetchMode.SUBSELECT)
   private Set<Demanda> demandas;
   

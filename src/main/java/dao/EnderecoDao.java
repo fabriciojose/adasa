@@ -53,7 +53,9 @@ public class EnderecoDao {
 		
 		
 		Criteria crit = s.createCriteria(Endereco.class, "e");
-		//crit.createAlias("e.demandas", "d", JoinType.LEFT_OUTER_JOIN);
+			crit.createAlias("e.demandas", "demandas", JoinType.LEFT_OUTER_JOIN);
+			crit.createAlias("demandas.demProcessoFK", "processos", JoinType.LEFT_OUTER_JOIN);
+			
 		crit.createAlias("e.endRAFK", "ra", JoinType.LEFT_OUTER_JOIN);
 		crit.createAlias("e.interferencias", "i", JoinType.LEFT_OUTER_JOIN);
 		

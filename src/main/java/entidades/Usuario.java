@@ -22,10 +22,8 @@ import org.hibernate.annotations.FetchMode;
 @Entity
 public class Usuario implements Serializable {
 	
-	
 	private static final long serialVersionUID = -7277735746662728331L;
 	
-
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column (name = "us_ID")
 	private int usID;
