@@ -55,6 +55,10 @@ public class Interferencia implements Serializable {
 							@JoinColumn (name = "inter_Tipo_Outorga_FK")
 							private TipoOutorga interTipoOutorgaFK;
 							
+								@ManyToOne (fetch = FetchType.LAZY) 
+								@JoinColumn (name = "inter_Subtipo_Outorga_FK")
+								private SubtipoOutorga interSubtipoOutorgaFK;
+							
 	
 	@Column (name="inter_DD_Latitude")
 	private Double interDDLatitude;
@@ -228,6 +232,14 @@ public class Interferencia implements Serializable {
 
 	public void setInterDespachoRenovacao(String interDespachoRenovacao) {
 		this.interDespachoRenovacao = interDespachoRenovacao;
+	}
+
+	public SubtipoOutorga getInterSubtipoOutorgaFK() {
+		return interSubtipoOutorgaFK;
+	}
+
+	public void setInterSubtipoOutorgaFK(SubtipoOutorga interSubtipoOutorgaFK) {
+		this.interSubtipoOutorgaFK = interSubtipoOutorgaFK;
 	}
 
 }

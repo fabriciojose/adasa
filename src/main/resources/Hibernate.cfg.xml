@@ -65,7 +65,7 @@
 		<mapping class="entidades.TipoPoco"/>
 		<mapping class="entidades.TipoAto"/>
 		<mapping class="entidades.TipoOutorga"/>
-		 
+		<mapping class="entidades.SubtipoOutorga"/> 
 	
     </session-factory>
     

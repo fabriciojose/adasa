@@ -597,27 +597,27 @@ public class TabEnderecoControlador implements Initializable {
 								    	listNodeDadosEndereco.add(btnLatLon = new Button());
 	    
 	
-	    prefSizeWHeLayXY = new Double [][] { 
-	    	{930.0,130.0,25.0,85.0},
-	    	{425.0,30.0,15.0,5.0},
-	    	{420.0,30.0,15.0,35.0},
-	    	{165.0,30.0,445.0,5.0},
-	    	{165.0,30.0,445.0,35.0},
-	    	{100.0,30.0,620.0,5.0},
-	    	{100.0,30.0,620.0,35.0},
-	    	{100.0,30.0,730.0,5.0},
-	    	{100.0,30.0,730.0,35.0},
-	    	{60.0,30.0,840.0,5.0},
-	    	{75.0,30.0,840.0,35.0},
-	    	{110.0,30.0,180.0,80.0},
-	    	{140.0,30.0,300.0,80.0},
-	    	{110.0,30.0,450.0,80.0},
-	    	{140.0,30.0,570.0,80.0},
-	    	{25.0,25.0,725.0,83.0},
-	    };
-	    	
-	    com = new Componentes();
-	    com.popularTela(listNodeDadosEndereco, prefSizeWHeLayXY, p1);
+		    prefSizeWHeLayXY = new Double [][] { 
+		    	{930.0,130.0,25.0,85.0},
+		    	{425.0,30.0,15.0,5.0},
+		    	{420.0,30.0,15.0,35.0},
+		    	{165.0,30.0,445.0,5.0},
+		    	{165.0,30.0,445.0,35.0},
+		    	{100.0,30.0,620.0,5.0},
+		    	{100.0,30.0,620.0,35.0},
+		    	{100.0,30.0,730.0,5.0},
+		    	{100.0,30.0,730.0,35.0},
+		    	{60.0,30.0,840.0,5.0},
+		    	{75.0,30.0,840.0,35.0},
+		    	{110.0,30.0,180.0,80.0},
+		    	{140.0,30.0,300.0,80.0},
+		    	{110.0,30.0,450.0,80.0},
+		    	{140.0,30.0,570.0,80.0},
+		    	{25.0,25.0,725.0,83.0},
+		    };
+		    	
+		    com = new Componentes();
+		    com.popularTela(listNodeDadosEndereco, prefSizeWHeLayXY, p1);
 	    
 	    cbRA.setItems(olEndRA);
 	    cbUF.setItems(olEndUF);
@@ -632,19 +632,19 @@ public class TabEnderecoControlador implements Initializable {
 	    listNodesPersistencia.add(tfPesquisar = new TextField());
 	    listNodesPersistencia.add(btnPesquisar = new Button("PESQUISAR"));
 	    
-	    prefSizeWHeLayXY = new Double[][] { 
-	    	{930.0,60.0,25.0,230.0},
-	    	{95.0,25.0,18.0,18.0},
-	    	{95.0,25.0,123.0,18.0},
-	    	{95.0,25.0,228.0,18.0},
-	    	{95.0,25.0,333.0,18.0},
-	    	{95.0,25.0,438.0,18.0},
-	    	{265.0,25.0,543.0,18.0},
-	    	{95.0,25.0,818.0,18.0},
-	    };
-					    				
-		 com = new Componentes();
-		    com.popularTela(listNodesPersistencia, prefSizeWHeLayXY, p1);    
+			    prefSizeWHeLayXY = new Double[][] { 
+			    	{930.0,60.0,25.0,230.0},
+			    	{95.0,25.0,18.0,18.0},
+			    	{95.0,25.0,123.0,18.0},
+			    	{95.0,25.0,228.0,18.0},
+			    	{95.0,25.0,333.0,18.0},
+			    	{95.0,25.0,438.0,18.0},
+			    	{265.0,25.0,543.0,18.0},
+			    	{95.0,25.0,818.0,18.0},
+			    };
+							    				
+				 com = new Componentes();
+				    com.popularTela(listNodesPersistencia, prefSizeWHeLayXY, p1);    
 		    
 	    
 	    // para trazer o valor da entidade principal, no caso Endereco

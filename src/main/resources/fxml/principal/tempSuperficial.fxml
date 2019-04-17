@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<Pane fx:id="pSuperficial" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="640.0" prefWidth="1030.0" stylesheets="@../../css/principal_mapa_azul.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+	
+   <children>
+      <Pane prefHeight="187.0" prefWidth="1030.0">
+         <children>
+            <Label layoutX="266.0" layoutY="10.0" prefHeight="30.0" prefWidth="95.0" text="Latitude (Y): " />
+            <TextField fx:id="tfIntLat" layoutX="361.0" layoutY="10.0" prefHeight="30.0" prefWidth="140.0" promptText="-15.7754084" />
+            <Label layoutX="511.0" layoutY="10.0" prefHeight="30.0" prefWidth="95.0" text="Longitude (X): " />
+            <TextField fx:id="tfIntLon" layoutX="606.0" layoutY="10.0" prefHeight="30.0" prefWidth="140.0" promptText="-47.9411395" />
+            <Button fx:id="btnIntMaps" layoutX="757.0" layoutY="13.0" mnemonicParsing="false" onAction="#btnIntMapsHab" prefHeight="25.0" prefWidth="25.0" />
+            <Label layoutX="14.0" layoutY="45.0" prefHeight="30.0" prefWidth="160.0" text="Bacia: " />
+            <ComboBox layoutX="14.0" layoutY="75.0" prefHeight="30.0" prefWidth="160.0" />
+            <Label layoutX="184.0" layoutY="45.0" prefHeight="30.0" prefWidth="60.0" text="UH: " />
+            <ComboBox layoutX="184.0" layoutY="75.0" prefHeight="30.0" prefWidth="60.0" />
+            <Label layoutX="254.0" layoutY="45.0" prefHeight="30.0" prefWidth="130.0" text="Local de Captação: " />
+            <ComboBox layoutX="254.0" layoutY="75.0" prefHeight="30.0" prefWidth="130.0" />
+            <Label layoutX="394.0" layoutY="45.0" prefHeight="30.0" prefWidth="130.0" text="Forma de Captação: " />
+            <ComboBox layoutX="394.0" layoutY="75.0" prefHeight="30.0" prefWidth="130.0" />
+            <Label layoutX="534.0" layoutY="45.0" prefHeight="30.0" prefWidth="130.0" text="Método de Irrigação: " />
+            <ComboBox layoutX="534.0" layoutY="75.0" prefHeight="30.0" prefWidth="130.0" />
+            <Label layoutX="674.0" layoutY="45.0" prefHeight="30.0" prefWidth="130.0" text="Barramento: " />
+            <ComboBox layoutX="674.0" layoutY="75.0" prefHeight="30.0" prefWidth="130.0" />
+            <Label layoutX="814.0" layoutY="45.0" prefHeight="30.0" prefWidth="130.0" text="Em operação desde: " />
+            <DatePicker fx:id="dpDataOperacao" layoutX="813.0" layoutY="75.0" prefHeight="30.0" prefWidth="120.0" />
+            <Label layoutX="946.0" layoutY="45.0" prefHeight="30.0" prefWidth="75.0" text="Caesb" />
+            <ComboBox layoutX="944.0" layoutY="75.0" prefHeight="30.0" prefWidth="75.0" />
+            <Label layoutX="19.0" layoutY="115.0" prefHeight="30.0" prefWidth="240.0" text="Corpo Hídrico: " />
+            <TextField fx:id="tfCorpoHidrico" layoutX="19.0" layoutY="145.0" prefHeight="30.0" prefWidth="240.0" />
+            <Label layoutX="269.0" layoutY="115.0" prefHeight="30.0" prefWidth="120.0" text="Área Irrigada (ha): " />
+            <TextField fx:id="tfAreaIrrigada" layoutX="269.0" layoutY="145.0" prefHeight="30.0" prefWidth="120.0" />
+            <Label layoutX="400.0" layoutY="115.0" prefHeight="30.0" prefWidth="160.0" text="Área de Contribuição (ha):" />
+            <TextField fx:id="tfAreaContribuicao" layoutX="400.0" layoutY="145.0" prefHeight="30.0" prefWidth="160.0" />
+            <Label layoutX="570.0" layoutY="115.0" prefHeight="30.0" prefWidth="150.0" text="Potência da Bomba (cv): " />
+            <TextField fx:id="tfPotenciaBomba" layoutX="570.0" layoutY="145.0" prefHeight="30.0" prefWidth="150.0" />
+            <Label layoutX="730.0" layoutY="115.0" prefHeight="30.0" prefWidth="120.0" text="Marca da Bomba: " />
+            <TextField fx:id="tfMarcaBomba" layoutX="730.0" layoutY="145.0" prefHeight="30.0" prefWidth="120.0" />
+            <Label layoutX="860.0" layoutY="115.0" prefHeight="30.0" prefWidth="160.0" text="Área da Propriedade (ha):" />
+            <TextField fx:id="tfAreaPropriedade" layoutX="860.0" layoutY="145.0" prefHeight="30.0" prefWidth="160.0" />
+         </children>
+      </Pane>
+      <Pane layoutX="60.0" layoutY="205.0" prefHeight="150.0" prefWidth="908.0">
+         <children>
+            <GridPane fx:id="gpFinalidades" layoutY="-7.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="183.0" prefWidth="908.0">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="90.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="50.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="90.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="50.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="95.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="95.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="95.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="25.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <Label alignment="CENTER" prefHeight="17.0" prefWidth="275.0" text="Finalidade" textAlignment="CENTER" />
+                  <Label alignment="CENTER" prefHeight="17.0" prefWidth="283.0" text="Subfinalidade" textAlignment="CENTER" GridPane.columnIndex="2" />
+                  <Label alignment="CENTER" prefHeight="17.0" prefWidth="240.0" text="TOTAL" textAlignment="CENTER" GridPane.columnIndex="6" />
+                  <TextField prefHeight="25.0" prefWidth="155.0" GridPane.rowIndex="1" />
+                  <ChoiceBox prefHeight="20.0" prefWidth="50.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <TextField GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                  <ChoiceBox prefHeight="20.0" prefWidth="50.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                  <TextField prefHeight="25.0" prefWidth="158.0" GridPane.columnIndex="6" GridPane.rowIndex="1" />
+                  <TextField GridPane.rowIndex="2" />
+                  <ChoiceBox prefHeight="20.0" prefWidth="50.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <TextField GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                  <ChoiceBox prefHeight="20.0" prefWidth="50.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                  <TextField GridPane.columnIndex="6" GridPane.rowIndex="2" />
+                  <TextField GridPane.rowIndex="3" />
+                  <ChoiceBox prefHeight="20.0" prefWidth="50.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <TextField GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                  <ChoiceBox prefHeight="25.0" prefWidth="50.0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                  <TextField GridPane.columnIndex="6" GridPane.rowIndex="3" />
+                  <TextField GridPane.rowIndex="4" />
+                  <ChoiceBox prefHeight="20.0" prefWidth="50.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <TextField GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                  <ChoiceBox prefHeight="20.0" prefWidth="50.0" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                  <TextField GridPane.columnIndex="6" GridPane.rowIndex="4" />
+                  <TextField GridPane.rowIndex="5" />
+                  <TextField GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                  <ChoiceBox prefHeight="25.0" prefWidth="50.0" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+                  <TextField prefHeight="0.0" prefWidth="154.0" GridPane.columnIndex="6" GridPane.rowIndex="5" />
+                  <Label alignment="CENTER" prefHeight="17.0" prefWidth="97.0" text="Quant (unid)" textAlignment="CENTER" GridPane.columnIndex="4" />
+                  <TextField GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <Label alignment="CENTER" prefHeight="17.0" prefWidth="97.0" text="Consumo(L/dia)" textAlignment="CENTER" GridPane.columnIndex="5" />
+                  <TextField GridPane.columnIndex="5" GridPane.rowIndex="2" />
+                  <TextField GridPane.columnIndex="5" GridPane.rowIndex="3" />
+                  <TextField GridPane.columnIndex="5" GridPane.rowIndex="4" />
+                  <TextField GridPane.columnIndex="5" GridPane.rowIndex="5" />
+                  <TextField GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                  <TextField GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                  <TextField GridPane.columnIndex="4" GridPane.rowIndex="3" />
+                  <TextField GridPane.columnIndex="4" GridPane.rowIndex="3" />
+                  <TextField GridPane.columnIndex="4" GridPane.rowIndex="4" />
+                  <TextField GridPane.columnIndex="4" GridPane.rowIndex="5" />
+                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="Button" GridPane.columnIndex="7" GridPane.rowIndex="1" />
+                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="Button" GridPane.columnIndex="7" GridPane.rowIndex="2" />
+                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="Button" GridPane.columnIndex="7" GridPane.rowIndex="3" />
+                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="Button" GridPane.columnIndex="7" GridPane.rowIndex="4" />
+                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="Button" GridPane.columnIndex="7" GridPane.rowIndex="5" />
+                  <ChoiceBox prefHeight="20.0" prefWidth="50.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <Label alignment="CENTER" prefHeight="17.0" prefWidth="283.0" textAlignment="CENTER" GridPane.columnIndex="6" GridPane.rowIndex="6" />
+                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="Button" GridPane.columnIndex="7" GridPane.rowIndex="6" />
+                  <Label alignment="CENTER" prefHeight="17.0" prefWidth="95.0" text="TOTAL" GridPane.columnIndex="5" GridPane.rowIndex="6" />
+               </children>
+            </GridPane>
+         </children>
+      </Pane>
+      <Pane layoutX="60.0" layoutY="410.0" prefHeight="120.0" prefWidth="908.0">
+         <children>
+            <GridPane fx:id="gpVazoes" layoutY="-4.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="120.0" prefWidth="908.0">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" prefWidth="105.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="25.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <Label alignment="CENTER" prefHeight="17.0" prefWidth="105.0" text="SET" GridPane.columnIndex="9" />
+                  <Label prefHeight="17.0" prefWidth="105.0" text="Vazão (l/dia) (*)" GridPane.rowIndex="1" />
+                  <Label prefHeight="17.0" prefWidth="105.0" text="Período (dia/mês)" GridPane.rowIndex="3" />
+                  <Label prefHeight="17.0" prefWidth="105.0" text="Tempo (h/dia)" GridPane.rowIndex="2" />
+                  <Label alignment="CENTER" prefHeight="17.0" prefWidth="105.0" text="JAN" textAlignment="CENTER" GridPane.columnIndex="1" />
+                  <Label alignment="CENTER" prefHeight="17.0" prefWidth="105.0" text="FEV" GridPane.columnIndex="2" />
+                  <Label alignment="CENTER" prefHeight="17.0" prefWidth="105.0" text="MAR" GridPane.columnIndex="3" />
+                  <Label alignment="CENTER" prefHeight="17.0" prefWidth="105.0" text="ABR" GridPane.columnIndex="4" />
+                  <Label alignment="CENTER" prefHeight="17.0" prefWidth="105.0" text="MAI" GridPane.columnIndex="5" />
+                  <Label alignment="CENTER" prefHeight="17.0" prefWidth="105.0" text="JUN" GridPane.columnIndex="6" />
+                  <Label alignment="CENTER" prefHeight="17.0" prefWidth="105.0" text="JUL" GridPane.columnIndex="7" />
+                  <Label alignment="CENTER" prefHeight="17.0" prefWidth="105.0" text="AGO" GridPane.columnIndex="8" />
+                  <Label prefHeight="17.0" prefWidth="105.0" text="Mês" />
+                  <Label alignment="CENTER" prefHeight="17.0" prefWidth="105.0" text="OUT" GridPane.columnIndex="10" />
+                  <Label alignment="CENTER" prefHeight="17.0" prefWidth="105.0" text="NOV" GridPane.columnIndex="11" />
+                  <Label alignment="CENTER" prefHeight="17.0" prefWidth="105.0" text="DEZ" GridPane.columnIndex="12" />
+                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <TextField GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <TextField prefHeight="0.0" prefWidth="105.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                  <TextField prefHeight="0.0" prefWidth="105.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                  <TextField prefHeight="0.0" prefWidth="105.0" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                  <TextField prefHeight="0.0" prefWidth="105.0" GridPane.columnIndex="6" GridPane.rowIndex="1" />
+                  <TextField prefHeight="0.0" prefWidth="105.0" GridPane.columnIndex="7" GridPane.rowIndex="1" />
+                  <TextField prefHeight="0.0" prefWidth="105.0" GridPane.columnIndex="8" GridPane.rowIndex="1" />
+                  <TextField prefHeight="0.0" prefWidth="105.0" GridPane.columnIndex="9" GridPane.rowIndex="1" />
+                  <TextField prefHeight="0.0" prefWidth="105.0" GridPane.columnIndex="10" GridPane.rowIndex="1" />
+                  <TextField prefHeight="0.0" prefWidth="105.0" GridPane.columnIndex="11" GridPane.rowIndex="1" />
+                  <TextField prefHeight="0.0" prefWidth="105.0" GridPane.columnIndex="12" GridPane.rowIndex="1" />
+                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <TextField GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                  <TextField GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                  <TextField GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                  <TextField GridPane.columnIndex="5" GridPane.rowIndex="2" />
+                  <TextField GridPane.columnIndex="6" GridPane.rowIndex="2" />
+                  <TextField GridPane.columnIndex="7" GridPane.rowIndex="2" />
+                  <TextField GridPane.columnIndex="8" GridPane.rowIndex="2" />
+                  <TextField GridPane.columnIndex="9" GridPane.rowIndex="2" />
+                  <TextField GridPane.columnIndex="10" GridPane.rowIndex="2" />
+                  <TextField GridPane.columnIndex="11" GridPane.rowIndex="2" />
+                  <TextField GridPane.columnIndex="12" GridPane.rowIndex="2" />
+                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <TextField GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                  <TextField GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                  <TextField GridPane.columnIndex="4" GridPane.rowIndex="3" />
+                  <TextField GridPane.columnIndex="5" GridPane.rowIndex="3" />
+                  <TextField GridPane.columnIndex="6" GridPane.rowIndex="3" />
+                  <TextField GridPane.columnIndex="7" GridPane.rowIndex="3" />
+                  <TextField GridPane.columnIndex="8" GridPane.rowIndex="3" />
+                  <TextField GridPane.columnIndex="9" GridPane.rowIndex="3" />
+                  <TextField GridPane.columnIndex="10" GridPane.rowIndex="3" />
+                  <TextField GridPane.columnIndex="11" GridPane.rowIndex="3" />
+                  <TextField GridPane.columnIndex="12" GridPane.rowIndex="3" />
+                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="Button" GridPane.columnIndex="13" GridPane.rowIndex="3" />
+                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="Button" GridPane.columnIndex="13" GridPane.rowIndex="2" />
+                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="Button" GridPane.columnIndex="13" GridPane.rowIndex="1" />
+               </children>
+            </GridPane>
+         </children>
+      </Pane>
+   </children>
+</Pane>

@@ -4,7 +4,7 @@ import java.net.URL;
 import java.sql.Date;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import entidades.FormaCaptacao;
@@ -21,83 +21,155 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import principal.Alerta;
+import principal.Componentes;
 
 public class TabSuperficialController implements Initializable{
 	
 	Superficial sup = new Superficial();
 	
-	@FXML TextField tfMarcaBomba = new TextField();
-	@FXML TextField tfPotenciaBomba = new TextField();
-	@FXML TextField tfCorpoHidrico = new TextField();
-	@FXML TextField tfAreaIrrigada = new  TextField();
-	@FXML TextField tfAreaContribuicao = new TextField();
-	@FXML TextField tfAreaPropriedade = new TextField();
 	
-	@FXML DatePicker dpDataOperacao;
+	int baciaID = 1;
+	final int [] listaBaciasID = new int [] { 1,2,3,4,5,6,7,8 };
 	
-	@FXML Pane tabSuperficial;
+	int unidHidID = 1;
+	final int [] listaUHID = new int [] { 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,
+			22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41};
 	
-	@FXML
-	ChoiceBox<String> cbLocalCaptacao = new ChoiceBox<String>();
-		ObservableList<String> olLocalCaptacao = FXCollections
-			.observableArrayList(
-					
-					"Nascente",
-					"Rio",
-					"Reservatório",
-					"Canal",
-					"Lago Natural"
-					
-					); 
-		@FXML
-		ChoiceBox<String> cbFormaCaptacao = new ChoiceBox<String>();
-			ObservableList<String> olFormaCaptacao = FXCollections
-				.observableArrayList(
-						"Bombeamento" , 
-						"Gravidade"
-						); 
-			
-			@FXML
-			ChoiceBox<String> cbMetodoIrrigacao = new ChoiceBox<String>();
-				ObservableList<String> olMetodoIrrigacao = FXCollections
-					.observableArrayList(
-							"Aspersão"	,
-							"Gotejamento",
-							"Pivô",
-							"Manual",
-							"Aspersão/gotejamento"	
-
-							); 
+	/* adicionar aos botoes salvar e editar
+	BaciasHidrograficas baciaHid = new BaciasHidrograficas();
+	baciaHid.setBaciaID(baciaID);
+	
+	UnidadeHidrografica UniHid = new UnidadeHidrografica();
+	UniHid.setUhID(unidHidID);
+	*/
+	
+	/*
+	cbBacia.getSelectionModel().selectedIndexProperty().addListener(new
+            ChangeListener<Number>() {
+    	public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
+    		Number value, Number new_value) {
+    		
+    		if ( (Integer) new_value !=  -1)
+    			
+    		baciaID = listaBaciasID [(int) new_value];
+    		
+    		System.out.println(" bacia id " + baciaID);
+    		
+        }
+    });
+    */
+	
+	/*
+	cbBacia.getSelectionModel()
+    	.selectedItemProperty()
+    	.addListener( 
+    	(ObservableValue<? extends String> observable, String oldValue, String newValue) ->
+    	
+    	baciaNome = (String) newValue
+    	
+    );
+    */
+	
+	/*
+	cbUnidHid.getSelectionModel().selectedIndexProperty().addListener(new
+            ChangeListener<Number>() {
+    	public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
+    		Number value, Number new_value) {
+    		
+    		if ( (Integer) new_value !=  -1)
+    		unidHidID = listaUHID [(int) new_value];
+    		
+    		System.out.println("unidade hidr selecionada " + unidHidID);
+    		
+        }
+    });
+    */
+	
+	/*
+	GeometryFactory geoFac = new GeometryFactory();
+	
+	Point p = geoFac.createPoint(new Coordinate(
+			Double.parseDouble(tfLon.getText()),
+			Double.parseDouble(tfLat.getText()
+			)));
+	
+	p.setSRID(4674);
+		
+	sup.setInterGeom(p);
+	*/
+	
+	ObservableList<String> olLocalCaptacao = FXCollections
+		.observableArrayList(
 				
-				@FXML
-				ChoiceBox<String> cbBarramento = new ChoiceBox<String>();
-					ObservableList<String> olBarramento = FXCollections
-						.observableArrayList(
-								"Sim",
-								"Não"
-								); 
+				"Nascente",
+				"Rio",
+				"Reservatório",
+				"Canal",
+				"Lago Natural"
+				
+				); 
+
+	ObservableList<String> olFormaCaptacao = FXCollections
+		.observableArrayList(
+				"Bombeamento" , 
+				"Gravidade"
+				); 
+			
+	ObservableList<String> olMetodoIrrigacao = FXCollections
+		.observableArrayList(
+				"Aspersão"	,
+				"Gotejamento",
+				"Pivô",
+				"Manual",
+				"Aspersão/gotejamento"	
+
+				); 
+				
+	ObservableList<String> olBarramento = FXCollections
+		.observableArrayList(
+				"Sim",
+				"Não"
+				); 
 		
-					@FXML
-					ChoiceBox<String> cbCaesb = new ChoiceBox<String>();
-						ObservableList<String> olCaesb = FXCollections
-							.observableArrayList(
-									"Sim" , 
-									"Não"
-									); 
-		
-					
-					
+	ObservableList<String> olCaesb = FXCollections
+		.observableArrayList(
+				"Sim" , 
+				"Não"
+				); 
+				
+	ObservableList<String>  olBacia = FXCollections
+		.observableArrayList(
+				
+				"Rio Corumbá"			,
+				"Rio Descoberto"		,
+				"Rio Paranã"			,
+				"Rio São Bartolomeu"	,
+				"Rio São Marcos"		,
+				"Rio Maranhão"			,
+				"Rio Paranoá"			,
+				"Rio Preto"	
+
+				); 
+	
+	ObservableList<String> 	olUniHid = FXCollections
+		.observableArrayList(
+				
+				"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20",
+				"21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41"
+				); 
+
 	int localCaptacaoID = 1;
 	String strLocalCaptacao = "Nascente";
 	final int [] listaLocalCaptacao = new int [] { 1,2,3,4,5 };
@@ -109,12 +181,6 @@ public class TabSuperficialController implements Initializable{
 	int metodoIrrigacaoID = 1;
 	String strMetodoIrrigacao = "Aspersão";
 	final int [] listaMetodoIrrigacao = new int [] { 1,2,3,4,5 };
-	
-				
-	@FXML ImageView	iVewSuper = new ImageView();
-	//Image imgSuper = new Image(TabSuperficialController.class.getResourceAsStream("/images/superficial.png"));
-	
-	
 	
 	// variaveis de finalidade e reflexao //
 	String strVariaveisFinalidades [] = {"supFinalidade1", "supFinalidade2", "supFinalidade3", "supFinalidade4", "supFinalidade5"};
@@ -356,34 +422,15 @@ public class TabSuperficialController implements Initializable{
 		
 	}
 	
-	
-	@FXML GridPane gpFinalidades;
-	@FXML GridPane gpVazoes;
-	
-	TextField[] tfListFinalidades = new TextField[5];
-	TextField[] tfListSubfinalidades = new TextField[5];
-	TextField[] tfListQuantidades = new TextField[5];
-	TextField[] tfListConsumo = new TextField[5];
-	TextField[] tfListFinVazoes = new TextField[5];
-	
-	Button [] btnListCalcular = new Button[6];
-	Label lblCalTotal = new Label();
-	
-	ChoiceBox<String>[] listCbFinalidade = new ChoiceBox[5];
-	ChoiceBox<String>[] listCbSubfinalidades = new ChoiceBox[5];
-	
-	TextField[] tfVazoesLD = new TextField[12];
-	TextField[] tfVazoesHD = new TextField[12]; //  
-	TextField[] tfPeriodoDM = new TextField[12];
-	Button [] btnListCalMeses = new Button[3];
+	@FXML Pane pSuperficial;
 	
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 		
 		System.out.println("initialize superficial iniciado!");
 		
-		iniciarDadosFinalidade ();
-		
+		inicializarComponentes();
+		/*
 		cbLocalCaptacao.setItems(olLocalCaptacao);
 		cbFormaCaptacao.setItems(olFormaCaptacao);
 		cbMetodoIrrigacao.setItems(olMetodoIrrigacao);
@@ -433,30 +480,6 @@ public class TabSuperficialController implements Initializable{
             }
 	    });
 		
-		//iVewSuper.setImage(imgSuper);
-		
-		
-		/*
-		dpDataOperacao.setConverter(new StringConverter<LocalDate>() {
-			
-			@Override
-			public String toString(LocalDate t) {
-				if (t != null) {
-					return formatter.format(t);
-				}
-				return null;
-			}
-			
-			@Override
-			public LocalDate fromString(String string) {
-				if (string != null && !string.trim().isEmpty()) {
-					return LocalDate.parse(string, formatter);
-				}
-				return null;
-			}
-
-		});
-		*/
 		
 		tfPotenciaBomba.lengthProperty().addListener(new ChangeListener<Number>() {
 
@@ -474,6 +497,9 @@ public class TabSuperficialController implements Initializable{
                 }
             }
         });
+        
+        */
+      
 		/*
 		tf.lengthProperty().addListener(new ChangeListener<Number>() {
 
@@ -491,27 +517,52 @@ public class TabSuperficialController implements Initializable{
                 }
             }
         });
+		*/
 		
-		tfArea.lengthProperty().addListener(new ChangeListener<Number>() {
+		
+		/*
+		tfAreaContribuicao.lengthProperty().addListener(new ChangeListener<Number>() {
 
             @Override
             public void changed(ObservableValue<? extends Number> observable,
                     Number oldValue, Number newValue) {
                 if (newValue.intValue() > oldValue.intValue()) {
                     // Check if the new character is greater than LIMIT
-                    if (tfArea.getText().length() >= 5) {
+                    if (tfAreaContribuicao.getText().length() >= 5) {
 
                         // if it's 11th character then just setText to previous
                         // one
-                    	tfArea.setText(tfArea.getText().substring(0, 5));
+                    	tfAreaContribuicao.setText(tfAreaContribuicao.getText().substring(0, 5));
                     }
                 }
             }
         });
+        
         */
-		
+      
 		
 	} // fim initialize
+	
+	GridPane gpFinalidades = new GridPane();
+	GridPane gpVazoes = new GridPane();
+	
+	TextField[] tfListFinalidades = new TextField[5];
+	TextField[] tfListSubfinalidades = new TextField[5];
+	TextField[] tfListQuantidades = new TextField[5];
+	TextField[] tfListConsumo = new TextField[5];
+	TextField[] tfListFinVazoes = new TextField[5];
+	
+	Button [] btnListCalcular = new Button[6];
+	Label lblCalTotal = new Label();
+	
+	ChoiceBox<String>[] listCbFinalidade = new ChoiceBox[5];
+	ChoiceBox<String>[] listCbSubfinalidades = new ChoiceBox[5];
+	
+	TextField[] tfVazoesLD = new TextField[12];
+	TextField[] tfVazoesHD = new TextField[12]; //  
+	TextField[] tfPeriodoDM = new TextField[12];
+	Button [] btnListCalMeses = new Button[3];
+	
 
 	ObservableList<String> olFinalidades = FXCollections.observableArrayList(
 			
@@ -585,6 +636,448 @@ public class TabSuperficialController implements Initializable{
 
 
 			);
+	
+	Componentes com;
+	
+	Pane pDadosSuperficial;
+	
+	TextField tfLatitude;
+	TextField tfLongitude;
+	
+	Button btnLatLon;
+	
+	ComboBox<String> cbBaciaHidrografica;
+	ComboBox<String> cbUnidadeHidrografica;
+	ComboBox<String> cbLocalCaptacao;
+	ComboBox<String> cbFormaCaptacao;	
+	ComboBox<String> cbMetodoIrrigacao;
+	ComboBox<String> cbBarramento;
+	ComboBox<String> cbCaesb;
+	
+	TextField tfCorpoHidrico;
+	TextField tfAreaIrrigada;
+	TextField tfAreaContribuicao;
+	TextField tfPotenciaBomba;
+	TextField tfMarcaBomba;
+	TextField tfAreaPropriedade;
+	
+	DatePicker dpDataOperacao;
+	
+	ArrayList<Node> listaComponentes = new ArrayList<Node>();
+	
+
+	
+	public void inicializarComponentes () {
+		
+		listaComponentes.add(pDadosSuperficial = new Pane());		    
+		listaComponentes.add(new Label ("Latitude (Y):"));
+		listaComponentes.add(tfLatitude = new TextField());
+		listaComponentes.add(new Label ("Longitude (X):"));
+		listaComponentes.add(tfLongitude = new TextField());
+		listaComponentes.add(btnLatLon = new Button());
+	
+	
+		listaComponentes.add(new Label ("Bacia: "));
+		listaComponentes.add(cbBaciaHidrografica = new ComboBox<>());
+		listaComponentes.add(new Label ("UH: "));
+		listaComponentes.add(cbUnidadeHidrografica = new ComboBox<>());
+		listaComponentes.add(new Label ("Local de Captação:  "));
+		listaComponentes.add(cbLocalCaptacao = new ComboBox<>());
+		listaComponentes.add(new Label ("Forma de Captação: "));
+		listaComponentes.add(cbFormaCaptacao = new ComboBox<>());
+		listaComponentes.add(new Label ("Método de Irrigação: "));
+		listaComponentes.add(cbMetodoIrrigacao = new ComboBox<>());
+		listaComponentes.add(new Label ("Barramento: "));
+		listaComponentes.add(cbBarramento = new ComboBox<>());
+		listaComponentes.add(new Label ("Em operação desde: "));
+		listaComponentes.add(dpDataOperacao = new DatePicker());
+		listaComponentes.add(new Label ("Caesb: "));
+		listaComponentes.add(cbCaesb = new ComboBox<>());
+	
+		listaComponentes.add(new Label ("Corpo Hídrico: "));
+		listaComponentes.add(tfCorpoHidrico = new TextField());
+		listaComponentes.add(new Label ("Área Irrigada (ha): "));
+		listaComponentes.add(tfAreaIrrigada = new TextField());
+		listaComponentes.add(new Label ("Área de Contribuição (ha):"));
+		listaComponentes.add(tfAreaContribuicao = new TextField());
+		listaComponentes.add(new Label ("Potência da Bomba (cv): "));
+		listaComponentes.add(tfPotenciaBomba = new TextField());
+		listaComponentes.add(new Label ("Marca da Bomba: "));
+		listaComponentes.add(tfMarcaBomba = new TextField());
+		listaComponentes.add(new Label ("Área da Propriedade (ha):"));
+		listaComponentes.add(tfAreaPropriedade = new TextField());
+		
+		
+		Pane pFinalidade;
+		Pane pVazoes;
+		
+		Double  prefSizeWHeLayXY  [][] = { 
+				{1030.0,187.0,0.0,0.0},
+				{95.0,30.0,266.0,10.0},
+				{140.0,30.0,361.0,10.0},
+				{95.0,30.0,511.0,10.0},
+				{140.0,30.0,606.0,10.0},
+				{25.0,25.0,757.0,13.0},
+				{160.0,30.0,14.0,45.0},
+				{160.0,30.0,14.0,75.0},
+				{60.0,30.0,184.0,45.0},
+				{60.0,30.0,184.0,75.0},
+				{130.0,30.0,254.0,45.0},
+				{130.0,30.0,254.0,75.0},
+				{130.0,30.0,394.0,45.0},
+				{130.0,30.0,394.0,75.0},
+				{130.0,30.0,534.0,45.0},
+				{130.0,30.0,534.0,75.0},
+				{130.0,30.0,674.0,45.0},
+				{130.0,30.0,674.0,75.0},
+				{130.0,30.0,814.0,45.0},
+				{120.0,30.0,813.0,75.0},
+				{75.0,30.0,946.0,45.0},
+				{75.0,30.0,944.0,75.0},
+				{240.0,30.0,19.0,115.0},
+				{240.0,30.0,19.0,145.0},
+				{120.0,30.0,269.0,115.0},
+				{120.0,30.0,269.0,145.0},
+				{160.0,30.0,400.0,115.0},
+				{160.0,30.0,400.0,145.0},
+				{150.0,30.0,570.0,115.0},
+				{150.0,30.0,570.0,145.0},
+				{120.0,30.0,730.0,115.0},
+				{120.0,30.0,730.0,145.0},
+				{160.0,30.0,860.0,115.0},
+				{160.0,30.0,860.0,145.0},
+	    	};
+	    	
+		    com = new Componentes();
+		    com.popularTela(listaComponentes, prefSizeWHeLayXY, pSuperficial);
+		    
+		    
+		    pFinalidade = new Pane();
+			pFinalidade.setPrefSize(910, 150);
+			pFinalidade.setLayoutX(60);
+			pFinalidade.setLayoutY(190);
+			
+			pVazoes = new Pane();
+			pVazoes.setPrefSize(910, 120);
+			pVazoes.setLayoutX(60);
+			pVazoes.setLayoutY(370);
+			
+			pSuperficial.getChildren().addAll(pFinalidade, pVazoes);
+			
+			pFinalidade = new Pane();
+			pFinalidade.setPrefSize(910, 150);
+			pFinalidade.setLayoutX(60);
+			pFinalidade.setLayoutY(190);
+			
+			pVazoes = new Pane();
+			pVazoes.setPrefSize(910, 120);
+			pVazoes.setLayoutX(60);
+			pVazoes.setLayoutY(370);
+			
+			pSuperficial.getChildren().addAll(pFinalidade, pVazoes);
+			
+			pFinalidade.getChildren().add(gpFinalidades);
+			pVazoes.getChildren().add(gpVazoes);
+			
+			 //Setting size for the pane  
+			gpVazoes.setMaxSize(910, 190); 
+			
+
+			Label lbl;
+			
+			 String[] strLabelFinalidade = {
+					 "Finalidade", " ","Subfinalidade", " ", "Quant (unid)", "Consumo(L/dia)", "TOTAL", " "
+					 		};
+			 for (int i = 0; i<8; i++ ) {
+				 gpFinalidades.add(lbl = new Label(strLabelFinalidade[i]), i, 0); // child, columnIndex, rowIndex
+				 lbl.setAlignment( Pos.CENTER );
+				 lbl.setMinSize(50, 20);
+			 }
+			 
+			 
+			 
+			 
+			 /////////////////////
+			 
+			 
+			 
+			 
+			 
+			 
+			 
+				for (int i = 0; i<5; i++ ) {
+					
+					TextField tfFin = tfListFinalidades [i] = new TextField();
+					TextField tfSub = tfListSubfinalidades [i] = new TextField();
+					TextField tfQuant = tfListQuantidades [i] = new TextField();
+					TextField tfCon = tfListConsumo [i] = new TextField();
+					TextField tfVaz = tfListFinVazoes [i] = new TextField();
+					
+					Button btnCal = btnListCalcular[i] = new Button();
+					
+					btnCal.setPrefSize(25, 25);
+					
+					ChoiceBox<String> cbFin =  listCbFinalidade [i] = new ChoiceBox<String>();
+					cbFin.setItems(olFinalidades);
+					cbFin.setPrefSize(50, 20);
+					
+					ChoiceBox<String> cbSub =  listCbSubfinalidades [i] = new ChoiceBox<String>();
+					cbSub.setItems(olSubFinalidades);
+					cbSub.setPrefSize(50, 20);
+					
+					gpFinalidades.add(tfFin, 0, i+1); // child, columnIndex, rowIndex
+					gpFinalidades.add(cbFin, 1, i+1);
+					
+					
+					gpFinalidades.add(tfSub, 2, i+1);
+					gpFinalidades.add(cbSub, 3, i+1);
+					
+					gpFinalidades.add(tfQuant, 4, i+1); 
+					gpFinalidades.add(tfCon, 5, i+1); 
+					
+					gpFinalidades.add(tfVaz, 6, i+1);
+					
+					gpFinalidades.add(btnCal, 7, i+1);
+					
+					tfQuant.lengthProperty().addListener(new ChangeListener<Number>() {
+
+			            @Override
+			            public void changed(ObservableValue<? extends Number> observable,
+			                    Number oldValue, Number newValue) {
+			                
+			                if (newValue.intValue() > oldValue.intValue()) {
+			                    // Check if the new character is greater than LIMIT
+			                    if (tfQuant.getText().length() >= 0) {
+
+			                    	/*   Nao permitir letras - variavel double, somente numeros com ponto ou virgula
+			                    	 */
+									if ( tfQuant.getText().matches("(.*)[a-zA-Z](.*)") == true ) {
+										// buscar letras entre os numeros
+										Alerta a = new Alerta ();
+										a.alertar(new Alert(Alert.AlertType.ERROR, "Somente números!!!", ButtonType.OK));
+										
+										// retirar caracter errado, como letra, virgula etc
+										tfQuant.setText(tfQuant.getText().substring(0, tfQuant.getText().length() - 1));
+									
+									}
+			                 
+			                    }
+			                    
+			                } // fim if length
+			            }
+			        });
+					
+					tfCon.lengthProperty().addListener(new ChangeListener<Number>() {
+
+			            @Override
+			            public void changed(ObservableValue<? extends Number> observable,
+			                    Number oldValue, Number newValue) {
+			                
+			                if (newValue.intValue() > oldValue.intValue()) {
+			                    // Check if the new character is greater than LIMIT
+			                    if (tfCon.getText().length() >= 0) {
+
+			                    	/*  Nao permitir letras - variavel double, somente numeros com ponto ou virgula
+			                    	 */
+									if ( tfCon.getText().matches("(.*)[a-zA-Z](.*)") == true ) {
+										// buscar letras entre os numeros
+										Alerta a = new Alerta ();
+										a.alertar(new Alert(Alert.AlertType.ERROR, "Somente números!!!", ButtonType.OK));
+										
+										// retirar caracter errado, como letra, virgula etc
+										tfCon.setText(tfCon.getText().substring(0, tfCon.getText().length() - 1));
+									
+									}
+			                 
+			                    }
+			                    
+			                } // fim if length
+			            }
+			        });
+					
+					cbFin.getSelectionModel().selectedItemProperty().addListener( 
+							
+					    	(ObservableValue<? extends String> observable, String oldValue, String newValue) ->
+					    	
+					    	tfFin.setText(newValue)
+					     );
+					
+					cbSub.getSelectionModel().selectedItemProperty().addListener( 
+							
+					    	(ObservableValue<? extends String> observable, String oldValue, String newValue) ->
+					    	
+					    	tfSub.setText(newValue)
+					     );
+					
+					 btnCal.setOnAction(new EventHandler<ActionEvent>() {
+
+					        @Override
+					        public void handle(ActionEvent event) {
+					        	Double result = Double.parseDouble(tfQuant.getText().replace(",", ".")) * Double.parseDouble(tfCon.getText().replace(",", "."));
+					            tfVaz.setText(String.valueOf(result));
+					        }
+					    });
+					
+				}
+				
+				 String[] lblVazoesMeses = {
+						 "Mês","JAN", "FEV", "MAR", "ABR", "MAI", "JUN", "JUL", "AGO", "SET", "OUT", "NOV", "DEZ", " ",
+						 		};
+				 
+				 for (int i = 0; i<14; i++ ) {
+					 gpVazoes.add(lbl = new Label(lblVazoesMeses[i]), i, 0); // child, columnIndex, rowIndex
+					 lbl.setMinSize(50, 20);
+				 }
+				 
+				
+				
+				for (int i = 0; i<12; i++ ) {
+					
+					TextField tfVazLD = tfVazoesLD [i] = new TextField();
+					gpVazoes.add(tfVazLD, i+1, 1); // child, columnIndex, rowIndex
+				
+				}
+				
+				for (int i = 0; i<12; i++ ) {
+					
+					TextField tfVazHD = tfVazoesHD [i] = new TextField();
+					gpVazoes.add(tfVazHD, i+1, 2);
+					
+					tfVazHD.lengthProperty().addListener(new ChangeListener<Number>() {
+
+			            @Override
+			            public void changed(ObservableValue<? extends Number> observable,
+			                    Number oldValue, Number newValue) {
+			                
+			                if (newValue.intValue() > oldValue.intValue()) {
+			                    // Check if the new character is greater than LIMIT
+			                    if (tfVazHD.getText().length() >= 0) {
+
+			                    	/*  Nao permitir virgula e ponto no tempo de captacao e nos dias 
+			                    	 *  por mes que sempre e um numero inteiro
+			                    	 */
+									if ( tfVazHD.getText().matches("(.*)\\D(.*)") == true ) {
+										// "(.*)\\D(.*)" buscar qualquer digito diferente de numero no meio do que foi digitado
+										Alerta a = new Alerta ();
+										a.alertar(new Alert(Alert.AlertType.ERROR, "Somente números!!!", ButtonType.OK));
+										
+										// retirar caracter errado, como letra, virgula etc
+										tfVazHD.setText(tfVazHD.getText().substring(0, tfVazHD.getText().length() - 1));
+									
+									}
+			                 
+			                    }
+			                    
+			                } // fim if length
+			            }
+			        });
+					
+				}
+
+				for (int i = 0; i<12; i++ ) {
+			
+					TextField tfPerDM = tfPeriodoDM [i] = new TextField();
+					gpVazoes.add(tfPerDM, i+1, 3);
+					
+					tfPerDM.lengthProperty().addListener(new ChangeListener<Number>() {
+
+			            @Override
+			            public void changed(ObservableValue<? extends Number> observable,
+			                    Number oldValue, Number newValue) {
+			                
+			                if (newValue.intValue() > oldValue.intValue()) {
+			                    // Check if the new character is greater than LIMIT
+			                    if (tfPerDM.getText().length() >= 0) {
+
+			                    	/*  Nao permitir virgula e ponto no tempo de captacao e nos dias 
+			                    	 *  por mes que sempre e um numero inteiro
+			                    	 */
+									if (tfPerDM.getText().matches("(.*)\\D(.*)") == true ) { 
+										// "(.*)\\D(.*)" buscar qualquer digito diferente de numero no meio do que foi digitado
+									    
+										Alerta a = new Alerta ();
+										a.alertar(new Alert(Alert.AlertType.ERROR, "Somente números!!!", ButtonType.OK));
+										
+										tfPerDM.setText(tfPerDM.getText().substring(0, tfPerDM.getText().length() - 1));
+									
+									}
+			                 
+			                    }
+			                    
+			                } // fim if length
+			            }
+			        });
+			
+				}
+				
+				String[] lblMesVazaoTempoPeriodo = {
+						 "Vazão (l/dia) (*)","Tempo (h/dia)", "Período (dia/mês)",
+						 		};
+				
+				for (int i = 0; i<3; i++ ) {
+					
+					Button btnCalMes = btnListCalMeses[i] = new Button();
+					btnCalMes.setPrefSize(25, 25);
+					gpVazoes.add(btnCalMes, 13, i+1);
+					gpVazoes.add(lbl = new Label(lblMesVazaoTempoPeriodo[i]), 0, i+1);  // child, columnIndex, rowIndex
+					lbl.setMinSize(110, 20);
+					lbl.setAlignment( Pos.CENTER );
+				} // fim loop for
+				
+				// botao para calcular o valor total de TODAS as finalidades
+				Button btnCal6 = btnListCalcular[5] = new Button();
+				btnCal6.setPrefSize(25, 25);
+				gpFinalidades.add(btnCal6, 7, 6);
+				
+				// adicionar label com resultado total no gridpane e centralizar o texto
+				lblCalTotal.setText("0.0");
+				lblCalTotal.setMaxWidth(Double.MAX_VALUE);
+				lblCalTotal.setAlignment(Pos.CENTER);
+				gpFinalidades.add(lblCalTotal, 6, 6);
+				
+				// calcular o valor total das finalidades
+				btnCal6.setOnAction(new EventHandler<ActionEvent>() {
+
+			        @Override
+			        public void handle(ActionEvent event) {
+			        	Double result = 0.0;
+			        	
+			        	for (int i = 0; i<5;i++) {
+			        		if (! tfListFinVazoes[i].getText().isEmpty())
+			        		result += Double.parseDouble(
+				        					tfListFinVazoes[i].getText());
+			        		
+			        		
+			        	}
+			        	lblCalTotal.setText(String.valueOf(result));
+			        	
+			        }
+			    });
+			    
+				// facilitar o cadastro dos meses 
+				btnListCalMeses[2].setOnAction(new EventHandler<ActionEvent>() {
+
+			        @Override
+			        public void handle(ActionEvent event) {
+			        	int meses [] =  {31,28,31,30,31,30,31,31,30,31,30,31};
+			        	for (int i = 0; i<12;i++) {
+			        		tfPeriodoDM [i].setText(String.valueOf(meses[i]));
+			        	}
+			        	
+			        }
+			    });
+				
+				
+				// facilitar o cadastro dos meses 
+				btnLatLon.setOnAction(new EventHandler<ActionEvent>() {
+					@Override
+			        public void handle(ActionEvent event) {
+			        	capturarCoordenadas();
+			        	
+			        }
+			    });
+		
+	}
 	
 	public void iniciarDadosFinalidade () {
 		
@@ -837,4 +1330,19 @@ public class TabSuperficialController implements Initializable{
 		
 	} // fim metodo iniciarDadosFinalidade
 
+	public void capturarCoordenadas () {
+		
+		tfLatitude.setText( ControladorPrincipal.capturarGoogleMaps().getLat() );
+		tfLongitude.setText( ControladorPrincipal.capturarGoogleMaps().getLon());
+	
+	}
 }
+
+
+
+
+//ImageView	iVewSuper = new ImageView();
+//Image imgSuper = new Image(TabSuperficialController.class.getResourceAsStream("/images/superficial.png"));
+
+
+
