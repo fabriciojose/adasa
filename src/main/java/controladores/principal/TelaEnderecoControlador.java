@@ -778,6 +778,10 @@ public class TelaEnderecoControlador implements Initializable {
 				tfLatitude.setText(end.getEndDDLatitude().toString());
 				tfLongitude.setText(end.getEndDDLongitude().toString());
 				
+				TabInterferenciaControlador.tabIntCon.setEndereco(end);
+				
+				System.out.println("selecionar endereco " + end.getEndLogradouro());
+				
 				// -- habilitar e desabilitar botoes -- //
 				btnNovo.setDisable(true);
 				btnSalvar.setDisable(true);

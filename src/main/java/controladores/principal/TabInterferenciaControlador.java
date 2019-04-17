@@ -69,6 +69,8 @@ public class TabInterferenciaControlador  implements Initializable{
 		this.endereco = endereco;
 		// preencher o label com a demanda selecionada //
 		
+		System.out.println(endereco.getEndLogradouro());
+		
 		lblEndereco.setText(
 				
 				endereco.getEndLogradouro()
@@ -106,7 +108,7 @@ public class TabInterferenciaControlador  implements Initializable{
 	int situacaoProcessoID = 1;
 	final int [] listaSituacaoProcessoID = new int [] { 1,2,3,4,5,6,7,8 };
 	
-	public void novaInterferencia () {
+	public void habilitarInterferencia () {
 					
 		cbTipoInterferencia.setDisable(false);
 		cbTipoOutorga.setDisable(false);
@@ -604,7 +606,6 @@ public class TabInterferenciaControlador  implements Initializable{
 		
 	}
 	
-
 	@FXML Pane pInterferencia;
 	
 	Pane p1 = new Pane();
@@ -618,8 +619,13 @@ public class TabInterferenciaControlador  implements Initializable{
 		
 	Componentes com;
 	
+	public static TabInterferenciaControlador tabIntCon;
+	
+	
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
+		
+		tabIntCon = this;
 		
 		 bp1.minWidthProperty().bind(pInterferencia.widthProperty());
 		    bp1.maxHeightProperty().bind(pInterferencia.heightProperty().subtract(60));
@@ -787,7 +793,7 @@ public class TabInterferenciaControlador  implements Initializable{
 
 		        @Override
 		        public void handle(ActionEvent event) {
-		            novaInterferencia();
+		        	habilitarInterferencia();
 		        }
 		    });
 			    
@@ -954,9 +960,9 @@ public class TabInterferenciaControlador  implements Initializable{
 		    
 		    prefSizeWHeLayXY = new Double [][] { 
 		    	{950.0,60.0,40.0,10.0},
-		    	{740.0,30.0,105.0,15.0},
-		    	{70.0,30.0,30.0,15.0},
-		    	{65.0,25.0,855.0,18.0},
+		    	{80.0,30.0,33.0,15.0},
+		    	{730.0,30.0,113.0,16.0},
+		    	{65.0,25.0,853.0,18.0},
 	    	};
 		    	
 			    com = new Componentes();

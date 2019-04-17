@@ -21,7 +21,6 @@ import entidades.Endereco;
 import entidades.Interferencia;
 import entidades.RA;
 import javafx.animation.TranslateTransition;
-import javafx.application.Preloader;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -974,6 +973,8 @@ public class TabEnderecoControlador implements Initializable {
 							lblDataAtualizacao.setTextFill(Color.BLACK);
 					}catch (Exception e) {lblDataAtualizacao.setText("Não há data de atualização!");
 							lblDataAtualizacao.setTextFill(Color.RED);}
+					
+					TabInterferenciaControlador.tabIntCon.setEndereco(end);
 					
 					/* caso não haja demanda relacionada ao endereco, setar demanda vazia */
 					if (end.getDemandas().size() == 0) {
