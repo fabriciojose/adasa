@@ -7,11 +7,17 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Point;
+
+import entidades.BaciasHidrograficas;
 import entidades.FormaCaptacao;
 import entidades.GetterAndSetter;
 import entidades.LocalCaptacao;
 import entidades.MetodoIrrigacao;
 import entidades.Superficial;
+import entidades.UnidadeHidrografica;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -39,76 +45,6 @@ public class TabSuperficialController implements Initializable{
 	
 	Superficial sup = new Superficial();
 	
-	
-	int baciaID = 1;
-	final int [] listaBaciasID = new int [] { 1,2,3,4,5,6,7,8 };
-	
-	int unidHidID = 1;
-	final int [] listaUHID = new int [] { 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,
-			22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41};
-	
-	/* adicionar aos botoes salvar e editar
-	BaciasHidrograficas baciaHid = new BaciasHidrograficas();
-	baciaHid.setBaciaID(baciaID);
-	
-	UnidadeHidrografica UniHid = new UnidadeHidrografica();
-	UniHid.setUhID(unidHidID);
-	*/
-	
-	/*
-	cbBacia.getSelectionModel().selectedIndexProperty().addListener(new
-            ChangeListener<Number>() {
-    	public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
-    		Number value, Number new_value) {
-    		
-    		if ( (Integer) new_value !=  -1)
-    			
-    		baciaID = listaBaciasID [(int) new_value];
-    		
-    		System.out.println(" bacia id " + baciaID);
-    		
-        }
-    });
-    */
-	
-	/*
-	cbBacia.getSelectionModel()
-    	.selectedItemProperty()
-    	.addListener( 
-    	(ObservableValue<? extends String> observable, String oldValue, String newValue) ->
-    	
-    	baciaNome = (String) newValue
-    	
-    );
-    */
-	
-	/*
-	cbUnidHid.getSelectionModel().selectedIndexProperty().addListener(new
-            ChangeListener<Number>() {
-    	public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
-    		Number value, Number new_value) {
-    		
-    		if ( (Integer) new_value !=  -1)
-    		unidHidID = listaUHID [(int) new_value];
-    		
-    		System.out.println("unidade hidr selecionada " + unidHidID);
-    		
-        }
-    });
-    */
-	
-	/*
-	GeometryFactory geoFac = new GeometryFactory();
-	
-	Point p = geoFac.createPoint(new Coordinate(
-			Double.parseDouble(tfLon.getText()),
-			Double.parseDouble(tfLat.getText()
-			)));
-	
-	p.setSRID(4674);
-		
-	sup.setInterGeom(p);
-	*/
 	
 	ObservableList<String> olLocalCaptacao = FXCollections
 		.observableArrayList(
@@ -170,6 +106,14 @@ public class TabSuperficialController implements Initializable{
 				"21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41"
 				); 
 
+	
+	int baciaID = 1;
+	final int [] listaBaciasID = new int [] { 1,2,3,4,5,6,7,8 };
+	
+	int unidHidID = 1;
+	final int [] listaUHID = new int [] { 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,
+			22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41};
+	
 	int localCaptacaoID = 1;
 	String strLocalCaptacao = "Nascente";
 	final int [] listaLocalCaptacao = new int [] { 1,2,3,4,5 };
@@ -211,13 +155,34 @@ public class TabSuperficialController implements Initializable{
 				};
 				
 				
+	BaciasHidrograficas baciaHidrografica = new  BaciasHidrograficas();
+	UnidadeHidrografica unidadeHidrografica = new UnidadeHidrografica();
 	
-	public Superficial obterSuperficial () {
+	public Superficial getSuperficial () {
 		
-		
-		System.out.println("metodo obter superficial id " + sup.getInterID());
+		System.out.println("metodo getSuperficial id " + sup.getInterID());
 		
 		sup.setInterID(sup.getInterID());
+		
+				// valores double de coordenadas - latitude e longitude
+				sup.setInterDDLatitude(Double.parseDouble(tfLatitude.getText()));
+				sup.setInterDDLongitude(Double.parseDouble(tfLongitude.getText()));
+				
+				// valor geometry de  coordenadas latitude longitude
+				GeometryFactory geoFac = new GeometryFactory();
+				
+				Point p = geoFac.createPoint(new Coordinate(
+						Double.parseDouble(tfLongitude.getText()),
+						Double.parseDouble(tfLatitude.getText()
+						)));
+				
+				p.setSRID(4674);
+					
+				sup.setInterGeom(p);
+				
+		// adicionar o id escolhido no combobox
+		baciaHidrografica.setBaciaID(baciaID);
+		unidadeHidrografica.setUhID(unidHidID);
 		
 		LocalCaptacao lc = new LocalCaptacao();
 		lc.setLocalCatacaoID(localCaptacaoID);
@@ -228,11 +193,16 @@ public class TabSuperficialController implements Initializable{
 		MetodoIrrigacao mi = new MetodoIrrigacao();
 		mi.setMetodoIrrigacaoID(metodoIrrigacaoID);
 		
+		sup.setSupBarramento(cbBarramento.getValue());
+		
+		sup.setInterBaciaFK(baciaHidrografica);
+		sup.setInterUHFK(unidadeHidrografica);
+		
 		sup.setSupLocalCaptacaoFK(lc);		// sup_Local; //-- () canal () rio () reservatório () lago natural () nascente
 		sup.setSupFormaCaptacaoFK(fc); // bombeamento gravidade 
 		sup.setSupMetodoIrrigacaoFK(mi); // Aspersão Gotejamento Pivô Manual Aspersão/gotejamento
 		
-		sup.setSupBarramento(cbBarramento.getValue());
+		
 		
 		if (dpDataOperacao.getValue() == null) {
 			
@@ -242,15 +212,16 @@ public class TabSuperficialController implements Initializable{
 			
 			}
 		
-		sup.setSupPotenciaBomba(tfPotenciaBomba.getText()); // potência da bomba
-		sup.setSupMarcaBomba(tfMarcaBomba.getText()); // marca da bomba
+		sup.setSupCaesb(cbCaesb.getValue());
 		
 		sup.setSupCorpoHidrico(tfCorpoHidrico.getText());
 		sup.setSupAreaIrrigada(tfAreaIrrigada.getText());
 		sup.setSupAreaContribuicao(tfAreaContribuicao.getText());
-		sup.setSupAreaPropriedade(tfAreaPropriedade.getText());
 		
-		sup.setSupCaesb(cbCaesb.getValue());
+		sup.setSupPotenciaBomba(tfPotenciaBomba.getText()); // potência da bomba
+		sup.setSupMarcaBomba(tfMarcaBomba.getText()); // marca da bomba
+		
+		sup.setSupAreaPropriedade(tfAreaPropriedade.getText());
 		
 		// Finalidades Sub Quan Cons e Vazao //
 				GetterAndSetter gs  = new GetterAndSetter();
@@ -368,10 +339,26 @@ public class TabSuperficialController implements Initializable{
 	
 	};
 	
-	public void imprimirSuperficial (Superficial sup) {
+	public void setSuperficial (Superficial sup) {
 		
-		System.out.println("metodo imprimirSuperficial - superficial id " + sup.getInterID());
+		tfLatitude.setText(String.valueOf(sup.getInterDDLatitude()));
+		tfLongitude.setText(String.valueOf(sup.getInterDDLongitude()));
 		
+		// valor geometry de  coordenadas latitude longitude
+		GeometryFactory geoFac = new GeometryFactory();
+		
+		Point p = geoFac.createPoint(new Coordinate(
+				Double.parseDouble(tfLongitude.getText()),
+				Double.parseDouble(tfLatitude.getText()
+				)));
+		
+		p.setSRID(4674);
+			
+		sup.setInterGeom(p);
+		
+		cbBaciaHidrografica.setValue(sup.getInterBaciaFK().getBaciaNome());
+		cbUnidadeHidrografica.setValue(String.valueOf(sup.getInterUHFK().getUhID()));
+				
 		cbLocalCaptacao.setValue(sup.getSupLocalCaptacaoFK().getLocalCaptacaoDescricao());
 		cbFormaCaptacao.setValue(sup.getSupFormaCaptacaoFK().getFormaCaptacaoDescricao());
 		cbMetodoIrrigacao.setValue(sup.getSupMetodoIrrigacaoFK().getMetodoIrrigacaoDescricao());
@@ -424,19 +411,52 @@ public class TabSuperficialController implements Initializable{
 	
 	@FXML Pane pSuperficial;
 	
+	public static TabSuperficialController tabSupCon;
+	
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
+		
+		tabSupCon = this;
 		
 		System.out.println("initialize superficial iniciado!");
 		
 		inicializarComponentes();
-		/*
+		
+		cbBaciaHidrografica.setItems(olBacia);
+		cbUnidadeHidrografica.setItems(olUniHid);
 		cbLocalCaptacao.setItems(olLocalCaptacao);
 		cbFormaCaptacao.setItems(olFormaCaptacao);
 		cbMetodoIrrigacao.setItems(olMetodoIrrigacao);
 		cbBarramento.setItems(olBarramento);
-		
 		cbCaesb.setItems(olCaesb);
+		
+		cbBaciaHidrografica.getSelectionModel().selectedIndexProperty().addListener(new
+	            ChangeListener<Number>() {
+	    	public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
+	    		Number value, Number new_value) {
+	    		
+	    		if ( (Integer) new_value !=  -1)
+	    			
+	    		baciaID = listaBaciasID [(int) new_value];
+	    		
+	    		System.out.println(" bacia id" + baciaID);
+	    		
+            }
+	    });
+		
+		cbUnidadeHidrografica.getSelectionModel().selectedIndexProperty().addListener(new
+	            ChangeListener<Number>() {
+	    	public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
+	    		Number value, Number new_value) {
+	    		
+	    		if ( (Integer) new_value !=  -1)
+	    		unidHidID = listaUHID [(int) new_value];
+	    		
+	    		System.out.println("unidade hidr selecionada " + unidHidID);
+	    		
+            }
+	    });
+		
 		
 		cbLocalCaptacao.getSelectionModel().selectedIndexProperty().addListener(new
 	            ChangeListener<Number>() {
@@ -498,8 +518,6 @@ public class TabSuperficialController implements Initializable{
             }
         });
         
-        */
-      
 		/*
 		tf.lengthProperty().addListener(new ChangeListener<Number>() {
 

@@ -9,12 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Point;
-
 import dao.InterferenciaDao;
-import entidades.BaciasHidrograficas;
 import entidades.Endereco;
 import entidades.Interferencia;
 import entidades.SituacaoProcesso;
@@ -24,7 +19,6 @@ import entidades.Superficial;
 import entidades.TipoAto;
 import entidades.TipoInterferencia;
 import entidades.TipoOutorga;
-import entidades.UnidadeHidrografica;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -43,8 +37,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -231,7 +223,7 @@ public class TabInterferenciaControlador  implements Initializable{
 						else if (tipoInterferenciaID == 1) {
 							
 								if (
-										tabSupCon.obterSuperficial() == null
+										TabSuperficialController.tabSupCon == null
 										
 										) {
 									
@@ -242,7 +234,7 @@ public class TabInterferenciaControlador  implements Initializable{
 									
 											Superficial sup = new Superficial ();
 											
-												sup = tabSupCon.obterSuperficial();
+												sup = TabSuperficialController.tabSupCon.getSuperficial();
 												
 												sup.setInterTipoInterferenciaFK(tipoInterferencia);
 													sup.setInterTipoOutorgaFK(tipoOutorga);
@@ -262,7 +254,6 @@ public class TabInterferenciaControlador  implements Initializable{
 												
 												sup.setInterEnderecoFK(endereco);
 													
-												
 												
 											InterferenciaDao interferenciaDao = new InterferenciaDao ();
 											interferenciaDao.salvaInterferencia(sup);
@@ -440,7 +431,7 @@ public class TabInterferenciaControlador  implements Initializable{
 					
 					else if (tipoInterferenciaID == 1) {
 						
-							if (tabSupCon.obterSuperficial().getSupLocalCaptacaoFK() == null // || 
+							if (TabSuperficialController.tabSupCon.getSuperficial().getSupLocalCaptacaoFK() == null // || 
 								//	tabSupCon.obterSuperficial().getSupArea() == null
 									
 									) {
@@ -450,10 +441,8 @@ public class TabInterferenciaControlador  implements Initializable{
 								
 								} else {
 									
-											Superficial sup = tabSupCon.obterSuperficial();
-											
-											System.out.println("btn editar - super valor id " + tabSupCon.obterSuperficial().getInterID());
-											
+											Superficial sup = TabSuperficialController.tabSupCon.getSuperficial();
+										
 											sup.setInterTipoInterferenciaFK(tipoInterferencia);
 											
 											sup.setInterTipoOutorgaFK(tipoOutorga);
@@ -1090,17 +1079,14 @@ public class TabInterferenciaControlador  implements Initializable{
 	
 	public void abrirTabs (int ti) throws IOException {
 		
-		System.out.println("tipo interferencia escolhida " + ti);
-		
 		if (ti == 1) {
 			
 			pTipoInterferencia.getChildren().clear();
 			Pane pane = new Pane();
-			tabSupCon = new TabSuperficialController();
 			
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/principal/TabSuperficial.fxml")); 
 			loader.setRoot(pane);
-			loader.setController(tabSupCon);
+			loader.setController(new TabSuperficialController());
 			loader.load();
 			
 			pTipoInterferencia.getChildren().add(pane);
@@ -1109,15 +1095,13 @@ public class TabInterferenciaControlador  implements Initializable{
 		
 		else if (ti == 2) {
 			
-			
-			
 			pTipoInterferencia.getChildren().clear();
 			Pane pane = new Pane();
 			tabSubCon = new TabSubterraneaController();
 			
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/principal/TabSubterranea.fxml")); 
 			loader.setRoot(pane);
-			loader.setController(tabSubCon);
+			loader.setController(new TabSubterraneaController());
 			loader.load();
 			pTipoInterferencia.getChildren().add(pane);
 			
@@ -1199,9 +1183,9 @@ public class TabInterferenciaControlador  implements Initializable{
 					cbTipoInterferencia.setValue(inter.getInterTipoInterferenciaFK().getTipoInterDescricao());
 					
 					cbTipoOutorga.setValue(inter.getInterTipoOutorgaFK().getTipoOutorgaDescricao());
-					//cbSubTipoOutorga.setValue(inter.getInterTipoOutorgaFK().getTipoOutorgaDescricao());
-					cbTipoAto.setValue(inter.getInterTipoAtoFK().getTipoAtoDescricao());
-					cbSituacao.setValue(inter.getInterSituacaoProcessoFK().getSituacaoProcessoDescricao());
+						cbSubtipoOutorga.setValue(inter.getInterSubtipoOutorgaFK().getSubtipoOutorgaDescricao());
+							cbTipoAto.setValue(inter.getInterTipoAtoFK().getTipoAtoDescricao());
+								cbSituacao.setValue(inter.getInterSituacaoProcessoFK().getSituacaoProcessoDescricao());
 					
 					Date dPub = inter.getInterDataPublicacao();
 					dpDataPublicacao.setValue(dPub.toLocalDate());
@@ -1239,6 +1223,9 @@ public class TabInterferenciaControlador  implements Initializable{
 						
 						TabSubterraneaController.tabSubCon.setSubterranea(((Subterranea) inter));
 						
+						System.out.println(" metodo selecionarInterferencia - inter subterranea id " + 
+								inter.getInterID());
+						
 					}
 					
 					if (tipoInterferenciaID == 1 || tipoInterferenciaID == 3) {
@@ -1250,7 +1237,11 @@ public class TabInterferenciaControlador  implements Initializable{
 							e.printStackTrace();
 						}
 						
-						tabSupCon.imprimirSuperficial(((Superficial) inter));
+						TabSuperficialController.tabSupCon.setSuperficial(((Superficial) inter));
+						
+						System.out.println(" metodo selecionarInterferencia - inter superficial id " + 
+								inter.getInterID());
+						
 						
 					}
 					

@@ -104,12 +104,9 @@ public class TabEnderecoControlador implements Initializable {
 	String strRA = "Plano Piloto";
 	
 	final int [] listaRA = new int [] {
-			
-			20	,4	,19	,9	,11	,31	,2	,10	,28	,27	,18	,16	,8	,7	,24	,6	,
-			1	,15	,17	,21	,12	,13	,14	,25	,29	,5	,26	,22	,3	,23	,30	,
-
+			20,4,19,9,11,31,2,10,28,27,18,16,8,7,24,6,
+			1,15,17,21,12,13,14,25,29,5,26,22,3,23,30,
 	};
-	
 	
 	ObservableList<String> olEndRA = FXCollections
 	.observableArrayList(
@@ -956,10 +953,6 @@ public class TabEnderecoControlador implements Initializable {
 					tfLatitude.setText(end.getEndDDLatitude().toString());
 					tfLongitude.setText(end.getEndDDLongitude().toString());
 					
-					//tabIntCon.setEndereco(end);
-					//tabUsCon.setEndereco(end);
-					//tabVisCon.setEndereco(end);
-					
 					// -- habilitar e desabilitar botoes -- //
 					btnNovo.setDisable(true);
 					btnSalvar.setDisable(true);
@@ -975,6 +968,11 @@ public class TabEnderecoControlador implements Initializable {
 							lblDataAtualizacao.setTextFill(Color.RED);}
 					
 					TabInterferenciaControlador.tabIntCon.setEndereco(end);
+					TabUsuarioControlador.tabUsCon.setEndereco(end);
+					
+					//tabIntCon.setEndereco(end);
+					//tabUsCon.setEndereco(end);
+					//tabVisCon.setEndereco(end);
 					
 					/* caso não haja demanda relacionada ao endereco, setar demanda vazia */
 					if (end.getDemandas().size() == 0) {

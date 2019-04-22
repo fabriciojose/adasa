@@ -39,12 +39,14 @@ public class InterferenciaDao {
 		//crit.createAlias("i.intSupFK", "superficial", JoinType.LEFT_OUTER_JOIN);
 		
 		crit.createAlias("i.interTipoInterferenciaFK", "tipoInter", JoinType.LEFT_OUTER_JOIN);
-		crit.createAlias("i.interBaciaFK", "baciaInter", JoinType.LEFT_OUTER_JOIN);
-		crit.createAlias("i.interUHFK", "unidaHidInter", JoinType.LEFT_OUTER_JOIN);
 		
-		crit.createAlias("i.interTipoOutorgaFK", "tipoOutorga", JoinType.LEFT_OUTER_JOIN);
+		crit.createAlias("i.interTipoOutorgaFK", "tipoOutorga", JoinType.LEFT_OUTER_JOIN); 
+		crit.createAlias("i.interSubtipoOutorgaFK", "SubTipoOutorga", JoinType.LEFT_OUTER_JOIN); 
 		crit.createAlias("i.interTipoAtoFK", "tipoAto", JoinType.LEFT_OUTER_JOIN);
 		crit.createAlias("i.interSituacaoProcessoFK", "situacaoProcesso", JoinType.LEFT_OUTER_JOIN);
+		
+		crit.createAlias("i.interBaciaFK", "baciaInter", JoinType.LEFT_OUTER_JOIN);
+		crit.createAlias("i.interUHFK", "unidaHidInter", JoinType.LEFT_OUTER_JOIN);
 		
 		crit.createAlias("endereco.endRAFK", "regiaoAdm", JoinType.LEFT_OUTER_JOIN);
 		

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -34,11 +35,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -47,7 +47,6 @@ import javafx.scene.control.ToolBar;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -58,76 +57,43 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.StringConverter;
 import principal.Alerta;
+import principal.Componentes;
 import principal.FormatoData;
 import principal.MalaDireta;
 
 public class TabUsuarioControlador implements Initializable {
 	
-	TabAtoControlador tabAtoControlador = new TabAtoControlador ();
-	//EditarEnderecoControlador enditarEnderecoControlador = new EditarEnderecoControlador();
-	
 	Usuario usuario = new Usuario();
-	Interferencia interferencia = new Interferencia();
-	static Endereco endereco = new Endereco ();
-	
+		Endereco endereco = new Endereco ();
+			Interferencia interferencia = new Interferencia();
+		
 	public void setEndereco (Endereco endereco) {
 		
-		TabUsuarioControlador.endereco = endereco;
+		this.endereco = endereco;
 		
 		// preencher o label com a demanda selecionada //
 		
 		if (endereco != null) {
 		
-		TabUsuarioControlador.lblEndereco.setText(
-				endereco.getEndLogradouro() 
-				+ ", CEP: " + endereco.getEndCEP()
-				+ ", Cidade: " + endereco.getEndCidade()
-				);
+			lblEndereco.setText(
+					endereco.getEndLogradouro() 
+					+ ", CEP: " + endereco.getEndCEP()
+					+ ", Cidade: " + endereco.getEndCidade()
+					);
 		
-		lblEndereco.setTextFill(Color.BLACK);
+			lblEndereco.setStyle("-fx-text-fill: #4A4A4A;"); 
+			
 		} else {
+			
 			lblEndereco.setText("Não há endereco de empreendimento cadastrado!");
-			lblEndereco.setTextFill(Color.RED);	
+			lblEndereco.setStyle("-fx-text-fill: #FF0000;");
 		}
 		
 	}
 	
-	public static Endereco getEndereco () {
-		return endereco;
-	}
-	
-	
-	Pane p_lbl_Endereco = new Pane();
-	static Label lblEndereco = new Label();
-
 	//-- Strings --//
 	String strPesquisa = "";
-		
-		Pane tabUsuario = new Pane();
-		
-		TextField tfNome = new TextField();
-		TextField tfCPFCNPJ = new TextField();
-		TextField tfLogadouro = new TextField();
-		TextField tfCEP = new TextField();
-		TextField tfCidade = new TextField();
-		TextField tfTelefone = new TextField();
-		TextField tfCelular = new TextField();
-		TextField tfEmail = new TextField();
-		
-		
-		//-- Persistência --//
-		
-		Button btnNovo = new Button("Novo");
-		Button btnSalvar = new Button("Salvar");
-		Button btnEditar = new Button("Editar");
-		Button btnExcluir = new Button("Excluir");
-		Button btnCancelar = new Button("Cancelar");
-		Button btnPesquisar = new Button("Pesquisar");
-		TextField tfPesquisar = new TextField();
-
-		
-		CheckBox cbEndEmp = new CheckBox();
-		
+	
 		//-- TableView Endereço --//
 		private TableView <Usuario> tvLista = new TableView<>();
 		
@@ -135,83 +101,62 @@ public class TabUsuarioControlador implements Initializable {
 		TableColumn<Usuario, String> tcCPFCNPJ = new TableColumn<>("CPF/CNPJ");
 		TableColumn<Usuario, String> tcEndereco = new TableColumn<>("Endereço de Correpondência");
 		
-		ObservableList<Usuario> obsList = FXCollections.observableArrayList();
-		
-		
-		ChoiceBox<Endereco> cbEnderecoEmpreedimento = new ChoiceBox<>();
-		ObservableList<Endereco> obsListEnderecoEmpreendimento = FXCollections.observableArrayList();
-		
-		ChoiceBox<Interferencia> cbInterferencia = new ChoiceBox<>();
-		ObservableList<Interferencia> obsListInterferencia = FXCollections.observableArrayList();
-		
-		Button btnGerarRequerimento = new Button("Gerar Requerimento");
-		
-		
-		
-		//Pane pUsuario;
-		//Label lblEndUsuario;
-		
-		//-- combobox - tipo de pessoa --//
-
-		ChoiceBox<String> cbTipoPessoa = new ChoiceBox<String>();
-			ObservableList<String> olTipoPessoa = FXCollections
-				.observableArrayList("Física" , "Jurídica"); // box - seleção pessoa físcia ou jurídica
-			
-		//-- combobox - Região Administrativa --//	
-
-		ChoiceBox<String> cbRA = new ChoiceBox<String>();
-			ObservableList<String> olRA = FXCollections
-				.observableArrayList(
-						
-						"Águas Claras",
-						"Brasília",
-						"Brazlândia",
-						"Candangolândia",
-						"Ceilândia",
-						"Cruzeiro",
-						"Fercal",
-						"Gama",
-						"Guará",
-						"Itapoã",
-						"Jardim Botânico",
-						"Lago Norte",
-						"Lago Sul",
-						"Núcleo Bandeirante",
-						"Paranoá",
-						"Park Way",
-						"Planaltina",
-						"Recanto das Emas",
-						"Riacho Fundo II",
-						"Riacho Fundo",
-						"Samambaia",
-						"Santa Maria",
-						"São Sebastião",
-						"SCIA",
-						"SIA",
-						"Sobradinho II",
-						"Sobradinho	",
-						"Sudoeste/Octogonal",
-						"Taguatinga	",
-						"Varjão	",
-						"Vicente Pires"
-						
-						); 	
-			
-			//-- combobox - unidade federal --//
-
-			ChoiceBox<String> cbUF = new ChoiceBox<String>();
-				ObservableList<String> olDF = FXCollections
-					.observableArrayList("DF" , "GO", "Outro"); // box - seleção pessoa físcia ou jurídica
-				
-				
+	ObservableList<Usuario> obsList = FXCollections.observableArrayList();
 	
+	ObservableList<Endereco> obsListEnderecoEmpreendimento = FXCollections.observableArrayList();
+
+	ObservableList<Interferencia> obsListInterferencia = FXCollections.observableArrayList();
+	
+	ObservableList<String> olTipoPessoa = FXCollections
+		.observableArrayList("Física" , "Jurídica"); // box - seleção pessoa físcia ou jurídica
+
+	ObservableList<String> olRA = FXCollections
+		.observableArrayList(
+					
+					"Águas Claras",
+					"Brasília",
+					"Brazlândia",
+					"Candangolândia",
+					"Ceilândia",
+					"Cruzeiro",
+					"Fercal",
+					"Gama",
+					"Guará",
+					"Itapoã",
+					"Jardim Botânico",
+					"Lago Norte",
+					"Lago Sul",
+					"Núcleo Bandeirante",
+					"Paranoá",
+					"Park Way",
+					"Planaltina",
+					"Recanto das Emas",
+					"Riacho Fundo II",
+					"Riacho Fundo",
+					"Samambaia",
+					"Santa Maria",
+					"São Sebastião",
+					"SCIA",
+					"SIA",
+					"Sobradinho II",
+					"Sobradinho	",
+					"Sudoeste/Octogonal",
+					"Taguatinga	",
+					"Varjão	",
+					"Vicente Pires"
+					
+					); 	
+
+	ObservableList<String> olDF = FXCollections
+		.observableArrayList("DF" , "GO", "Outro"); // box - seleção pessoa físcia ou jurídica
+				
 	public void btnNovoHab () {
 		
 		cbTipoPessoa.setValue(null);
 		
 		tfNome.setText(null);
 		tfCPFCNPJ.setText(null);
-		tfLogadouro.setText(null);
+		tfLogradouro.setText(null);
 		
 		cbRA.setValue(null);
 		
@@ -229,9 +174,9 @@ public class TabUsuarioControlador implements Initializable {
 		tfNome.setDisable(false);
 		tfCPFCNPJ.setDisable(false);
 		
-		cbEndEmp.setDisable(false);
+		checkEnderecoEmpreendimento.setDisable(false);
 		
-		tfLogadouro.setDisable(false);
+		tfLogradouro.setDisable(false);
 		cbRA.setDisable(false);
 		tfCEP.setDisable(false);
 		tfCidade.setDisable(false);
@@ -273,7 +218,7 @@ public class TabUsuarioControlador implements Initializable {
 							us.setUsTipo(cbTipoPessoa.getValue());
 							us.setUsNome(tfNome.getText());
 							us.setUsCPFCNPJ(tfCPFCNPJ.getText()); 
-							us.setUsLogadouro(tfLogadouro.getText());
+							us.setUsLogadouro(tfLogradouro.getText());
 							us.setUsRA(cbRA.getValue());
 							us.setUsCidade(tfCidade.getText());
 							us.setUsEstado(cbUF.getValue());
@@ -326,10 +271,10 @@ public class TabUsuarioControlador implements Initializable {
 			cbTipoPessoa.setDisable(false);
 			tfNome.setDisable(false);
 			
-			cbEndEmp.setDisable(false);
+			checkEnderecoEmpreendimento.setDisable(false);
 			
 			tfCPFCNPJ.setDisable(false);
-			tfLogadouro.setDisable(false);
+			tfLogradouro.setDisable(false);
 			cbRA.setDisable(false);
 			tfCEP.setDisable(false);
 			tfCidade.setDisable(false);
@@ -363,7 +308,7 @@ public class TabUsuarioControlador implements Initializable {
 				us.setUsTipo(cbTipoPessoa.getValue()); 
 				us.setUsNome(tfNome.getText());
 				us.setUsCPFCNPJ(tfCPFCNPJ.getText());
-				us.setUsLogadouro(tfLogadouro.getText()); 
+				us.setUsLogadouro(tfLogradouro.getText()); 
 				
 				us.setUsRA(cbRA.getValue()); 
 				
@@ -446,7 +391,7 @@ public class TabUsuarioControlador implements Initializable {
 		
 		tfNome.setText("");
 		tfCPFCNPJ.setText("");
-		tfLogadouro.setText("");
+		tfLogradouro.setText("");
 		
 		cbRA.setValue(null);
 		
@@ -472,13 +417,13 @@ public class TabUsuarioControlador implements Initializable {
 		
 	}
 
-	public void cbEndEmpHab () {
+	public void imprimirEnderecoEmpreendimento () {
 		
 		int count = 0;
 		
-		if (cbEndEmp.isSelected()) {
+		if (checkEnderecoEmpreendimento.isSelected()) {
 			count ++;
-			try{tfLogadouro.setText(endereco.getEndLogradouro());}catch (Exception e) {tfLogadouro.setText(null);};
+			try{tfLogradouro.setText(endereco.getEndLogradouro());}catch (Exception e) {tfLogradouro.setText(null);};
 			try{cbRA.setValue(endereco.getEndRAFK().getRaNome());}catch (Exception e) {cbRA.setValue(null);};
 			try{tfCEP.setText(endereco.getEndCEP());}catch (Exception e) {tfCEP.setText(null);};
 			try{tfCidade.setText(endereco.getEndCidade());}catch (Exception e) {tfCidade.setText(null);};
@@ -488,80 +433,50 @@ public class TabUsuarioControlador implements Initializable {
 		System.out.println("check box usuario - endereço: " + count);
 	}
 	
-	
 	@FXML Pane pUsuario;
-	AnchorPane apPrincipal = new AnchorPane();
-	BorderPane bpPrincipal = new BorderPane();
-	ScrollPane spPrincipal = new ScrollPane();
-	Pane p1 = new Pane ();
-	
-	Pane p_lblEndereco = new Pane();
-	Pane pDadosBasicos = new Pane();
-	Pane pPersistencia = new Pane();
+
+	Pane p1 = new Pane();
+	BorderPane bp1 = new BorderPane();
+	BorderPane bp2 = new BorderPane();
+	ScrollPane sp = new ScrollPane();
+	Pane pMapa = new Pane();
 	
 	Label lblDataAtualizacao = new Label();
 	
-	@SuppressWarnings("unchecked")
+	public static TabUsuarioControlador tabUsCon;
+
 	public void initialize(URL url, ResourceBundle rb) {
 		
-		pUsuario.getChildren().add(apPrincipal);
+		tabUsCon = this;
 		
-		apPrincipal.minWidthProperty().bind(pUsuario.widthProperty());
-		apPrincipal.minHeightProperty().bind(pUsuario.heightProperty());
-		
-		apPrincipal.getChildren().add(spPrincipal);
-		
-		spPrincipal.setHbarPolicy(ScrollBarPolicy.NEVER);
-		spPrincipal.setVbarPolicy(ScrollBarPolicy.ALWAYS);
-		
-	    AnchorPane.setLeftAnchor(spPrincipal, 0.0);
-		AnchorPane.setRightAnchor(spPrincipal, 0.0);
-		AnchorPane.setTopAnchor(spPrincipal, 0.0);
-		AnchorPane.setBottomAnchor(spPrincipal, 47.0);
-		
-		spPrincipal.setPrefSize(200, 200);
-		
-	    bpPrincipal.minWidthProperty().bind(spPrincipal.widthProperty());
-	    bpPrincipal.setPrefHeight(1200);
-
-	    spPrincipal.setContent(bpPrincipal);
-	    
-	    p1.setMaxSize(1140, 680);
-	    p1.setMinSize(1140, 680);
-	    
-		bpPrincipal.setTop(p1);
-	    BorderPane.setAlignment(p1, Pos.CENTER);
-		
-	    obterEndereco();
-	    obterDadosBasicos();
-	    obterPersistencia();
-	    
+		 bp1.minWidthProperty().bind(pUsuario.widthProperty());
+		    bp1.maxHeightProperty().bind(pUsuario.heightProperty().subtract(60));
+		    
+		    bp1.getStyleClass().add("border-pane");
+		    
+		    bp2.setPrefHeight(800.0D);
+		    bp2.minWidthProperty().bind(pUsuario.widthProperty());
+		    
+		    sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		    
+		    sp.setContent(bp2);
+		    
+		    bp1.setCenter(sp);
+		    
+		    pUsuario.getChildren().add(bp1);
+		    
+		    p1.setMaxSize(980.0, 1000.0);
+		    p1.setMinSize(980.0, 1000.0);
+		    
+		    bp2.setTop(p1);
+		    BorderPane.setAlignment(p1, Pos.CENTER);
+		 
+		inicializarComponentes ();
+		acionarBotoes();
+		    
 	    lblDataAtualizacao.setPrefSize(247, 22);
-	    lblDataAtualizacao.setLayoutX(772);
-	    lblDataAtualizacao.setLayoutY(567);
-	    
-	    Label lblEndereco = new  Label("Endereço do Empreendimento: ");
-	    lblEndereco.setLayoutX(121);
-	    lblEndereco.setLayoutY(574);
-	    
-	    Label lblInterferencia = new  Label("Interferências: ");
-	    lblInterferencia.setLayoutX(501);
-	    lblInterferencia.setLayoutY(574);
-	    
-	    cbEnderecoEmpreedimento.setPrefSize(368, 25);
-	    cbEnderecoEmpreedimento.setLayoutX(121);
-	    cbEnderecoEmpreedimento.setLayoutY(600);
-	    
-	    cbInterferencia.setPrefSize(368, 25);
-	    cbInterferencia.setLayoutX(501);
-	    cbInterferencia.setLayoutY(600);
-	    
-	    cbEnderecoEmpreedimento.setItems(obsListEnderecoEmpreendimento);
-	    cbInterferencia.setItems(obsListInterferencia);
-	   
-	    btnGerarRequerimento.setPrefSize(140, 25);
-	    btnGerarRequerimento.setLayoutX(880);
-	    btnGerarRequerimento.setLayoutY(600);
+	    lblDataAtualizacao.setLayoutX(705);
+	    lblDataAtualizacao.setLayoutY(600);
 	    
 		cbTipoPessoa.setValue("Física");
 		cbTipoPessoa.setItems(olTipoPessoa);
@@ -571,169 +486,215 @@ public class TabUsuarioControlador implements Initializable {
 		cbUF.setValue("DF");
 		cbUF.setItems(olDF);
 		
-		tcNome.setPrefWidth(409);
-	    tcCPFCNPJ.setPrefWidth(232);
-	    tcEndereco.setPrefWidth(232);
-	    
 		tcNome.setCellValueFactory(new PropertyValueFactory<Usuario, String>("usNome"));
 		tcCPFCNPJ.setCellValueFactory(new PropertyValueFactory<Usuario, String>("usCPFCNPJ"));
 		tcEndereco.setCellValueFactory(new PropertyValueFactory<Usuario, String>("usLogadouro"));
 		
-		tvLista.getColumns().addAll(tcNome, tcCPFCNPJ, tcEndereco);
+		tcNome.setPrefWidth(410);
+		tcCPFCNPJ.setPrefWidth(180);
+		tcEndereco.setPrefWidth(320);
+		
+		tvLista.setPrefSize(930, 185);
+		tvLista.setLayoutX(25);
+		tvLista.setLayoutY(405);
+		
+		
+		tvLista.getColumns().add(tcNome);
+		tvLista.getColumns().add(tcCPFCNPJ);
+		tvLista.getColumns().add(tcEndereco);
+		
 		tvLista.setItems(obsList);
 		
-		tvLista.setPrefSize(900, 185);
-		tvLista.setLayoutX(120);
-		tvLista.setLayoutY(372);
-		
 		p1.getChildren().addAll(
-				p_lblEndereco, pDadosBasicos, pPersistencia, tvLista, 
-				lblDataAtualizacao, 
-				lblEndereco, cbEnderecoEmpreedimento, lblInterferencia, cbInterferencia,
-				btnGerarRequerimento);
+				tvLista, 
+				lblDataAtualizacao
+				);
 		
 		modularBotoesInicial();
 		
-		 btnNovo.setOnAction(new EventHandler<ActionEvent>() {
-
-		        @Override
-		        public void handle(ActionEvent event) {
-		            btnNovoHab();
-		        }
-		    });
-			    
-		    btnSalvar.setOnAction(new EventHandler<ActionEvent>() {
-
-		        @Override
-		        public void handle(ActionEvent event) {
-		            btnSalvarHab();
-		        }
-		    });
-		    
-		    btnEditar.setOnAction(new EventHandler<ActionEvent>() {
-
-		        @Override
-		        public void handle(ActionEvent event) {
-		            btnEditarHab();
-		        }
-		    });
-		    
-		    btnCancelar.setOnAction(new EventHandler<ActionEvent>() {
-
-		        @Override
-		        public void handle(ActionEvent event) {
-		            btnCancelarHab();
-		        }
-		    });
-		    
-		    btnPesquisar.setOnAction(new EventHandler<ActionEvent>() {
-
-		        @Override
-		        public void handle(ActionEvent event) {
-		            btnPesquisarHab();
-		        }
-		    });
-		    
-		    
-		    cbEndEmp.selectedProperty().addListener(new ChangeListener<Boolean>() {
-		        public void changed(ObservableValue<? extends Boolean> ov,
-		            Boolean old_val, Boolean new_val) {
-		                if(new_val == true) {
-		                	cbEndEmpHab();
-		                }
-		        }
-		    });
-		 
-		    btnGerarRequerimento.setOnAction(new EventHandler<ActionEvent>() {
-
-		        @Override
-		        public void handle(ActionEvent event) {
-		        	
-		        	btnGerarRequerimentoHab (usuario, interferencia);
-		        	
-		        }
-		    });
-		
-		  
-		    
-		    btnExcluir.setOnAction(new EventHandler<ActionEvent>() {
-
-		        @Override
-		        public void handle(ActionEvent event) {
-		        	
-		        	  btnExcluirHab ();
-		        }
-		    });
-		
-		    cbEnderecoEmpreedimento.setConverter(new StringConverter<Endereco>() {
-				
-				public String toString(Endereco e) {
-					
-					return e.getEndLogradouro() + ", RA: " + e.getEndRAFK().getRaNome();
-				}
-				
-				public Endereco fromString(String string) {
-					
-					return null;
-				}
-			});
-		    
-		    
-		    cbEnderecoEmpreedimento.valueProperty().addListener(new ChangeListener<Endereco>() {
-	            @Override 
-	            public void changed(ObservableValue<? extends Endereco> ov, Endereco oldValue, Endereco newValue) {  
-	            	
-	            	obsListInterferencia.clear();
-	            	
-	            	if (newValue != null)
-					for(Interferencia i: newValue.getInterferencias()) {
-				
-						obsListInterferencia.add(i);
-						
-						
-					}
-	            	endereco = newValue;
-	            }    
-	        });
-		    
-		    cbInterferencia.setConverter(new StringConverter<Interferencia>() {
-				
-				public String toString(Interferencia i) {
-					
-					return i.getInterTipoInterferenciaFK().getTipoInterDescricao() + " --- " + i.getInterTipoOutorgaFK().getTipoOutorgaDescricao();
-				}
-				
-				public Interferencia fromString(String string) {
-					
-					return null;
-				}
-			});
-		    
-		    
-		    cbInterferencia.valueProperty().addListener(new ChangeListener<Interferencia>() {
-	            @Override 
-	            public void changed(ObservableValue<? extends Interferencia> ov, Interferencia oldValue, Interferencia newValue) {  
-	            	
-	            	if (newValue != null)
-					interferencia = newValue;
-	            }    
-	        });
-		    
-		    
-		    
-		    
-		    
-		    selecionarUsuario();
-		   // selecionarInterferencia ();
+		selecionarUsuario();
+		// selecionarInterferencia ();
 		    
 	}
 	
+	Pane pEndereco;
+	Label lblEndereco = new Label();
+	Button btnEndereco;
+			
+		ArrayList<Node> listaComonentesEndereco = new ArrayList<Node>();
+				
+	Pane pPersistencia;
+		Button btnNovo;
+		Button btnSalvar;
+		Button btnEditar;
+		Button btnExcluir;
+		Button btnCancelar;
+		Button btnPesquisar;
+		TextField tfPesquisar;
+					
+		ArrayList<Node> listNodesPersistencia= new ArrayList<Node>();
+	  								
+	Pane pDadosUsuario;
+		ComboBox<String> cbTipoPessoa;
+		TextField tfNome;
+		TextField tfCPFCNPJ;
+		CheckBox checkEnderecoEmpreendimento;
+		TextField tfLogradouro;
+		TextField tfCEP;
+		ComboBox<String> cbRA;
+		TextField tfCidade;
+		ComboBox<String> cbUF;
+		TextField tfTelefone;
+		TextField tfCelular;
+		TextField tfEmail;
+	
+		ArrayList<Node> listaComponentesUsuario = new ArrayList<Node>();												
+		
+	  	
+	Pane pInterferencia;
+		ComboBox<Endereco> cbEndereco;
+		ComboBox<Interferencia> cbInterferencia;
+		Button btnRequerimento;
+				
+		ArrayList<Node> listaComonentesInterferencia = new ArrayList<Node>();
+
+	Componentes com;
+		Double prefSizeWHeLayXY [][];
+	
+	public void inicializarComponentes () {
+		
+		listaComonentesEndereco.add(pEndereco = new Pane());
+		listaComonentesEndereco.add(new Label("ENDERECO:"));
+		listaComonentesEndereco.add(lblEndereco = new Label());
+		listaComonentesEndereco.add(btnEndereco = new  Button("<<<"));
+		
+			prefSizeWHeLayXY = new Double [][]  { 
+				
+				{950.0,60.0,15.0,14.0},
+				{85.0,30.0,25.0,15.0},
+				{740.0,30.0,110.0,15.0},
+				{65.0,25.0,860.0,17.0},
+		    					    	
+			}; 
+		    	
+			com = new Componentes();
+		    com.popularTela(listaComonentesEndereco, prefSizeWHeLayXY, p1);
+		
+		
+		listaComponentesUsuario.add(pDadosUsuario = new Pane());
+		listaComponentesUsuario.add(new Label("TIPO:"));
+		listaComponentesUsuario.add(cbTipoPessoa = new ComboBox<String>());
+		listaComponentesUsuario.add(new Label("NOME/RAZÃO SOCIAL:"));
+		listaComponentesUsuario.add(tfNome = new TextField());
+		listaComponentesUsuario.add(new Label("CPF/CNPJ: "));
+		listaComponentesUsuario.add(tfCPFCNPJ = new TextField());
+		listaComponentesUsuario.add(checkEnderecoEmpreendimento = new CheckBox("importar endereço do empreendimento. "));
+		listaComponentesUsuario.add(new Label("ENDERECO:"));
+		listaComponentesUsuario.add(tfLogradouro = new TextField());
+		listaComponentesUsuario.add(new Label("RA: "));
+		listaComponentesUsuario.add(cbRA = new ComboBox<String>());
+		listaComponentesUsuario.add(new Label("CEP: "));
+		listaComponentesUsuario.add(tfCEP = new TextField());
+		listaComponentesUsuario.add(new Label("CIDADE:"));
+		listaComponentesUsuario.add(tfCidade = new TextField());
+		listaComponentesUsuario.add(new Label("UF: "));
+		listaComponentesUsuario.add(cbUF = new ComboBox<String>());
+		listaComponentesUsuario.add(new Label("TELEFONE:"));
+		listaComponentesUsuario.add(tfTelefone = new TextField());
+		listaComponentesUsuario.add(new Label("CELULAR:"));
+		listaComponentesUsuario.add(tfCelular = new TextField());
+		listaComponentesUsuario.add(new Label("EMAIL:"));
+		listaComponentesUsuario.add(tfEmail = new TextField());
+		
+			prefSizeWHeLayXY = new Double [][]  { 
+		    	
+				{930.0,231.0,25.0,85.0},
+				{110.0,30.0,46.0,5.0},
+				{110.0,30.0,46.0,35.0},
+				{510.0,30.0,166.0,5.0},
+				{510.0,30.0,165.0,35.0},
+				{200.0,30.0,687.0,5.0},
+				{200.0,30.0,685.0,35.0},
+				{370.0,30.0,45.0,66.0},
+				{390.0,30.0,45.0,95.0},
+				{390.0,30.0,45.0,125.0},
+				{150.0,30.0,445.0,95.0},
+				{150.0,30.0,445.0,125.0},
+				{85.0,30.0,605.0,95.0},
+				{85.0,30.0,605.0,125.0},
+				{110.0,30.0,700.0,95.0},
+				{110.0,30.0,700.0,125.0},
+				{60.0,30.0,820.0,95.0},
+				{60.0,30.0,820.0,125.0},
+				{140.0,30.0,45.0,155.0},
+				{140.0,30.0,44.0,185.0},
+				{140.0,30.0,195.0,155.0},
+				{140.0,30.0,195.0,185.0},
+				{535.0,30.0,345.0,155.0},
+				{535.0,30.0,345.0,185.0},
+								    	
+			}; 
+		    	
+			com = new Componentes();
+		    com.popularTela(listaComponentesUsuario, prefSizeWHeLayXY, p1);
+	    
+		listNodesPersistencia.add(pPersistencia = new Pane());
+	    listNodesPersistencia.add(btnNovo = new Button("NOVO"));
+	    listNodesPersistencia.add(btnSalvar = new Button("SALVAR"));
+		listNodesPersistencia.add(btnEditar = new Button("EDITAR"));
+		listNodesPersistencia.add(btnExcluir = new Button("EXCLUIR"));
+		listNodesPersistencia.add(btnCancelar = new Button("CANCELAR"));
+	    
+		listNodesPersistencia.add(tfPesquisar = new TextField());
+		listNodesPersistencia.add(btnPesquisar = new Button("PESQUISAR"));
+	    
+			prefSizeWHeLayXY = new Double [][]  { 
+		    	
+				{930.0,60.0,25.0,330.0},
+				{95.0,25.0,18.0,18.0},
+				{95.0,25.0,123.0,18.0},
+				{95.0,25.0,228.0,18.0},
+				{95.0,25.0,333.0,18.0},
+				{95.0,25.0,438.0,18.0},
+				{265.0,25.0,543.0,18.0},
+				{95.0,25.0,818.0,18.0},
+								    	
+			}; 
+		    	
+			com = new Componentes();
+		    com.popularTela(listNodesPersistencia, prefSizeWHeLayXY, p1);
+	    
+		listaComonentesInterferencia.add(pInterferencia = new Pane());
+		listaComonentesInterferencia.add(new Label("Endereço:"));
+		listaComonentesInterferencia.add(cbEndereco = new ComboBox<Endereco>());
+		listaComonentesInterferencia.add(new Label("Interferência:"));
+		listaComonentesInterferencia.add(cbInterferencia = new ComboBox<Interferencia>());
+		listaComonentesInterferencia.add(btnRequerimento = new  Button("GERAR REQUERIMENTO"));
+				
+			prefSizeWHeLayXY = new Double [][]  { 
+				
+				{930.0,81.0,25.0,630.0},
+				{350.0,30.0,21.0,9.0},
+				{350.0,30.0,21.0,42.0},
+				{350.0,30.0,381.0,9.0},
+				{350.0,30.0,381.0,42.0},
+				{175.0,25.0,741.0,45.0},
+		    					    	
+			}; 
+				    	
+			com = new Componentes();
+		    com.popularTela(listaComonentesInterferencia, prefSizeWHeLayXY, p1);
+		    
+		    cbEndereco.setItems(obsListEnderecoEmpreendimento);
+		    cbInterferencia.setItems(obsListInterferencia);
+		    
+		
+	}
 	
 	WebView webTermo;
 	WebEngine engTermo;
 	
-	
-	public void btnGerarRequerimentoHab (Usuario us, Interferencia inter) {
+	public void gerarRequerimento (Usuario us, Interferencia inter) {
 		
 		HTMLEditor htmlEditor = new HTMLEditor();
 		
@@ -754,8 +715,18 @@ public class TabUsuarioControlador implements Initializable {
 		MalaDireta ml = new MalaDireta(usuario, interferencia, endereco);
 		
 		ml.setHtmlRel(listRequerimento.get(0).getModConteudo());
+		
+		String strHTML = ml.criarDocumento();
+		
+		try { ControladorNavegacao.conNav.setHTML(strHTML); } 
+			catch (Exception e) {
+				
+				Alerta a = new Alerta ();
+				a.alertar(new Alert(Alert.AlertType.ERROR, "Inicialize o navegador SEI !!!", ButtonType.OK));
+		}
+		
 			
-		htmlEditor.setHtmlText(ml.criarDocumento());
+		htmlEditor.setHtmlText(strHTML);
 		
 		// adicionar um novo botao ao htmlEditor //
 		final String TOP_TOOLBAR = ".top-toolbar";
@@ -859,193 +830,138 @@ public class TabUsuarioControlador implements Initializable {
 	
 	}
 	
+	public void acionarBotoes () {
+		
+		 btnNovo.setOnAction(new EventHandler<ActionEvent>() {
+
+		        @Override
+		        public void handle(ActionEvent event) {
+		            btnNovoHab();
+		        }
+		    });
+			    
+		    btnSalvar.setOnAction(new EventHandler<ActionEvent>() {
+
+		        @Override
+		        public void handle(ActionEvent event) {
+		            btnSalvarHab();
+		        }
+		    });
+		    
+		    btnEditar.setOnAction(new EventHandler<ActionEvent>() {
+
+		        @Override
+		        public void handle(ActionEvent event) {
+		            btnEditarHab();
+		        }
+		    });
+		    
+		    btnCancelar.setOnAction(new EventHandler<ActionEvent>() {
+
+		        @Override
+		        public void handle(ActionEvent event) {
+		            btnCancelarHab();
+		        }
+		    });
+		    
+		    btnPesquisar.setOnAction(new EventHandler<ActionEvent>() {
+
+		        @Override
+		        public void handle(ActionEvent event) {
+		            btnPesquisarHab();
+		        }
+		    });
+		    
+		    checkEnderecoEmpreendimento.selectedProperty().addListener(new ChangeListener<Boolean>() {
+		        public void changed(ObservableValue<? extends Boolean> ov,
+		            Boolean old_val, Boolean new_val) {
+		                if(new_val == true) {
+		                	imprimirEnderecoEmpreendimento();
+		                }
+		        }
+		    });
+		 
+		    btnRequerimento.setOnAction(new EventHandler<ActionEvent>() {
+
+		        @Override
+		        public void handle(ActionEvent event) {
+		        	
+		        	gerarRequerimento (usuario, interferencia);
+		        	
+		        }
+		    });
+		
+		  
+		    
+		    btnExcluir.setOnAction(new EventHandler<ActionEvent>() {
+
+		        @Override
+		        public void handle(ActionEvent event) {
+		        	
+		        	  btnExcluirHab ();
+		        }
+		    });
+		
+		    cbEndereco.setConverter(new StringConverter<Endereco>() {
+				
+				public String toString(Endereco e) {
+					
+					return e.getEndLogradouro() + ", RA: " + e.getEndRAFK().getRaNome();
+				}
+				
+				public Endereco fromString(String string) {
+					
+					return null;
+				}
+			});
+		    
+		    
+		    cbEndereco.valueProperty().addListener(new ChangeListener<Endereco>() {
+	            @Override 
+	            public void changed(ObservableValue<? extends Endereco> ov, Endereco oldValue, Endereco newValue) {  
+	            	
+	            	obsListInterferencia.clear();
+	            	
+	            	if (newValue != null)
+					for(Interferencia i: newValue.getInterferencias()) {
+				
+						obsListInterferencia.add(i);
+						
+						
+					}
+	            	endereco = newValue;
+	            }    
+	        });
+		    
+		    cbInterferencia.setConverter(new StringConverter<Interferencia>() {
+				
+				public String toString(Interferencia i) {
+					
+					return i.getInterTipoInterferenciaFK().getTipoInterDescricao() + " --- " + i.getInterTipoOutorgaFK().getTipoOutorgaDescricao();
+				}
+				
+				public Interferencia fromString(String string) {
+					
+					return null;
+				}
+			});
+		    
+		    
+		    cbInterferencia.valueProperty().addListener(new ChangeListener<Interferencia>() {
+	            @Override 
+	            public void changed(ObservableValue<? extends Interferencia> ov, Interferencia oldValue, Interferencia newValue) {  
+	            	
+	            	if (newValue != null)
+					interferencia = newValue;
+	            }    
+	        });
+		    
+		    
+		    
+		
+	}
 	
 	Button btnBuscaEnderecoEmpreendimento = new Button();
-	
-	public void obterEndereco () {
-		
-		p_lblEndereco.setPrefSize(900, 50);
-		p_lblEndereco.setLayoutX(120);
-		p_lblEndereco.setLayoutY(20);
-		p_lblEndereco.setStyle("-fx-background-color: #E9E9E9;");
-		
-		Label lblEnd = new Label ("Endereco: ");
-		lblEnd.setLayoutX(20);
-		lblEnd.setLayoutY(16);
-		
-		 // Label para preencher com o endereco a ser trabalhada //
-	    lblEndereco.setStyle("-fx-font-weight: bold;");
-	    lblEndereco.setPrefSize(750, 25);	
-	    lblEndereco.setLayoutX(90);
-	    lblEndereco.setLayoutY(13);
-	    
-	    btnBuscaEnderecoEmpreendimento.setPrefSize(25, 25);
-	    btnBuscaEnderecoEmpreendimento.setLayoutX(850);
-	    btnBuscaEnderecoEmpreendimento.setLayoutY(13);
-	    
-	    btnBuscaEnderecoEmpreendimento.setOnAction(new EventHandler<ActionEvent>() {
-
-	        @Override
-	        public void handle(ActionEvent event) {
-	        	abrirPaneEditarEndereco();
-	        }
-	    });
-		
-		p_lblEndereco.getChildren().addAll(lblEnd, lblEndereco, btnBuscaEnderecoEmpreendimento);
-	}
-	
-	public void obterDadosBasicos () {
-		
-		pDadosBasicos.setPrefSize(900, 227);
-		pDadosBasicos.setLayoutX(120);
-		pDadosBasicos.setLayoutY(80);
-		pDadosBasicos.setStyle("-fx-background-color: #E9E9E9;");
-		
-		Label lblTipo = new Label ("Tipo: ");
-		lblTipo.setLayoutX(30);
-		lblTipo.setLayoutY(13);
-		
-			cbTipoPessoa.setPrefSize(106, 25);
-			cbTipoPessoa.setLayoutX(29);
-			cbTipoPessoa.setLayoutY(38);
-			
-				Label lblNome = new Label ("Nome/Razão Social: ");
-				lblNome.setLayoutX(148);
-				lblNome.setLayoutY(13);
-					
-					tfNome.setPrefSize(509, 25);
-					tfNome.setLayoutX(147);
-					tfNome.setLayoutY(38);
-					
-						Label lblCPFCNPJ = new Label ("CPF/CNPJ: ");
-						lblCPFCNPJ.setLayoutX(670);
-						lblCPFCNPJ.setLayoutY(13);
-			
-							tfCPFCNPJ.setPrefSize(203, 25);
-							tfCPFCNPJ.setLayoutX(668);
-							tfCPFCNPJ.setLayoutY(38);
-							
-			cbEndEmp.setText("importar endereço do empreendimento. ");				
-			cbEndEmp.setLayoutX(29);
-			cbEndEmp.setLayoutY(73);
-							
-							
-			Label lblLog = new Label ("Endereço: ");
-			lblLog.setLayoutX(31);
-			lblLog.setLayoutY(103);	
-			
-				tfLogadouro.setPrefSize(390, 25);
-				tfLogadouro.setLayoutX(31);
-				tfLogadouro.setLayoutY(128);
-		
-			Label lblRA = new Label ("RA: ");
-			lblRA.setLayoutX(435);
-			lblRA.setLayoutY(103);	
-			
-				cbRA.setPrefSize(150, 25);
-				cbRA.setLayoutX(433);
-				cbRA.setLayoutY(128);
-			
-			Label lblCEP = new Label ("CEP:");
-			lblCEP.setLayoutX(597);
-			lblCEP.setLayoutY(103);	
-			
-				tfCEP.setPrefSize(83, 25);
-				tfCEP.setLayoutX(596);
-				tfCEP.setLayoutY(128);
-			
-			Label lblCidade = new Label ("Cidade: ");
-			lblCidade.setLayoutX(692);
-			lblCidade.setLayoutY(103);
-			
-
-				tfCidade.setPrefSize(112, 25);
-				tfCidade.setLayoutX(691);
-				tfCidade.setLayoutY(128);
-			
-			Label lblUF = new Label ("UF: ");
-			lblUF.setLayoutX(816);
-			lblUF.setLayoutY(103);	
-			
-				cbUF.setPrefSize(55, 25);
-				cbUF.setLayoutX(815);
-				cbUF.setLayoutY(128);
-				
-			Label lblTel = new Label ("Telefone: ");
-			lblTel.setLayoutX(31);
-			lblTel.setLayoutY(164);	
-			
-				tfTelefone.setPrefSize(140, 25);
-				tfTelefone.setLayoutX(30);
-				tfTelefone.setLayoutY(189);
-			
-			Label lblCel = new Label ("Celular: ");
-			lblCel.setLayoutX(182);
-			lblCel.setLayoutY(164);	
-			
-				tfCelular.setPrefSize(140, 25);
-				tfCelular.setLayoutX(181);
-				tfCelular.setLayoutY(189);
-			
-			Label lblEmail = new Label ("Email: ");
-			lblEmail.setLayoutX(333);
-			lblEmail.setLayoutY(164);	
-											
-				tfEmail.setPrefSize(535	, 25);
-				tfEmail.setLayoutX(332);
-				tfEmail.setLayoutY(189);
-
-		pDadosBasicos.getChildren().addAll(
-				
-				lblTipo, cbTipoPessoa, lblNome, tfNome, lblCPFCNPJ, tfCPFCNPJ, 
-				cbEndEmp,  lblLog, tfLogadouro, lblRA, cbRA, lblCEP, tfCEP, lblCidade, tfCidade, lblUF, cbUF,
-				lblTel, tfTelefone, lblCel, tfCelular, lblEmail, tfEmail
-				);
-		
-	}
-	
-    public void obterPersistencia () {
-    	
-   	    pPersistencia.setPrefSize(900, 50);
-   	    pPersistencia.setLayoutX(120);
-   	    pPersistencia.setLayoutY(313);
-   
-		btnNovo.setPrefSize(76, 25);
-		btnNovo.setLayoutX(42);
-		btnNovo.setLayoutY(12);
-	
-	    btnSalvar.setPrefSize(76, 25);
-	    btnSalvar.setLayoutX(129);
-	    btnSalvar.setLayoutY(12);
-	
-	    btnEditar.setPrefSize(76, 25);
-	    btnEditar.setLayoutX(216);
-	    btnEditar.setLayoutY(12);
-	
-	    btnExcluir.setPrefSize(76, 25);
-	    btnExcluir.setLayoutX(303);
-	    btnExcluir.setLayoutY(12);
-	    
-	    btnCancelar.setPrefSize(76, 25);
-	    btnCancelar.setLayoutX(390);
-	    btnCancelar.setLayoutY(12);
-	    
-	    btnPesquisar.setPrefSize(76, 25);
-	    btnPesquisar.setLayoutX(783);
-	    btnPesquisar.setLayoutY(12);
-	    
-	    tfPesquisar.setPrefSize(295, 25);
-	    tfPesquisar.setLayoutX(477);
-	    tfPesquisar.setLayoutY(12);
-	    
-	    pPersistencia.getChildren().addAll( 
-	    		btnNovo, btnSalvar, btnEditar, btnExcluir,
-	    		btnCancelar, tfPesquisar, btnPesquisar
-	    		
-	    		);
-	    
-	    
-    }
 	
 	private void modularBotoesInicial () {
 		
@@ -1053,9 +969,9 @@ public class TabUsuarioControlador implements Initializable {
 		tfNome.setDisable(true); 
 		tfCPFCNPJ.setDisable(true);
 		
-		cbEndEmp.setDisable(true);
+		checkEnderecoEmpreendimento.setDisable(true);
 		
-		tfLogadouro.setDisable(true);
+		tfLogradouro.setDisable(true);
 		
 		cbRA.setDisable(true); 
 		
@@ -1077,7 +993,7 @@ public class TabUsuarioControlador implements Initializable {
 	}
 	
 	//-- método listar usuários --//
-		public void listarUsuarios (String strPesquisa) {
+	public void listarUsuarios (String strPesquisa) {
 			
 			UsuarioDao usDao = new UsuarioDao();
 			List<Usuario> usuarioList = usDao.listarUsuario(strPesquisa);
@@ -1114,8 +1030,7 @@ public class TabUsuarioControlador implements Initializable {
 					
 					tvLista.setItems(obsList);
 		}
-			
-			
+				
 	public void selecionarUsuario () {
 			
 		tvLista.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Object>() {
@@ -1129,7 +1044,7 @@ public class TabUsuarioControlador implements Initializable {
 					
 					tfNome.setText(null);
 					tfCPFCNPJ.setText(null);
-					tfLogadouro.setText(null);
+					tfLogradouro.setText(null);
 					
 					cbRA.setValue(null);
 					
@@ -1157,7 +1072,7 @@ public class TabUsuarioControlador implements Initializable {
 					
 					tfNome.setText(us.getUsNome());
 					tfCPFCNPJ.setText(us.getUsCPFCNPJ());
-					tfLogadouro.setText(us.getUsLogadouro());
+					tfLogradouro.setText(us.getUsLogadouro());
 					
 					cbRA.setValue(us.getUsRA());
 					
@@ -1184,23 +1099,12 @@ public class TabUsuarioControlador implements Initializable {
 				
 					obsListEnderecoEmpreendimento.clear();
 					
-					
-					/*  // teste - imprimir o endereco e suas interferencias
-					for(Endereco e:  usuario.getEnderecos()) {
-						System.out.println("enderecos selecionados por usuario " + e.getEndLogadouro());
-						
-						for (Interferencia i: e.getInterferencias()) {
-							System.out.println(" insterferencias selecionadas por usuario  " + i.getInterDDLatitude());
-						}
-					}
-					*/
-					
 					Set<Endereco> setEnderecos = us.getEnderecos();
 					
 					if (! us.getEnderecos().isEmpty()) {
 						
 						for(Endereco e: setEnderecos) {
-							System.out.println(e.getEndLogradouro());
+							System.out.println("set<Endereco> " + e.getEndLogradouro());
 							
 							obsListEnderecoEmpreendimento.add(e);
 							/*

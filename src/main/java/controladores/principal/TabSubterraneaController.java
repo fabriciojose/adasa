@@ -44,71 +44,6 @@ public class TabSubterraneaController implements Initializable {
 	
 	public Subterranea sub = new Subterranea();
 	
-	
-	/* adicionar aos botoes salvar e editar
-	BaciasHidrograficas baciaHid = new BaciasHidrograficas();
-	baciaHid.setBaciaID(baciaID);
-	
-	UnidadeHidrografica UniHid = new UnidadeHidrografica();
-	UniHid.setUhID(unidHidID);
-	*/
-	
-	/*
-	cbBacia.getSelectionModel().selectedIndexProperty().addListener(new
-            ChangeListener<Number>() {
-    	public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
-    		Number value, Number new_value) {
-    		
-    		if ( (Integer) new_value !=  -1)
-    			
-    		baciaID = listaBaciasID [(int) new_value];
-    		
-    		System.out.println(" bacia id " + baciaID);
-    		
-        }
-    });
-    */
-	
-	/*
-	cbBacia.getSelectionModel()
-    	.selectedItemProperty()
-    	.addListener( 
-    	(ObservableValue<? extends String> observable, String oldValue, String newValue) ->
-    	
-    	baciaNome = (String) newValue
-    	
-    );
-    */
-	
-	/*
-	cbUnidHid.getSelectionModel().selectedIndexProperty().addListener(new
-            ChangeListener<Number>() {
-    	public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
-    		Number value, Number new_value) {
-    		
-    		if ( (Integer) new_value !=  -1)
-    		unidHidID = listaUHID [(int) new_value];
-    		
-    		System.out.println("unidade hidr selecionada " + unidHidID);
-    		
-        }
-    });
-    */
-	
-	
-	/*
-	GeometryFactory geoFac = new GeometryFactory();
-	
-	Point p = geoFac.createPoint(new Coordinate(
-			Double.parseDouble(tfLon.getText()),
-			Double.parseDouble(tfLat.getText()
-			)));
-	
-	p.setSRID(4674);
-		
-	sup.setInterGeom(p);
-	*/
-	
 	// variaveis de finalidade e reflexao //
 	String strVariaveisFinalidades [] = {"subFinalidade1", "subFinalidade2", "subFinalidade3", "subFinalidade4", "subFinalidade5"};
 	String strVariaveisSubfinaldades [] = {"subSubfinalidade1", "subSubfinalidade2", "subSubfinalidade3", "subSubfinalidade4", "subSubfinalidade5"};
@@ -139,28 +74,32 @@ public class TabSubterraneaController implements Initializable {
 	
 	public Subterranea getSubterranea () {
 		
+		System.out.println("metodo getSubterranea id " + sub.getInterID());
+		
 		sub.setInterID(sub.getInterID());
 		
+		// valores double de coordenadas - latitude e longitude
 		sub.setInterDDLatitude(Double.parseDouble(tfLatitude.getText()));
 		sub.setInterDDLongitude(Double.parseDouble(tfLongitude.getText()));
+		
+		// valor geometry de  coordenadas latitude longitude
+		GeometryFactory geoFac = new GeometryFactory();
+		
+		Point p = geoFac.createPoint(new Coordinate(
+				Double.parseDouble(tfLongitude.getText()),
+				Double.parseDouble(tfLatitude.getText()
+				)));
+		
+		p.setSRID(4674);
+			
+		sub.setInterGeom(p);
 		
 		// adicionar o id escolhido no combobox
 		baciaHidrografica.setBaciaID(baciaID);
 		unidadeHidrografica.setUhID(unidHidID);
-		subSistema.setSubID(subSistemaID);
 		tipoPoco.setTipoPocoID(tipoPocoID);
+		subSistema.setSubID(subSistemaID);
 		
-		GeometryFactory geoFac = new GeometryFactory();
-			
-			Point p = geoFac.createPoint(new Coordinate(
-					Double.parseDouble(tfLongitude.getText()),
-					Double.parseDouble(tfLatitude.getText()
-					)));
-			
-			p.setSRID(4674);
-				
-			sub.setInterGeom(p);
-			
 		sub.setInterBaciaFK(baciaHidrografica);
 		sub.setInterUHFK(unidadeHidrografica);
 		sub.setSubTipoPocoFK(tipoPoco);
@@ -514,23 +453,37 @@ public class TabSubterraneaController implements Initializable {
 		
 		//iniciarDadosFinalidade ();
 		
-		
-		/*
-		
+		cbBaciaHidrografica.setItems(olBacia);
+		cbUnidadeHidrografica.setItems(olUniHid);
 		cbBaciaHidrografica.setItems(olBacia);
 		cbUnidadeHidrografica.setItems(olUniHid);
 		cbTipoPoco.setItems(olTipoPoco);
 		cbSubCaesb.setItems(olSubCaesb);
 		cbSubsistema.setItems(olSubSis);
 		
-		cbSubsistema.getSelectionModel().selectedIndexProperty().addListener(new
+		cbBaciaHidrografica.getSelectionModel().selectedIndexProperty().addListener(new
 	            ChangeListener<Number>() {
 	    	public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
 	    		Number value, Number new_value) {
 	    		
 	    		if ( (Integer) new_value !=  -1)
-	    			subSistemaID = listaSubsistema [(int) new_value];
-	    		System.out.println("susbsistema ID tabSubterranea " + subSistemaID);
+	    			
+	    		baciaID = listaBaciasID [(int) new_value];
+	    		
+	    		System.out.println(" bacia id" + baciaID);
+	    		
+            }
+	    });
+		
+		cbUnidadeHidrografica.getSelectionModel().selectedIndexProperty().addListener(new
+	            ChangeListener<Number>() {
+	    	public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
+	    		Number value, Number new_value) {
+	    		
+	    		if ( (Integer) new_value !=  -1)
+	    		unidHidID = listaUHID [(int) new_value];
+	    		
+	    		System.out.println("unidade hidr selecionada " + unidHidID);
 	    		
             }
 	    });
@@ -547,30 +500,20 @@ public class TabSubterraneaController implements Initializable {
             }
 	    });
 		
-		cbBaciaHidrografica.getSelectionModel().selectedIndexProperty().addListener(new
+		cbSubsistema.getSelectionModel().selectedIndexProperty().addListener(new
 	            ChangeListener<Number>() {
 	    	public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
 	    		Number value, Number new_value) {
 	    		
 	    		if ( (Integer) new_value !=  -1)
-	    			baciaID = listaBaciasID [(int) new_value];
-	    		System.out.println(" id da bacia - tab subterranea " + baciaID);
+	    			subSistemaID = listaSubsistema [(int) new_value];
+	    		System.out.println("susbsistema ID tabSubterranea " + subSistemaID);
 	    		
             }
 	    });
 		
 		
-		cbUnidadeHidrografica.getSelectionModel().selectedIndexProperty().addListener(new
-	            ChangeListener<Number>() {
-	    	public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
-	    		Number value, Number new_value) {
-	    		
-	    		if ( (Integer) new_value !=  -1)
-	    			unidHidID = listaUHID [(int) new_value];
-	    		System.out.println(" id da unidade hidrografica - tab subterranea " + unidHidID);
-	    		
-            }
-	    });
+		
 		
 		
 		System.out.println("TabSubterranea inicializada!");
@@ -646,8 +589,7 @@ public class TabSubterraneaController implements Initializable {
                 
             }
         });
-        */
-		
+   
 	} // FIM INITIALIZE
 	
 	Componentes com;
