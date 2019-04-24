@@ -8,10 +8,10 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
 
-public class ControladorAtendimento {
+public class ControladorOutorga {
 	
-	@FXML Pane pAtendimento;
-	@FXML TabPane tpAtendimento = new TabPane();
+	@FXML Pane pOutorga;
+	@FXML TabPane tpOutorga = new TabPane();
 	
 	@FXML Tab tpTabDemanda;
 		String strDem = "/fxml/principal/TabDemanda.fxml";
@@ -24,19 +24,23 @@ public class ControladorAtendimento {
 			
 				@FXML Tab tpTabUsuario;
 				String strUs = "/fxml/principal/TabUsuario.fxml";
+				
+					@FXML Tab tpTabParecer;
+					String strPar = "/fxml/principal/TabParecer.fxml";
+				
+				
 	
 	@FXML 
     private void initialize() {
 		
-		tpAtendimento.prefWidthProperty().bind(pAtendimento.widthProperty());
-		tpAtendimento.prefHeightProperty().bind(pAtendimento.heightProperty());
+		tpOutorga.prefWidthProperty().bind(pOutorga.widthProperty());
+		tpOutorga.prefHeightProperty().bind(pOutorga.heightProperty());
 		
-		abrirTab (new Pane() ,  new TabDemandaControlador(0), strDem, tpTabDemanda );
-			abrirTab (new Pane()  ,  new TabEnderecoControlador(0), strEnd, tpTabEndereco );
-				abrirTab (new Pane() ,   new TabInterferenciaControlador(0), strInt, tpTabInterferencia );
-					abrirTab (new Pane() ,  new TabUsuarioControlador(0), strUs, tpTabUsuario );
-		
-		
+		abrirTab (new Pane() ,  new TabDemandaControlador(2), strDem, tpTabDemanda );
+			abrirTab (new Pane()  ,  new TabEnderecoControlador(2), strEnd, tpTabEndereco );
+				abrirTab (new Pane() ,  new TabInterferenciaControlador(2), strInt, tpTabInterferencia );
+					abrirTab (new Pane() ,  new TabUsuarioControlador(2), strUs, tpTabUsuario );
+						abrirTab (new Pane() ,  new TabParecerControlador(2), strPar, tpTabParecer );
 		
 	}
 	
@@ -53,8 +57,8 @@ public class ControladorAtendimento {
 			e.printStackTrace();
 		}
 		
-		p.minWidthProperty().bind(pAtendimento.widthProperty());
-		p.minHeightProperty().bind(pAtendimento.heightProperty());
+		p.minWidthProperty().bind(pOutorga.widthProperty());
+		p.minHeightProperty().bind(pOutorga.heightProperty());
 		
 		t.setContent(p);
 	}

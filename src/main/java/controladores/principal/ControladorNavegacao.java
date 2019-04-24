@@ -62,21 +62,21 @@ public class ControladorNavegacao implements Initializable {
 			hbControles.setPrefHeight(30);
 		
 			btnVoltar = new Button();
-			btnVoltar.setPrefSize(30, 30);
+			btnVoltar.setPrefSize(90, 30);
 			
 			btnIr = new Button();
-			btnIr.setPrefSize(30, 30);
+			btnIr.setPrefSize(90, 30);
 			
 			btnAtualizaNavegador = new Button();
-			btnAtualizaNavegador.setPrefSize(30, 30);
+			btnAtualizaNavegador.setPrefSize(90, 30);
 			
-			btnGoogle = new Button();
-			btnGoogle.setPrefSize(30, 30);
+			btnGoogle = new Button("GOOGLE");
+			btnGoogle.setPrefSize(90, 30);
 			
-			btnSEI = new Button();
-			btnSEI.setPrefSize(30, 30);
+			btnSEI = new Button("SEI");
+			btnSEI.setPrefSize(90, 30);
 			
-			hbControles.setStyle("-fx-background-color: red");
+			hbControles.setStyle("-fx-background-color: white");
 			
 		hbControles.getChildren().addAll(btnVoltar, btnIr, btnAtualizaNavegador, btnGoogle, btnSEI);
 	
@@ -97,7 +97,7 @@ public class ControladorNavegacao implements Initializable {
 	    
         btnGoogle.setOnAction((ActionEvent evt)->{
         	
-        	link = "https://www.w3schools.com/howto/howto_js_popup.asp";
+        	link = "https://www.google.com.br/webhp?hl=pt-BR&sa=X&ved=0ahUKEwiQm_2BrN3hAhXKIrkGHRukAZUQPAgH";
         	navegarWeb (link);
         	
         });
@@ -161,7 +161,9 @@ public class ControladorNavegacao implements Initializable {
     	
     	// String link = "https://www.w3schools.com/howto/howto_js_popup.asp";
     	
-    	webEnginer.load("https://www.w3schools.com/howto/howto_js_popup.asp");
+    	// treinamento sei http://treinamento3.sei.df.gov.br/sip/login.php?sigla_orgao_sistema=GDF&sigla_sistema=SEI
+    	
+    	webEnginer.load("https://sei.df.gov.br/sip/login.php?sigla_orgao_sistema=GDF&sigla_sistema=SEI");
     	
     	ap.getChildren().add(webView);
     	

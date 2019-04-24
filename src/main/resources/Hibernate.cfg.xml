@@ -41,32 +41,40 @@
 		<property name="hibernate.c3p0.idle_test_period">60</property>
 		
 		<!-- MAPEAMENTO DAS ENTIDADES -->
-		<mapping class="entidades.Demanda"/>
 		<mapping class="entidades.Processo"/>
+			<mapping class="entidades.Demanda"/>
+			
+			<mapping class="entidades.Documento"/> 
+				<mapping class="entidades.Parecer"/> 
+		
 		<mapping class="entidades.Endereco"/>
-		<mapping class="entidades.RA"/>
+			<mapping class="entidades.RA"/>
+			
 		<mapping class="entidades.Interferencia"/>
-		<mapping class="entidades.BaciasHidrograficas"/>
-		<mapping class="entidades.SubSistema"/>
-		<mapping class="entidades.UnidadeHidrografica"/>
-		<mapping class="entidades.TipoInterferencia"/>
+			<mapping class="entidades.BaciasHidrograficas"/>
+			<mapping class="entidades.UnidadeHidrografica"/>
+			<mapping class="entidades.TipoInterferencia"/>
+			<mapping class="entidades.SituacaoProcesso"/>
+			<mapping class="entidades.TipoAto"/>
+			<mapping class="entidades.TipoOutorga"/>
+			<mapping class="entidades.SubtipoOutorga"/> 
+			
 		<mapping class="entidades.Subterranea"/>
+			<mapping class="entidades.TipoPoco"/>
+			<mapping class="entidades.SubSistema"/>
+		
 		<mapping class="entidades.Superficial"/>
+			<mapping class="entidades.LocalCaptacao"/>
+			<mapping class="entidades.FormaCaptacao"/>
+			<mapping class="entidades.MetodoIrrigacao"/>
+		
 		<mapping class="entidades.Usuario"/>
+		
 		<mapping class="entidades.Vistoria"/>
 		<mapping class="entidades.Ato"/>
+		
 		<mapping class="entidades.ModelosHTML"/>
 		
-		<mapping class="entidades.LocalCaptacao"/>
-		<mapping class="entidades.FormaCaptacao"/>
-		<mapping class="entidades.MetodoIrrigacao"/>
-		<mapping class="entidades.SituacaoProcesso"/>
-		
-		<mapping class="entidades.TipoPoco"/>
-		<mapping class="entidades.TipoAto"/>
-		<mapping class="entidades.TipoOutorga"/>
-		<mapping class="entidades.SubtipoOutorga"/> 
-	
     </session-factory>
     
 </hibernate-configuration>

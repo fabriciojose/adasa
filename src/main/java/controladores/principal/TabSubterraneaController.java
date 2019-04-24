@@ -5,12 +5,15 @@ import java.sql.Date;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 
+import dao.BaciasHidrograficasDao;
+import dao.UnidadeHidrograficaDao;
 import entidades.BaciasHidrograficas;
 import entidades.GetterAndSetter;
 import entidades.SubSistema;
@@ -1006,7 +1009,10 @@ public class TabSubterraneaController implements Initializable {
 		btnLatLon.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 	        public void handle(ActionEvent event) {
+				
 	        	capturarCoordenadas();
+	        	
+	        	
 	        	
 	        }
 	    });
@@ -1266,11 +1272,58 @@ public class TabSubterraneaController implements Initializable {
 	} // fim metodo iniciarDadosFinalidade
 
 	public void capturarCoordenadas () {
+		
+		String lat = ControladorPrincipal.capturarGoogleMaps().getLat();
+		String lon = ControladorPrincipal.capturarGoogleMaps().getLon();
+		
+		tfLatitude.setText(lat);
+		tfLongitude.setText(lon);
+		
+		System.out.println(lat + "," + lon);
+		
+		GeometryFactory geoFac;
+		Point p;
+		
+		geoFac = new GeometryFactory();
+				
+				p = geoFac.createPoint(new Coordinate(
+						Double.parseDouble(lon),
+						Double.parseDouble(lat)
+						));
+				
+				p.setSRID(4674);
+				
+		BaciasHidrograficasDao bacias = new BaciasHidrograficasDao();
+		List<BaciasHidrograficas> listBacias = bacias.listarBaciasHidrograficas("");
+		
+		UnidadeHidrograficaDao uhs = new UnidadeHidrograficaDao();
+		List<UnidadeHidrografica> listUnidades = uhs.listarUnidadesHidrograficas("");
+		
+		
+		for (BaciasHidrograficas b : listBacias) {
+			
+			if (p.intersects(b.getBaciaShape())) {
+				
+				cbBaciaHidrografica.setValue(String.valueOf(b.getBaciaNome()));
+				
+				System.out.println("nome da bacia " + b.getBaciaNome() );
+			}
+			
+		} // fim loop bacias hidrograficas
+		
+		for (UnidadeHidrografica u : listUnidades) {
+			
+			
+			if (p.intersects(u.getShape())) {
+				
+			cbUnidadeHidrografica.setValue(String.valueOf(u.getUhCodigo()));
+				
+			System.out.println("nome da uh " + u.getUhNome() );
+			}
+		
+		} // fim loop unidades hidrograficas
 	
-		tfLatitude.setText( ControladorPrincipal.capturarGoogleMaps().getLat() );
-		tfLongitude.setText( ControladorPrincipal.capturarGoogleMaps().getLon());
-	
-	}
+	} // fim metodo capturar coordenadas
 	
 }
 

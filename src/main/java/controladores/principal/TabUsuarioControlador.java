@@ -444,6 +444,30 @@ public class TabUsuarioControlador implements Initializable {
 	Label lblDataAtualizacao = new Label();
 	
 	public static TabUsuarioControlador tabUsCon;
+	
+	public static TabUsuarioControlador controladorAtendimento;
+	public static TabUsuarioControlador controladorFiscalizacao;
+	public static TabUsuarioControlador controladorOutorga;
+	
+	int intControlador;
+	
+	public TabUsuarioControlador (int i) {
+		
+		if (i==0) {
+			controladorAtendimento = this;
+			intControlador = i;
+		}
+		if(i==1) {
+			controladorFiscalizacao = this;
+			intControlador = i;
+		}
+		
+		if(i==2) {
+			controladorOutorga = this;
+			intControlador = i;
+		}
+	
+	}
 
 	public void initialize(URL url, ResourceBundle rb) {
 		
@@ -712,7 +736,7 @@ public class TabUsuarioControlador implements Initializable {
 			listRequerimento = modDao.listarModelo("Requerimento de Outorga Superficial");
 		} 
 		
-		MalaDireta ml = new MalaDireta(usuario, interferencia, endereco);
+		MalaDireta ml = new MalaDireta(endereco, interferencia, usuario);
 		
 		ml.setHtmlRel(listRequerimento.get(0).getModConteudo());
 		

@@ -105,6 +105,8 @@ public class ControladorModelosHTML implements Initializable {
 	// -- botão salvar -- //
 	public void btnSalvarHabilitar (ActionEvent event) {
 		
+		System.out.println("BNT SALVAR MODELOS CLICADO");
+		
 		ModelosHTML mod = new ModelosHTML();
 		
 		mod.setModUnidade(cbUnidade.getValue());

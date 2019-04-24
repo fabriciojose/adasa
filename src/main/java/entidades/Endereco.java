@@ -66,6 +66,12 @@ public class Endereco implements Serializable{
 	@Fetch(FetchMode.SUBSELECT) 
 	private Set<Demanda> demandas;
 	
+		//-- Lista de documentos vinculados --//
+		@OneToMany (mappedBy = "docEnderecoFK", cascade = CascadeType.MERGE,
+				 fetch = FetchType.EAGER, targetEntity = Documento.class)
+		@Fetch(FetchMode.SUBSELECT) 
+		private Set<Documento> documentos;
+	
 	
 		//-- Lista de interferencias vinculadas --//
 		@OneToMany (mappedBy = "interEnderecoFK", cascade = CascadeType.MERGE,

@@ -295,6 +295,8 @@ public class TabDemandaControlador implements Initializable {
   
   public static TabDemandaControlador controladorAtendimento;
   	public static TabDemandaControlador controladorFiscalizacao;
+  		public static TabDemandaControlador controladorOutorga;
+  	
   		int intControlador;
 	
   public TabDemandaControlador (int i) {
@@ -305,6 +307,10 @@ public class TabDemandaControlador implements Initializable {
 		}
 		if(i==1) {
 			controladorFiscalizacao = this;
+			intControlador = i;
+		}
+		if(i==2) {
+			controladorOutorga = this;
 			intControlador = i;
 		}
 	
@@ -496,6 +502,7 @@ public class TabDemandaControlador implements Initializable {
     acionarBotoesDemanda();
     
     selecionarDemanda ();
+    
   }
   
   public void acionarBotoesDemanda() {
@@ -910,6 +917,8 @@ public class TabDemandaControlador implements Initializable {
 			//tabEndCon.setDemanda(demanda);
 			//enditarEnderecoControlador.setObjetoDeEdicao(demanda);
 			
+			System.out.println("valor do int controlador " + intControlador);
+			
 		    if (intControlador == 0) {
 		    	TabEnderecoControlador.controladorAtendimento.setDemanda(dem);
 	
@@ -918,8 +927,13 @@ public class TabDemandaControlador implements Initializable {
 		    if (intControlador == 1) {
 		 			TabEnderecoControlador.controladorFiscalizacao.setDemanda(dem);
 		    }
+		    
+		    if (intControlador == 2) {
+	 			TabEnderecoControlador.controladorOutorga.setDemanda(dem);
+		    }
 			
-			
+		   // System.out.println("tabDemanda - atendimento 0; fiscalizacao 1, outorga 2 ");
+		    System.out.println("tabDemandaControlador " + intControlador);
 			// copiar número sei da demanda ao selecionar //
 			Clipboard clip = Clipboard.getSystemClipboard();
             ClipboardContent conteudo = new ClipboardContent();

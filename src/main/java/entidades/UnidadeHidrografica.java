@@ -17,6 +17,8 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import com.vividsolutions.jts.geom.Geometry;
+
 @Entity
 @Table(name="UNIDADE_HIDROGRAFICA")
 public class UnidadeHidrografica implements Serializable{
@@ -30,20 +32,31 @@ public class UnidadeHidrografica implements Serializable{
 	@Column (name="OBJECTID")
 	private int objectID;
 
-	@Column (name="bacia_nome", columnDefinition="varchar(70)")
+	@Column (name="uh_nome", columnDefinition="varchar(70)")
 	private String uhNome;
 	
-	@Column (name="bacia_codi")
+	@Column (name="uh_codigo")
 	private int uhCodigo;
 	
 	@Column (name="subbacia_n", columnDefinition="varchar(150)")
 	private String uhBaciaNome;
+	
+	@Column (name="Shape", columnDefinition="org.hibernate.spatial.GeometryType") // , columnDefinition = "Geometry"  ver se precisa do column Definition
+	private  Geometry Shape;  // ver com a biblioteca vividsoluctions
 
 	@OneToMany (mappedBy = "interUHFK", cascade = CascadeType.MERGE,
 			fetch = FetchType.LAZY, targetEntity = Interferencia.class)
 	@Fetch(FetchMode.SUBSELECT) 
 	private List<Interferencia> interferencias = new ArrayList<Interferencia>();
 	
+	public Geometry getShape() {
+		return Shape;
+	}
+
+	public void setShape(Geometry shape) {
+		Shape = shape;
+	}
+
 	//CONSTRUTOR PADRÃO
 	public UnidadeHidrografica () {
 		

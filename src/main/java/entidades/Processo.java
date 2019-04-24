@@ -44,6 +44,10 @@ public class Processo
   @Fetch(FetchMode.SUBSELECT)
   private Set<Demanda> demandas;
   
+  @OneToMany(mappedBy="docProcessoFK", cascade= CascadeType.MERGE, fetch=FetchType.EAGER, targetEntity=Documento.class)
+  @Fetch(FetchMode.SUBSELECT)
+  private Set<Documento> documentos;
+  
   public Processo() {}
   
   public Processo(String proSEI, Timestamp proAtualizacao, Set<Demanda> demandas)
@@ -112,4 +116,6 @@ public class Processo
   {
     this.proDataCriacao = proDataCriacao;
   }
+
+  
 }

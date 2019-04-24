@@ -778,7 +778,25 @@ public class TelaEnderecoControlador implements Initializable {
 				tfLatitude.setText(end.getEndDDLatitude().toString());
 				tfLongitude.setText(end.getEndDDLongitude().toString());
 				
-				TabInterferenciaControlador.tabIntCon.setEndereco(end);
+				// levar o endereco salvo para a tabinterferencia //	
+				
+				 if (intControlador == 0) {
+					 TabInterferenciaControlador.controladorAtendimento.setEndereco(end);
+					 TabUsuarioControlador.controladorAtendimento.setEndereco(end);
+			
+				 	}
+				     
+				    if (intControlador == 1) {
+				    	TabInterferenciaControlador.controladorFiscalizacao.setEndereco(end);
+				    	TabUsuarioControlador.controladorFiscalizacao.setEndereco(end);
+				    }
+				    
+				    if (intControlador == 2) {
+				    	TabInterferenciaControlador.controladorOutorga.setEndereco(end);
+				    	TabUsuarioControlador.controladorOutorga.setEndereco(end);
+				    	TabParecerControlador.controladorOutorga.setEndereco(end);
+				    }
+				
 				
 				System.out.println("selecionar endereco " + end.getEndLogradouro());
 				

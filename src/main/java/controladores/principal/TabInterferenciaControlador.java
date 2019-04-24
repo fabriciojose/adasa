@@ -63,13 +63,14 @@ public class TabInterferenciaControlador  implements Initializable{
 		
 		System.out.println(endereco.getEndLogradouro());
 		
-		lblEndereco.setText(
+				lblEndereco.setText(
 				
-				endereco.getEndLogradouro()
-				+ ", CEP n°: " + endereco.getEndCEP()
-				+ ", Cidade: " + endereco.getEndCidade()
+					endereco.getEndLogradouro()
+					+ ", CEP n°: " + endereco.getEndCEP()
+					+ ", Cidade: " + endereco.getEndCidade()
 				
 				);
+				lblEndereco.setStyle("-fx-text-fill: #FF0000;");
 			
 	}
 	
@@ -608,13 +609,34 @@ public class TabInterferenciaControlador  implements Initializable{
 		
 	Componentes com;
 	
-	public static TabInterferenciaControlador tabIntCon;
+	public static TabInterferenciaControlador controladorAtendimento;
+	public static TabInterferenciaControlador controladorFiscalizacao;
+	public static TabInterferenciaControlador controladorOutorga;
+	
+	int intControlador;
+	
+	public TabInterferenciaControlador (int i) {
+		
+		if (i==0) {
+			controladorAtendimento = this;
+			intControlador = i;
+		}
+		if(i==1) {
+			controladorFiscalizacao = this;
+			intControlador = i;
+		}
+		
+		if(i==2) {
+			controladorOutorga = this;
+			intControlador = i;
+		}
+	
+	}
+	
 	
 	
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
-		
-		tabIntCon = this;
 		
 		 bp1.minWidthProperty().bind(pInterferencia.widthProperty());
 		    bp1.maxHeightProperty().bind(pInterferencia.heightProperty().subtract(60));

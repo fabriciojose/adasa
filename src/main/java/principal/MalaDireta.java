@@ -1,13 +1,16 @@
 package principal;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import entidades.Documento;
 import entidades.Endereco;
 import entidades.GetterAndSetter;
 import entidades.Interferencia;
@@ -19,9 +22,10 @@ public class MalaDireta {
 	
 	String htmlRel;
 	
-	Usuario usuario;
-	Endereco endereco;
-	Interferencia interferencia;
+	Documento documento;
+		Endereco endereco;
+			Interferencia interferencia;
+				Usuario usuario;
 	
 	/*
 	 * Dados das finalidades
@@ -69,11 +73,22 @@ public class MalaDireta {
 		
 	}
 	
-	public MalaDireta (Usuario usuario, Interferencia interferencia, Endereco endereco) {
-		this.usuario = usuario;
-		this.interferencia = interferencia;
+	public MalaDireta (Endereco endereco, Interferencia interferencia,Usuario usuario) {
+	
 		this.endereco = endereco;
+			this.interferencia = interferencia;
+				this.usuario = usuario;
+		
 	}
+	
+	public MalaDireta (Documento documento,Endereco endereco,Interferencia interferencia, Usuario usuario) {
+		
+		this.documento = documento;
+			this.endereco = endereco;
+				this.interferencia = interferencia;
+					this.usuario = usuario;
+	}
+	
 	
 	public String criarDocumento () {
 		
@@ -82,6 +97,42 @@ public class MalaDireta {
 		Document docHtml = null;
 		
 		docHtml = Jsoup.parse(htmlRel, "UTF-8").clone();
+		
+		if (documento.getDocID() != 0) {
+			
+			String strPosicoesDocumento [] = {
+					
+					"doc_num_tag",
+					"doc_data_tag"
+					
+			};
+			
+			// formatador
+			DateFormat formatador = DateFormat.getDateInstance(DateFormat.FULL, new Locale("pt", "BR"));
+				// string com a data:  Terça-feira, 2 de Abril de 2019
+				String dataExtenso = formatador.format(documento.getDocDataCriacao());
+			
+					System.out.println(dataExtenso);
+			
+						// retirar o dia da semana:  2 de Abril de 2019
+						int index  = dataExtenso.indexOf(","); // inicio da substring
+		
+							System.out.println(dataExtenso.substring(index + 2));
+			
+			String strDocumento [] = {
+					documento.getDocNumero(),
+					dataExtenso.substring(index + 2)				
+					};
+			
+			for (int i  = 0; i<strPosicoesDocumento.length; i++) {
+ 				
+ 				try { docHtml.select(strPosicoesDocumento[i]).prepend(strDocumento[i]);} 
+ 					catch (Exception e) {docHtml.select(strPosicoesDocumento[i]).prepend("");};
+ 			}
+			
+			
+		}
+		
 		
 		/*
 		 * dados do usuario
@@ -171,13 +222,11 @@ public class MalaDireta {
 			
 			for (int i = 0; i<5; i++) {
 				
-				
 				listFinalidadesCadastradas.add(gs.callGetter(((Superficial) interferencia), listVariaveisFinalidades.get(i))); // .getIntSupFK()
 				listSubfinalidadesCadastradas.add(gs.callGetter(((Superficial) interferencia), listVariaveisSubfinaldades.get(i)));
 				listQuantidadesCadastradas.add(gs.callGetter(((Superficial) interferencia), listVariaveisQuantidades.get(i)));
 				listConsumosCadastrados.add(gs.callGetter(((Superficial) interferencia), listVariaveisConsumo.get(i)));
 				listVazoesCadastradas.add(gs.callGetter(((Superficial) interferencia), listVariaveisVazao.get(i)));
-				
 				
 			}
 
