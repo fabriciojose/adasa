@@ -693,7 +693,6 @@ public class TabDemandaControlador implements Initializable {
   
   public void movimentarTelaProcesso (Double dbltransEsquerda)	{
 	  
-	  
 	  /*
     if (demanda.getDemID() == 0) {
     	
@@ -711,16 +710,16 @@ public class TabDemandaControlador implements Initializable {
       	lbl_TP_Demanda.setTextFill(Color.BLACK);
     }*/
     
-    dblTranslateTelaProcesso = Double.valueOf(pTelaProcesso.getTranslateX());
+	  dblTranslateTelaProcesso = Double.valueOf(pTelaProcesso.getTranslateX());
     
-    if (dblTranslateTelaProcesso.equals(dbltransEsquerda)) {
-    	transicaoTelaProDireita.play();
-    } else {
-    		transicaoTelaProEsquerda.play();
-    }
-    
-  }
-  
+	  if (dblTranslateTelaProcesso.equals(dbltransEsquerda)) {
+	    	transicaoTelaProDireita.play();
+	    } else {
+	    	transicaoTelaProEsquerda.play();
+	    }
+	    
+	  }
+	  
   public void inicializarTelaEndereco ()
   {
     if (pTelaEndereco == null)

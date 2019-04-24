@@ -74,7 +74,7 @@ public class TelaDemandaControlador implements Initializable {
 		
 	}
 	
-	Pane p = new Pane();
+	Pane pPrincipal = new Pane();
 	
 	Pane pEndereco;
 		Label lblEndereco;
@@ -132,7 +132,7 @@ public class TelaDemandaControlador implements Initializable {
 		
 		inicializarComponentes ();
 	   
-		pTelaDemanda.getChildren().addAll(p);
+		pTelaDemanda.getChildren().addAll(pPrincipal);
 		
 		selecionarDemanda();
 		modularBotoesDemanda();
@@ -162,7 +162,7 @@ public class TelaDemandaControlador implements Initializable {
 				};
 			
 				com = new Componentes();
-			    com.popularTela(listComponentesEndereco, prefSizeWHeLayXY, p);
+			    com.popularTela(listComponentesEndereco, prefSizeWHeLayXY, pPrincipal);
 			
 			
 		 listComponentesDemanda.add(pDadosDemanda = new Pane());
@@ -199,14 +199,14 @@ public class TelaDemandaControlador implements Initializable {
 							    	
 	    pTelaDemanda.setStyle("-fx-background-color: rgba(223,226,227, 0.7);");
 
-	    p.setStyle("-fx-background-color: white");
-	    p.setPrefSize(890, 670);
-	    p.setLayoutX(60);
-	    p.setLayoutY(0.0);
+	    pPrincipal.setStyle("-fx-background-color: white");
+	    pPrincipal.setPrefSize(890, 670);
+	    pPrincipal.setLayoutX(60);
+	    pPrincipal.setLayoutY(0.0);
 	    
 	    
 	    com = new Componentes();
-	    com.popularTela(listComponentesDemanda, prefSizeWHeLayXY, p);
+	    com.popularTela(listComponentesDemanda, prefSizeWHeLayXY, pPrincipal);
 	    
 	    
 	    ObservableList<String> obsListTiposDemanda = FXCollections
@@ -249,7 +249,7 @@ public class TelaDemandaControlador implements Initializable {
 								    };
 		    	
 		com = new Componentes();
-	    com.popularTela(listComponentesPersistencia, prefSizeWHeLayXY, p);
+	    com.popularTela(listComponentesPersistencia, prefSizeWHeLayXY, pPrincipal);
 	   
 	   
 	    tcTipoDemanda.setCellValueFactory(new PropertyValueFactory<Demanda, String>("demTipo"));
@@ -277,7 +277,7 @@ public class TelaDemandaControlador implements Initializable {
 	    lblDataAtualizacao.setLayoutX(615.0);
 	    lblDataAtualizacao.setLayoutY(515.0);
 	    
-	    p.getChildren().addAll(tvLista, lblDataAtualizacao);
+	    pPrincipal.getChildren().addAll(tvLista, lblDataAtualizacao);
 	    
 	    btnEndereco.setOnAction(new EventHandler<ActionEvent>() {
 	    	
@@ -289,6 +289,11 @@ public class TelaDemandaControlador implements Initializable {
 	        	if (intControlador == 1) {
 	        		TabEnderecoControlador.controladorFiscalizacao.movimentarTelaDemanda(15.0);
 	        	}
+	        	if (intControlador == 2) {
+	        		TabEnderecoControlador.controladorOutorga.movimentarTelaDemanda(15.0);
+	        	}
+	        	
+	        	System.out.println("valor do intControlador TelaDemanda " + intControlador);
 	        	
 	        }
 	    });

@@ -46,10 +46,14 @@ public void salvarDocumento (Documento documento) {
 		s.beginTransaction();
 		
 		Criteria crit = s.createCriteria(Documento.class, "d");
-		crit.createAlias("d.docEnderecoFK" , "e", JoinType.LEFT_OUTER_JOIN);
-		crit.createAlias("e.endRAFK", "ra", JoinType.LEFT_OUTER_JOIN);
-		crit.createAlias("d.docProcessoFK", "p", JoinType.LEFT_OUTER_JOIN);
+
+		crit.createAlias("d.usuarios" , "usuarios", JoinType.LEFT_OUTER_JOIN);
 		
+		crit.createAlias("d.docEnderecoFK" , "e", JoinType.LEFT_OUTER_JOIN);
+			crit.createAlias("e.endRAFK", "regiaoAdministrativa", JoinType.LEFT_OUTER_JOIN);
+			crit.createAlias("e.endUsuarioFK", "endUsuarioFK", JoinType.LEFT_OUTER_JOIN);
+		
+		crit.createAlias("d.docProcessoFK", "p", JoinType.LEFT_OUTER_JOIN);
 		
 		Criterion docTipo = Restrictions.like("docTipo", '%' + strPesquisa + '%');
 		Criterion docNumero = Restrictions.like("docNumero", '%' + strPesquisa + '%');

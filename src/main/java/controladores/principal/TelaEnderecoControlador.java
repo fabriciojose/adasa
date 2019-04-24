@@ -335,6 +335,11 @@ public class TelaEnderecoControlador implements Initializable {
 	        	if(intControlador == 1) {
 	        		TabDemandaControlador.controladorFiscalizacao.movimentarTelaEndereco(15.0);
 	        	}
+	        	if (intControlador == 2) {
+	        		TabDemandaControlador.controladorOutorga.movimentarTelaEndereco(15.0);
+	        	}
+	        	
+	        	System.out.println("valor do intControlador TelaEndereco " + intControlador);
 	        }
 	    });
 	    

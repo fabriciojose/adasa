@@ -14,6 +14,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.Fetch;
@@ -33,6 +35,10 @@ public class Usuario implements Serializable {
 				fetch = FetchType.LAZY, targetEntity = Endereco.class)
 		@Fetch(FetchMode.SUBSELECT)
 		private Set<Endereco> enderecos = new HashSet<Endereco>();
+		
+		@ManyToOne
+		@JoinColumn(name="us_Documento_FK")
+		private Documento usDocumentoFK;
 		
 		//List<Endereco> enderecos = new ArrayList<Endereco>();
 		//private Set parts = new HashSet();
@@ -196,5 +202,15 @@ public class Usuario implements Serializable {
 	public void setUsDataAtualizacao(java.sql.Timestamp usDataAtualizacao) {
 		this.usDataAtualizacao = usDataAtualizacao;
 	}
+
+	public Documento getUsDocumentoFK() {
+		return usDocumentoFK;
+	}
+
+	public void setUsDocumentoFK(Documento usDocumentoFK) {
+		this.usDocumentoFK = usDocumentoFK;
+	}
+	
+	
 	
 }

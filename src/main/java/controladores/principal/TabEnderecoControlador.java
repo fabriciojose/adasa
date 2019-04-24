@@ -574,6 +574,8 @@ public class TabEnderecoControlador implements Initializable {
 	Double prefSizeWHeLayXY [][];
 		
 	Componentes com;
+	
+	Pane pPrincipal = new Pane();
 	  
 	public void initialize(URL url, ResourceBundle rb) {
 		

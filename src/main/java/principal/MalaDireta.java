@@ -98,14 +98,12 @@ public class MalaDireta {
 		
 		docHtml = Jsoup.parse(htmlRel, "UTF-8").clone();
 		
-		if (documento.getDocID() != 0) {
+		// dados documento
+		if (!(documento == null)) {
 			
 			String strPosicoesDocumento [] = {
-					
 					"doc_num_tag",
-					"doc_data_tag"
-					
-			};
+						"doc_data_tag"	};
 			
 			// formatador
 			DateFormat formatador = DateFormat.getDateInstance(DateFormat.FULL, new Locale("pt", "BR"));
@@ -121,8 +119,7 @@ public class MalaDireta {
 			
 			String strDocumento [] = {
 					documento.getDocNumero(),
-					dataExtenso.substring(index + 2)				
-					};
+						dataExtenso.substring(index + 2)	};
 			
 			for (int i  = 0; i<strPosicoesDocumento.length; i++) {
  				
@@ -131,13 +128,10 @@ public class MalaDireta {
  			}
 			
 			
-		}
+		} // fim if documento null
 		
 		
-		/*
-		 * dados do usuario
-		 */
-		
+		// dados do usuario
 		if (usuario.getUsNome() != null ) {
 			
 			String strPosicoesUsuario [] = {
@@ -222,7 +216,7 @@ public class MalaDireta {
 			
 			for (int i = 0; i<5; i++) {
 				
-				listFinalidadesCadastradas.add(gs.callGetter(((Superficial) interferencia), listVariaveisFinalidades.get(i))); // .getIntSupFK()
+				listFinalidadesCadastradas.add(gs.callGetter(((Superficial) interferencia), listVariaveisFinalidades.get(i)));
 				listSubfinalidadesCadastradas.add(gs.callGetter(((Superficial) interferencia), listVariaveisSubfinaldades.get(i)));
 				listQuantidadesCadastradas.add(gs.callGetter(((Superficial) interferencia), listVariaveisQuantidades.get(i)));
 				listConsumosCadastrados.add(gs.callGetter(((Superficial) interferencia), listVariaveisConsumo.get(i)));

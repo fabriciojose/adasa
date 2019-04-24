@@ -1,5 +1,6 @@
 package controladores.principal;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -10,16 +11,13 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-import javax.print.Doc;
-
-import dao.DemandaDao;
 import dao.DocumentoDao;
-import entidades.Demanda;
 import entidades.Documento;
 import entidades.Endereco;
-import entidades.Parecer;
+import entidades.Interferencia;
 import entidades.Processo;
-import javafx.beans.property.SimpleStringProperty;
+import entidades.Usuario;
+import javafx.animation.TranslateTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -27,12 +25,14 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -46,7 +46,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.util.Callback;
+import javafx.util.Duration;
 import principal.Alerta;
 import principal.Componentes;
 import principal.FormatoData;
@@ -61,6 +61,8 @@ public class TabParecerControlador implements Initializable {
 	  		 ObservableList<Documento> obsList = FXCollections.observableArrayList();
 	  		
 	  		 Set<Documento> setListParecer;
+	  		 
+
 
 	Documento documento = new Documento();
 		Processo processo = new Processo();
@@ -68,18 +70,18 @@ public class TabParecerControlador implements Initializable {
 		
 	public void setEndereco (Endereco endereco) {
 	
-	this.endereco = endereco;
-
-	if (endereco != null ) {
-		
-		lblEndereco.setText(
-				
-				endereco.getEndLogradouro()
-				+ ", CEP n°: " + endereco.getEndCEP()
-				+ ", Cidade: " + endereco.getEndCidade()
-				
-				);
-		lblEndereco.setStyle("-fx-text-fill: #4A4A4A;"); 
+		this.endereco = endereco;
+	
+		if (endereco != null ) {
+			
+			lblEndereco.setText(
+					
+					endereco.getEndLogradouro()
+					+ ", CEP n°: " + endereco.getEndCEP()
+					+ ", Cidade: " + endereco.getEndCidade()
+					
+					);
+			lblEndereco.setStyle("-fx-text-fill: #4A4A4A;"); 
 	}
 	else {
 		
@@ -124,7 +126,6 @@ public class TabParecerControlador implements Initializable {
 	
 	}
 	  
-	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		
@@ -187,8 +188,8 @@ public class TabParecerControlador implements Initializable {
     
     inicializarComponentes ();
     selecionarDocumento (); 
-    modularBotoesDocumento();
-    acionarBotoesDocumento();
+    modularBotoes();
+    acionarBotoes();
     
     	
 	} // FIM INITIALIZE
@@ -211,7 +212,7 @@ public class TabParecerControlador implements Initializable {
   		
   		ArrayList<Node> componentesParecer = new ArrayList<Node>();
 	
-  	Pane  pPersistencia;
+		Pane  pPersistencia;
   		Button btnNovo;
 		Button btnSalvar;
 		Button btnEditar;
@@ -221,6 +222,29 @@ public class TabParecerControlador implements Initializable {
 		TextField tfPesquisar;
 			  			
 		ArrayList<Node> componentesPersistencia = new ArrayList<Node>();
+		
+		Pane pUsuario;
+	  	
+  		TableView<Usuario> tvUsuarios;
+	  		 TableColumn<Usuario, String> tcNomeUsuario = new TableColumn<Usuario, String>("Nome");
+			  	TableColumn<Usuario, String> tcCPFCNPJ = new TableColumn<Usuario, String>("CPF/CNPJ");
+			  		ObservableList<Usuario> obsListUsuario = FXCollections.observableArrayList();
+			  		 Set<Usuario> setListUsuario; 
+  		
+			  		 ComboBox<Endereco> cbEndereco;
+			  		 	ObservableList<Endereco> obsListEndereco = FXCollections.observableArrayList();
+  		
+  		TableView<Interferencia> tvInterferencias;
+	  		 TableColumn<Interferencia, String> tcTipoInterferencia = new TableColumn<Interferencia, String>("Tipo de Interferência");
+			  	TableColumn<Interferencia, String> tcSituacaoInterferencia = new TableColumn<Interferencia, String>("Situação");
+			  		ObservableList<Interferencia> obsListInterferencia = FXCollections.observableArrayList();
+			  		 	Set<Interferencia> setListInterferencia; 
+  	
+		Button btnUsuario;
+		Button btnParecer;
+		
+		ArrayList<Node> componentesDocumento = new ArrayList<Node>();
+		
 	
 	public void inicializarComponentes (){
 		
@@ -300,6 +324,59 @@ public class TabParecerControlador implements Initializable {
 			    	
 			com = new Componentes();
 		    com.popularTela(componentesPersistencia, prefSizeWHeLayXY, p1);
+		    
+		    
+		    componentesDocumento.add(pUsuario = new Pane());
+		    componentesDocumento.add(btnUsuario = new Button("<<<"));
+		    componentesDocumento.add(new Label("USUÁRIOS:"));
+		    componentesDocumento.add(tvUsuarios = new TableView<Usuario>());
+		    componentesDocumento.add(new Label("ENDEREÇO:"));
+		    componentesDocumento.add(cbEndereco = new ComboBox<>());
+		    componentesDocumento.add(new Label("INTERFERÊNCIAS:"));
+		    componentesDocumento.add(tvInterferencias = new TableView<Interferencia>());
+		    componentesDocumento.add(btnParecer = new Button("GERAR PARECER"));
+		
+			    
+			    prefSizeWHeLayXY = new Double [][] { 
+			    	
+			    	{930.0,410.0,25.0,480.0},
+			    	{70.0,25.0,850.0,10.0},
+			    	
+			    	{420.0,30.0,10.0,60.0},
+			    	{420.0,255.0,10.0,100.0},
+			    	
+			    	{420.0,30.0,440.0,60.0},
+			    	{420.0,30.0,440.0,100.0},
+			    	{420.0,30.0,440.0,140.0},
+			    	{420.0,175.0,440.0,180.0},
+			    	{180.0,30.0,680.0,365.0},
+			    	
+		    				};
+			    	
+			    com = new Componentes();
+			    com.popularTela(componentesDocumento, prefSizeWHeLayXY, p1);
+			    
+			    
+			    tcNomeUsuario.setCellValueFactory(new PropertyValueFactory<Usuario, String>("usNome"));
+			    tcCPFCNPJ.setCellValueFactory(new PropertyValueFactory<Usuario, String>("usCPFCNPJ"));
+			    
+			    tcNomeUsuario.setPrefWidth(250.0);
+		    	tcCPFCNPJ.setPrefWidth(150.0);
+		    		tvUsuarios.getColumns().add(tcNomeUsuario); //, tcDocsSEI, tcProcsSEI });
+				    tvUsuarios.getColumns().add(tcCPFCNPJ);
+				    	tvUsuarios.setItems(obsListUsuario);
+				    	
+				    	
+				    	tcTipoInterferencia.setCellValueFactory(new PropertyValueFactory<Interferencia, String>("interTipoInterferenciaFK"));
+				    	tcSituacaoInterferencia.setCellValueFactory(new PropertyValueFactory<Interferencia, String>("interSituacaoProcessoFK"));
+					    
+					    tcTipoInterferencia.setPrefWidth(235.0);
+				    	tcSituacaoInterferencia.setPrefWidth(165.0);
+				    		tvInterferencias.getColumns().add(tcTipoInterferencia); //, tcDocsSEI, tcProcsSEI });
+				    		tvInterferencias.getColumns().add(tcSituacaoInterferencia);
+				    			tvInterferencias.setItems(obsListInterferencia);
+				    			
+				    			cbEndereco.setItems(obsListEndereco);
 			    
 		
 	}
@@ -323,8 +400,6 @@ public class TabParecerControlador implements Initializable {
 	    tvLista.setItems(obsList);
 		    
 	}
-	
-	int contador = 0;
 	
 	public void selecionarDocumento () {
 		
@@ -352,9 +427,7 @@ public class TabParecerControlador implements Initializable {
 				btnCancelar.setDisable(false);
 				
 			} else {
-				
-				System.out.println(contador ++);
-
+			
 				documento = doc;
 				
 				setEndereco(doc.getDocEnderecoFK());
@@ -370,7 +443,7 @@ public class TabParecerControlador implements Initializable {
 	 				} else {
 	 					Date d = doc.getDocDataCriacao();
 	 					dpDataCriacao.setValue(d.toLocalDate());
-	 					System.out.println("data criacao " + d.toLocalDate());
+	 			
 	 				}
 				
 				if (doc.getDocDataDistribuicao() == null) {
@@ -379,7 +452,7 @@ public class TabParecerControlador implements Initializable {
 	 				} else {
 	 					Date d = doc.getDocDataDistribuicao();
 	 					dpDataDistribuicao.setValue(d.toLocalDate());
-	 					System.out.println("data distribuicao " + d.toLocalDate());
+	 				
 	 				}
 				
 				if (doc.getDocDataRecebimento() == null) {
@@ -388,9 +461,17 @@ public class TabParecerControlador implements Initializable {
 	 					
 	 					Date d = doc.getDocDataRecebimento();
 	 					dpDataRecebimento.setValue(d.toLocalDate());
-	 					System.out.println("data recebimento " + d.toLocalDate());
+	 				
 	 				}
 				
+				
+				if (!obsListUsuario.isEmpty()) {
+					obsListUsuario.clear();
+				      
+				}
+				
+				obsListUsuario.add(doc.getDocEnderecoFK().getEndUsuarioFK());
+					System.out.println(doc.getDocEnderecoFK().getEndUsuarioFK());
 				
 				// mostrar data de atualizacao //
 				FormatoData d = new FormatoData();
@@ -398,6 +479,7 @@ public class TabParecerControlador implements Initializable {
 						lblDataAtualizacao.setTextFill(Color.BLACK);
 				}catch (Exception e) {lblDataAtualizacao.setText("Não há data de atualização!");
 						lblDataAtualizacao.setTextFill(Color.RED);}
+				
 				
 				// copiar número sei da demanda ao selecionar //
 				Clipboard clip = Clipboard.getSystemClipboard();
@@ -420,7 +502,7 @@ public class TabParecerControlador implements Initializable {
 			
 		}
 	
-	public void modularBotoesDocumento () {
+	public void modularBotoes () {
 		  
 		tfDocumento.setDisable(true);
 	    tfSEI.setDisable(true);
@@ -437,7 +519,7 @@ public class TabParecerControlador implements Initializable {
 	    btnNovo.setDisable(false);
 	}
 	
-	public void acionarBotoesDocumento () {
+	public void acionarBotoes() {
 		   
 	    btnNovo.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override public void handle(ActionEvent e) {
@@ -488,6 +570,17 @@ public class TabParecerControlador implements Initializable {
 			     btnPesquisar.fire();
 			  }
 			});
+	    
+	   // inicializar tela usuario
+	    btnUsuario.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override public void handle(ActionEvent e) {
+	        	
+	        	inicializarTelaUsuario();
+	        
+	        	TelaUsuarioControlador.telaUsCon.setDocumento(documento);
+	        	
+	        }
+	    });
 	   
 		    
 		  
@@ -572,7 +665,7 @@ public class TabParecerControlador implements Initializable {
 		      
 		        obsList.add(doc);
 		        
-		        modularBotoesDocumento();
+		        modularBotoes();
 		        
 		        Alerta a = new Alerta();
 		        a.alertar(new Alert(Alert.AlertType.INFORMATION, "Cadastro salvo com sucesso!!!", new ButtonType[] { ButtonType.OK }));
@@ -653,7 +746,7 @@ public class TabParecerControlador implements Initializable {
 				      obsList.add(doc);
 				     
 				  
-				    modularBotoesDocumento();
+				      modularBotoes();
 				      
 				    Alerta a = new Alerta();
 				    a.alertar(new Alert(Alert.AlertType.ERROR, "Cadastro editado com sucesso!!!", new ButtonType[] { ButtonType.OK }));
@@ -676,7 +769,7 @@ public class TabParecerControlador implements Initializable {
 			      
 			      obsList.remove(doc);
 			      
-			      modularBotoesDocumento();
+			      modularBotoes();
 			      
 			      Alerta a = new Alerta();
 			      a.alertar(new Alert(Alert.AlertType.INFORMATION, "Cadastro excluído com sucesso!!!", new ButtonType[] { ButtonType.OK }));
@@ -693,18 +786,77 @@ public class TabParecerControlador implements Initializable {
 	  
 	public void cancelarDocumento ()	{
 	   
-		  modularBotoesDocumento();
+		modularBotoes();
 	}
 	  
 	String strPesquisa = "";
-	  
 	public void pesquisarDocumento ()	{
 		  
 	   strPesquisa = tfPesquisar.getText();
 	    
 	   listarDocumentos(strPesquisa);
 	    
-	   modularBotoesDocumento();
+	   modularBotoes();
 	    
 	  }
+
+	Pane pTelaUsuario;
+		TranslateTransition tDireita;
+		TranslateTransition tEsquerda;
+		Double dblTUsuario;
+	  
+	public void inicializarTelaUsuario () {
+		  
+	    if (pTelaUsuario == null) {
+	    	
+	    	pTelaUsuario = new Pane();
+	    	pTelaUsuario.setPrefSize(500.0, 500.0);
+	    	
+	    	Pane p = new Pane();
+	    
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/principal/TelaUsuario.fxml"));
+			loader.setRoot(p);
+			loader.setController(new TelaUsuarioControlador (intControlador));
+		
+			try {
+				loader.load();
+			} 
+				catch (IOException e)	{
+					System.out.println("erro leitura do pane");
+					e.printStackTrace();
+				}
+		
+			pTelaUsuario.getChildren().add(p);
+			
+			p1.getChildren().add(pTelaUsuario);
+		
+				tEsquerda = new TranslateTransition(new Duration(350.0), pTelaUsuario);
+					tEsquerda.setToX(15.0);
+				  
+				tDireita = new TranslateTransition(new Duration(350.0), pTelaUsuario);
+					tDireita.setToX(1300.0);
+		  
+					pTelaUsuario.setTranslateX(1300.0);
+		  
+		}
+	    
+	    movimentarTelaUsuario (15.0);
+	    
+	  }
+	  
+	public void movimentarTelaUsuario (Double dbltransEsquerda)	{
+		 
+		dblTUsuario = Double.valueOf(pTelaUsuario.getTranslateX());
+	    
+		  if (dblTUsuario.equals(dbltransEsquerda)) {
+		    	tDireita.play();
+		    } else {
+		    	tEsquerda.play();
+		    }
+		    
+		  }
+		  
+
+		
+
 }

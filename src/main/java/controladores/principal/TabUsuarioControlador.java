@@ -584,8 +584,9 @@ public class TabUsuarioControlador implements Initializable {
 
 	Componentes com;
 		Double prefSizeWHeLayXY [][];
-	
+		
 	public void inicializarComponentes () {
+		
 		
 		listaComonentesEndereco.add(pEndereco = new Pane());
 		listaComonentesEndereco.add(new Label("ENDERECO:"));
@@ -909,36 +910,29 @@ public class TabUsuarioControlador implements Initializable {
 
 		        @Override
 		        public void handle(ActionEvent event) {
-		        	
 		        	gerarRequerimento (usuario, interferencia);
 		        	
 		        }
 		    });
 		
-		  
-		    
 		    btnExcluir.setOnAction(new EventHandler<ActionEvent>() {
 
 		        @Override
 		        public void handle(ActionEvent event) {
-		        	
-		        	  btnExcluirHab ();
+		        	btnExcluirHab ();
 		        }
 		    });
 		
 		    cbEndereco.setConverter(new StringConverter<Endereco>() {
 				
 				public String toString(Endereco e) {
-					
 					return e.getEndLogradouro() + ", RA: " + e.getEndRAFK().getRaNome();
 				}
 				
 				public Endereco fromString(String string) {
-					
 					return null;
 				}
 			});
-		    
 		    
 		    cbEndereco.valueProperty().addListener(new ChangeListener<Endereco>() {
 	            @Override 
@@ -948,9 +942,7 @@ public class TabUsuarioControlador implements Initializable {
 	            	
 	            	if (newValue != null)
 					for(Interferencia i: newValue.getInterferencias()) {
-				
 						obsListInterferencia.add(i);
-						
 						
 					}
 	            	endereco = newValue;
@@ -958,14 +950,11 @@ public class TabUsuarioControlador implements Initializable {
 	        });
 		    
 		    cbInterferencia.setConverter(new StringConverter<Interferencia>() {
-				
 				public String toString(Interferencia i) {
-					
 					return i.getInterTipoInterferenciaFK().getTipoInterDescricao() + " --- " + i.getInterTipoOutorgaFK().getTipoOutorgaDescricao();
 				}
 				
 				public Interferencia fromString(String string) {
-					
 					return null;
 				}
 			});
@@ -974,15 +963,11 @@ public class TabUsuarioControlador implements Initializable {
 		    cbInterferencia.valueProperty().addListener(new ChangeListener<Interferencia>() {
 	            @Override 
 	            public void changed(ObservableValue<? extends Interferencia> ov, Interferencia oldValue, Interferencia newValue) {  
-	            	
 	            	if (newValue != null)
 					interferencia = newValue;
 	            }    
 	        });
-		    
-		    
-		    
-		
+		  
 	}
 	
 	Button btnBuscaEnderecoEmpreendimento = new Button();

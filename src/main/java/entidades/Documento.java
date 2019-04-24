@@ -3,10 +3,14 @@ package entidades;
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,6 +18,10 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -32,7 +40,13 @@ public class Documento implements Serializable {
 		@ManyToOne
 		@JoinColumn(name="doc_Processo_FK")
 		private Processo docProcessoFK;
-	
+		
+			//-- Lista de enderecos vinculados --//
+			@OneToMany (mappedBy = "usDocumentoFK", cascade = CascadeType.MERGE,
+					fetch = FetchType.LAZY, targetEntity = Usuario.class)
+			@Fetch(FetchMode.SUBSELECT)
+			private Set<Usuario> usuarios = new HashSet<Usuario>();
+				
 	@Column(name="doc_Tipo", columnDefinition="varchar(50)")
 	private String docTipo;
 		 
@@ -140,9 +154,21 @@ public class Documento implements Serializable {
 	public void setDocDataAtualizacao(Timestamp docDataAtualizacao) {
 		this.docDataAtualizacao = docDataAtualizacao;
 	}
-	
-	
-	
-	
+
+	public Set<Usuario> getUsuarios() {
+		return usuarios;
+	}
+
+	public void setUsuarios(Set<Usuario> usuarios) {
+		this.usuarios = usuarios;
+	}
+
+	public String getDocTipo() {
+		return docTipo;
+	}
+
+	public void setDocTipo(String docTipo) {
+		this.docTipo = docTipo;
+	}
 	
 }
