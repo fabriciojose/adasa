@@ -14,13 +14,14 @@
    <children>
       <Pane fx:id="pEndereco" layoutX="40.0" layoutY="10.0" prefHeight="60.0" prefWidth="950.0" style="-fx-background-color: #E9E9E9;" styleClass="panes">
          <children>
-            <Label layoutX="33.0" layoutY="15.0" prefHeight="30.0" prefWidth="80.0" text="Endereço: " />
-            <Label fx:id="lblEndereco" layoutX="113.0" layoutY="16.0" prefHeight="30.0" prefWidth="730.0">
+            <Label layoutX="35.0" layoutY="15.0" prefHeight="30.0" prefWidth="80.0" text="Endereço: " />
+            <Label fx:id="lblEndereco" layoutX="115.0" layoutY="16.0" prefHeight="30.0" prefWidth="690.0">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
             </Label>
-            <Button fx:id="lblEndereco" layoutX="853.0" layoutY="18.0" mnemonicParsing="false" onAction="#btnEndCoordHab" prefHeight="25.0" prefWidth="65.0" />
+            <Button layoutX="815.0" layoutY="18.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" />
+            <Button fx:id="lblEndereco" layoutX="850.0" layoutY="18.0" mnemonicParsing="false" onAction="#btnEndCoordHab" prefHeight="25.0" prefWidth="65.0" />
          </children>
       </Pane>
       <Pane fx:id="pDadosBasicos" layoutX="50.0" layoutY="85.0" prefHeight="165.0" prefWidth="930.0" styleClass="panes">

@@ -56,15 +56,14 @@ import principal.FormatoData;
 public class TabEnderecoControlador implements Initializable {
 	
 	// para trazer a demanda cadastrada e relacionado com o endereco //
-	Demanda demanda = new Demanda ();
-	Endereco endereco = new Endereco();
+	Demanda demanda;
+	Endereco endereco;
 	
 	/* recebimento da demanda e preenchimento na parte superior - DOCUMENTO: ... */
 	public void setDemanda (Demanda demanda)  {
 		
 		this.demanda = demanda;
 		// preencher o label com a demanda selecionada //
-	
 		
 		if(!(demanda == null)) {
 			lblDemanda.setText(
@@ -81,7 +80,7 @@ public class TabEnderecoControlador implements Initializable {
 					);
 			lblDemanda.setStyle("-fx-text-fill: #FF0000;");
 		}
-		
+	
 	}
 	
 	Pane pMap;
@@ -192,108 +191,105 @@ public class TabEnderecoControlador implements Initializable {
 			
 		} 
 		
-			else if (demanda == null) {
+		else if (demanda == null) {
 				
-				Alerta a = new Alerta ();
-				a.alertar(new Alert(Alert.AlertType.ERROR, "Não há demanda selecionada!!!", ButtonType.OK));
+			Alerta a = new Alerta ();
+			a.alertar(new Alert(Alert.AlertType.ERROR, "Não há demanda selecionada!!!", ButtonType.OK));
 				
 			} 
 		
-				else {
+	else {
+	
+	
+		if (tfLogradouro.getText().isEmpty()) {
+			
+			Alerta a = new Alerta ();
+			a.alertar(new Alert(Alert.AlertType.ERROR, "Informe o logradouro do empreendimento!!!", ButtonType.OK));
+			
+		} else {
+		
+			RA ra = new RA ();
+				ra.setRaID(intRA);
+				ra.setRaNome(strRA);
+	
+			Endereco end = new Endereco();
+		
+			end.setEndLogradouro(tfLogradouro.getText());
+			end.setEndRAFK(ra);
 				
+			end.setEndCEP(tfCEP.getText());
+			end.setEndCidade(tfCidade.getText());
+			end.setEndUF(cbUF.getValue());
+		
+
+			end.setEndDDLatitude(Double.parseDouble(tfLatitude.getText()));
+			end.setEndDDLongitude(Double.parseDouble(tfLongitude.getText()));
+			
+			GeometryFactory geoFac = new GeometryFactory();
+			
+			Point p = geoFac.createPoint(new Coordinate(
+					Double.parseDouble(tfLongitude.getText()),
+					Double.parseDouble(tfLatitude.getText()
+					)));
+			
+			p.setSRID(4674);
 				
-					if (tfLogradouro.getText().isEmpty()) {
-						
-						Alerta a = new Alerta ();
-						a.alertar(new Alert(Alert.AlertType.ERROR, "Informe o logradouro do empreendimento!!!", ButtonType.OK));
-						
-					} else {
+			end.setEndGeom(p);
+			
+			end.setEndAtualizacao(
+					Timestamp.valueOf((LocalDateTime.now())));
+			
+				Demanda dem = new Demanda();
+				
+				dem = demanda;
+				dem.setDemEnderecoFK(end);
+			
+				// adicionar a demanda editada //
+				Set<Demanda> listDemandas = new HashSet<>();
+				listDemandas.add(dem);
+				
+				end.setDemandas(listDemandas);
+				
+				EnderecoDao endDao = new EnderecoDao();
 					
-							RA ra = new RA ();
-								ra.setRaID(intRA);
-								ra.setRaNome(strRA);
-						
-						Endereco end = new Endereco();
-							
-								end.setEndLogradouro(tfLogradouro.getText());
-								end.setEndRAFK(ra);
-									
-								end.setEndCEP(tfCEP.getText());
-								end.setEndCidade(tfCidade.getText());
-								end.setEndUF(cbUF.getValue());
-							
-							try {
-								
-								end.setEndDDLatitude(Double.parseDouble(tfLatitude.getText()));
-								end.setEndDDLongitude(Double.parseDouble(tfLongitude.getText()));
-								
-								GeometryFactory geoFac = new GeometryFactory();
-								
-								Point p = geoFac.createPoint(new Coordinate(
-										Double.parseDouble(tfLongitude.getText()),
-										Double.parseDouble(tfLatitude.getText()
-										)));
-								
-								p.setSRID(4674);
-									
-								end.setEndGeom(p);
-								
-								end.setEndAtualizacao(
-										Timestamp.valueOf((LocalDateTime.now())));
-										
-										Demanda dem = new Demanda ();
-										
-											dem = demanda;
-											dem.setDemEnderecoFK(end);
-											end.getDemandas().add(dem);
-										
-										EnderecoDao endDao = new EnderecoDao();
-										
-											endDao.salvarEndereco(end); //solução para recuperar o id do endereço
-											endDao.mergeEndereco(end); // assim adiciona o id end na demanda dem
-										
-											 if (intControlador == 0) {
-												 TabInterferenciaControlador.controladorAtendimento.setEndereco(end);
-												 TabUsuarioControlador.controladorAtendimento.setEndereco(end);
-										
-											 	}
-											     
-											    if (intControlador == 1) {
-											    	TabInterferenciaControlador.controladorFiscalizacao.setEndereco(end);
-											    	TabUsuarioControlador.controladorFiscalizacao.setEndereco(end);
-											    }
-											    
-											    if (intControlador == 2) {
-											    	TabInterferenciaControlador.controladorOutorga.setEndereco(end);
-											    	TabUsuarioControlador.controladorOutorga.setEndereco(end);
-											    	TabParecerControlador.controladorOutorga.setEndereco(end);
-											    }
-											    
-										
-										//-- modular botoes--//
-										modularBotoesInicial ();
-										
-										obsList.remove(end);
-										obsList.add(end);
-										
-										modularBotoesInicial();
-										
-										Alerta a = new Alerta ();
-										a.alertar(new Alert(Alert.AlertType.INFORMATION, "Cadastro salvo com sucesso!!!", ButtonType.OK));
-										
-								} 
-							
-								catch (Exception e) {
-									
-									Alerta a = new Alerta ();
-									a.alertar(new Alert(Alert.AlertType.ERROR, "erro ao salvar!!!", ButtonType.OK));
-									
-									e.printStackTrace();
-								}
-				}
+					endDao.salvarEndereco(end); //solução para recuperar o id do endereço
+					endDao.mergeEndereco(end); // assim adiciona o id end na demanda dem
+				
+					// levar o endereco salvo para a tabinterferencia //	
+					if (intControlador == 0) {
+					 TabInterferenciaControlador.controladorAtendimento.setEndereco(end);
+					 TabUsuarioControlador.controladorAtendimento.setEndereco(end);
+					 TabParecerControlador.controladorAtendimento.setEndereco(end);
 			
+				 	}
+				     
+					    if (intControlador == 1) {
+					    	TabInterferenciaControlador.controladorFiscalizacao.setEndereco(end);
+					    	TabUsuarioControlador.controladorFiscalizacao.setEndereco(end);
+					    	TabParecerControlador.controladorFiscalizacao.setEndereco(end);
+					    }
+				    
+						    if (intControlador == 2) {
+						    	TabInterferenciaControlador.controladorOutorga.setEndereco(end);
+						    	TabUsuarioControlador.controladorOutorga.setEndereco(end);
+						    	TabParecerControlador.controladorOutorga.setEndereco(end);
+						    }
+							    
+							
+				//-- modular botoes--//
+				modularBotoesInicial ();
+				
+				obsList.remove(end);
+				obsList.add(end);
+				
+				modularBotoesInicial();
+				
+				Alerta a = new Alerta ();
+				a.alertar(new Alert(Alert.AlertType.INFORMATION, "Cadastro salvo com sucesso!!!", ButtonType.OK));
+							
+					
+			}
 		}
-			
 	}
 	
 	public void editarEndereco () {
@@ -381,26 +377,31 @@ public class TabEnderecoControlador implements Initializable {
 					// dao //
 					EnderecoDao enderecoDao = new EnderecoDao();
 				
-					enderecoDao.mergeEndereco(end);
+						enderecoDao.mergeEndereco(end);
 					
 					// levar o endereco salvo para a tabinterferencia //	
-					 if (intControlador == 0) {
-						 TabInterferenciaControlador.controladorAtendimento.setEndereco(end);
-						 TabUsuarioControlador.controladorAtendimento.setEndereco(end);
-				
-					 	}
+
+					// levar o endereco salvo para a tabinterferencia //	
+					if (intControlador == 0) {
+					 TabInterferenciaControlador.controladorAtendimento.setEndereco(end);
+					 TabUsuarioControlador.controladorAtendimento.setEndereco(end);
+					 TabParecerControlador.controladorAtendimento.setEndereco(end);
+			
+				 	}
 					     
-					    if (intControlador == 1) {
-					    	TabInterferenciaControlador.controladorFiscalizacao.setEndereco(end);
-					    	TabUsuarioControlador.controladorFiscalizacao.setEndereco(end);
-					    }
+				    if (intControlador == 1) {
+				    	TabInterferenciaControlador.controladorFiscalizacao.setEndereco(end);
+				    	TabUsuarioControlador.controladorFiscalizacao.setEndereco(end);
+				    	TabParecerControlador.controladorFiscalizacao.setEndereco(end);
+				    }
 					    
-					    if (intControlador == 2) {
-					    	TabInterferenciaControlador.controladorOutorga.setEndereco(end);
-					    	TabUsuarioControlador.controladorOutorga.setEndereco(end);
-					    	TabParecerControlador.controladorOutorga.setEndereco(end);
-					    }
-					
+				    if (intControlador == 2) {
+				    	TabInterferenciaControlador.controladorOutorga.setEndereco(end);
+				    	TabUsuarioControlador.controladorOutorga.setEndereco(end);
+				    	TabParecerControlador.controladorOutorga.setEndereco(end);
+				    }
+		
+						    
 					// atualizar a tableview //
 					obsList.remove(end);
 					obsList.add(end);
@@ -1012,22 +1013,26 @@ public class TabEnderecoControlador implements Initializable {
 					
 					// levar o endereco salvo para a tabinterferencia //	
 					
-					 if (intControlador == 0) {
-						 TabInterferenciaControlador.controladorAtendimento.setEndereco(end);
-						 TabUsuarioControlador.controladorAtendimento.setEndereco(end);
-				
-					 	}
-					     
-					    if (intControlador == 1) {
-					    	TabInterferenciaControlador.controladorFiscalizacao.setEndereco(end);
-					    	TabUsuarioControlador.controladorFiscalizacao.setEndereco(end);
-					    }
-					    
-					    if (intControlador == 2) {
-					    	TabInterferenciaControlador.controladorOutorga.setEndereco(end);
-					    	TabUsuarioControlador.controladorOutorga.setEndereco(end);
-					    	TabParecerControlador.controladorOutorga.setEndereco(end);
-					    }
+
+					// levar o endereco salvo para a tabinterferencia //	
+					if (intControlador == 0) {
+					 TabInterferenciaControlador.controladorAtendimento.setEndereco(end);
+					 TabUsuarioControlador.controladorAtendimento.setEndereco(end);
+					 TabParecerControlador.controladorAtendimento.setEndereco(end);
+			
+				 	}
+				     
+				    if (intControlador == 1) {
+				    	TabInterferenciaControlador.controladorFiscalizacao.setEndereco(end);
+				    	TabUsuarioControlador.controladorFiscalizacao.setEndereco(end);
+				    	TabParecerControlador.controladorFiscalizacao.setEndereco(end);
+				    }
+				    
+				    if (intControlador == 2) {
+				    	TabInterferenciaControlador.controladorOutorga.setEndereco(end);
+				    	TabUsuarioControlador.controladorOutorga.setEndereco(end);
+				    	TabParecerControlador.controladorOutorga.setEndereco(end);
+				    }
 					
 					/* caso não haja demanda relacionada ao endereco, setar demanda vazia */
 					if (end.getDemandas().size() == 0) {

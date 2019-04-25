@@ -721,12 +721,15 @@ public class TabUsuarioControlador implements Initializable {
 	
 	public void gerarRequerimento (Usuario us, Interferencia inter) {
 		
+		
+		// buscar tipo de documento 
 		HTMLEditor htmlEditor = new HTMLEditor();
 		
 		ModelosDao modDao = new ModelosDao();
 		
 		List<ModelosHTML> listRequerimento = null;
 		
+	
 		if (inter.getInterTipoInterferenciaFK().getTipoInterDescricao().equals("Subterrânea")) {
 			
 			listRequerimento = modDao.listarModelo("Requerimento de Outorga Subterrânea");
@@ -737,6 +740,8 @@ public class TabUsuarioControlador implements Initializable {
 			listRequerimento = modDao.listarModelo("Requerimento de Outorga Superficial");
 		} 
 		
+		
+		// editar tipo de documento com dados do usuario, interferencia etc
 		MalaDireta ml = new MalaDireta(endereco, interferencia, usuario);
 		
 		ml.setHtmlRel(listRequerimento.get(0).getModConteudo());

@@ -10,7 +10,7 @@ import entidades.ModelosHTML;
 public class ModelosDao {
 	
 	
-	public ModelosHTML obterModeloHTMl (Integer modeloID) {
+	public ModelosHTML obterModeloHTMLPorID (Integer modeloID) {
 		
 		Session s = HibernateUtil.getSessionFactory().openSession();
 		
@@ -33,7 +33,7 @@ public class ModelosDao {
 		
 	}
 	
-@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	public List<ModelosHTML> listarModelo (String strPesquisa) {
 		
 		Session s = HibernateUtil.getSessionFactory().openSession();

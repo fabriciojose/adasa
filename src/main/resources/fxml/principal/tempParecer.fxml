@@ -53,26 +53,28 @@
             <Button fx:id="btnPesquisar" layoutX="818.0" layoutY="18.0" mnemonicParsing="false" onAction="#btnPesquisarHab" prefHeight="25.0" prefWidth="95.0" text="Pesquisar" />
          </children>
       </Pane>
-      <Pane layoutX="25.0" layoutY="480.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="410.0" prefWidth="930.0">
+      <Pane layoutX="25.0" layoutY="480.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="930.0">
          <children>
             <Button layoutX="850.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" text="&lt;&lt;&lt;" />
-            <Label layoutX="10.0" layoutY="60.0" prefHeight="30.0" prefWidth="420.0" text="USUÁRIOS:" />
-            <TableView fx:id="tvLista1" layoutX="10.0" layoutY="100.0" prefHeight="255.0" prefWidth="420.0">
+            <Label layoutX="10.0" layoutY="10.0" prefHeight="30.0" prefWidth="420.0" text="USUÁRIOS:" />
+            <TableView fx:id="tvLista1" layoutX="10.0" layoutY="50.0" prefHeight="255.0" prefWidth="420.0">
                <columns>
                   <TableColumn fx:id="tcNome" prefWidth="250.0" text="Nome" />
                   <TableColumn fx:id="tcCPFCNPJ" minWidth="0.0" prefWidth="150.0" text="CPF/CNPJ" />
                </columns>
             </TableView>
-            <Label layoutX="440.0" layoutY="60.0" prefHeight="30.0" prefWidth="420.0" text="ENDEREÇO:" />
-            <ComboBox layoutX="440.0" layoutY="100.0" prefHeight="30.0" prefWidth="420.0" />
-            <Label layoutX="440.0" layoutY="140.0" prefHeight="30.0" prefWidth="420.0" text="INTERFERÊNCIAS:" />
-            <TableView fx:id="tvListaInt" layoutX="440.0" layoutY="180.0" prefHeight="175.0" prefWidth="420.0">
+            <Label layoutX="440.0" layoutY="10.0" prefHeight="30.0" prefWidth="400.0" text="ENDEREÇO:" />
+            <ComboBox layoutX="440.0" layoutY="50.0" prefHeight="30.0" prefWidth="400.0" />
+            <Label layoutX="440.0" layoutY="90.0" prefHeight="30.0" prefWidth="420.0" text="INTERFERÊNCIAS:" />
+            <TableView fx:id="tvListaInt" layoutX="440.0" layoutY="130.0" prefHeight="175.0" prefWidth="400.0">
                <columns>
-                  <TableColumn fx:id="tcDescEndInt" prefWidth="235.0" text="Tipo de Interferência" />
-                  <TableColumn fx:id="tcIntUH" prefWidth="165.0" text="Situação" />
+                  <TableColumn fx:id="tcDescEndInt" prefWidth="200.0" text="Tipo de Interferência" />
+                  <TableColumn fx:id="tcIntUH" prefWidth="180.0" text="Situação" />
                </columns>
             </TableView>
-            <Button layoutX="680.0" layoutY="365.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="180.0" text="GERAR PARECER" />
+            <Button layoutX="660.0" layoutY="315.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="180.0" text="GERAR PARECER" />
+            <Button layoutX="850.0" layoutY="188.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="+" />
+            <Button layoutX="850.0" layoutY="223.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="-" />
          </children>
       </Pane>
    </children>

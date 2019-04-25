@@ -181,13 +181,7 @@ public class Endereco implements Serializable{
 		this.endDDLongitude = endLongitude;
 	}
 
-	public Set<Demanda> getDemandas() {
-		return demandas;
-	}
-
-	public void setDemandas(Set<Demanda> demandas) {
-		this.demandas = demandas;
-	}
+	
 
 	public java.sql.Timestamp getEndAtualizacao() {
 		return endAtualizacao;
@@ -229,70 +223,24 @@ public class Endereco implements Serializable{
 		this.endUsuarioFK = endUsuarioFK;
 	}
 
-	
-	
-	/*
-	//-- Construtor --//
-	public Endereco (EnderecoTabela endTab) {
-		
-		this.Cod_Endereco = endTab.getCod_Endereco();
-		this.Desc_Endereco = endTab.getDesc_Endereco();
-		this.RA_Endereco = endTab.getRA_Endereco();
-		this.CEP_Endereco = endTab.getCEP_Endereco();
-		this.Cid_Endereco = endTab.getCid_Endereco();
-		this.UF_Endereco = endTab.getUF_Endereco();
-		
-		this.Lat_Endereco = endTab.getLat_Endereco();
-		this.Lon_Endereco = endTab.getLon_Endereco();
+	public Set<Demanda> getDemandas() {
+		return demandas;
 	}
+
+	public void setDemandas(Set<Demanda> demandas) {
+		this.demandas = demandas;
+	}
+
+	public Set<Documento> getDocumentos() {
+		return documentos;
+	}
+
+	public void setDocumentos(Set<Documento> documentos) {
+		this.documentos = documentos;
+	}
+
 	
-	*/
 	
-	// -- GETTERS AND SETTERS - //
-	
-	
-	
-	
-	
-	/*
-		//-- get e set OneToMany List Interferencia --//
-			public List<Interferencia> getListInterferencias() {
-				return interferencias;
-			}
-	
-			public void setListInterferencias(List<Interferencia> interferencias) {
-				this.interferencias = interferencias;
-			}
-	
-				//-- get e set OneToMany List Usuarios --//
-				public List<Usuario> getListUsuarios() {
-					return usuarios;
-				}
-				
-				public void setListUsuarios(List<Usuario> usuarios) {
-					this.usuarios = usuarios;
-				}
-				
-					//-- get e set OneToMany List Fiscais --//
-					public List<Fiscal> getListFiscais() {
-						return fiscais;
-					}
-					
-					public void setListFiscais(List<Fiscal> fiscais) {
-						this.fiscais = fiscais;
-					}
-					
-						//-- get e set OneToMany List Vistorias --//
-						public List<Vistoria> getListVistorias() {
-							return vistorias;
-						}
-						
-						public void setListVistorias(List<Vistoria> vistorias) {
-							this.vistorias = vistorias;
-						}
-						*/
-				
-		
 	
 	
 }

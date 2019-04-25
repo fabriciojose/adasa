@@ -602,7 +602,7 @@ public class TabInterferenciaControlador  implements Initializable{
 	BorderPane bp1 = new BorderPane();
 	BorderPane bp2 = new BorderPane();
 	ScrollPane sp = new ScrollPane();
-	Pane pMapa = new Pane();
+	//Pane pMapa = new Pane();
 	  
 	/* array de posicoes prefWidth prefHeight Layout Y e X */
 	Double prefSizeWHeLayXY [][];
@@ -632,8 +632,6 @@ public class TabInterferenciaControlador  implements Initializable{
 		}
 	
 	}
-	
-	
 	
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
@@ -841,16 +839,20 @@ public class TabInterferenciaControlador  implements Initializable{
 		    });
 		    
 		    
-		    /*
-		    btnCapturarCoord.setOnAction(new EventHandler<ActionEvent>() {
+		    btnCoordenadasEndereco.setOnAction(new EventHandler<ActionEvent>() {
 
 		        @Override
 		        public void handle(ActionEvent event) {
-		        	 btnIntMapsHab(); 
+		        	
+		        	if (endereco.getEndDDLatitude() != null) {
+		        	ControladorPrincipal.capturarGoogleMaps().setMarkerPosition(endereco.getEndDDLatitude(), endereco.getEndDDLongitude());
+		        	ControladorPrincipal.capturarGoogleMaps().setMapCenter(endereco.getEndDDLatitude(), endereco.getEndDDLongitude());
+		        	}
+		        	
+		        	System.out.println("ir para as coordenadas");
 		        }
 		    });
-		    */
-		    
+		   
 		    btnExcluir.setOnAction(new EventHandler<ActionEvent>() {
 
 		        @Override
@@ -919,6 +921,7 @@ public class TabInterferenciaControlador  implements Initializable{
 	Pane pEndereco;
 	
 		Label lblEndereco;
+		Button btnCoordenadasEndereco;
 		Button btnEndereco;
 	
 		ArrayList<Node> listComponentesEndereco = new ArrayList<Node>();
@@ -967,13 +970,15 @@ public class TabInterferenciaControlador  implements Initializable{
 	   listComponentesEndereco.add(pEndereco = new Pane());
 		   listComponentesEndereco.add(new Label("ENDERECO:"));
 		   listComponentesEndereco.add(lblEndereco = new Label());
+		   listComponentesEndereco.add(btnCoordenadasEndereco = new Button());
 		   listComponentesEndereco.add(btnEndereco = new Button("<<<"));
 		    
 		    prefSizeWHeLayXY = new Double [][] { 
 		    	{950.0,60.0,40.0,10.0},
-		    	{80.0,30.0,33.0,15.0},
-		    	{730.0,30.0,113.0,16.0},
-		    	{65.0,25.0,853.0,18.0},
+		    	{80.0,30.0,35.0,15.0},
+		    	{690.0,30.0,115.0,16.0},
+		    	{25.0,25.0,815.0,18.0},
+		    	{65.0,25.0,850.0,18.0},
 	    	};
 		    	
 			    com = new Componentes();

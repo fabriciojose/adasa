@@ -52,9 +52,6 @@ import principal.FormatoData;
 
 public class TabDemandaControlador implements Initializable {
 	
-  TelaProcessoControlador telaProCon;
-  TelaEnderecoControlador telaEndCon;
-	
   String strPesquisa = "";
   String strPesquisaProcesso = "";
   
@@ -65,8 +62,7 @@ public class TabDemandaControlador implements Initializable {
 	  			TableColumn<Demanda, String> tcNumeroProcesso = new TableColumn<Demanda, String>("Número do Processo");
 	  		
   Set<Demanda> setListDemanda;
-  
-  Demanda demanda = new Demanda();
+  Demanda demanda = new  Demanda();
   Processo processo = new Processo();
   
   public void habilitarDemanda() {
@@ -107,34 +103,45 @@ public class TabDemandaControlador implements Initializable {
 		      }
 		      else
 		      {
-		        Demanda demanda = new Demanda();
+		        Demanda dem = new Demanda();
 		        
-		        demanda.setDemTipo(cbTipoDemanda.getValue());
-		        demanda.setDemNumero(tfNumeroDemanda.getText());
-		        demanda.setDemNumeroSEI(tfDemandaSei.getText());
-		        demanda.setDemProcesso(tfProcessoSei.getText());
+		        dem.setDemTipo(cbTipoDemanda.getValue());
+		        dem.setDemNumero(tfNumeroDemanda.getText());
+		        dem.setDemNumeroSEI(tfDemandaSei.getText());
+		        dem.setDemProcesso(tfProcessoSei.getText());
 		        
 		        if (dpDataDistribuicao.getValue() == null) {
-		          demanda.setDemDistribuicao(null);
+		        	dem.setDemDistribuicao(null);
 		        } else {
-		          demanda.setDemDistribuicao(Date.valueOf((LocalDate)dpDataDistribuicao.getValue()));
+		        	dem.setDemDistribuicao(Date.valueOf((LocalDate)dpDataDistribuicao.getValue()));
 		        }
 			        if (dpDataRecebimento.getValue() == null) {
-			          demanda.setDemRecebimento(null);
+			        	dem.setDemRecebimento(null);
 			        } else {
-			          demanda.setDemRecebimento(Date.valueOf((LocalDate)dpDataRecebimento.getValue()));
+			        	dem.setDemRecebimento(Date.valueOf((LocalDate)dpDataRecebimento.getValue()));
 			        }
 			        
-		        demanda.setDemAtualizacao(Timestamp.valueOf(LocalDateTime.now()));
+			        dem.setDemAtualizacao(Timestamp.valueOf(LocalDateTime.now()));
 		        
 		        DemandaDao dao = new DemandaDao();
 		        
-		        dao.salvarDemanda(demanda);
+		        dao.salvarDemanda(dem);
 		        
-		       // tabEndCon.setDemanda(demanda);
-		       // enditarEnderecoControlador.setObjetoDeEdicao(demanda);
-		        
-		        obsList.add(demanda);
+
+			    if (intControlador == 0) {
+			    	TabEnderecoControlador.controladorAtendimento.setDemanda(dem);
+		
+			 	}
+			     
+			    if (intControlador == 1) {
+			 		TabEnderecoControlador.controladorFiscalizacao.setDemanda(dem);
+			    }
+			    
+			    if (intControlador == 2) {
+		 			TabEnderecoControlador.controladorOutorga.setDemanda(dem);
+			    }
+				
+		        obsList.add(dem);
 		        
 		        modularBotoesDemanda();
 		        
@@ -144,9 +151,9 @@ public class TabDemandaControlador implements Initializable {
 		      
 	    	}
 	  
-	  catch (Exception ex)	{
-		  System.out.println("Erro: " + ex);
-		  ex.printStackTrace();
+		  catch (Exception ex)	{
+			  System.out.println("Erro: " + ex);
+			  ex.printStackTrace();
       
       Alerta a = new Alerta();
       a.alertar(new Alert(Alert.AlertType.ERROR, "erro na conexão, tente novamente!", new ButtonType[] { ButtonType.OK }));
@@ -180,21 +187,21 @@ public class TabDemandaControlador implements Initializable {
 			    {
 			      Demanda dem = (Demanda)tvLista.getSelectionModel().getSelectedItem();
 			      
-			      demanda.setDemTipo(cbTipoDemanda.getValue());
-			      demanda.setDemNumero(tfNumeroDemanda.getText());
-			      demanda.setDemNumeroSEI(tfDemandaSei.getText());
-			      demanda.setDemProcesso(tfProcessoSei.getText());
+				      dem.setDemTipo(cbTipoDemanda.getValue());
+				      dem.setDemNumero(tfNumeroDemanda.getText());
+				      dem.setDemNumeroSEI(tfDemandaSei.getText());
+				      dem.setDemProcesso(tfProcessoSei.getText());
 			        
-			      if (dpDataDistribuicao.getValue() == null) {
-			        dem.setDemDistribuicao(null);
-			      } else {
-			        dem.setDemDistribuicao(Date.valueOf((LocalDate)dpDataDistribuicao.getValue()));
-			      }
-				      if (dpDataRecebimento.getValue() == null) {
-				        dem.setDemRecebimento(null);
+				      if (dpDataDistribuicao.getValue() == null) {
+				        dem.setDemDistribuicao(null);
 				      } else {
-				        dem.setDemRecebimento(Date.valueOf((LocalDate)dpDataRecebimento.getValue()));
+				        dem.setDemDistribuicao(Date.valueOf((LocalDate)dpDataDistribuicao.getValue()));
 				      }
+					      if (dpDataRecebimento.getValue() == null) {
+					        dem.setDemRecebimento(null);
+					      } else {
+					        dem.setDemRecebimento(Date.valueOf((LocalDate)dpDataRecebimento.getValue()));
+					      }
 			      
 				      dem.setDemAtualizacao(Timestamp.valueOf(LocalDateTime.now()));
 			      
@@ -206,16 +213,18 @@ public class TabDemandaControlador implements Initializable {
 			      obsList.add(dem);
 			     
 			     /* transmitir demanda para a tab endereco */
-			    // TabEnderecoControlador.tabEndCon.setDemanda(dem);
-			     
-
+			   
 			    if (intControlador == 0) {
 			    	TabEnderecoControlador.controladorAtendimento.setDemanda(dem);
 		
 			 	}
 			     
 			    if (intControlador == 1) {
-			 			TabEnderecoControlador.controladorFiscalizacao.setDemanda(dem);
+			 		TabEnderecoControlador.controladorFiscalizacao.setDemanda(dem);
+			    }
+			    
+			    if (intControlador == 2) {
+		 			TabEnderecoControlador.controladorOutorga.setDemanda(dem);
 			    }
 				
 			    modularBotoesDemanda();
@@ -831,13 +840,13 @@ public class TabDemandaControlador implements Initializable {
  					dpDataDistribuicao.setValue(dataDis.toLocalDate());
  				}
 			
-			if (dem.getDemRecebimento() == null) {
-				dpDataRecebimento.setValue(null);
- 				} else {
- 					
- 					Date dataRec = dem.getDemRecebimento();
- 					dpDataRecebimento.setValue(dataRec.toLocalDate());
- 				}
+				if (dem.getDemRecebimento() == null) {
+					dpDataRecebimento.setValue(null);
+	 				} else {
+	 					
+	 					Date dataRec = dem.getDemRecebimento();
+	 					dpDataRecebimento.setValue(dataRec.toLocalDate());
+	 				}
 			
 			
 			// endereço relacionado //
@@ -924,15 +933,14 @@ public class TabDemandaControlador implements Initializable {
 		 	}
 		     
 		    if (intControlador == 1) {
-		 			TabEnderecoControlador.controladorFiscalizacao.setDemanda(dem);
+		 		TabEnderecoControlador.controladorFiscalizacao.setDemanda(dem);
 		    }
 		    
 		    if (intControlador == 2) {
 	 			TabEnderecoControlador.controladorOutorga.setDemanda(dem);
 		    }
 			
-		   // System.out.println("tabDemanda - atendimento 0; fiscalizacao 1, outorga 2 ");
-		    System.out.println("tabDemandaControlador " + intControlador);
+		    
 			// copiar número sei da demanda ao selecionar //
 			Clipboard clip = Clipboard.getSystemClipboard();
             ClipboardContent conteudo = new ClipboardContent();

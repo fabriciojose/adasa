@@ -35,6 +35,7 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.util.StringConverter;
 import principal.Alerta;
 import principal.Componentes;
 import principal.FormatoData;
@@ -64,7 +65,8 @@ public class TelaUsuarioControlador implements Initializable {
 		if (documento != null) {
 		
 			lblDocumento.setText(
-					documento.getDocNumero()
+					documento.getDocTipo() + " Nº "
+					+ documento.getDocNumero()
 					+ ", SEI: " + documento.getDocSEI()
 					+ ", PROCESSO: " + documento.getDocProcesso()
 					);
@@ -370,7 +372,7 @@ public class TelaUsuarioControlador implements Initializable {
 	        	
 	        }
 	    });
-	   
+	
 	   
 	}	
 	
@@ -688,6 +690,9 @@ public class TelaUsuarioControlador implements Initializable {
 		
 				Usuario us = tvLista.getSelectionModel().getSelectedItem(); 
 				
+				
+				System.out.println("lista enderecos size " + us.getEnderecos().size());
+				
 					// -- preencher os campos -- //
 					us.setUsTipo(cbTipoPessoa.getValue()); 
 					us.setUsNome(tfNome.getText());
@@ -717,7 +722,13 @@ public class TelaUsuarioControlador implements Initializable {
 					us.getEnderecos().add(end);
 					*/
 					
-					usuario.setUsDocumentoFK(documento);
+					System.out.println("id documento " + documento.getDocID());
+					
+					
+					if (!(documento.getDocID() == 0)) {
+						usuario.setUsDocumentoFK(documento);
+					}
+				
 				
 				/*
 				// para não dar repeticao de objetos //
@@ -834,7 +845,6 @@ public class TelaUsuarioControlador implements Initializable {
 			btnNovo.setDisable(false);
 			
 		}
-		
 		
 		public void acionarBotoes () {
 			
