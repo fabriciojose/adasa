@@ -77,9 +77,9 @@ public class TabSubterraneaController implements Initializable {
 	
 	public Subterranea getSubterranea () {
 		
-		System.out.println("metodo getSubterranea id " + sub.getInterID());
-		
 		sub.setInterID(sub.getInterID());
+		
+		System.out.println("tabSubterranea - metodo getSubterranea id " + sub.getInterID());
 		
 		// valores double de coordenadas - latitude e longitude
 		sub.setInterDDLatitude(Double.parseDouble(tfLatitude.getText()));
@@ -234,35 +234,37 @@ public class TabSubterraneaController implements Initializable {
 		}
 
 		sub.setInterID(this.sub.getInterID());
-		System.out.println("subterranea id - metodo obter subterranea " + sub.getInterID());
+		//System.out.println("subterranea id - metodo obter subterranea " + sub.getInterID());
 		
 		return sub;
 	
 	}
 	
-	public void setSubterranea (Subterranea sub) {
+	public void setSubterranea (Subterranea subt) {
 		
-		tfLatitude.setText(String.valueOf(sub.getInterDDLatitude()));
-		tfLongitude.setText(String.valueOf(sub.getInterDDLongitude()));
+		System.out.println("TabSub - setSubterranea id " + subt.getInterID());
 		
-		cbBaciaHidrografica.setValue(sub.getInterBaciaFK().getBaciaNome());
-		cbUnidadeHidrografica.setValue(String.valueOf(sub.getInterUHFK().getUhID()));
+		tfLatitude.setText(String.valueOf(subt.getInterDDLatitude()));
+		tfLongitude.setText(String.valueOf(subt.getInterDDLongitude()));
 		
-		cbTipoPoco.setValue(sub.getSubTipoPocoFK().getTipoPocoDescricao());
-		cbSubsistema.setValue(sub.getSubSubSistemaFK().getSubDescricao());
+		cbBaciaHidrografica.setValue(subt.getInterBaciaFK().getBaciaNome());
+		cbUnidadeHidrografica.setValue(String.valueOf(subt.getInterUHFK().getUhID()));
 		
-		cbSubCaesb.setValue(sub.getSubCaesb());
+		cbTipoPoco.setValue(subt.getSubTipoPocoFK().getTipoPocoDescricao());
+		cbSubsistema.setValue(subt.getSubSubSistemaFK().getSubDescricao());
 		
-		tfVazaoPoco.setText(sub.getSubVazao());
-		tfEstatico.setText(sub.getSubEstatico());
-		tfDinamico.setText(sub.getSubDinamico());
-		tfProfundidade.setText(sub.getSubProfundidade());
+		cbSubCaesb.setValue(subt.getSubCaesb());
+		
+		tfVazaoPoco.setText(subt.getSubVazao());
+		tfEstatico.setText(subt.getSubEstatico());
+		tfDinamico.setText(subt.getSubDinamico());
+		tfProfundidade.setText(subt.getSubProfundidade());
 		
 		
-		if (sub.getSubDataOperacao() == null) {
+		if (subt.getSubDataOperacao() == null) {
 			dpDataOperacao.getEditor().clear();
 		} else {
-			Date d = sub.getSubDataOperacao();
+			Date d = subt.getSubDataOperacao();
 			dpDataOperacao.setValue(d.toLocalDate());
 		}
 		
@@ -271,28 +273,28 @@ public class TabSubterraneaController implements Initializable {
 		// Finalidades Sub Quan Cons e Vazao //
 		entidades.GetterAndSetter gs  = new entidades.GetterAndSetter();
 				
-		System.out.println(gs.callGetter(sub, "subFinalidade1"));
+		//System.out.println(gs.callGetter(sub, "subFinalidade1"));
 		
 		for (int i = 0; i< strVariaveisFinalidades.length; i++) {
 			
-			tfListFinalidades[i].setText(gs.callGetter(sub, strVariaveisFinalidades[i]));
-			tfListSubfinalidades[i].setText(gs.callGetter(sub, strVariaveisSubfinaldades[i]));
-			tfListQuantidades[i].setText(gs.callGetter(sub, strVariaveisQuantidades[i]));
-			tfListConsumo[i].setText(gs.callGetter(sub, strVariaveisConsumo[i]));
-			tfListFinVazoes[i].setText(gs.callGetter(sub, strVariaveisVazao[i]));
+			tfListFinalidades[i].setText(gs.callGetter(subt, strVariaveisFinalidades[i]));
+			tfListSubfinalidades[i].setText(gs.callGetter(subt, strVariaveisSubfinaldades[i]));
+			tfListQuantidades[i].setText(gs.callGetter(subt, strVariaveisQuantidades[i]));
+			tfListConsumo[i].setText(gs.callGetter(subt, strVariaveisConsumo[i]));
+			tfListFinVazoes[i].setText(gs.callGetter(subt, strVariaveisVazao[i]));
 		}
 		
-		try {lblCalTotal.setText(String.valueOf(sub.getSubVazaoTotal()));} catch (Exception e) {lblCalTotal.setText("");};
+		try {lblCalTotal.setText(String.valueOf(subt.getSubVazaoTotal()));} catch (Exception e) {lblCalTotal.setText("");};
 		
 		for (int i = 0; i< strVariaveisVazaoMes.length; i++) {
 			
-			tfVazoesLD[i].setText( String.valueOf(gs.callGetter(sub, strVariaveisVazaoMes[i]).replace('.', ',')));
-			tfVazoesHD[i].setText(gs.callGetter(sub, strVariaveisVazaoHora[i]));
-			tfPeriodoDM[i].setText(gs.callGetter(sub, strVariaveisTempo[i]));
+			tfVazoesLD[i].setText( String.valueOf(gs.callGetter(subt, strVariaveisVazaoMes[i]).replace('.', ',')));
+			tfVazoesHD[i].setText(gs.callGetter(subt, strVariaveisVazaoHora[i]));
+			tfPeriodoDM[i].setText(gs.callGetter(subt, strVariaveisTempo[i]));
 			
 		}
 		
-		this.sub = sub;	
+		this.sub = subt;	
 	
 	}
 	
@@ -450,7 +452,7 @@ public class TabSubterraneaController implements Initializable {
 		
 		tabSubCon = this;
 		
-		System.out.println("tabSubterranea inicializada");
+		//System.out.println("tabSubterranea inicializada");
 		
 		inicializarComponentes();
 		
@@ -473,7 +475,7 @@ public class TabSubterraneaController implements Initializable {
 	    			
 	    		baciaID = listaBaciasID [(int) new_value];
 	    		
-	    		System.out.println(" bacia id" + baciaID);
+	    		//System.out.println(" bacia id" + baciaID);
 	    		
             }
 	    });
@@ -486,7 +488,7 @@ public class TabSubterraneaController implements Initializable {
 	    		if ( (Integer) new_value !=  -1)
 	    		unidHidID = listaUHID [(int) new_value];
 	    		
-	    		System.out.println("unidade hidr selecionada " + unidHidID);
+	    		//System.out.println("unidade hidr selecionada " + unidHidID);
 	    		
             }
 	    });
@@ -498,7 +500,7 @@ public class TabSubterraneaController implements Initializable {
 	    		
 	    		if ( (Integer) new_value !=  -1)
 	    			tipoPocoID = listaTipoPoco [(int) new_value];
-	    		System.out.println(" tipo poço id" + tipoPocoID);
+	    		//System.out.println(" tipo poço id" + tipoPocoID);
 	    		
             }
 	    });
@@ -510,7 +512,7 @@ public class TabSubterraneaController implements Initializable {
 	    		
 	    		if ( (Integer) new_value !=  -1)
 	    			subSistemaID = listaSubsistema [(int) new_value];
-	    		System.out.println("susbsistema ID tabSubterranea " + subSistemaID);
+	    		//System.out.println("susbsistema ID tabSubterranea " + subSistemaID);
 	    		
             }
 	    });
@@ -519,7 +521,7 @@ public class TabSubterraneaController implements Initializable {
 		
 		
 		
-		System.out.println("TabSubterranea inicializada!");
+		//System.out.println("TabSubterranea inicializada!");
 		
 		// listeners para envitar valor maior que cinco caracteres
 		tfVazaoPoco.lengthProperty().addListener(new ChangeListener<Number>() {
@@ -1279,7 +1281,7 @@ public class TabSubterraneaController implements Initializable {
 		tfLatitude.setText(lat);
 		tfLongitude.setText(lon);
 		
-		System.out.println(lat + "," + lon);
+		//System.out.println(lat + "," + lon);
 		
 		GeometryFactory geoFac;
 		Point p;
@@ -1306,7 +1308,7 @@ public class TabSubterraneaController implements Initializable {
 				
 				cbBaciaHidrografica.setValue(String.valueOf(b.getBaciaNome()));
 				
-				System.out.println("nome da bacia " + b.getBaciaNome() );
+				//System.out.println("nome da bacia " + b.getBaciaNome() );
 			}
 			
 		} // fim loop bacias hidrograficas
@@ -1318,7 +1320,7 @@ public class TabSubterraneaController implements Initializable {
 				
 			cbUnidadeHidrografica.setValue(String.valueOf(u.getUhCodigo()));
 				
-			System.out.println("nome da uh " + u.getUhNome() );
+			//System.out.println("nome da uh " + u.getUhNome() );
 			}
 		
 		} // fim loop unidades hidrograficas

@@ -163,9 +163,11 @@ public class TabSuperficialController implements Initializable{
 	
 	public Superficial getSuperficial () {
 		
-		System.out.println("metodo getSuperficial id " + sup.getInterID());
+		
 		
 		sup.setInterID(sup.getInterID());
+		
+		System.out.println("tabSuperficial - metodo getSuperficial id " + sup.getInterID());
 		
 				// valores double de coordenadas - latitude e longitude
 				sup.setInterDDLatitude(Double.parseDouble(tfLatitude.getText()));
@@ -421,7 +423,7 @@ public class TabSuperficialController implements Initializable{
 		
 		tabSupCon = this;
 		
-		System.out.println("initialize superficial iniciado!");
+		//System.out.println("initialize superficial iniciado!");
 		
 		inicializarComponentes();
 		
@@ -442,7 +444,7 @@ public class TabSuperficialController implements Initializable{
 	    			
 	    		baciaID = listaBaciasID [(int) new_value];
 	    		
-	    		System.out.println(" bacia id" + baciaID);
+	    		//System.out.println(" bacia id" + baciaID);
 	    		
             }
 	    });
@@ -455,7 +457,7 @@ public class TabSuperficialController implements Initializable{
 	    		if ( (Integer) new_value !=  -1)
 	    		unidHidID = listaUHID [(int) new_value];
 	    		
-	    		System.out.println("unidade hidr selecionada " + unidHidID);
+	    		//System.out.println("unidade hidr selecionada " + unidHidID);
 	    		
             }
 	    });
@@ -470,7 +472,7 @@ public class TabSuperficialController implements Initializable{
 	    			
 	    		localCaptacaoID = listaLocalCaptacao [(int) new_value];
 	    		
-	    		System.out.println("+++ local captacao id " + localCaptacaoID);
+	    		//System.out.println("+++ local captacao id " + localCaptacaoID);
 	    		
             }
 	    });
@@ -484,7 +486,7 @@ public class TabSuperficialController implements Initializable{
 	    			
 	    		formaCaptacaoID = listaFormaCaptacao [(int) new_value];
 	    		
-	    		System.out.println("---------------------------- forma captacao id " + formaCaptacaoID);
+	    		//System.out.println("---------------------------- forma captacao id " + formaCaptacaoID);
 	    		
             }
 	    });
@@ -498,7 +500,7 @@ public class TabSuperficialController implements Initializable{
 	    			
 	    		metodoIrrigacaoID = listaMetodoIrrigacao [(int) new_value];
 	    		
-	    		System.out.println("/////////////////////////////////////////////// metodo irrigacao id " + metodoIrrigacaoID);
+	    		//System.out.println("/////////////////////////////////////////////// metodo irrigacao id " + metodoIrrigacaoID);
 	    		
             }
 	    });
@@ -1359,7 +1361,7 @@ public void capturarCoordenadas () {
 		tfLatitude.setText(lat);
 		tfLongitude.setText(lon);
 		
-		System.out.println(lat + "," + lon);
+		//System.out.println(lat + "," + lon);
 		
 		GeometryFactory geoFac;
 		Point p;
@@ -1379,7 +1381,7 @@ public void capturarCoordenadas () {
 		UnidadeHidrograficaDao uhs = new UnidadeHidrograficaDao();
 		List<UnidadeHidrografica> listUnidades = uhs.listarUnidadesHidrograficas("");
 		
-		System.out.println(listUnidades.size());
+		//System.out.println(listUnidades.size());
 		
 		for (BaciasHidrograficas b : listBacias) {
 			
@@ -1387,7 +1389,7 @@ public void capturarCoordenadas () {
 				
 				cbBaciaHidrografica.setValue(String.valueOf(b.getBaciaNome()));
 				
-				System.out.println("nome da bacia " + b.getBaciaNome() );
+				//System.out.println("nome da bacia " + b.getBaciaNome() );
 			}
 			
 		} // fim loop bacias hidrograficas
@@ -1399,7 +1401,7 @@ public void capturarCoordenadas () {
 				
 			cbUnidadeHidrografica.setValue(String.valueOf(u.getUhCodigo()));
 				
-			System.out.println("nome da uh " + u.getUhNome() );
+			//System.out.println("nome da uh " + u.getUhNome() );
 			}
 		
 		} // fim loop unidades hidrograficas

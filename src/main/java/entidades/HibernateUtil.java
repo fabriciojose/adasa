@@ -33,6 +33,8 @@ public class HibernateUtil {
 			conf.getProperties().setProperty("hibernate.connection.username",strUserPass[0]);
 			conf.getProperties().setProperty("hibernate.connection.password",strUserPass[1]);
 		
+			
+			
 			System.out.println("Configurou!");
 		
 		factory = conf.buildSessionFactory();

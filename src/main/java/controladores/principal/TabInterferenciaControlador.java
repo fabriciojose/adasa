@@ -89,6 +89,7 @@ public class TabInterferenciaControlador  implements Initializable{
 	String strTipoInterferencia = "Superficial";
 	final int [] listaTipoInterID = new int [] { 1,2,3,4,5,6,7 };
 	
+	
 	int tipoOutorgaID = 1;
 	final int [] listaTipoOutorgaID = new int [] { 1,2,3};
 	
@@ -132,6 +133,7 @@ public class TabInterferenciaControlador  implements Initializable{
 		
 		TipoInterferencia tipoInterferencia = new TipoInterferencia();
 		tipoInterferencia.setTipoInterID(tipoInterferenciaID);
+			tipoInterferencia.setTipoInterDescricao(strTipoInterferencia);
 
 		TipoOutorga tipoOutorga = new TipoOutorga();
 		tipoOutorga.setTipoOutorgaID(tipoOutorgaID);
@@ -178,8 +180,22 @@ public class TabInterferenciaControlador  implements Initializable{
 											
 											sub.setIntAtualizacao(Timestamp.valueOf((LocalDateTime.now())));
 											
-											sub.setInterDataPublicacao(Date.valueOf(dpDataPublicacao.getValue()));
-											sub.setInterDataVencimento(Date.valueOf(dpDataVencimento.getValue()));
+											//sub.setInterDataPublicacao(Date.valueOf(dpDataPublicacao.getValue()));
+											//sub.setInterDataVencimento(Date.valueOf(dpDataVencimento.getValue()));
+											
+											if (dpDataPublicacao.getValue() == null) {
+												sub.setInterDataPublicacao(null);}
+												else {
+													sub.setInterDataPublicacao(Date.valueOf(dpDataPublicacao.getValue()));
+													
+													}
+															
+											if (dpDataVencimento.getValue() == null) {
+												sub.setInterDataVencimento(null);}
+												else {
+													sub.setInterDataVencimento(Date.valueOf(dpDataVencimento.getValue()));
+												
+													}
 											
 											sub.setInterNumeroAto(tfNumeroAto.getText());
 											
@@ -245,8 +261,25 @@ public class TabInterferenciaControlador  implements Initializable{
 													
 												sup.setIntAtualizacao(Timestamp.valueOf((LocalDateTime.now())));
 												
-												sup.setInterDataPublicacao(Date.valueOf(dpDataPublicacao.getValue()));
-												sup.setInterDataVencimento(Date.valueOf(dpDataVencimento.getValue()));
+												//sup.setInterDataPublicacao(Date.valueOf(dpDataPublicacao.getValue()));
+												//sup.setInterDataVencimento(Date.valueOf(dpDataVencimento.getValue()));
+												
+												
+												if (dpDataPublicacao.getValue() == null) {
+													sup.setInterDataPublicacao(null);;}
+													else {
+														sup.setInterDataPublicacao(Date.valueOf(dpDataPublicacao.getValue()));
+														
+														}
+																
+												if (dpDataVencimento.getValue() == null) {
+													sup.setInterDataVencimento(null);}
+													else {
+														sup.setInterDataVencimento(Date.valueOf(dpDataVencimento.getValue()));
+													
+														}
+												
+												
 												
 												sup.setInterNumeroAto(tfNumeroAto.getText());
 												
@@ -280,8 +313,27 @@ public class TabInterferenciaControlador  implements Initializable{
 								inter.setInterSubtipoOutorgaFK(subtipoOutorga);
 								inter.setInterTipoAtoFK(tipoAto);
 								inter.setInterSituacaoProcessoFK(situacaoProcesso);
+								
+								
+								if (dpDataPublicacao.getValue() == null) {
+									inter.setInterDataPublicacao(null);;}
+									else {
+										inter.setInterDataPublicacao(Date.valueOf(dpDataPublicacao.getValue()));
+										
+										}
+												
+								if (dpDataVencimento.getValue() == null) {
+									inter.setInterDataVencimento(null);}
+									else {
+										inter.setInterDataVencimento(Date.valueOf(dpDataVencimento.getValue()));
+									
+										}
+								
 							
 							inter.setInterNumeroAto(tfNumeroAto.getText());
+							
+							
+							
 							
 							inter.setInterProcRenovacao(tfProcesoOutorga.getText());
 							inter.setInterDespachoRenovacao(tfDespachoOutorga.getText());
@@ -326,7 +378,8 @@ public class TabInterferenciaControlador  implements Initializable{
 	public void editarInterferencia () {
 		
 		TipoInterferencia tipoInterferencia = new TipoInterferencia();
-		tipoInterferencia.setTipoInterID(tipoInterferenciaID);
+			tipoInterferencia.setTipoInterID(tipoInterferenciaID);
+				tipoInterferencia.setTipoInterDescricao(strTipoInterferencia);
 
 		TipoOutorga tipoOutorga = new TipoOutorga();
 		tipoOutorga.setTipoOutorgaID(tipoOutorgaID);
@@ -365,9 +418,9 @@ public class TabInterferenciaControlador  implements Initializable{
 	
 			if (tipoInterferenciaID == 2) {
 				
-				if (tabSubCon.getSubterranea().getSubTipoPocoFK() == null ||
-					tabSubCon.getSubterranea().getSubCaesb() == null ||
-						tabSubCon.getSubterranea().getSubSubSistemaFK() == null
+				if (TabSubterraneaController.tabSubCon.getSubterranea().getSubTipoPocoFK() == null ||
+						TabSubterraneaController.tabSubCon.getSubterranea() == null ||
+								TabSubterraneaController.tabSubCon.getSubterranea().getSubSubSistemaFK() == null
 					) {
 				
 				Alerta a = new Alerta ();
@@ -376,11 +429,14 @@ public class TabInterferenciaControlador  implements Initializable{
 				} else {
 			
 						// obter interferencia selecionada	
-						Subterranea sub = tabSubCon.getSubterranea();
+						Subterranea sub = TabSubterraneaController.tabSubCon.getSubterranea();
 						
-						System.out.println("btn editar subterranea id " + tabSubCon.getSubterranea().getInterID());
+						System.out.println("Metodo editarInterferencia - tabInterferencia - btn editar subterranea id " 
+								+ TabSubterraneaController.tabSubCon.getSubterranea().getInterID());
 							
 							sub.setInterTipoInterferenciaFK(tipoInterferencia);
+							
+							System.out.println(sub.getInterTipoInterferenciaFK().getTipoInterDescricao());
 							
 							sub.setInterTipoOutorgaFK(tipoOutorga);
 								sub.setInterSubtipoOutorgaFK(subtipoOutorga);
@@ -418,6 +474,9 @@ public class TabInterferenciaControlador  implements Initializable{
 				
 							obsList.remove(sub);
 							obsList.add(sub);
+							
+							System.out.println("tabInterferencia - metodo editar interferencia - sub tipoInterferencia " 
+									+ sub.getInterTipoInterferenciaFK().getTipoInterDescricao());
 							
 						modularBotoes ();
 						
@@ -744,7 +803,7 @@ public class TabInterferenciaControlador  implements Initializable{
 	    		
 	    		if ( (Integer) new_value !=  -1)
 	    			tipoOutorgaID = listaTipoOutorgaID [(int) new_value];
-	    			System.out.println("tipo outorga " + tipoOutorgaID);
+	    			//System.out.println("tipo outorga " + tipoOutorgaID);
 	    			
             }
 	    });
@@ -757,7 +816,7 @@ public class TabInterferenciaControlador  implements Initializable{
 	    		
 	    		if ( (Integer) new_value !=  -1)
 	    			subtipoOutorgaID = listaSubtipoOutorgaID [(int) new_value];
-	    			System.out.println("subtipo outorga " + subtipoOutorgaID);
+	    			//System.out.println("subtipo outorga " + subtipoOutorgaID);
 	    			
             }
 	    });
@@ -771,7 +830,7 @@ public class TabInterferenciaControlador  implements Initializable{
 	    		
 	    		if ( (Integer) new_value !=  -1)
 	    			tipoAtoID = listaTipoAtoID [(int) new_value];
-	    			System.out.println("situação " + tipoAtoID);
+	    			//System.out.println("situação " + tipoAtoID);
 	    			
             }
 	    });
@@ -784,7 +843,7 @@ public class TabInterferenciaControlador  implements Initializable{
 	    		
 	    		if ( (Integer) new_value !=  -1)
 	    			situacaoProcessoID = listaSituacaoProcessoID [(int) new_value];
-	    			System.out.println("situação " + situacaoProcessoID);
+	    			//System.out.println("situação " + situacaoProcessoID);
 	    			
             }
 	    });
@@ -849,7 +908,7 @@ public class TabInterferenciaControlador  implements Initializable{
 		        	ControladorPrincipal.capturarGoogleMaps().setMapCenter(endereco.getEndDDLatitude(), endereco.getEndDDLongitude());
 		        	}
 		        	
-		        	System.out.println("ir para as coordenadas");
+		        	//System.out.println("ir para as coordenadas");
 		        }
 		    });
 		   
@@ -1214,6 +1273,7 @@ public class TabInterferenciaControlador  implements Initializable{
 							cbTipoAto.setValue(inter.getInterTipoAtoFK().getTipoAtoDescricao());
 								cbSituacao.setValue(inter.getInterSituacaoProcessoFK().getSituacaoProcessoDescricao());
 					
+								
 					Date dPub = inter.getInterDataPublicacao();
 					dpDataPublicacao.setValue(dPub.toLocalDate());
 					
@@ -1228,11 +1288,11 @@ public class TabInterferenciaControlador  implements Initializable{
 					FormatoData d = new FormatoData();
 					try {lblDataAtualizacao.setText("Data de Atualização: " + d.formatarData(inter.getIntAtualizacao()));
 							lblDataAtualizacao.setTextFill(Color.BLACK);
-							System.out.println("teste data atualizacao black");
+							//System.out.println("teste data atualizacao black");
 					}catch (Exception e) {
 							lblDataAtualizacao.setText("Não há data de atualização!");
 							lblDataAtualizacao.setTextFill(Color.RED);
-							System.out.println("teste data atualizacao red");
+							//System.out.println("teste data atualizacao red");
 					}
 				
 					setEndereco(inter.getInterEnderecoFK());
@@ -1250,7 +1310,7 @@ public class TabInterferenciaControlador  implements Initializable{
 						
 						TabSubterraneaController.tabSubCon.setSubterranea(((Subterranea) inter));
 						
-						System.out.println(" metodo selecionarInterferencia - inter subterranea id " + 
+						System.out.println("tabIinterferencia - metodo selecionarInterferencia - inter subterranea id " + 
 								inter.getInterID());
 						
 					}
@@ -1266,7 +1326,7 @@ public class TabInterferenciaControlador  implements Initializable{
 						
 						TabSuperficialController.tabSupCon.setSuperficial(((Superficial) inter));
 						
-						System.out.println(" metodo selecionarInterferencia - inter superficial id " + 
+						System.out.println("tabInterferencia - metodo selecionarInterferencia - inter superficial id " + 
 								inter.getInterID());
 						
 						

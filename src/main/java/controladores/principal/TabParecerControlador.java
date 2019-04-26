@@ -8,16 +8,18 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 
 import dao.DocumentoDao;
+import dao.ModelosDao;
+import entidades.Demanda;
 import entidades.Documento;
 import entidades.Endereco;
 import entidades.Interferencia;
-import entidades.Subterranea;
-import entidades.Superficial;
+import entidades.ModelosHTML;
 import entidades.Usuario;
 import javafx.animation.TranslateTransition;
 import javafx.beans.property.SimpleStringProperty;
@@ -55,6 +57,7 @@ import javafx.util.StringConverter;
 import principal.Alerta;
 import principal.Componentes;
 import principal.FormatoData;
+import principal.MalaDiretaDocumentos;
 
 public class TabParecerControlador implements Initializable {
 	
@@ -65,14 +68,9 @@ public class TabParecerControlador implements Initializable {
 
 	  		 ObservableList<Documento> obsList = FXCollections.observableArrayList();
 	  		
-	  		 Set<Documento> setListParecer;
-	  		 
-
-
-	//Processo processo = new Processo();
-		Documento documento = new Documento();
-		
-			Endereco endereco = new Endereco();
+	
+	Documento documento = new Documento();
+		Endereco endereco = new Endereco();
 		
 	public void setEndereco (Endereco endereco) {
 	
@@ -241,6 +239,10 @@ public class TabParecerControlador implements Initializable {
 		Button btnUsuario;
 		Button btnParecer;
 		
+		Button btn1, btn2, btn3, btn4;
+		ComboBox<ModelosHTML> cbModelosHTML;
+			ObservableList<ModelosHTML> obsListModelosHTML = FXCollections.observableArrayList();
+		
 		ArrayList<Node> componentesDocumento = new ArrayList<Node>();
 		
 	
@@ -331,6 +333,11 @@ public class TabParecerControlador implements Initializable {
 		    componentesDocumento.add(cbEndereco = new ComboBox<>());
 		    componentesDocumento.add(new Label("INTERFERÊNCIAS:"));
 		    componentesDocumento.add(tvInterferencia = new TableView<Interferencia>());
+		    componentesDocumento.add(btn1 = new Button(""));
+		    componentesDocumento.add(btn2 = new Button(""));
+		    componentesDocumento.add(btn3 = new Button("+"));
+		    componentesDocumento.add(btn4 = new Button("-"));
+		    componentesDocumento.add(cbModelosHTML = new ComboBox<>());
 		    componentesDocumento.add(btnParecer = new Button("GERAR PARECER"));
 		
 			    
@@ -348,7 +355,13 @@ public class TabParecerControlador implements Initializable {
 			    	
 			    	{400.0,175.0,440.0,130.0}, // tableView
 			    	
-			    	{180.0,30.0,660.0,315.0},
+			    	{25.0,25.0,850.0,155.0},
+			    	{25.0,25.0,850.0,190.0},
+			    	{25.0,25.0,850.0,225.0},
+			    	{25.0,25.0,850.0,258.0},
+			    	
+			    	{420.0,30.0,10.0,315.0},
+			    	{420.0,30.0,660.0,315.0},
 			    	
 		    				};
 			    	
@@ -394,7 +407,7 @@ public class TabParecerControlador implements Initializable {
 				    			cbEndereco.setConverter(new StringConverter<Endereco>() {
 				    				
 				    				public String toString(Endereco e) {
-				    					return e.getEndLogradouro();  //+ ", RA: " + e.getEndRAFK().getRaNome();
+				    					return e.getEndLogradouro();
 				    				}
 				    				
 				    				public Endereco fromString(String string) {
@@ -411,14 +424,32 @@ public class TabParecerControlador implements Initializable {
 				    		        	if (newValue != null)
 				    					for(Interferencia i: newValue.getInterferencias()) {
 				    						
-				    						System.out.println("id interferencia " + i.getInterTipoInterferenciaFK().getTipoInterDescricao());
-				    						
 				    						obsListInterferencia.add(i);
-				    						
-				    						
 				    						
 				    					}
 				    		        	endereco = newValue;
+				    		        }    
+				    		    });
+				    		    
+				    		   cbModelosHTML.setItems(obsListModelosHTML);
+				    		   
+				    		   cbModelosHTML.setConverter(new StringConverter<ModelosHTML>() {
+				    			   
+				    				public String toString(ModelosHTML m) {
+				    					return m.getModIdentificacao();
+				    				
+				    				}
+				    				
+				    				public ModelosHTML fromString(String string) {
+				    					return null;
+				    				}
+				    			});
+				    		 
+				    		   cbModelosHTML.valueProperty().addListener(new ChangeListener<ModelosHTML>() {
+				    		        @Override 
+				    		        public void changed(ObservableValue<? extends ModelosHTML> ov, ModelosHTML oldValue, ModelosHTML newValue) {  
+				    		        	
+				    		        	System.out.println("modelos escolhido " + newValue.getModIdentificacao());
 				    		        }    
 				    		    });
 			    
@@ -470,6 +501,8 @@ public class TabParecerControlador implements Initializable {
 				btnExcluir.setDisable(false);
 				btnCancelar.setDisable(false);
 				
+				System.out.println("documento nulo");
+				
 			} else {
 			
 				documento = doc;
@@ -519,21 +552,23 @@ public class TabParecerControlador implements Initializable {
 				// adicionar usuario buscado pelo endereco relacionado ao  documento
 				//usList.add(doc.getDocEnderecoFK().getEndUsuarioFK());
 				
-				for(Usuario us : usList) {
+					// Preencher a tableView Usuario 
+					for(Usuario us : usList) {
+						
+						obsListUsuario.add(us);
+						//System.out.println(us.getUsNome());
+						
+					}
 					
-					obsListUsuario.add(us);
-					System.out.println(us.getUsNome());
-					
-				}
-				
+						// Limpar a tableView Interferencia
+						obsListInterferencia.clear();
 				
 				// mostrar data de atualizacao //
 				FormatoData d = new FormatoData();
 				try {lblDataAtualizacao.setText("Data de Atualização: " + d.formatarData(doc.getDocDataAtualizacao()));  // d.formatarData(demanda.getDemAtualizacao())
 						lblDataAtualizacao.setTextFill(Color.BLACK);
-				}catch (Exception e) {lblDataAtualizacao.setText("Não há data de atualização!");
-						lblDataAtualizacao.setTextFill(Color.RED);}
-				
+					} catch (Exception e) {lblDataAtualizacao.setText("Não há data de atualização!");
+							lblDataAtualizacao.setTextFill(Color.RED);}
 				
 				// copiar número sei da demanda ao selecionar //
 				Clipboard clip = Clipboard.getSystemClipboard();
@@ -567,35 +602,10 @@ public class TabParecerControlador implements Initializable {
 				
 				if (us == null) {
 					
-					/*
-					cbTipoPessoa.setValue(null);
-					
-					tfNome.setText(null);
-					tfCPFCNPJ.setText(null);
-					tfLogradouro.setText(null);
-					
-					cbRA.setValue(null);
-					
-					tfCEP.setText(null);
-					tfCidade.setText(null);
-					
-					cbUF.setValue(null);
-					
-					tfTelefone.setText(null);
-					tfCelular.setText(null);
-					tfEmail.setText(null);
-					
-					btnNovo.setDisable(true);
-					btnSalvar.setDisable(true);
-					btnEditar.setDisable(false);
-					btnExcluir.setDisable(false);
-					btnCancelar.setDisable(false);
-					*/
-					System.out.println("tabParcecer -  selecionar usuario - usuário null");
+					System.out.println("tabParcecer -  selecionar usuario - if usuario == null");
 					
 				} else {
 
-					
 					obsListEndereco.clear();
 					
 					Set<Endereco> setEnderecos = us.getEnderecos();
@@ -603,14 +613,13 @@ public class TabParecerControlador implements Initializable {
 					if (! us.getEnderecos().isEmpty()) {
 						
 						for(Endereco e: setEnderecos) {
-							System.out.println("set<Endereco> " + e.getEndLogradouro());
-							
+						
 							obsListEndereco.add(e);
+							
 							/*
 							 * para atualizar o endereço com qualquer um dos  relacionados
 							 * 		o objeto endereco não pode ficar vazio
 							 */
-					
 					
 							endereco = e;
 							
@@ -621,6 +630,7 @@ public class TabParecerControlador implements Initializable {
 					}
 					
 					usuario = us;
+				
 					
 					// copiar cpf do usuario ao selecionar //
 					Clipboard clip = Clipboard.getSystemClipboard();
@@ -628,21 +638,15 @@ public class TabParecerControlador implements Initializable {
 	                conteudo.putString(us.getUsCPFCNPJ());
 	                clip.setContent(conteudo);
 	                
-	                /*
-					// -- habilitar e desabilitar botões -- //
-					btnNovo.setDisable(true);
-					btnSalvar.setDisable(true);
-					btnEditar.setDisable(false);
-					btnExcluir.setDisable(false);
-					btnCancelar.setDisable(false);
-					*/
 					
 				}
 				}
 			});
 	}
 	
-	Set<Documento> listDocumentos = new HashSet<>();
+	Set<Usuario> setUsuarios = new HashSet<>();
+	Set<Endereco> setEnderecos = new HashSet<>();
+	Set<Interferencia> setInterferencias = new HashSet<>();
 	
 	// metodo selecionar interferencia -- //
 	public void selecionarInterferencia () {
@@ -650,61 +654,27 @@ public class TabParecerControlador implements Initializable {
  		tvInterferencia.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Object>() {
 			
 		public void changed(ObservableValue<?> observable , Object oldValue, Object newValue) {
-		
+	
+			
 		Interferencia inter = (Interferencia) newValue;
 		
 		if (inter == null) {
 			
-			System.out.println("metodo selecionarInterferencia - tabParecer - interferencia nula");
+			System.out.println("metodo selecionarInterferencia - tabParecer - if interferencia == null");
 			
 		} else {
-			
-			Documento d = tvDocumento.getSelectionModel().getSelectedItem();
-			
-				Interferencia i = tvInterferencia.getSelectionModel().getSelectedItem();
-				
-				Endereco e = cbEndereco.getSelectionModel().getSelectedItem();
-				
-				Usuario u = tvUsuarios.getSelectionModel().getSelectedItem();
-				
-				d.getUsuarios().add(u);
-				
-				System.out.println(d.getDocNumero());
-				
-				for (Usuario us : d.getUsuarios()) {
-					
-					System.out.println(us.getUsNome());
-					
-				}
-				
-				listDocumentos.add(d);
-				
-				for (Documento doc : listDocumentos ) {
-					
-					System.out.println("list documentos - doc " + doc.getDocNumero());
-					
-					for (Usuario uss : doc.getUsuarios()) {
-						System.out.println(" --------- " + uss.getUsNome());
-						
-					}
-					
-					for (Interferencia ii : doc.getDocEnderecoFK().getInterferencias()) {
-						System.out.println(" --------- interferencias ----------- " + ii.getInterID());
-					}
-					
-					
-					
-					
-				}
-			
 		
+			setUsuarios.add(tvUsuarios.getSelectionModel().getSelectedItem());
+			setEnderecos.add(cbEndereco.getSelectionModel().getSelectedItem());
+			setInterferencias.add(tvInterferencia.getSelectionModel().getSelectedItem());
+			
 		}
-	}
-						
-					
-				});
-			}
 	
+	} // fim metodo changed
+					
+	}); // fim selectionModel
+ 		
+	} // fim selecionarInterferencia
 	
 	public void modularBotoes () {
 		  
@@ -763,7 +733,21 @@ public class TabParecerControlador implements Initializable {
 	    
 						    btnPesquisar.setOnAction(new EventHandler<ActionEvent>() {
 						        @Override public void handle(ActionEvent e) {
+						        	
 						        	pesquisarDocumento();
+						        	
+						        	if (obsListModelosHTML.isEmpty()) {
+						        	
+						        		ModelosDao mDao = new  ModelosDao();
+						        	
+						        		List<ModelosHTML> docList = mDao.listarModelo("");
+						    	    
+							    	    for (ModelosHTML d : docList) {
+							    	      obsListModelosHTML.add(d);
+							    	    }
+						    	    
+						        	}
+						        	
 						        }
 						    });
 						   
@@ -786,9 +770,58 @@ public class TabParecerControlador implements Initializable {
 	        }
 	    });
 	   
-		    
-		  
-	 }
+	    
+	 // inicializar tela usuario
+	    btn1.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override public void handle(ActionEvent e) {
+	        	
+	        	System.out.println("\n|||||||| INÍCIO |||||||||||||");
+	        	
+	        	for (Usuario u : setUsuarios) {
+					
+	        		
+					Iterator<Endereco> enderecos = setEnderecos.iterator();
+		            	while (enderecos.hasNext()){
+		            		Endereco ee = enderecos.next();
+		            	 
+		            	 	if (ee.getEndUsuarioFK().getUsID() == u.getUsID()) {
+		            	 		System.out.println("Usuario " + u.getUsNome()
+		            	 				+ ", Endereco: " + ee.getEndLogradouro()
+		            	 				
+		            	 				);
+		            	 		
+		            	 				for(Demanda d : ee.getDemandas()) {
+		            	 					System.out.println("numero demana " + d.getDemNumero());
+		            	 				}
+		            	 		
+		            	 		Iterator<Interferencia> interferencias = setInterferencias.iterator();
+		            	 		while (interferencias.hasNext()){
+		            	 			Interferencia i = interferencias.next();
+			            	 
+			            	 	if (i.getInterEnderecoFK().getEndID() == ee.getEndID()) {
+			            	 		System.out.println(" Interferencias: " 
+			            	 				+ i.getInterID() + " : " + i.getInterDDLatitude() + "," + i.getInterDDLongitude());
+			            	 	} // fim white interferencia
+		            	 		}
+		            	 		
+		            	 	}
+		            	 	
+		            	 	
+		            	 	
+		             }
+		                   
+				} // fim loop for
+	        
+	        	String modeloHTML = cbModelosHTML.getSelectionModel().getSelectedItem().getModConteudo();
+	        	
+	        	MalaDiretaDocumentos mlDoc = new MalaDiretaDocumentos(modeloHTML, documento, setUsuarios, setEnderecos, setInterferencias);
+	        	mlDoc.criarDocumento();
+	        	
+	        	
+	        }
+	    });
+	   
+	}
 	 
 	public void habilitarDocumento () {
 		  
@@ -1060,7 +1093,5 @@ public class TabParecerControlador implements Initializable {
 		    
 		  }
 		  
-
-		
 
 }

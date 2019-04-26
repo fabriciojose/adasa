@@ -72,9 +72,12 @@
                   <TableColumn fx:id="tcIntUH" prefWidth="180.0" text="Situação" />
                </columns>
             </TableView>
-            <Button layoutX="660.0" layoutY="315.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="180.0" text="GERAR PARECER" />
-            <Button layoutX="850.0" layoutY="188.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="+" />
-            <Button layoutX="850.0" layoutY="223.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="-" />
+            <Button layoutX="850.0" layoutY="155.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="-" />
+            <Button layoutX="850.0" layoutY="190.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="-" />
+            <Button layoutX="850.0" layoutY="225.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="+" />
+            <Button layoutX="850.0" layoutY="258.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="-" />
+            <ComboBox layoutX="10.0" layoutY="315.0" prefHeight="30.0" prefWidth="420.0" />
+            <Button layoutX="440.0" layoutY="315.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="400.0" text="GERAR PARECER" />
          </children>
       </Pane>
    </children>

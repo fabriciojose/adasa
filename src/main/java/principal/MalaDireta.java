@@ -90,18 +90,7 @@ public class MalaDireta {
 	}
 	
 	
-	/*
-	 * para o parecer coletivo
-	 * <tr>
-						<td><doc_processo_tag></doc_processo_tag></td>
-						<td><inter_tipo_outorga_tag></inter_tipo_outorga_tag> </td>
-						<td><us_nome_tag></us_nome_tag></td>
-						<td><abast_hum_tag></abast_hum_tag> <cria_anim_tag></cria_anim_tag> <irrig_tag></irrig_tag> <uso_ind_tag></uso_ind_tag> </td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-					</tr>
-	 */
+	
 	
 	public String criarDocumento () {
 		

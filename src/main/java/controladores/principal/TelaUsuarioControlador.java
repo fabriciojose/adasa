@@ -35,7 +35,6 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.util.StringConverter;
 import principal.Alerta;
 import principal.Componentes;
 import principal.FormatoData;
@@ -81,7 +80,6 @@ public class TelaUsuarioControlador implements Initializable {
 		
 	}
 	
-	
 	//-- TableView Endereço --//
 	private TableView <Usuario> tvLista = new TableView<>();
 	
@@ -93,7 +91,6 @@ public class TelaUsuarioControlador implements Initializable {
 	public static TelaUsuarioControlador telaUsCon;
 	
 	@FXML Pane pTelaUsuario;
-	
 	
 	ObservableList<Endereco> obsListEnderecoEmpreendimento = FXCollections.observableArrayList();
 
@@ -225,8 +222,6 @@ public class TelaUsuarioControlador implements Initializable {
 		TextField tfEmail;
 	
 		ArrayList<Node> componentesUsuario = new ArrayList<Node>();												
-		
-		
 		
 	public void inicializarComponentes () {
 		
@@ -376,10 +371,8 @@ public class TelaUsuarioControlador implements Initializable {
 	   
 	}	
 	
-	
-
 	//-- método listar usuários --//
-		public void listarUsuarios (String strPesquisa) {
+	public void listarUsuarios (String strPesquisa) {
 				
 				UsuarioDao usDao = new UsuarioDao();
 				List<Usuario> usuarioList = usDao.listarUsuario(strPesquisa);
@@ -417,7 +410,7 @@ public class TelaUsuarioControlador implements Initializable {
 						tvLista.setItems(obsList);
 			}
 					
-		public void selecionarUsuario () {
+	public void selecionarUsuario () {
 				
 			tvLista.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Object>() {
 				public void changed(ObservableValue<?> observable , Object oldValue, Object newValue) {
@@ -532,8 +525,7 @@ public class TelaUsuarioControlador implements Initializable {
 				});
 		}
 		
-		
-		public void btnNovoHab () {
+	public void btnNovoHab () {
 			
 			cbTipoPessoa.setValue(null);
 			
@@ -576,7 +568,7 @@ public class TelaUsuarioControlador implements Initializable {
 			
 		}
 		
-		public void btnSalvarHab () {
+	public void btnSalvarHab () {
 			
 			if (documento == null) {
 				
@@ -637,7 +629,7 @@ public class TelaUsuarioControlador implements Initializable {
 							
 							obsList.add(us);
 							
-							modularBotoesInicial();
+							modularBotoes();
 							
 							//Alerta //
 							Alerta a = new Alerta ();
@@ -650,7 +642,7 @@ public class TelaUsuarioControlador implements Initializable {
 				
 		}
 		
-		public void btnEditarHab () {
+	public void btnEditarHab () {
 			
 			if (cbTipoPessoa.isDisable()) {
 				
@@ -746,7 +738,7 @@ public class TelaUsuarioControlador implements Initializable {
 				obsList.remove(us);
 				obsList.add(us);
 				
-				modularBotoesInicial();
+				modularBotoes();
 				
 				Alerta a = new Alerta ();
 				a.alertar(new Alert(Alert.AlertType.INFORMATION, "Cadastro editado com sucesso!!!", ButtonType.OK));
@@ -757,96 +749,96 @@ public class TelaUsuarioControlador implements Initializable {
 			
 		}
 		
-		public void btnExcluirHab () {
+	public void btnExcluirHab () {
+		
+		try {
+			//-- capturar usuário selecionado --//
+			Usuario usuario = tvLista.getSelectionModel().getSelectedItem(); 
 			
-			try {
-				//-- capturar usuário selecionado --//
-				Usuario usuario = tvLista.getSelectionModel().getSelectedItem(); 
+			UsuarioDao usDao = new UsuarioDao();
+			
+			usDao.removerUsuario(usuario.getUsID());
+			
+			obsList.remove(usuario);
+			
+			modularBotoes();
+		
+				Alerta a = new Alerta ();
+				a.alertar(new Alert(Alert.AlertType.INFORMATION, "Cadastro excluído com sucesso!!!", ButtonType.OK)); 
+	
+		}	catch (Exception e) {
+		
+				Alerta a = new Alerta ();
+				a.alertar(new Alert(Alert.AlertType.ERROR, "Erro ao escluir o cadastro!!!", ButtonType.OK)); 
 				
-				UsuarioDao usDao = new UsuarioDao();
-				
-				usDao.removerUsuario(usuario.getUsID());
-				
-				obsList.remove(usuario);
-				
-				modularBotoesInicial();
-			
-					Alerta a = new Alerta ();
-					a.alertar(new Alert(Alert.AlertType.INFORMATION, "Cadastro excluído com sucesso!!!", ButtonType.OK)); 
-		
-			}	catch (Exception e) {
-			
-					Alerta a = new Alerta ();
-					a.alertar(new Alert(Alert.AlertType.ERROR, "Erro ao escluir o cadastro!!!", ButtonType.OK)); 
-					
-			}
 		}
+	}
+	
+	public void btnCancelarHab () {
 		
-		public void btnCancelarHab () {
-			
-			modularBotoesInicial ();
-			
-			cbTipoPessoa.setValue(null);
-			
-			tfNome.setText("");
-			tfCPFCNPJ.setText("");
-			tfLogradouro.setText("");
-			
-			cbRA.setValue(null);
-			
-			tfCEP.setText("");
-			tfCidade.setText("");
-			
-			cbUF.setValue(null);
-			
-			tfTelefone.setText("");
-			tfCelular.setText("");
-			tfEmail.setText("");
-			
-		}
+		modularBotoes ();
 		
-		String strPesquisa = "";
-		//-- botão pesquisar usuário --//
-		public void btnPesquisarHab () {
-			
-			strPesquisa = tfPesquisar.getText();
-			
-			listarUsuarios (strPesquisa);
-			
-			modularBotoesInicial();
-			
-		}
+		cbTipoPessoa.setValue(null);
 		
-		private void modularBotoesInicial () {
-			
-			cbTipoPessoa.setDisable(true);
-			tfNome.setDisable(true); 
-			tfCPFCNPJ.setDisable(true);
-			
-			checkEnderecoEmpreendimento.setDisable(true);
-			
-			tfLogradouro.setDisable(true);
-			
-			cbRA.setDisable(true); 
-			
-			tfCEP.setDisable(true);
-			tfCidade.setDisable(true);
-			
-			cbUF.setDisable(true);
-			
-			tfTelefone.setDisable(true);
-			tfCelular.setDisable(true);
-			tfEmail.setDisable(true);
-			
-			
-			btnSalvar.setDisable(true);
-			btnEditar.setDisable(true);
-			btnExcluir.setDisable(true);
-			btnNovo.setDisable(false);
-			
-		}
+		tfNome.setText("");
+		tfCPFCNPJ.setText("");
+		tfLogradouro.setText("");
 		
-		public void acionarBotoes () {
+		cbRA.setValue(null);
+		
+		tfCEP.setText("");
+		tfCidade.setText("");
+		
+		cbUF.setValue(null);
+		
+		tfTelefone.setText("");
+		tfCelular.setText("");
+		tfEmail.setText("");
+		
+	}
+	
+	String strPesquisa = "";
+	//-- botão pesquisar usuário --//
+	public void btnPesquisarHab () {
+		
+		strPesquisa = tfPesquisar.getText();
+		
+		listarUsuarios (strPesquisa);
+		
+		modularBotoes();
+		
+	}
+	
+	private void modularBotoes () {
+		
+		cbTipoPessoa.setDisable(true);
+		tfNome.setDisable(true); 
+		tfCPFCNPJ.setDisable(true);
+		
+		checkEnderecoEmpreendimento.setDisable(true);
+		
+		tfLogradouro.setDisable(true);
+		
+		cbRA.setDisable(true); 
+		
+		tfCEP.setDisable(true);
+		tfCidade.setDisable(true);
+		
+		cbUF.setDisable(true);
+		
+		tfTelefone.setDisable(true);
+		tfCelular.setDisable(true);
+		tfEmail.setDisable(true);
+		
+		
+		btnSalvar.setDisable(true);
+		btnEditar.setDisable(true);
+		btnExcluir.setDisable(true);
+		btnNovo.setDisable(false);
+		
+	}
+	
+	public void acionarBotoes () {
 			
 			 btnNovo.setOnAction(new EventHandler<ActionEvent>() {
 
