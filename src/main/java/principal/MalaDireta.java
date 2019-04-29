@@ -120,7 +120,7 @@ public class MalaDireta {
 							System.out.println(dataExtenso.substring(index + 2));
 			
 			String strDocumento [] = {
-					documento.getDocNumero(),
+					documento.getDocNumeracao(),
 						dataExtenso.substring(index + 2)	};
 			
 			for (int i  = 0; i<strPosicoesDocumento.length; i++) {

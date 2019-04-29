@@ -239,8 +239,12 @@ public class Endereco implements Serializable{
 		this.documentos = documentos;
 	}
 
-	
-	
-	
+	public String toString(Endereco end) {
+         if (end == null) {
+             return null;
+         }
+         return end.getEndLogradouro();
+     }
+
 	
 }

@@ -128,7 +128,7 @@ public class MalaDiretaDocumentos {
 			
 			String strDocumento [] = {
 					documento.getDocProcesso(),
-						documento.getDocNumero(),
+						documento.getDocNumeracao(),
 							dataExtenso.substring(index + 2)	};
 			
 			for (int i  = 0; i<strPosicoesDocumento.length; i++) {

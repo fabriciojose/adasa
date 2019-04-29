@@ -16,6 +16,7 @@ import org.junit.internal.InexactComparisonCriteria;
 
 import dao.ProcessoDao;
 import entidades.Demanda;
+import entidades.Documento;
 import entidades.Endereco;
 import entidades.Processo;
 import javafx.beans.value.ChangeListener;
@@ -61,6 +62,23 @@ public class TelaProcessoControlador implements Initializable {
 				+ ", Processo n° " + demanda.getDemProcesso()
 				);
 	}
+	
+	
+	Documento documento;
+	
+	/* recebimento da demanda e preenchimento na parte superior - DOCUMENTO: ... */
+	public void setDocumento (Documento documento)  {
+		
+		this.documento = documento;
+		// preencher o label com a demanda selecionada //
+		lblDemanda.setText(
+				documento.getDocTipo()
+				+ ", Sei n° " + documento.getDocSEI()
+				+ ", Processo n° " + documento.getDocProcesso()
+				);
+	}
+	
+	
 	
 	Pane pDemanda;
 		Label lblDemanda;
@@ -258,13 +276,13 @@ public class TelaProcessoControlador implements Initializable {
 	    	@Override public void handle(ActionEvent e) {
 	     
 	        	if (intControlador == 0) {
-	        		TabDemandaControlador.controladorAtendimento.movimentarTelaProcesso(15.0);
+	        		TabDocumentoControlador.controladorAtendimento.movimentarTelaProcesso(15.0);
 	        	}
 	        	if (intControlador == 1) {
-	        		TabDemandaControlador.controladorFiscalizacao.movimentarTelaProcesso(15.0);
+	        		TabDocumentoControlador.controladorFiscalizacao.movimentarTelaProcesso(15.0);
 	        	}
 	        	if (intControlador == 2) {
-	        		TabDemandaControlador.controladorOutorga.movimentarTelaProcesso(15.0);
+	        		TabDocumentoControlador.controladorOutorga.movimentarTelaProcesso(15.0);
 	        	}
 	        	
 	        	System.out.println("valor do intControlador TelaProcesso " + intControlador);

@@ -17,6 +17,7 @@ import com.vividsolutions.jts.geom.Point;
 
 import dao.EnderecoDao;
 import entidades.Demanda;
+import entidades.Documento;
 import entidades.Endereco;
 import entidades.Interferencia;
 import entidades.RA;
@@ -82,6 +83,33 @@ public class TabEnderecoControlador implements Initializable {
 		}
 	
 	}
+	
+	Documento documento = new  Documento();
+	
+	public void setDocumento (Documento documento)  {
+		
+		this.documento = documento;
+		// preencher o label com a demanda selecionada //
+		
+		if(!(documento == null)) {
+			lblDemanda.setText(
+					documento.getDocTipo()
+					+ ", Sei n° " + documento.getDocSEI()
+					+ ", Processo n° " + documento.getDocProcesso()
+					);
+			
+			lblDemanda.setStyle("-fx-text-fill: #4A4A4A;"); 
+		} else {
+			
+			lblDemanda.setText(
+					"Não há demanda relacionada a este endereco! "
+					);
+			lblDemanda.setStyle("-fx-text-fill: #FF0000;");
+		}
+	
+	}
+
+
 	
 	Pane pMap;
 
@@ -741,6 +769,9 @@ public class TabEnderecoControlador implements Initializable {
 	    		
 	    		if ( (Integer) new_value !=  -1)
 	    		intRA = listaRA[(int) new_value];
+	    		
+	    		System.out.println("região adminsitrativa TABEndereco " + intRA);
+	    		System.out.println("região adminsitrativa TABEndereco " + strRA);
 	    		
             }
 	    });

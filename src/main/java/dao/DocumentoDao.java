@@ -69,7 +69,7 @@ public void salvarDocumento (Documento documento) {
 		//crit.createAlias("d.docProcessoFK", "p", JoinType.LEFT_OUTER_JOIN);
 		
 		Criterion docTipo = Restrictions.like("docTipo", '%' + strPesquisa + '%');
-		Criterion docNumero = Restrictions.like("docNumero", '%' + strPesquisa + '%');
+		Criterion docNumero = Restrictions.like("docNumeracao", '%' + strPesquisa + '%');
 		Criterion docSEI = Restrictions.like("docSEI", '%' + strPesquisa + '%');
 		Criterion docProcesso = Restrictions.like("docProcesso", '%' + strPesquisa + '%');
 		

@@ -89,6 +89,10 @@ public class TabUsuarioControlador implements Initializable {
 			lblEndereco.setStyle("-fx-text-fill: #FF0000;");
 		}
 		
+
+		System.out.println("tabUsuario setEndereco" + endereco.getEndLogradouro());
+		
+		
 	}
 	
 	//-- Strings --//
@@ -150,7 +154,7 @@ public class TabUsuarioControlador implements Initializable {
 	ObservableList<String> olDF = FXCollections
 		.observableArrayList("DF" , "GO", "Outro"); // box - seleção pessoa físcia ou jurídica
 				
-	public void btnNovoHab () {
+	public void habilitarEndereco () {
 		
 		cbTipoPessoa.setValue(null);
 		
@@ -193,7 +197,7 @@ public class TabUsuarioControlador implements Initializable {
 		
 	}
 	
-	public void btnSalvarHab () {
+	public void salvarEndereco () {
 		
 		
 		if (endereco.getEndLogradouro() == null) {
@@ -264,7 +268,7 @@ public class TabUsuarioControlador implements Initializable {
 			
 	}
 	
-	public void btnEditarHab () {
+	public void editarEndereco () {
 		
 		if (cbTipoPessoa.isDisable()) {
 			
@@ -322,7 +326,7 @@ public class TabUsuarioControlador implements Initializable {
 				us.setUsEmail(tfEmail.getText());
 				us.setUsDataAtualizacao(Timestamp.valueOf((LocalDateTime.now())));
 				
-			
+			  System.out.println("bnt editar - tabUsuario" + endereco.getEndDDLatitude());
 			Endereco end = new Endereco();
 				// captura um endereco relacionado
 				end = endereco;
@@ -330,6 +334,11 @@ public class TabUsuarioControlador implements Initializable {
 				end.setEndUsuarioFK(us);
 				// adiciona este endereco no setEnderecos do usuario
 				us.getEnderecos().add(end);
+				
+				
+				for(Endereco e : us.getEnderecos()) {
+					System.out.println("enderecos do usuario depois de editar: "  + e.getEndLogradouro());
+				}
 			
 			/*
 			// para não dar repeticao de objetos //
@@ -358,7 +367,7 @@ public class TabUsuarioControlador implements Initializable {
 		
 	}
 	
-	public void btnExcluirHab () {
+	public void excluirEndereco () {
 		
 		try {
 			//-- capturar usuário selecionado --//
@@ -383,7 +392,7 @@ public class TabUsuarioControlador implements Initializable {
 		}
 	}
 	
-	public void btnCancelarHab () {
+	public void cancelarEndereco () {
 		
 		modularBotoesInicial ();
 		
@@ -407,7 +416,7 @@ public class TabUsuarioControlador implements Initializable {
 	}
 	
 	//-- botão pesquisar usuário --//
-	public void btnPesquisarHab () {
+	public void pesquisarEndereco () {
 		
 		strPesquisa = tfPesquisar.getText();
 		
@@ -866,7 +875,7 @@ public class TabUsuarioControlador implements Initializable {
 
 		        @Override
 		        public void handle(ActionEvent event) {
-		            btnNovoHab();
+		            habilitarEndereco();
 		        }
 		    });
 			    
@@ -874,7 +883,7 @@ public class TabUsuarioControlador implements Initializable {
 
 		        @Override
 		        public void handle(ActionEvent event) {
-		            btnSalvarHab();
+		            salvarEndereco();
 		        }
 		    });
 		    
@@ -882,7 +891,7 @@ public class TabUsuarioControlador implements Initializable {
 
 		        @Override
 		        public void handle(ActionEvent event) {
-		            btnEditarHab();
+		        	editarEndereco();
 		        }
 		    });
 		    
@@ -890,7 +899,7 @@ public class TabUsuarioControlador implements Initializable {
 
 		        @Override
 		        public void handle(ActionEvent event) {
-		            btnCancelarHab();
+		            cancelarEndereco();
 		        }
 		    });
 		    
@@ -898,7 +907,7 @@ public class TabUsuarioControlador implements Initializable {
 
 		        @Override
 		        public void handle(ActionEvent event) {
-		            btnPesquisarHab();
+		            pesquisarEndereco();
 		        }
 		    });
 		    
@@ -924,7 +933,7 @@ public class TabUsuarioControlador implements Initializable {
 
 		        @Override
 		        public void handle(ActionEvent event) {
-		        	btnExcluirHab ();
+		        	excluirEndereco ();
 		        }
 		    });
 		

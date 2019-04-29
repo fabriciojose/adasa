@@ -11,7 +11,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 import dao.EnderecoDao;
-import entidades.Demanda;
+import entidades.Documento;
 import entidades.Endereco;
 import entidades.RA;
 import entidades.Usuario;
@@ -45,16 +45,17 @@ public class TelaEnderecoControlador implements Initializable {
 	
 	Object objetoDeEdicao = new Object();
 	
+
 	public void setObjetoDeEdicao (Object objetoDeEdicao) {
 		
 		this.objetoDeEdicao = objetoDeEdicao;
 		
-		if (objetoDeEdicao.getClass().getName() == "entidades.Demanda")
+		if (objetoDeEdicao.getClass().getName() == "entidades.Documento")
 			
-			lblDemanda.setText(
-					((Demanda) objetoDeEdicao).getDemTipo() 
-					+ ", Sei n° " + ((Demanda) objetoDeEdicao).getDemNumeroSEI()
-					+ ", Processo n° " + ((Demanda) objetoDeEdicao).getDemProcesso()
+			lblDocumento.setText(
+					((Documento) objetoDeEdicao).getDocTipo()
+					+ ", Sei n° " + ((Documento) objetoDeEdicao).getDocSEI()
+					+ ", Processo n° " + ((Documento) objetoDeEdicao).getDocProcesso()
 					);
 		
 		
@@ -62,11 +63,11 @@ public class TelaEnderecoControlador implements Initializable {
 	
 	@FXML Pane pTelaEndereco;
 	
-	Pane pDemanda;
-		Label lblDemanda;
-			Button btnDemanda;
+	Pane pDocumento;
+		Label lblDocumento;
+			Button btnDocumento;
 
-				ArrayList<Node> listNodesDemanda = new ArrayList<Node>();
+				ArrayList<Node> componentesDocumento = new ArrayList<Node>();
 				
 				
 				Pane pDadosEndereco;
@@ -79,7 +80,7 @@ public class TelaEnderecoControlador implements Initializable {
 											TextField tfLongitude;
 												Button btnLatLon;
 											
-												ArrayList<Node> listNodeDadosEndereco = new ArrayList<Node>();
+												ArrayList<Node> componentesEndereco = new ArrayList<Node>();
 										
 												 Pane pPersistencia;
 												  	Button btnNovo;
@@ -91,15 +92,15 @@ public class TelaEnderecoControlador implements Initializable {
 												  						
 												  							TextField tfPesquisar;
 												  							
-												  								ArrayList<Node> listNodesPersistencia= new ArrayList<Node>();
+												  								ArrayList<Node> componentesPersistencia = new ArrayList<Node>();
 												  								
 												 
 	//-- TableView endereco --//
 	private TableView <Endereco> tvLista = new TableView<>();
 
-	TableColumn<Endereco, String> tcDesEnd = new TableColumn<>("Endereço");
+	TableColumn<Endereco, String> tcLogradouro = new TableColumn<>("Endereço");
 	TableColumn<Endereco, String> tcEndRA = new TableColumn<>("Região Administrativa");
-	TableColumn<Endereco, String> tcEndCid = new TableColumn<>("CEP");
+	TableColumn<Endereco, String> tcCidade = new TableColumn<>("CEP");
 	
 	Label lblDataAtualizacao = new Label();
 												
@@ -200,40 +201,46 @@ public class TelaEnderecoControlador implements Initializable {
 	
 		pTelaEndereco.setStyle("-fx-background-color:#FFFFFF;");
 	    
-		listNodesDemanda.add(pDemanda = new Pane());
-			listNodesDemanda.add(new Label("DEMANDA:"));
-				listNodesDemanda.add(lblDemanda = new Label());
-					listNodesDemanda.add(btnDemanda = new Button(">>>"));
+		componentesDocumento.add(pDocumento = new Pane());
+			componentesDocumento.add(new Label("DOCUMENTO:"));
+				componentesDocumento.add(lblDocumento = new Label());
+					componentesDocumento.add(btnDocumento = new Button(">>>"));
 	    
 	    prefSizeWHeLayXY = new Double [][] { 
-    		{930.0,60.0,10.0,10.0}, 
-    			{75.0,30.0,11.0,15.0}, 
-    				{750.0,30.0,87.0,15.0}, 
-    					{75.0,20.0,844.0,18.0}};
+	    	{930.0,60.0,10.0,10.0},
+	    	{120.0,30.0,18.0,15.0},
+	    	{690.0,30.0,138.0,15.0},
+	    	{75.0,20.0,838.0,19.0},
+    				};
 	    	
 	    com = new Componentes();
-	    com.popularTela(listNodesDemanda, prefSizeWHeLayXY, pTelaEndereco);
+	    com.popularTela(componentesDocumento, prefSizeWHeLayXY, pTelaEndereco);
 	    
 	    
-	    listNodeDadosEndereco.add(pDadosEndereco = new Pane());
-	    	listNodeDadosEndereco.add(new Label("ENDEREÇO DO EMPREENDIMENTO:"));
-	    	listNodeDadosEndereco.add(tfLogradouro = new TextField());
-	    		listNodeDadosEndereco.add(new Label("REGIÃO ADMINISTRATIVA:"));
-	    		listNodeDadosEndereco.add(cbRA = new  ComboBox<>());
-	    			listNodeDadosEndereco.add(new Label("CEP:"));
-	    			listNodeDadosEndereco.add(tfCEP = new TextField());
-					    listNodeDadosEndereco.add(new Label("CIDADE:"));
-					    listNodeDadosEndereco.add(tfCidade = new TextField());
-						    listNodeDadosEndereco.add(new Label("UF:"));
-							listNodeDadosEndereco.add(cbUF = new  ComboBox<>());
-								listNodeDadosEndereco.add(new Label("LATITUDE (Y):"));
-							    listNodeDadosEndereco.add(tfLatitude = new TextField());
-							    	listNodeDadosEndereco.add(new Label("LONGITUDE(X):"));
-								    listNodeDadosEndereco.add(tfLongitude = new TextField());
-								    	listNodeDadosEndereco.add(btnLatLon = new Button());
-	    
+	    componentesEndereco.add(pDadosEndereco = new Pane());
+	    	componentesEndereco.add(new Label("ENDEREÇO DO EMPREENDIMENTO:"));
+	    	componentesEndereco.add(tfLogradouro = new TextField());
+	    		componentesEndereco.add(new Label("REGIÃO ADMINISTRATIVA:"));
+	    		componentesEndereco.add(cbRA = new  ComboBox<>());
+	    			componentesEndereco.add(new Label("CEP:"));
+	    			componentesEndereco.add(tfCEP = new TextField());
+					    componentesEndereco.add(new Label("CIDADE:"));
+					    componentesEndereco.add(tfCidade = new TextField());
+						    componentesEndereco.add(new Label("UF:"));
+							componentesEndereco.add(cbUF = new  ComboBox<>());
+								componentesEndereco.add(new Label("LATITUDE (Y):"));
+							    componentesEndereco.add(tfLatitude = new TextField());
+							    	componentesEndereco.add(new Label("LONGITUDE(X):"));
+								    componentesEndereco.add(tfLongitude = new TextField());
+								    	componentesEndereco.add(btnLatLon = new Button());
+								    	
+								    	cbRA.setItems(olEndRA);
+								 	    cbRA.setValue("Plano Piloto");
+								 	    cbUF.setItems(olEndUF);
+								 	
 	
 	    prefSizeWHeLayXY = new Double [][] { 
+	    	
 	    	{900.0,130.0,25.0,83.0},
 	    	{380.0,30.0,18.0,0.0},
 	    	{370.0,30.0,18.0,30.0},
@@ -253,17 +260,17 @@ public class TelaEnderecoControlador implements Initializable {
 	    };
 	    	
 	    com = new Componentes();
-	    com.popularTela(listNodeDadosEndereco, prefSizeWHeLayXY, pTelaEndereco);
+	    com.popularTela(componentesEndereco, prefSizeWHeLayXY, pTelaEndereco);
 	    
 	    
-	    listNodesPersistencia.add(pPersistencia = new Pane());
-	    listNodesPersistencia.add(btnNovo = new Button("NOVO"));
-	    listNodesPersistencia.add(btnSalvar = new Button("SALVAR"));
-	    listNodesPersistencia.add(btnEditar = new Button("EDITAR"));
-	    listNodesPersistencia.add(btnExcluir = new Button("EXCLUIR"));
-	    listNodesPersistencia.add(btnCancelar = new Button("CANCELAR"));
-	    listNodesPersistencia.add(tfPesquisar = new TextField());
-	    listNodesPersistencia.add(btnPesquisar = new Button("PESQUISAR"));
+	    componentesPersistencia.add(pPersistencia = new Pane());
+	    componentesPersistencia.add(btnNovo = new Button("NOVO"));
+	    componentesPersistencia.add(btnSalvar = new Button("SALVAR"));
+	    componentesPersistencia.add(btnEditar = new Button("EDITAR"));
+	    componentesPersistencia.add(btnExcluir = new Button("EXCLUIR"));
+	    componentesPersistencia.add(btnCancelar = new Button("CANCELAR"));
+	    componentesPersistencia.add(tfPesquisar = new TextField());
+	    componentesPersistencia.add(btnPesquisar = new Button("PESQUISAR"));
 	    
 	    prefSizeWHeLayXY = new Double[][] { 
 	    	{900.0,60.0,25.0,225.0}, 
@@ -276,10 +283,10 @@ public class TelaEnderecoControlador implements Initializable {
 					    				{95.0,25.0,793.0,18.0} }; 
 					    				
 					    				 com = new Componentes();
-					    				    com.popularTela(listNodesPersistencia, prefSizeWHeLayXY, pTelaEndereco);
+					    				    com.popularTela(componentesPersistencia, prefSizeWHeLayXY, pTelaEndereco);
 	    
 	    // para trazer o valor da entidade principal, no caso Endereco
-	    tcDesEnd.setCellValueFactory(new PropertyValueFactory<Endereco, String>("endLogradouro"));
+		tcLogradouro.setCellValueFactory(new PropertyValueFactory<Endereco, String>("endLogradouro"));
 		// para trazer valor de outra entidade, no caso RA
 	    tcEndRA.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Endereco, String>, ObservableValue<String>>() {
 		    public ObservableValue<String> call(TableColumn.CellDataFeatures<Endereco, String> e) {
@@ -288,13 +295,13 @@ public class TelaEnderecoControlador implements Initializable {
 		    }
 		});
 		
-		tcDesEnd.setPrefWidth(409);
+	    tcLogradouro.setPrefWidth(409);
 		tcEndRA.setPrefWidth(232);
-		tcEndCid.setPrefWidth(232);
+		tcCidade.setPrefWidth(232);
 			
-	    tvLista.getColumns().add(tcDesEnd);
+	    tvLista.getColumns().add(tcLogradouro);
 	    tvLista.getColumns().add(tcEndRA);
-	    tvLista.getColumns().add(tcEndCid);
+	    tvLista.getColumns().add(tcCidade);
 	  
 	    tvLista.setItems(obsList);
 	    
@@ -307,6 +314,30 @@ public class TelaEnderecoControlador implements Initializable {
 		lblDataAtualizacao.setLayoutY(500);
 		
 		pTelaEndereco.getChildren().addAll(tvLista, lblDataAtualizacao);
+		    
+		 cbRA.getSelectionModel().selectedIndexProperty().addListener(new
+		            ChangeListener<Number>() {
+		    	public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
+		    		Number value, Number new_value) {
+		    		
+		    		if ( (Integer) new_value !=  -1)
+		    		intRA = listaRA[(int) new_value];
+
+		    		System.out.println("região adminsitrativa tela Endereco " + intRA);
+		    		System.out.println("região adminsitrativa  tela Endereco " + strRA);
+		    		
+	            }
+		    });
+		    
+		    cbRA.getSelectionModel()
+		    	.selectedItemProperty()
+		    	.addListener( 
+		    	(ObservableValue<? extends String> observable, String oldValue, String newValue) ->
+		    	
+		    	strRA = (String) newValue 
+		    );
+		    
+		    
 		
 		
 	    acionarBotoes ();
@@ -326,17 +357,17 @@ public class TelaEnderecoControlador implements Initializable {
 	 
 	public void acionarBotoes () {
 		  
-	    btnDemanda.setOnAction(new EventHandler<ActionEvent>() {
+	    btnDocumento.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override public void handle(ActionEvent e) {
 	        	
 	        	if (intControlador == 0) {
-	        		TabDemandaControlador.controladorAtendimento.movimentarTelaEndereco(15.0);
+	        		TabDocumentoControlador.controladorAtendimento.movimentarTelaEndereco(15.0);
 	        	}
 	        	if(intControlador == 1) {
-	        		TabDemandaControlador.controladorFiscalizacao.movimentarTelaEndereco(15.0);
+	        		TabDocumentoControlador.controladorFiscalizacao.movimentarTelaEndereco(15.0);
 	        	}
 	        	if (intControlador == 2) {
-	        		TabDemandaControlador.controladorOutorga.movimentarTelaEndereco(15.0);
+	        		TabDocumentoControlador.controladorOutorga.movimentarTelaEndereco(15.0);
 	        	}
 	        	
 	        	System.out.println("valor do intControlador TelaEndereco " + intControlador);
@@ -345,19 +376,19 @@ public class TelaEnderecoControlador implements Initializable {
 	    
 	    btnNovo.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override public void handle(ActionEvent e) {
-	        	
+	        	habilitarEndereco();
 	        }
 	    });
 	    
 	    btnSalvar.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override public void handle(ActionEvent e) {
-	        	salvarEndereco(objetoDeEdicao);
+	        	salvarEndereco();
 	        }
 	    });
 	    
 	    btnEditar.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override public void handle(ActionEvent e) {
-	        	editarEndereco(objetoDeEdicao);
+	        	editarEndereco();
 	        }
 	    });
 	    btnExcluir.setOnAction(new EventHandler<ActionEvent>() {
@@ -378,9 +409,26 @@ public class TelaEnderecoControlador implements Initializable {
 	        }
 	    });
 	  
+	    
+	    btnLatLon.setOnAction(new EventHandler<ActionEvent>() {
+
+	        @Override
+	        public void handle(ActionEvent event) {
+	        	capturarLatitudeLongitude ();
+	        }
+	    });
+	    
   }
 	
-	public void btnNovoHab (ActionEvent event) {
+	/* capturar as coordenadas clicadas no mapa e trazer para o cadastro do endereco */
+	public void capturarLatitudeLongitude () {
+		
+		tfLatitude.setText( ControladorPrincipal.capturarGoogleMaps().getLat() );
+		tfLongitude.setText( ControladorPrincipal.capturarGoogleMaps().getLon());
+		
+	}
+	
+	public void habilitarEndereco () {
 		
 		tfLogradouro.setText("");
 		
@@ -412,10 +460,8 @@ public class TelaEnderecoControlador implements Initializable {
 		
 	}
 
-	public void salvarEndereco (Object obj) {
-	
-	/*
-		
+	public void salvarEndereco () {
+
 		if (tfLatitude.getText().isEmpty() || 
 				tfLongitude.getText().isEmpty()) {
 			
@@ -424,10 +470,10 @@ public class TelaEnderecoControlador implements Initializable {
 			
 		} 
 		
-			else if (obj == null) {
+			else if (objetoDeEdicao == null) {
 				
 				Alerta a = new Alerta ();
-				a.alertar(new Alert(Alert.AlertType.ERROR, "Não há demanda selecionada!!!", ButtonType.OK));
+				a.alertar(new Alert(Alert.AlertType.ERROR, "Não há documento ou endereço selecionado!!!", ButtonType.OK));
 				
 			} 
 		
@@ -446,6 +492,9 @@ public class TelaEnderecoControlador implements Initializable {
 						ra.setRaNome(strRA);
 						
 						Endereco end = new Endereco();
+						
+
+						try {
 							
 							end.setEndLogradouro(tfLogradouro.getText());
 							end.setEndRAFK(ra);
@@ -454,29 +503,49 @@ public class TelaEnderecoControlador implements Initializable {
 							end.setEndCidade(tfCidade.getText());
 							end.setEndUF(cbUF.getValue());
 							
-							try {
+							end.setEndDDLatitude(Double.parseDouble(tfLatitude.getText()));
+							end.setEndDDLongitude(Double.parseDouble(tfLongitude.getText()));
+							
+							end.setEndAtualizacao(Timestamp.valueOf((LocalDateTime.now())));
+							
+
+							if (objetoDeEdicao.getClass().getName().equals("entidades.Documento")) {
 								
-								end.setEndDDLatitude(Double.parseDouble(tfLatitude.getText()));
-								end.setEndDDLongitude(Double.parseDouble(tfLongitude.getText()));
+							
+							Documento doc = (Documento) objetoDeEdicao;
+								doc.setDocEnderecoFK(end);
 								
-								end.setEndAtualizacao(Timestamp.valueOf((LocalDateTime.now())));
-										
-										Demanda dem = new Demanda ();
-										
-											dem = EditarEnderecoControlador.getDemanda();
-											dem.setDemEnderecoFK(end);
-											end.getDemandas().add(dem);
-										
-										EnderecoDao endDao = new EnderecoDao();
-										
-											endDao.salvarEndereco(end); //solução para recuperar o id do endereço
-											endDao.mergeEndereco(end); // assim adiciona o id end na demanda dem
-										
-										//-- modular botoes--//
-										modularBotoesInicial ();
-										
-										obsList.remove(end);
-										obsList.add(end);
+								Set<Documento> docList = new HashSet<>();
+								docList.add(doc);
+								
+								end.setDocumentos(docList);
+							
+							}
+							
+							else if (objetoDeEdicao.getClass().getName().equals("entidades.Usuario")) {
+								
+								Usuario us = (Usuario) objetoDeEdicao;
+								//us.setUsDataAtualizacao(Timestamp.valueOf((LocalDateTime.now())));
+								
+									// adiciona este endereco no setEnderecos do usuario
+									us.getEnderecos().add(end);
+									
+									// adiciona neste endereco o id usuario selecionado
+									end.setEndUsuarioFK(us);
+								
+							}
+							
+							EnderecoDao endDao = new EnderecoDao();
+							
+								endDao.salvarEndereco(end); //solução para recuperar o id do endereço
+								endDao.mergeEndereco(end); // assim adiciona o id end na demanda dem
+							
+							
+							//-- modular botoes--//
+							modularBotoesInicial ();
+							
+							obsList.remove(end);
+							obsList.add(end);
 										
 										
 										selecionarEndereco();
@@ -499,13 +568,11 @@ public class TelaEnderecoControlador implements Initializable {
 			
 		}
 		
-		*/
-			
 	}
 	
 	int contador = 0;
 	
-	public void editarEndereco (Object objetodeEdicao) {
+	public void editarEndereco () {
 		
 		if (tfLogradouro.isDisable()) {
 			
@@ -552,34 +619,29 @@ public class TelaEnderecoControlador implements Initializable {
 					end.setEndAtualizacao(
 							Timestamp.valueOf((LocalDateTime.now())));
 					
-					Demanda dem = new Demanda();
+					Documento doc = new Documento();
 					Usuario us = new Usuario();
 					
 					System.out.println(objetoDeEdicao.getClass().getName());
 					
 					System.out.println("contador " + contador++);
 					
-					if (objetoDeEdicao.getClass().getName().equals("entidades.Demanda")) {
+					if (objetoDeEdicao.getClass().getName().equals("entidades.Documento")) {
 						
-						dem = (Demanda) objetoDeEdicao;
-						dem.setDemEnderecoFK(end);
-						
-						for(Demanda d : end.getDemandas()) {
-							System.out.println("antes --- demandas " + d.getDemID());
-						}
-						
-						
+						doc = (Documento) objetoDeEdicao;
+						doc.setDocEnderecoFK(end);
+					
 						/* retirar na lista de demandas do endereco uma demanda repetida */
-						Iterator<Demanda> iDemanda;
+						Iterator<Documento> iDoc;
 						
-						Set<Demanda> hashsetDemandas = new HashSet<Demanda>();
-							hashsetDemandas = end.getDemandas();
+						Set<Documento> hashsetDemandas = new HashSet<Documento>();
+							hashsetDemandas = end.getDocumentos();
 						
-						for (iDemanda = hashsetDemandas.iterator(); iDemanda.hasNext();)
+						for (iDoc = hashsetDemandas.iterator(); iDoc.hasNext();)
 				        {
-				          Demanda d = (Demanda)iDemanda.next();
-				          if (d.getDemID() == dem.getDemID()) {
-				        	  iDemanda.remove();
+				          Documento d = (Documento) iDoc.next();
+				          if (d.getDocID() == doc.getDocID()) {
+				        	  iDoc.remove();
 				          }
 				        }
 						
@@ -594,16 +656,7 @@ public class TelaEnderecoControlador implements Initializable {
 						*/
 						
 						// adicionar a demanda editada //
-						end.getDemandas().add(dem);
-						
-
-						for(Demanda d : end.getDemandas()) {
-							System.out.println("depois -------------------- demandas " + d.getDemID());
-						}
-						
-						
-						
-						System.out.println("editar demanda e endereco");
+						end.getDocumentos().add(doc);
 						
 					}
 					

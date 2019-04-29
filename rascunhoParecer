@@ -1,3 +1,13 @@
+Pane pDadosDocumento;
+	  	ComboBox<String> cbTipo;
+	  		TextField tfNumeracao;
+	  			TextField tfSEI;
+	  				TextField tfProcesso;
+	  					DatePicker dpDataDistribuicao;
+	  						DatePicker dpDataRecebimento;
+
+
+
 doc = tvDocumento.getSelectionModel().getSelectedItem();
 				doc.getUsuarios().clear();
 			

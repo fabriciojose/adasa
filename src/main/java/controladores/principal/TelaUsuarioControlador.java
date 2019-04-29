@@ -65,7 +65,7 @@ public class TelaUsuarioControlador implements Initializable {
 		
 			lblDocumento.setText(
 					documento.getDocTipo() + " Nº "
-					+ documento.getDocNumero()
+					+ documento.getDocNumeracao()
 					+ ", SEI: " + documento.getDocSEI()
 					+ ", PROCESSO: " + documento.getDocProcesso()
 					);

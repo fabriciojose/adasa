@@ -12,9 +12,9 @@
    <children>
       <Pane layoutX="10.0" layoutY="10.0" prefHeight="60.0" prefWidth="930.0" styleClass="panes" stylesheets="@../../css/principal_mapa_azul.css">
          <children>
-            <Label alignment="CENTER" layoutX="11.0" layoutY="15.0" prefHeight="30.0" prefWidth="75.0" text="DEMANDA:" />
-            <Label layoutX="87.0" layoutY="15.0" prefHeight="30.0" prefWidth="750.0" />
-            <Button layoutX="844.0" layoutY="18.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="75.0" text="&lt;&lt;&lt;" />
+            <Label alignment="CENTER" layoutX="18.0" layoutY="15.0" prefHeight="30.0" prefWidth="120.0" text="DEMANDA:" />
+            <Label layoutX="138.0" layoutY="15.0" prefHeight="30.0" prefWidth="690.0" />
+            <Button layoutX="838.0" layoutY="19.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="75.0" text="&lt;&lt;&lt;" />
          </children>
       </Pane>
       <Pane fx:id="pPersistencia" layoutX="25.0" layoutY="225.0" prefHeight="60.0" prefWidth="900.0" styleClass="panes">

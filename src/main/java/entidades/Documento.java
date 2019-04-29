@@ -50,13 +50,13 @@ public class Documento implements Serializable {
 	@Column(name="doc_Tipo", columnDefinition="varchar(50)")
 	private String docTipo;
 		 
-	@Column(name="doc_Numero", columnDefinition="varchar(50)")
-	private String docNumero;
+	@Column(name="doc_Numeracao", columnDefinition="varchar(50)")
+	private String docNumeracao;
 	  
 	@Column(name="doc_SEI", columnDefinition="varchar(50)")
 	private String docSEI;
 	  
-	@Column(name="_Processo", columnDefinition="varchar(50)")
+	@Column(name="doc_Processo", columnDefinition="varchar(50)")
 	private String docProcesso;
 	 
 	@Basic
@@ -99,12 +99,12 @@ public class Documento implements Serializable {
 		this.docProcessoFK = docProcessoFK;
 	}
 
-	public String getDocNumero() {
-		return docNumero;
+	public String getDocNumeracao() {
+		return docNumeracao;
 	}
 
-	public void setDocNumero(String docNumero) {
-		this.docNumero = docNumero;
+	public void setDocNumeracao(String docNumeracao) {
+		this.docNumeracao = docNumeracao;
 	}
 
 	public String getDocSEI() {

@@ -63,20 +63,18 @@
                   <TableColumn fx:id="tcCPFCNPJ" minWidth="0.0" prefWidth="150.0" text="CPF/CNPJ" />
                </columns>
             </TableView>
+            <ComboBox layoutX="10.0" layoutY="315.0" prefHeight="30.0" prefWidth="420.0" />
             <Label layoutX="440.0" layoutY="10.0" prefHeight="30.0" prefWidth="400.0" text="ENDEREÇO:" />
             <ComboBox layoutX="440.0" layoutY="50.0" prefHeight="30.0" prefWidth="400.0" />
-            <Label layoutX="440.0" layoutY="90.0" prefHeight="30.0" prefWidth="420.0" text="INTERFERÊNCIAS:" />
+            <Label layoutX="440.0" layoutY="90.0" prefHeight="30.0" prefWidth="400.0" text="INTERFERÊNCIAS:" />
             <TableView fx:id="tvListaInt" layoutX="440.0" layoutY="130.0" prefHeight="175.0" prefWidth="400.0">
                <columns>
                   <TableColumn fx:id="tcDescEndInt" prefWidth="200.0" text="Tipo de Interferência" />
                   <TableColumn fx:id="tcIntUH" prefWidth="180.0" text="Situação" />
                </columns>
             </TableView>
-            <Button layoutX="850.0" layoutY="155.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="-" />
-            <Button layoutX="850.0" layoutY="190.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="-" />
-            <Button layoutX="850.0" layoutY="225.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="+" />
-            <Button layoutX="850.0" layoutY="258.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="-" />
-            <ComboBox layoutX="10.0" layoutY="315.0" prefHeight="30.0" prefWidth="420.0" />
+            <Button layoutX="850.0" layoutY="190.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" text="limpar" />
+            <Button layoutX="850.0" layoutY="225.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" text="remover" />
             <Button layoutX="440.0" layoutY="315.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="400.0" text="GERAR PARECER" />
          </children>
       </Pane>

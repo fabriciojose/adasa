@@ -14,7 +14,7 @@ public class ControladorOutorga {
 	@FXML TabPane tpOutorga = new TabPane();
 	
 	@FXML Tab tpTabDemanda;
-		String strDem = "/fxml/principal/TabDemanda.fxml";
+		String strDem = "/fxml/principal/TabDocumento.fxml";
 	
 		@FXML Tab tpTabEndereco;
 			String strEnd = "/fxml/principal/TabEndereco.fxml";
@@ -36,7 +36,7 @@ public class ControladorOutorga {
 		tpOutorga.prefWidthProperty().bind(pOutorga.widthProperty());
 		tpOutorga.prefHeightProperty().bind(pOutorga.heightProperty());
 		
-		abrirTab (new Pane() ,  new TabDemandaControlador(2), strDem, tpTabDemanda );
+		abrirTab (new Pane() ,  new TabDocumentoControlador(2), strDem, tpTabDemanda );
 			abrirTab (new Pane()  ,  new TabEnderecoControlador(2), strEnd, tpTabEndereco );
 				abrirTab (new Pane() ,  new TabInterferenciaControlador(2), strInt, tpTabInterferencia );
 					abrirTab (new Pane() ,  new TabUsuarioControlador(2), strUs, tpTabUsuario );

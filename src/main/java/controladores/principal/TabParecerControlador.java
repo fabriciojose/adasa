@@ -239,7 +239,7 @@ public class TabParecerControlador implements Initializable {
 		Button btnUsuario;
 		Button btnParecer;
 		
-		Button btn1, btn2, btn3, btn4;
+		Button btnSelecao, btnInterferencia, btn3, btn4;
 		ComboBox<ModelosHTML> cbModelosHTML;
 			ObservableList<ModelosHTML> obsListModelosHTML = FXCollections.observableArrayList();
 		
@@ -329,15 +329,14 @@ public class TabParecerControlador implements Initializable {
 		    componentesDocumento.add(btnUsuario = new Button("<<<"));
 		    componentesDocumento.add(new Label("USUÁRIOS:"));
 		    componentesDocumento.add(tvUsuarios = new TableView<Usuario>());
+		    componentesDocumento.add(cbModelosHTML = new ComboBox<>());
 		    componentesDocumento.add(new Label("ENDEREÇO:"));
 		    componentesDocumento.add(cbEndereco = new ComboBox<>());
 		    componentesDocumento.add(new Label("INTERFERÊNCIAS:"));
 		    componentesDocumento.add(tvInterferencia = new TableView<Interferencia>());
-		    componentesDocumento.add(btn1 = new Button(""));
-		    componentesDocumento.add(btn2 = new Button(""));
-		    componentesDocumento.add(btn3 = new Button("+"));
-		    componentesDocumento.add(btn4 = new Button("-"));
-		    componentesDocumento.add(cbModelosHTML = new ComboBox<>());
+		    componentesDocumento.add(btnSelecao = new Button("limpar"));
+		    componentesDocumento.add(btnInterferencia = new Button("remover"));
+
 		    componentesDocumento.add(btnParecer = new Button("GERAR PARECER"));
 		
 			    
@@ -345,23 +344,19 @@ public class TabParecerControlador implements Initializable {
 			    	
 			    	{930.0,360.0,25.0,480.0},
 			    	{70.0,25.0,850.0,10.0},
+
 			    	{420.0,30.0,10.0,10.0},
-			    	
 			    	{420.0,255.0,10.0,50.0}, // tableView
-			    	
+			    	{420.0,30.0,10.0,315.0},
+
 			    	{400.0,30.0,440.0,10.0},
 			    	{400.0,30.0,440.0,50.0},
-			    	{420.0,30.0,440.0,90.0},
-			    	
+			    	{400.0,30.0,440.0,90.0},
+
 			    	{400.0,175.0,440.0,130.0}, // tableView
-			    	
-			    	{25.0,25.0,850.0,155.0},
-			    	{25.0,25.0,850.0,190.0},
-			    	{25.0,25.0,850.0,225.0},
-			    	{25.0,25.0,850.0,258.0},
-			    	
-			    	{420.0,30.0,10.0,315.0},
-			    	{420.0,30.0,660.0,315.0},
+			    	{70.0,25.0,850.0,190.0},
+			    	{70.0,25.0,850.0,225.0},
+			    	{400.0,30.0,440.0,315.0},
 			    	
 		    				};
 			    	
@@ -510,7 +505,7 @@ public class TabParecerControlador implements Initializable {
 				setEndereco(doc.getDocEnderecoFK());
 				
 				// preencher os campos //
-				tfDocumento.setText(doc.getDocNumero());
+				tfDocumento.setText(doc.getDocNumeracao());
 				tfSEI.setText(doc.getDocSEI());
 				tfProcessoSEI.setText(doc.getDocProcesso());
 				
@@ -770,10 +765,12 @@ public class TabParecerControlador implements Initializable {
 	        }
 	    });
 	   
-	    
+	   
 	 // inicializar tela usuario
-	    btn1.setOnAction(new EventHandler<ActionEvent>() {
+	    btnParecer.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override public void handle(ActionEvent e) {
+	        	
+	        	System.out.println("bntParecer clicado - gerar html");
 	        	
 	        	System.out.println("\n|||||||| INÍCIO |||||||||||||");
 	        	
@@ -791,7 +788,12 @@ public class TabParecerControlador implements Initializable {
 		            	 				);
 		            	 		
 		            	 				for(Demanda d : ee.getDemandas()) {
-		            	 					System.out.println("numero demana " + d.getDemNumero());
+		            	 					System.out.println(contadorDemandas + " numero demana " + d.getDemNumero());
+		            	 					
+		            	 					if  (d.getDemProcessoFK().getProSEI() != null ) {
+		            	 					System.out.println("------------ processo principal " + d.getDemProcessoFK().getProSEI());
+		            	 					}
+		            	 					contadorDemandas ++;
 		            	 				}
 		            	 		
 		            	 		Iterator<Interferencia> interferencias = setInterferencias.iterator();
@@ -819,9 +821,37 @@ public class TabParecerControlador implements Initializable {
 	        	
 	        	
 	        }
+	       
+	    });
+	    
+	    // inicializar tela usuario
+	    btnSelecao.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override public void handle(ActionEvent e) {
+	        	
+	        	documento = null;
+	        	setEnderecos.clear();
+	        	setInterferencias.clear();
+	        	setUsuarios.clear();
+	        	
+	        	System.out.println("btnSelecao clicado - limpar lista de interferencias, endereco e usuario");
+	        	
+	        }
+	    });
+	    
+	 // inicializar tela usuario
+	    btnInterferencia.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override public void handle(ActionEvent e) {
+	        	
+	        	setInterferencias.remove(tvInterferencia.getSelectionModel().getSelectedItem());
+	        	
+	        	System.out.println("btnInterferencia clicado - remover interferencia");
+	        	
+	        }
 	    });
 	   
 	}
+	 
+	 int contadorDemandas = 1;
 	 
 	public void habilitarDocumento () {
 		  
@@ -869,7 +899,7 @@ public class TabParecerControlador implements Initializable {
 	      {
 		       Documento doc = new Documento();
 		        
-		       	doc.setDocNumero(tfDocumento.getText());
+		       	doc.setDocNumeracao(tfDocumento.getText());
 		       	doc.setDocSEI(tfSEI.getText());
 		       	doc.setDocProcesso(tfProcessoSEI.getText());
 			        
@@ -947,7 +977,7 @@ public class TabParecerControlador implements Initializable {
 				    {
 				      Documento doc = (Documento) tvDocumento.getSelectionModel().getSelectedItem();
 				      
-				      doc.setDocNumero(tfDocumento.getText());
+				      doc.setDocNumeracao(tfDocumento.getText());
 				      doc.setDocSEI(tfSEI.getText());
 				      doc.setDocProcesso(tfProcessoSEI.getText());
 				      
