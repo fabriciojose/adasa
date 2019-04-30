@@ -18,13 +18,13 @@
             <Button layoutX="838.0" layoutY="19.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="70.0" text="&lt;&lt;&lt;" />
          </children>
       </Pane>
-      <Pane fx:id="pDadosDemanda" layoutX="15.0" layoutY="80.0" prefHeight="89.0" prefWidth="950.0" styleClass="panes">
+      <Pane fx:id="pDadosDemanda" layoutX="15.0" layoutY="80.0" prefHeight="90.0" prefWidth="950.0" styleClass="panes">
          <children>
-            <Label layoutX="16.0" layoutY="15.0" prefHeight="30.0" prefWidth="70.0" text="NÚMERO:" />
+            <Label layoutX="16.0" layoutY="15.0" prefHeight="30.0" prefWidth="130.0" text="NÚMERO:" />
             <TextField layoutX="15.0" layoutY="45.0" prefHeight="30.0" prefWidth="130.0" promptText="15/2015" />
-            <Label layoutX="156.0" layoutY="15.0" prefHeight="30.0" prefWidth="35.0" text="SEI:" />
+            <Label layoutX="156.0" layoutY="15.0" prefHeight="30.0" prefWidth="130.0" text="SEI:" />
             <TextField layoutX="156.0" layoutY="45.0" prefHeight="30.0" prefWidth="130.0" promptText="123456789" />
-            <Label layoutX="296.0" layoutY="15.0" prefHeight="30.0" prefWidth="85.0" text="PROCESSO:" />
+            <Label layoutX="296.0" layoutY="15.0" prefHeight="30.0" prefWidth="160.0" text="PROCESSO:" />
             <TextField layoutX="296.0" layoutY="45.0" prefHeight="30.0" prefWidth="160.0" promptText="197.555.666/2015" />
             <Label layoutX="466.0" layoutY="15.0" prefHeight="30.0" prefWidth="150.0" text="DATA DE CRIAÇÃO" />
             <DatePicker layoutX="466.0" layoutY="45.0" prefHeight="30.0" prefWidth="150.0" promptText="13/05/2016" />
@@ -53,29 +53,29 @@
             <Button fx:id="btnPesquisar" layoutX="818.0" layoutY="18.0" mnemonicParsing="false" onAction="#btnPesquisarHab" prefHeight="25.0" prefWidth="95.0" text="Pesquisar" />
          </children>
       </Pane>
-      <Pane layoutX="25.0" layoutY="480.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="930.0">
+      <Pane layoutX="25.0" layoutY="480.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="930.0">
          <children>
             <Button layoutX="850.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" text="&lt;&lt;&lt;" />
-            <Label layoutX="10.0" layoutY="10.0" prefHeight="30.0" prefWidth="420.0" text="USUÁRIOS:" />
-            <TableView fx:id="tvLista1" layoutX="10.0" layoutY="50.0" prefHeight="255.0" prefWidth="420.0">
+            <Label layoutX="14.0" layoutY="41.0" prefHeight="30.0" prefWidth="420.0" text="USUÁRIOS:" />
+            <TableView fx:id="tvLista1" layoutX="14.0" layoutY="71.0" prefHeight="222.0" prefWidth="420.0">
                <columns>
                   <TableColumn fx:id="tcNome" prefWidth="250.0" text="Nome" />
                   <TableColumn fx:id="tcCPFCNPJ" minWidth="0.0" prefWidth="150.0" text="CPF/CNPJ" />
                </columns>
             </TableView>
-            <ComboBox layoutX="10.0" layoutY="315.0" prefHeight="30.0" prefWidth="420.0" />
-            <Label layoutX="440.0" layoutY="10.0" prefHeight="30.0" prefWidth="400.0" text="ENDEREÇO:" />
-            <ComboBox layoutX="440.0" layoutY="50.0" prefHeight="30.0" prefWidth="400.0" />
-            <Label layoutX="440.0" layoutY="90.0" prefHeight="30.0" prefWidth="400.0" text="INTERFERÊNCIAS:" />
-            <TableView fx:id="tvListaInt" layoutX="440.0" layoutY="130.0" prefHeight="175.0" prefWidth="400.0">
+            <Label layoutX="444.0" layoutY="41.0" prefHeight="30.0" prefWidth="400.0" text="ENDEREÇO:" />
+            <ComboBox layoutX="444.0" layoutY="71.0" prefHeight="30.0" prefWidth="400.0" />
+            <TableView fx:id="tvLista11" layoutX="444.0" layoutY="112.0" prefHeight="117.0" prefWidth="400.0">
                <columns>
-                  <TableColumn fx:id="tcDescEndInt" prefWidth="200.0" text="Tipo de Interferência" />
-                  <TableColumn fx:id="tcIntUH" prefWidth="180.0" text="Situação" />
+                  <TableColumn fx:id="tcNome1" prefWidth="200.0" text="Tipo" />
+                  <TableColumn fx:id="tcCPFCNPJ1" minWidth="0.0" prefWidth="180.0" text="Situação" />
                </columns>
             </TableView>
-            <Button layoutX="850.0" layoutY="190.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" text="limpar" />
-            <Button layoutX="850.0" layoutY="225.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" text="remover" />
-            <Button layoutX="440.0" layoutY="315.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="400.0" text="GERAR PARECER" />
+            <Label layoutX="444.0" layoutY="230.0" prefHeight="30.0" prefWidth="400.0" text="MODELOS:" />
+            <ComboBox layoutX="444.0" layoutY="260.0" prefHeight="30.0" prefWidth="400.0" />
+            <Button layoutX="850.0" layoutY="141.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" text="limpar" />
+            <Button layoutX="850.0" layoutY="176.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" text="remover" />
+            <Button layoutX="14.0" layoutY="306.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="833.0" text="GERAR PARECER" />
          </children>
       </Pane>
    </children>

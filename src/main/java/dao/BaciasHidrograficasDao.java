@@ -5,10 +5,7 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.sql.JoinType;
 
 import entidades.BaciasHidrograficas;
 import entidades.HibernateUtil;

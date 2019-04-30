@@ -3,16 +3,14 @@ package entidades;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-import principal.LeituraTXT;
-
 public class HibernateUtil {
 	
 	private static SessionFactory factory = null;
 	
 	private static Configuration conf;
 	
-	private static String newUserName;
-	private static String newPassword;
+	private static String newUserName = "user";
+	private static String newPassword = "password";
 	
 	public static void getUserPass ( String newUserName, String newPassword) {
 		
@@ -23,18 +21,11 @@ public class HibernateUtil {
 	private static SessionFactory buildSessionFactory () {
 		try {
 		conf = new Configuration();
-		conf.configure("/Hibernate.cfg.xml"); // /hibernate/Hibernate.cfg.xml
-		// /resources/hibernate.cfg.xml  original: hibernate.cfg.xml
+		conf.configure("/Hibernate.cfg.xml");
 		
-			LeituraTXT  leitura = new LeituraTXT();
-				String strUserPass [] = new String[2];
-					strUserPass = leitura.lerArquivo().split(",");
+			conf.getProperties().setProperty("hibernate.connection.username",newUserName);
+			conf.getProperties().setProperty("hibernate.connection.password",newPassword);
 		
-			conf.getProperties().setProperty("hibernate.connection.username",strUserPass[0]);
-			conf.getProperties().setProperty("hibernate.connection.password",strUserPass[1]);
-		
-			
-			
 			System.out.println("Configurou!");
 		
 		factory = conf.buildSessionFactory();

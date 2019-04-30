@@ -440,9 +440,12 @@ public class TabDocumentoControlador implements Initializable {
 	    				
 	    				"Requerimento de Outorga"	,
 	    				"Solicitação",
-	    				"Memorando"	,
 	    				"Ofício"	,
 	    				"Carta",
+	    				"Memorando"	,
+	    				"Relatório de Vistoria"	,
+	    				"Auto de Infração"	,
+	    				"Termo de Notificação"	,
 	    				"Recurso",
 	    				"Outros"
 	    				

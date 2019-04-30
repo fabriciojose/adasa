@@ -12,6 +12,7 @@ import entidades.Interferencia;
 import entidades.Usuario;
 import javafx.application.Application;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -62,11 +63,66 @@ public class TableViewTableColumn extends Application {
         		table.setItems(obsListUsuario);
         		
         	     	tcUsuario.setCellValueFactory(new PropertyValueFactory<>("usNome"));
-        	     		tcEndereco.setCellFactory(ComboBoxTableCell.forTableColumn(obsListEndereco));
-        	     			tcInterferencia.setCellFactory(ComboBoxTableCell.forTableColumn(obsListInterferencia));
+        	     	
+        	     	/*
+        	     		tcEndereco.setCellValueFactory(new Callback<CellDataFeatures<Usuario, Endereco>, ObservableValue<Endereco>>() {
+        	     			 
+        	                @Override
+        	                public ObservableValue<Endereco> call(CellDataFeatures<Usuario, Endereco> param) {
+        	                	
+        	                	Usuario us = param.getValue();
+        	                    // F,M
+        	                    //String genderCode = person.getGender();
+        	                    Endereco end = us.getEnderecos().iterator().next();
+        	                    return new SimpleObjectProperty<Endereco>(end);
+        	                }
+        	            });
+        	            */
+        	     		
+        	     	//	tcEndereco.setCellFactory(ComboBoxTableCell.forTableColumn(obsListEndereco));
+        	     			//tcInterferencia.setCellFactory(ComboBoxTableCell.forTableColumn(obsListInterferencia));
 
-        	     			
-        	     			/*
+        	     
+        	        
+        	     	/*
+        	     	tcEndereco.setOnEditCommit(
+        	                new EventHandler<CellEditEvent<Usuario, Endereco>>() {
+
+								@Override
+								public void handle(CellEditEvent<Usuario, Endereco> u) {
+									
+									obsListEndereco.clear();
+									obsListEndereco.addAll(u.getNewValue().getEndUsuarioFK().getEnderecos());
+									System.out.println( u.getNewValue().getEndUsuarioFK().getUsLogadouro());
+								}
+        	                   
+        	                }
+        	            );
+        	            */
+        	    
+        	     	tcEndereco.setCellValueFactory(new Callback<CellDataFeatures<Usuario, Endereco>, ObservableValue<Endereco>>() {
+        	     		 
+        	            @Override
+        	            public ObservableValue<Endereco> call(CellDataFeatures<Usuario, Endereco> param) {
+        	            	
+        	            	Usuario us = param.getValue();
+        	            	
+        	            	//Endereco end = us.getEnderecos().iterator().next();
+        	            	
+        	          	   	obsListEndereco.clear();
+        	          	  
+         	     	    	obsListEndereco.addAll(us.getEnderecos());
+         	     	
+         	     	    	
+         	     	    	return null;
+         	     	    	//return new SimpleObjectProperty<Endereco>(us.getEnderecos().iterator().next());
+        	           
+        	            }
+        	        });
+        	     	
+        	     	 tcEndereco.setCellFactory(ComboBoxTableCell.forTableColumn(obsListEndereco));
+        	     	 
+        	     	 /*
         	     	tcEndereco.setCellFactory(ComboBoxTableCell.<Usuario, Endereco> forTableColumn(new StringConverter<Endereco>() {
 
         	            @Override
@@ -83,42 +139,11 @@ public class TableViewTableColumn extends Application {
 						}
 
         	        }) ); 
-        	        
-        	     	tcEndereco.setOnEditCommit(
-        	                new EventHandler<CellEditEvent<Usuario, Endereco>>() {
-
-								@Override
-								public void handle(CellEditEvent<Usuario, Endereco> u) {
-									
-									obsListEndereco.clear();
-									obsListEndereco.addAll(u.getNewValue().getEndUsuarioFK().getEnderecos());
-									System.out.println( u.getNewValue().getEndUsuarioFK().getUsLogadouro());
-								}
-        	                   
-        	                }
-        	            );
-        	            
-        	            */
-        	     	
-        	     	/*
-        	     	tcEndereco.setCellValueFactory(new Callback<CellDataFeatures<Usuario, Endereco>, ObservableValue<Endereco>>() {
-        	     		 
-        	            @Override
-        	            public ObservableValue<Endereco> call(CellDataFeatures<Usuario, Endereco> param) {
-        	            	
-        	            	obsListEndereco.clear();
-        	            	
-        	            	
-							return null;
-        	                
-        	            	//Usuario us = param.getValue();
-        	               // Endereco end = us.getEnderecos().iterator().next();
-        	              ///return new SimpleObjectProperty<Endereco>(end);
-        	            	
-        	            }
-        	        });
         	        */
+        	     
+        	       
         	  
+        	     	/*
         	     	tcEndereco.setCellValueFactory(new Callback<CellDataFeatures<Usuario, Endereco>, ObservableValue<Endereco>>() {
         	     	     public ObservableValue<Endereco> call(CellDataFeatures<Usuario, Endereco> u) {
 							
@@ -138,6 +163,7 @@ public class TableViewTableColumn extends Application {
         	     	     
         	     	     
         	     	  });
+        	     	  */
         	        
         	        table.getColumns().add(tcUsuario);
         	        table.getColumns().add(tcEndereco);
@@ -152,14 +178,15 @@ public class TableViewTableColumn extends Application {
 	        	        for (Documento d : listDoc ) {
 	        	        	listUsuarios.addAll(d.getUsuarios());
 	        	        
+	        	        //System.out.println("loop for doc");
 	        	        }
         	        
 	        	        for (Usuario u : listUsuarios ) {
 	        	  
 	        	        	obsListUsuario.add(u);
-	        	        	
+	        	        	//System.out.println(u.getUsNome());
+	        	        	// System.out.println("loop for usuario");
 	        	        	//obsListEndereco.addAll(u.getEnderecos());
-	        	        
 	        	        }
         	     
         	        Scene scene = new Scene(table);

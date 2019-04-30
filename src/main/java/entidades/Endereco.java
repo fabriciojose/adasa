@@ -2,6 +2,7 @@ package entidades;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -62,15 +63,15 @@ public class Endereco implements Serializable{
 	
 	//-- Lista de enderecos vinculados --//
 	@OneToMany (mappedBy = "demEnderecoFK", cascade = CascadeType.MERGE,
-			 fetch = FetchType.EAGER, targetEntity = Demanda.class)
+			 fetch = FetchType.LAZY, targetEntity = Demanda.class)
 	@Fetch(FetchMode.SUBSELECT) 
-	private Set<Demanda> demandas;
+	private Set<Demanda> demandas = new HashSet<>();
 	
 		//-- Lista de documentos vinculados --//
 		@OneToMany (mappedBy = "docEnderecoFK", cascade = CascadeType.MERGE,
 				 fetch = FetchType.EAGER, targetEntity = Documento.class)
 		@Fetch(FetchMode.SUBSELECT) 
-		private Set<Documento> documentos;
+		private Set<Documento> documentos = new HashSet<>();
 	
 	
 		//-- Lista de interferencias vinculadas --//

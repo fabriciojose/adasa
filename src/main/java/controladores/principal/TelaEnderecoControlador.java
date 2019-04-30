@@ -573,9 +573,9 @@ public class TelaEnderecoControlador implements Initializable {
 	int contador = 0;
 	
 	public void editarEndereco () {
-		
+
 		if (tfLogradouro.isDisable()) {
-			
+
 			tfLogradouro.setDisable(false);
 			cbRA.setDisable(false);
 			tfCEP.setDisable(false);
@@ -583,112 +583,101 @@ public class TelaEnderecoControlador implements Initializable {
 			cbUF.setDisable(false);
 			tfLatitude.setDisable(false);
 			tfLongitude.setDisable(false);
-		
-				
+
+
 		} else {
-			
+
 			if (tfLatitude.getText().isEmpty()|| tfLongitude.getText().isEmpty() ) {
 				Alerta a = new Alerta ();
 				a.alertar(new Alert(Alert.AlertType.ERROR, "Coordenadas inválidas!!!", ButtonType.OK));
 				// colocar para não aceitar texto e somente número
-				} 
-				
-				else if (objetoDeEdicao == null) {
-					Alerta a = new Alerta ();
-					a.alertar(new Alert(Alert.AlertType.ERROR, "não selecionado(a)!!!", ButtonType.OK));
-				}
-			
-				else {
-					
-					RA ra = new RA ();
-					ra.setRaID(intRA);
-					ra.setRaNome(strRA);
-	
-					Endereco end = new Endereco ();
-					
-					end = tvLista.getSelectionModel().getSelectedItem();
-						
-					end.setEndLogradouro(tfLogradouro.getText());
-					end.setEndRAFK(ra);
-					end.setEndCEP(tfCEP.getText());
-					end.setEndCidade(tfCidade.getText());
-					end.setEndUF(cbUF.getValue());
-					end.setEndDDLatitude(Double.parseDouble(tfLatitude.getText()));
-					end.setEndDDLongitude(Double.parseDouble(tfLongitude.getText()));
-					
-					end.setEndAtualizacao(
-							Timestamp.valueOf((LocalDateTime.now())));
-					
-					Documento doc = new Documento();
-					Usuario us = new Usuario();
-					
-					System.out.println(objetoDeEdicao.getClass().getName());
-					
-					System.out.println("contador " + contador++);
-					
-					if (objetoDeEdicao.getClass().getName().equals("entidades.Documento")) {
-						
-						doc = (Documento) objetoDeEdicao;
-						doc.setDocEnderecoFK(end);
-					
-						/* retirar na lista de demandas do endereco uma demanda repetida */
-						Iterator<Documento> iDoc;
-						
-						Set<Documento> hashsetDemandas = new HashSet<Documento>();
-							hashsetDemandas = end.getDocumentos();
-						
-						for (iDoc = hashsetDemandas.iterator(); iDoc.hasNext();)
-				        {
-				          Documento d = (Documento) iDoc.next();
-				          if (d.getDocID() == doc.getDocID()) {
-				        	  iDoc.remove();
-				          }
-				        }
-						
-						
-						/*
-						// para não dar repeticao de objetos //
-						for (int i = 0 ; i < end.getDemandas().size(); i++) {
-							if (end.getDemandas().get(i).getDemID() == (dem.getDemID())) {
-								end.getDemandas().remove(end.getDemandas().get(i));
-							}
+			} 
+
+			else if (objetoDeEdicao == null) {
+				Alerta a = new Alerta ();
+				a.alertar(new Alert(Alert.AlertType.ERROR, "não selecionado(a)!!!", ButtonType.OK));
+			}
+
+			else {
+
+				RA ra = new RA ();
+				ra.setRaID(intRA);
+				ra.setRaNome(strRA);
+
+				Endereco end = new Endereco ();
+
+				end = tvLista.getSelectionModel().getSelectedItem();
+
+				end.setEndLogradouro(tfLogradouro.getText());
+				end.setEndRAFK(ra);
+				end.setEndCEP(tfCEP.getText());
+				end.setEndCidade(tfCidade.getText());
+				end.setEndUF(cbUF.getValue());
+				end.setEndDDLatitude(Double.parseDouble(tfLatitude.getText()));
+				end.setEndDDLongitude(Double.parseDouble(tfLongitude.getText()));
+
+				end.setEndAtualizacao(
+						Timestamp.valueOf((LocalDateTime.now())));
+
+				Documento doc = new Documento();
+				Usuario us = new Usuario();
+
+				//System.out.println(objetoDeEdicao.getClass().getName());
+				//System.out.println("contador " + contador++);
+
+				if (objetoDeEdicao.getClass().getName().equals("entidades.Documento")) {
+
+					doc = (Documento) objetoDeEdicao;
+					doc.setDocEnderecoFK(end);
+
+					/* retirar na lista de demandas do endereco uma demanda repetida */
+					Iterator<Documento> iDoc;
+
+					Set<Documento> hashsetDemandas = new HashSet<Documento>();
+					hashsetDemandas = end.getDocumentos();
+
+					for (iDoc = hashsetDemandas.iterator(); iDoc.hasNext();)
+					{
+						Documento d = (Documento) iDoc.next();
+						if (d.getDocID() == doc.getDocID()) {
+							iDoc.remove();
 						}
-						*/
-						
-						// adicionar a demanda editada //
-						end.getDocumentos().add(doc);
-						
 					}
-					
-					else if (objetoDeEdicao.getClass().getName().equals("entidades.Usuario")) {
-						
-						us = (Usuario) objetoDeEdicao;
-						//us.setUsDataAtualizacao(Timestamp.valueOf((LocalDateTime.now())));
-						// adiciona neste endereco o id usuario selecionado
-						end.setEndUsuarioFK(us);
-						// adiciona este endereco no setEnderecos do usuario
-						//us.getEnderecos().add(end);
-						
-					}
-					
-					// dao //
-					EnderecoDao enderecoDao = new EnderecoDao();
-				
-					enderecoDao.mergeEndereco(end);
-					
-					// atualizar a tableview //
-					obsList.remove(end);
-					obsList.add(end);
-					
-					modularBotoesInicial (); 
-					
-					Alerta a = new Alerta ();
-					a.alertar(new Alert(Alert.AlertType.INFORMATION, "Cadastro editado com sucesso!!!", ButtonType.OK));
-						
+
+					// adicionar a demanda editada //
+					end.getDocumentos().add(doc);
+
 				}
-		
+
+				else if (objetoDeEdicao.getClass().getName().equals("entidades.Usuario")) {
+
+					us = (Usuario) objetoDeEdicao;
+					//us.setUsDataAtualizacao(Timestamp.valueOf((LocalDateTime.now())));
+					// adiciona neste endereco o id usuario selecionado
+					end.setEndUsuarioFK(us);
+					// adiciona este endereco no setEnderecos do usuario
+					//us.getEnderecos().add(end);
+
+				}
+
+				// dao //
+				EnderecoDao enderecoDao = new EnderecoDao();
+
+				enderecoDao.mergeEndereco(end);
+
+				// atualizar a tableview //
+				obsList.remove(end);
+				obsList.add(end);
+
+				modularBotoesInicial (); 
+
+				Alerta a = new Alerta ();
+				a.alertar(new Alert(Alert.AlertType.INFORMATION, "Cadastro editado com sucesso!!!", ButtonType.OK));
+
+			}
+
 		}
-		
+
 	}
 	
 	public void excluirEndereco () {

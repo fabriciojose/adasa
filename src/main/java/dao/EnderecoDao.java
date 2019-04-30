@@ -34,27 +34,9 @@ public class EnderecoDao {
 		
 		s.beginTransaction();
 		
-		/*
-		list = s.createQuery(
-					"SELECT e FROM Endereco AS e "
-				+	"JOIN e.demandas "
-				+ 	"LEFT OUTER JOIN FETCH e.endRA "
-				+ 	"WHERE (e.endLogradouro LIKE '%"+strPesquisa+"%')"
-				).list();
-				*/
-		/*
-		list = s.createQuery(
-				"SELECT e FROM Endereco AS e "
-			+	"JOIN e.demandas "
-			+ 	"JOIN e.endRA "
-			+ 	"WHERE (e.endLogradouro LIKE '%"+strPesquisa+"%')"
-			).list();
-		*/
-		
-		
 		Criteria crit = s.createCriteria(Endereco.class, "e");
-			crit.createAlias("e.demandas", "demandas", JoinType.LEFT_OUTER_JOIN);
-			crit.createAlias("demandas.demProcessoFK", "processos", JoinType.LEFT_OUTER_JOIN);
+			crit.createAlias("e.documentos", "documentos", JoinType.LEFT_OUTER_JOIN);
+			crit.createAlias("documentos.docProcessoFK", "processos", JoinType.LEFT_OUTER_JOIN);
 			
 		crit.createAlias("e.endRAFK", "ra", JoinType.LEFT_OUTER_JOIN);
 		crit.createAlias("e.interferencias", "i", JoinType.LEFT_OUTER_JOIN);

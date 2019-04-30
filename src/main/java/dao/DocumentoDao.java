@@ -12,6 +12,7 @@ import org.hibernate.sql.JoinType;
 
 import entidades.Documento;
 import entidades.HibernateUtil;
+import entidades.Parecer;
 
 public class DocumentoDao {
 	
@@ -27,46 +28,20 @@ public void salvarDocumento (Documento documento) {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Documento> listarDocumentos(String strPesquisa) {
+	public List<Documento> listarDocumentos (String strPesquisa) {
 		
 		List<Documento> list = new ArrayList<Documento>();
 		
 		Session s = HibernateUtil.getSessionFactory().openSession();
 		
-		
-		s.beginTransaction();
+			s.beginTransaction();
 		
 		Criteria crit = s.createCriteria(Documento.class, "d");
+		
+		crit.createAlias("d.docEnderecoFK" , "e", JoinType.LEFT_OUTER_JOIN);
+		crit.createAlias("e.endRAFK", "ra", JoinType.LEFT_OUTER_JOIN);
+		crit.createAlias("d.docProcessoFK", "p", JoinType.LEFT_OUTER_JOIN);
 
-		crit.createAlias("d.usuarios" , "usuarios", JoinType.LEFT_OUTER_JOIN);
-		crit.createAlias("d.usuarios.enderecos" , "usEnderecos", JoinType.LEFT_OUTER_JOIN);
-		crit.createAlias("usEnderecos.interferencias" , "usInterferencias", JoinType.LEFT_OUTER_JOIN);
-		
-			crit.createAlias("usEnderecos.endRAFK", "regiaoAdm", JoinType.LEFT_OUTER_JOIN);
-			
-			/// join relacionado com os usuários relacionados ao documento ///
-				
-			crit.createAlias("usInterferencias.interTipoInterferenciaFK", "tipoInter", JoinType.LEFT_OUTER_JOIN);
-			
-			crit.createAlias("usInterferencias.interTipoOutorgaFK", "tipoOutorga", JoinType.LEFT_OUTER_JOIN); 
-			crit.createAlias("usInterferencias.interSubtipoOutorgaFK", "SubTipoOutorga", JoinType.LEFT_OUTER_JOIN); 
-			crit.createAlias("usInterferencias.interTipoAtoFK", "tipoAto", JoinType.LEFT_OUTER_JOIN);
-			crit.createAlias("usInterferencias.interSituacaoProcessoFK", "situacaoProcesso", JoinType.LEFT_OUTER_JOIN);
-			
-			crit.createAlias("usInterferencias.interBaciaFK", "baciaInter", JoinType.LEFT_OUTER_JOIN);
-			crit.createAlias("usInterferencias.interUHFK", "unidaHidInter", JoinType.LEFT_OUTER_JOIN);
-			
-			crit.createAlias("usInterferencias.subTipoPocoFK", "tipoPoco", JoinType.LEFT_OUTER_JOIN);
-			crit.createAlias("usInterferencias.subSubSistemaFK", "subSistema", JoinType.LEFT_OUTER_JOIN);
-			
-			crit.createAlias("usInterferencias.supFormaCaptacaoFK", "formaCaptacao", JoinType.LEFT_OUTER_JOIN);
-			crit.createAlias("usInterferencias.supLocalCaptacaoFK", "localCaptacao", JoinType.LEFT_OUTER_JOIN);
-			crit.createAlias("usInterferencias.supMetodoIrrigacaoFK", "metodoIrrigacao", JoinType.LEFT_OUTER_JOIN);
-		
-			
-		crit.createAlias("usEnderecos.endUsuarioFK", "endUsuarioFK", JoinType.LEFT_OUTER_JOIN);
-		
-		//crit.createAlias("d.docProcessoFK", "p", JoinType.LEFT_OUTER_JOIN);
 		
 		Criterion docTipo = Restrictions.like("docTipo", '%' + strPesquisa + '%');
 		Criterion docNumero = Restrictions.like("docNumeracao", '%' + strPesquisa + '%');
@@ -85,25 +60,71 @@ public void salvarDocumento (Documento documento) {
 		s.close();
 		return list;
 		
-		
-
-		//crit.add(Restrictions.like("demDocumento", '%' + strPesquisa + '%'));
-		
-		
-		// SQL list = s.createSQLQuery("SELECT * FROM Documento WHERE Documento_Denuncia LIKE '%strPesquisa%'").list();
-		//list = s.createQuery("from Documento d where d.Documento_Denuncia= : strPesquisa").setString("strPesquisa",strPesquisa).list();
-		
-		/*
-		List<Documento> list = s.createQuery(
-				"SELECT d FROM Documento AS d "
-				+ "LEFT OUTER JOIN FETCH d.demEnderecoFK "
-				+ "WHERE (d.demDocumento LIKE '%"+strPesquisa+"%' "
-						+ "OR d.demDocumentoSEI LIKE '%"+strPesquisa+"%' OR d.demProcessoSEI LIKE '%"+strPesquisa+"%')"
-				).list();
-		
-		
-		*/
 	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public List<Documento> listarParecer (String strPesquisa) {
+		
+		List<Documento> list = new ArrayList<Documento>();
+		
+		Session s = HibernateUtil.getSessionFactory().openSession();
+		
+		
+		s.beginTransaction();
+		
+		Criteria crit = s.createCriteria(Parecer.class, "d");
+
+		crit.createAlias("d.usuarios" , "usuarios", JoinType.LEFT_OUTER_JOIN);
+		crit.createAlias("d.usuarios.enderecos" , "usEnderecos", JoinType.LEFT_OUTER_JOIN);
+		crit.createAlias("usEnderecos.interferencias" , "usInterferencias", JoinType.LEFT_OUTER_JOIN);
+		
+			crit.createAlias("usEnderecos.endRAFK", "regiaoAdm", JoinType.LEFT_OUTER_JOIN);
+			
+			//crit.createAlias("usEnderecos.documentos", "endDocumentos", JoinType.LEFT_OUTER_JOIN);
+			
+			// join relacionado com os usuários relacionados ao documento //
+				
+			crit.createAlias("usInterferencias.interTipoInterferenciaFK", "tipoInter", JoinType.LEFT_OUTER_JOIN);
+			
+			crit.createAlias("usInterferencias.interTipoOutorgaFK", "tipoOutorga", JoinType.LEFT_OUTER_JOIN); 
+			crit.createAlias("usInterferencias.interSubtipoOutorgaFK", "SubTipoOutorga", JoinType.LEFT_OUTER_JOIN); 
+			crit.createAlias("usInterferencias.interTipoAtoFK", "tipoAto", JoinType.LEFT_OUTER_JOIN);
+			crit.createAlias("usInterferencias.interSituacaoProcessoFK", "situacaoProcesso", JoinType.LEFT_OUTER_JOIN);
+			
+			crit.createAlias("usInterferencias.interBaciaFK", "baciaInter", JoinType.LEFT_OUTER_JOIN);
+			crit.createAlias("usInterferencias.interUHFK", "unidaHidInter", JoinType.LEFT_OUTER_JOIN);
+			
+			crit.createAlias("usInterferencias.subTipoPocoFK", "tipoPoco", JoinType.LEFT_OUTER_JOIN);
+			crit.createAlias("usInterferencias.subSubSistemaFK", "subSistema", JoinType.LEFT_OUTER_JOIN);
+			
+			crit.createAlias("usInterferencias.supFormaCaptacaoFK", "formaCaptacao", JoinType.LEFT_OUTER_JOIN);
+			crit.createAlias("usInterferencias.supLocalCaptacaoFK", "localCaptacao", JoinType.LEFT_OUTER_JOIN);
+			crit.createAlias("usInterferencias.supMetodoIrrigacaoFK", "metodoIrrigacao", JoinType.LEFT_OUTER_JOIN);
+		
+		crit.createAlias("usEnderecos.endUsuarioFK", "endUsuarioFK", JoinType.LEFT_OUTER_JOIN);
+		
+		crit.createAlias("d.docProcessoFK", "p", JoinType.LEFT_OUTER_JOIN);
+		
+		Criterion docTipo = Restrictions.like("docTipo", '%' + strPesquisa + '%');
+		Criterion docNumero = Restrictions.like("docNumeracao", '%' + strPesquisa + '%');
+		Criterion docSEI = Restrictions.like("docSEI", '%' + strPesquisa + '%');
+		Criterion docProcesso = Restrictions.like("docProcesso", '%' + strPesquisa + '%');
+		
+		Disjunction orExp = Restrictions.or(docTipo, docNumero,docSEI, docProcesso);
+		
+		// adicionar os critérios e garantir resultados não  repetidos
+		crit.add(orExp).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		
+		list = crit.list();
+		
+		
+		s.getTransaction().commit();
+		s.close();
+		return list;
+	
+	}
+	
 	
 	public void removerDocumento(Integer id) {
 		Session s = HibernateUtil.getSessionFactory().openSession();

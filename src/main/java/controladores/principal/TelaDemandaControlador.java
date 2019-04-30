@@ -169,7 +169,7 @@ public class TelaDemandaControlador implements Initializable {
 		    
 		 listComponentesDemanda.add(new Label("TIPO:"));
 		 listComponentesDemanda.add(cbTipoDemanda =  new ComboBox<String>());
-			 listComponentesDemanda.add(new Label("NÚMERO:"));
+			 listComponentesDemanda.add(new Label("NUMERAÇÃO:"));
 			 listComponentesDemanda.add(tfNumeroDemanda = new TextField());
 				 listComponentesDemanda.add(new Label("SEI:"));
 				 listComponentesDemanda.add(tfDemandaSei = new TextField());

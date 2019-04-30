@@ -3,6 +3,7 @@ package entidades;
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -42,11 +43,11 @@ public class Processo
   
   @OneToMany(mappedBy="demProcessoFK", cascade= CascadeType.MERGE, fetch=FetchType.EAGER, targetEntity=Demanda.class)
   @Fetch(FetchMode.SUBSELECT)
-  private Set<Demanda> demandas;
+  private Set<Demanda> demandas = new HashSet<>();
   
   @OneToMany(mappedBy="docProcessoFK", cascade= CascadeType.MERGE, fetch=FetchType.EAGER, targetEntity=Documento.class)
   @Fetch(FetchMode.SUBSELECT)
-  private Set<Documento> documentos;
+  private Set<Documento> documentos  = new HashSet<>();
   
   public Processo() {}
   
@@ -117,5 +118,14 @@ public class Processo
     this.proDataCriacao = proDataCriacao;
   }
 
+public Set<Documento> getDocumentos() {
+	return documentos;
+}
+
+public void setDocumentos(Set<Documento> documentos) {
+	this.documentos = documentos;
+}
+
+  
   
 }

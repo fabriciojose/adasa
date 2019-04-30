@@ -58,9 +58,9 @@ public class TabEnderecoControlador implements Initializable {
 	
 	// para trazer a demanda cadastrada e relacionado com o endereco //
 	Demanda demanda;
-	Endereco endereco;
-	
-	/* recebimento da demanda e preenchimento na parte superior - DOCUMENTO: ... */
+	Endereco endereco = new Endereco();
+
+	// recebimento da demanda e preenchimento na parte superior - DOCUMENTO: ... 
 	public void setDemanda (Demanda demanda)  {
 		
 		this.demanda = demanda;
@@ -83,7 +83,7 @@ public class TabEnderecoControlador implements Initializable {
 		}
 	
 	}
-	
+
 	Documento documento = new  Documento();
 	
 	public void setDocumento (Documento documento)  {
@@ -109,8 +109,6 @@ public class TabEnderecoControlador implements Initializable {
 	
 	}
 
-
-	
 	Pane pMap;
 
 	Label lblDataAtualizacao = new Label();
@@ -219,10 +217,10 @@ public class TabEnderecoControlador implements Initializable {
 			
 		} 
 		
-		else if (demanda == null) {
+		else if (documento == null) {
 				
 			Alerta a = new Alerta ();
-			a.alertar(new Alert(Alert.AlertType.ERROR, "Não há demanda selecionada!!!", ButtonType.OK));
+			a.alertar(new Alert(Alert.AlertType.ERROR, "Não há documento selecionado!!!", ButtonType.OK));
 				
 			} 
 		
@@ -267,16 +265,16 @@ public class TabEnderecoControlador implements Initializable {
 			end.setEndAtualizacao(
 					Timestamp.valueOf((LocalDateTime.now())));
 			
-				Demanda dem = new Demanda();
+				Documento doc = new Documento();
 				
-				dem = demanda;
-				dem.setDemEnderecoFK(end);
+				doc = documento;
+				doc.setDocEnderecoFK(end);
 			
-				// adicionar a demanda editada //
-				Set<Demanda> listDemandas = new HashSet<>();
-				listDemandas.add(dem);
+				// adicionar o documento editada //
+				Set<Documento> docList = new HashSet<>();
+				docList.add(doc);
 				
-				end.setDemandas(listDemandas);
+				end.setDocumentos(docList);
 				
 				EnderecoDao endDao = new EnderecoDao();
 					
@@ -343,9 +341,9 @@ public class TabEnderecoControlador implements Initializable {
 				// colocar para não aceitar texto e somente número
 				} 
 				
-				else if (demanda == null) {
+				else if (documento == null) {
 					Alerta a = new Alerta ();
-					a.alertar(new Alert(Alert.AlertType.ERROR, "Não foi selecionado uma demanda!!!", ButtonType.OK));
+					a.alertar(new Alert(Alert.AlertType.ERROR, "Não foi selecionado um documento!!!", ButtonType.OK));
 				}
 		
 				else {
@@ -380,27 +378,27 @@ public class TabEnderecoControlador implements Initializable {
 					
 					end.setEndAtualizacao(Timestamp.valueOf((LocalDateTime.now())));
 					
-					Demanda dem = new Demanda();
+					Documento doc = new Documento();
 					
-					dem = demanda;
-					dem.setDemEnderecoFK(end);
+					doc = documento;
+					doc.setDocEnderecoFK(end);
 					
 					/* retirar na lista de demandas do endereco uma demanda repetida */
-					Iterator<Demanda> iDemanda;
+					Iterator<Documento> itDoc;
 					
-					Set<Demanda> hashsetDemandas = new HashSet<Demanda>();
-					hashsetDemandas = end.getDemandas();
+					Set<Documento> hashDoc = new HashSet<Documento>();
+					hashDoc = end.getDocumentos();
 					
-					for (iDemanda = hashsetDemandas.iterator(); iDemanda.hasNext();)
+					for (itDoc = hashDoc.iterator(); itDoc.hasNext();)
 			        {
-			          Demanda d = (Demanda)iDemanda.next();
-			          if (d.getDemID() == dem.getDemID()) {
-			        	  iDemanda.remove();
+						Documento d = (Documento) itDoc.next();
+			          if (d.getDocID() == doc.getDocID()) {
+			        	  itDoc.remove();
 			          }
 			        }
 					
 					// adicionar a demanda editada //
-					end.getDemandas().add(dem);
+					end.getDocumentos().add(doc);
 					
 					// dao //
 					EnderecoDao enderecoDao = new EnderecoDao();
@@ -857,9 +855,10 @@ public class TabEnderecoControlador implements Initializable {
 
 	        @Override
 	        public void handle(ActionEvent event) {
+	        	
 	            inicializarTelaDemanda();
-	            
-	            TelaDemandaControlador.telaDemCon.setEndereco(endereco);
+	            TelaDocumentoControlador.telaDocCon.setEndereco(endereco);
+	          //  TelaDemandaControlador.telaDemCon.setEndereco(endereco);
 	            
 	        }
 	    });
@@ -882,9 +881,9 @@ public class TabEnderecoControlador implements Initializable {
 	
 	    	Pane p = new Pane();
 	    	
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/principal/TelaDemanda.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/principal/TelaDocumento.fxml"));
 				loader.setRoot(p);
-					loader.setController(new TelaDemandaControlador(intControlador));
+					loader.setController(new TelaDocumentoControlador(intControlador));
 		
 			try {
 				loader.load();
@@ -971,17 +970,7 @@ public class TabEnderecoControlador implements Initializable {
 			obsList.clear();
 		}
 		
-				
-		// funcionando
-    	List<Endereco> iList = enderecoList;
-    	
-    	
-    	for (Endereco e : iList) {
-    		
-    		obsList.add(e);
-    		
-		}
-		
+		obsList.addAll(enderecoList);
 	}
 	
 	GoogleMap googleMaps = new GoogleMap();
@@ -1066,26 +1055,18 @@ public class TabEnderecoControlador implements Initializable {
 				    }
 					
 					/* caso não haja demanda relacionada ao endereco, setar demanda vazia */
-					if (end.getDemandas().size() == 0) {
-						setDemanda (null);
+					if (end.getDocumentos().size() == 0) {
+						setDocumento (null);
 						
-						System.out.println("lista de demandas size " + end.getDemandas().size());
+						System.out.println("lista de demandas size " + end.getDocumentos().size());
 					}
 					
 					/* havendo demandas, setar uma delas no lblDemanda */
-					for (Demanda dem : end.getDemandas()) {
+					for (Documento doc : end.getDocumentos()) {
 						
-						setDemanda (dem); 
+						setDocumento(doc);
 						
 					}
-					
-					// System.out.println("tabDemanda - atendimento 0; fiscalizacao 1, outorga 2 ");
-					System.out.println("tabEnderecControlador " + intControlador);
-						
-					// setar na interferencia (tabinterferencia) este endereco selecinado //
-					//tabIntCon.setEndereco(end);
-					//tabUsCon.setEndereco(end);
-					//tabVisCon.setEndereco(end);
 					
 					// listar as interferencias
 					List<Interferencia> iList = end.getInterferencias();
@@ -1114,7 +1095,7 @@ public class TabEnderecoControlador implements Initializable {
 						zoom do mapa e deois centralizar o mapa de acordo com o endereco
 						*/
 					googleMaps.setEnderecoInterferencias(strEndereco, strInterferencias, strDetalhes);
-					googleMaps.setZoom (13);
+					googleMaps.setZoom (15);
 					googleMaps.setMapCenter(end.getEndDDLatitude(), end.getEndDDLongitude());
 					
 				}
