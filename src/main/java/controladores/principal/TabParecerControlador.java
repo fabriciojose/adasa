@@ -7,15 +7,12 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 
 import dao.DocumentoDao;
 import dao.ModelosDao;
-import entidades.Demanda;
 import entidades.Documento;
 import entidades.Endereco;
 import entidades.Interferencia;
@@ -61,17 +58,16 @@ import principal.FormatoData;
 import principal.MalaDiretaDocumentos;
 
 public class TabParecerControlador implements Initializable {
-	
-	TableView<Documento> tvDocumento = new TableView<Documento>();
-	  TableColumn<Documento, String> tcTipoDocumento = new TableColumn<Documento, String>("Parecer");
-	  	TableColumn<Documento, String> tcSEI = new TableColumn<Documento, String>("SEI");
-	  		TableColumn<Documento, String> tcEndereco = new TableColumn<Documento, String>("Endereço");
 
-	  		 ObservableList<Documento> obsList = FXCollections.observableArrayList();
-	  		
-	
+	TableView<Documento> tvDocumento = new TableView<Documento>();
+	TableColumn<Documento, String> tcTipoDocumento = new TableColumn<Documento, String>("Parecer");
+	TableColumn<Documento, String> tcSEI = new TableColumn<Documento, String>("SEI");
+	TableColumn<Documento, String> tcEndereco = new TableColumn<Documento, String>("Endereço");
+
+	ObservableList<Documento> obsList = FXCollections.observableArrayList();
+
 	Documento documento = new Documento();
-		Endereco endereco = new Endereco();
+	Endereco endereco = new Endereco();
 		
 	public void setEndereco (Endereco endereco) {
 	
@@ -107,10 +103,8 @@ public class TabParecerControlador implements Initializable {
   	BorderPane bp2 = new BorderPane();
   	ScrollPane sp = new ScrollPane();
 	  
-	public static TabParecerControlador controladorAtendimento;
-  		public static TabParecerControlador controladorFiscalizacao;
-  			public static TabParecerControlador controladorOutorga;
-	 
+	public static TabParecerControlador controladorAtendimento, controladorFiscalizacao, controladorOutorga;
+
 	int intControlador;
 		
 	public TabParecerControlador (int i) {
@@ -232,10 +226,14 @@ public class TabParecerControlador implements Initializable {
 		TableColumn<Usuario, String> tcNomeUsuario = new TableColumn<Usuario, String>("Nome");
 		TableColumn<Usuario, String> tcCPFCNPJ = new TableColumn<Usuario, String>("CPF/CNPJ");
 		ObservableList<Usuario> obsListUsuario = FXCollections.observableArrayList();
-		Set<Usuario> setListUsuario; 
+		Set<Usuario> setListUsuarios; 
 
-		ComboBox<Endereco> cbEndereco;
-		ObservableList<Endereco> obsListEndereco = FXCollections.observableArrayList();
+		ComboBox<Endereco> cbEndereco;		
+		ObservableList<Endereco> obsListEnderecos = FXCollections.observableArrayList();
+		
+		ComboBox<Documento> cbDocumento;		
+		ObservableList<Documento> obsListDocumentos = FXCollections.observableArrayList();
+		
 
 		//-- TableView Endereco --//
 		private TableView <Interferencia> tvInterferencia = new TableView<>();
@@ -340,8 +338,14 @@ public class TabParecerControlador implements Initializable {
 
 		componentesDocumento.add(new Label("USUÁRIOS:"));
 		componentesDocumento.add(tvUsuarios = new TableView<Usuario>());
+		
 		componentesDocumento.add(new Label("ENDEREÇOS:"));
 		componentesDocumento.add(cbEndereco = new ComboBox<>());
+		
+		componentesDocumento.add(new Label("DOCUMENTOS:"));
+		componentesDocumento.add(cbDocumento = new ComboBox<>());
+		
+		componentesDocumento.add(new Label("INTERFERÊNCIAS:"));
 		componentesDocumento.add(tvInterferencia = new TableView<>());
 
 		componentesDocumento.add(new Label("MODELOS:"));
@@ -354,24 +358,27 @@ public class TabParecerControlador implements Initializable {
 
 		prefSizeWHeLayXY = new Double [][] { 
 
-			{930.0,350.0,25.0,480.0},
+			{930.0,431.0,25.0,480.0},
 			{70.0,25.0,850.0,10.0},
-
 			{420.0,30.0,14.0,41.0},
-			{420.0,222.0,14.0,71.0},
-
+			
+			{420.0,300.0,14.0,71.0}, // tableview ususario
+			
 			{400.0,30.0,444.0,41.0},
 			{400.0,30.0,444.0,71.0},
-
-			{400.0,117.0,444.0,112.0},
-
-			{400.0,30.0,444.0,230.0},
-			{400.0,30.0,444.0,260.0},
-
-			{70.0,25.0,850.0,141.0},
-			{70.0,25.0,850.0,176.0},
-
-			{833.0,30.0,14.0,306.0},
+			{400.0,30.0,444.0,101.0},
+			{400.0,30.0,444.0,131.0},
+			{400.0,30.0,444.0,161.0},
+			
+			{400.0,120.0,444.0,191.0}, // tableView interferencia
+			
+			{400.0,30.0,444.0,311.0},
+			{400.0,30.0,444.0,341.0},
+			
+			{70.0,25.0,850.0,220.0},
+			{70.0,25.0,850.0,255.0},
+			
+			{833.0,30.0,14.0,386.0},
 
 		};
 
@@ -412,7 +419,9 @@ public class TabParecerControlador implements Initializable {
 
 		tvInterferencia.setItems(obsListInterferencia);
 
-		cbEndereco.setItems(obsListEndereco);
+		cbEndereco.setItems(obsListEnderecos);
+		
+		cbDocumento.setItems(obsListDocumentos);
 
 		cbEndereco.setConverter(new StringConverter<Endereco>() {
 
@@ -430,14 +439,39 @@ public class TabParecerControlador implements Initializable {
 			public void changed(ObservableValue<? extends Endereco> ov, Endereco oldValue, Endereco newValue) {  
 
 				obsListInterferencia.clear();
+				obsListDocumentos.clear();
 
-				if (newValue != null)
-					for(Interferencia i: newValue.getInterferencias()) {
+				if (newValue != null) {
+					obsListInterferencia.addAll(newValue.getInterferencias());
+					endereco = newValue;
+				}
+				
+				if (cbEndereco.getSelectionModel().getSelectedItem() != null) {
+					obsListDocumentos.addAll(newValue.getDocumentos());
+				}
+				
+						
+			}    
+		});
+		
+		cbDocumento.setConverter(new StringConverter<Documento>() {
 
-						obsListInterferencia.add(i);
+			public String toString(Documento d) {
+				return d.getDocTipo() + ", nº " + d.getDocNumeracao();
+			}
 
-					}
-				endereco = newValue;
+			public Documento fromString(String string) {
+				return null;
+			}
+		});
+		
+		cbDocumento.valueProperty().addListener(new ChangeListener<Documento>() {
+			@Override 
+			public void changed(ObservableValue<? extends Documento> ov, Documento oldValue, Documento newValue) {  
+
+				//if(newValue != null)
+				//System.out.println(newValue.getDocID());
+						
 			}    
 		});
 
@@ -459,7 +493,7 @@ public class TabParecerControlador implements Initializable {
 			@Override 
 			public void changed(ObservableValue<? extends ModelosHTML> ov, ModelosHTML oldValue, ModelosHTML newValue) {  
 
-				System.out.println("modelos escolhido " + newValue.getModIdentificacao());
+				//System.out.println("modelos escolhido " + newValue.getModIdentificacao());
 			}    
 		});
 
@@ -616,7 +650,7 @@ public class TabParecerControlador implements Initializable {
 					
 				} else {
 
-					obsListEndereco.clear();
+					obsListEnderecos.clear();
 					
 					Set<Endereco> setEnderecos = us.getEnderecos();
 					
@@ -624,7 +658,7 @@ public class TabParecerControlador implements Initializable {
 						
 						for(Endereco e: setEnderecos) {
 						
-							obsListEndereco.add(e);
+							obsListEnderecos.add(e);
 							
 							/*
 							 * para atualizar o endereço com qualquer um dos  relacionados
@@ -639,9 +673,6 @@ public class TabParecerControlador implements Initializable {
 						endereco = null;
 					}
 					
-					usuario = us;
-				
-					
 					// copiar cpf do usuario ao selecionar //
 					Clipboard clip = Clipboard.getSystemClipboard();
 	                ClipboardContent conteudo = new ClipboardContent();
@@ -653,38 +684,78 @@ public class TabParecerControlador implements Initializable {
 				}
 			});
 	}
+
+	String[][] malaDireta = new String [][] {
+		
+	};
 	
-	Set<Usuario> setUsuarios = new HashSet<>();
-	Set<Endereco> setEnderecos = new HashSet<>();
-	Set<Interferencia> setInterferencias = new HashSet<>();
+	List<Object[][]> listMalaDireta = new ArrayList<>();
 	
 	// metodo selecionar interferencia -- //
 	public void selecionarInterferencia () {
-	
- 		tvInterferencia.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Object>() {
 			
-		public void changed(ObservableValue<?> observable , Object oldValue, Object newValue) {
-	
-			
-		Interferencia inter = (Interferencia) newValue;
-		
-		if (inter == null) {
-			
-			System.out.println("metodo selecionarInterferencia - tabParecer - if interferencia == null");
-			
-		} else {
-		
-			setUsuarios.add(tvUsuarios.getSelectionModel().getSelectedItem());
-			setEnderecos.add(cbEndereco.getSelectionModel().getSelectedItem());
-			setInterferencias.add(tvInterferencia.getSelectionModel().getSelectedItem());
-			
-		}
-	
-	} // fim metodo changed
+		 		tvInterferencia.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Object>() {
 					
-	}); // fim selectionModel
- 		
-	} // fim selecionarInterferencia
+					public void changed(ObservableValue<?> observable , Object oldValue, Object newValue) {
+					
+					Interferencia inter = (Interferencia) newValue;
+					
+					if (inter == null) {
+						
+						
+						System.out.println("selecionarInterferencia - null");
+					
+					} else {
+						
+						/*
+						setUsuarios.add(tvUsuarios.getSelectionModel().getSelectedItem());
+						setEnderecos.add(cbEndereco.getSelectionModel().getSelectedItem());
+						setInterferencias.add(tvInterferencia.getSelectionModel().getSelectedItem());
+						
+						if (cbDocumento.getSelectionModel().getSelectedItem() != null) {
+							setDocumentos.add(cbDocumento.getSelectionModel().getSelectedItem());	
+						
+						}
+						*/
+						
+						Object[][] dados = new Object [][] {
+							{
+							cbDocumento.getSelectionModel().getSelectedItem(),
+							tvUsuarios.getSelectionModel().getSelectedItem(),
+							tvInterferencia.getSelectionModel().getSelectedItem(),
+							},
+						} ;
+						
+						System.out.println(cbDocumento.getSelectionModel().getSelectedItem());
+						System.out.println(tvUsuarios.getSelectionModel().getSelectedItem());
+						System.out.println(tvInterferencia.getSelectionModel().getSelectedItem());
+						
+						listMalaDireta.add(dados);
+						
+						System.out.println("||||||||||||||||| INÍCIO ||||||||||||||||||||||||");
+						
+						for (int i = 0; i<listMalaDireta.size(); i++) {
+							
+							System.out.println("Parecer " + documento.getDocNumeracao());
+							
+							for (int ii=0; ii < listMalaDireta.get(i)[0].length; ii++) {
+								
+								System.out.println(listMalaDireta.get(i)[0][ii]);
+							}
+							
+							
+							
+						} // fim loop for
+						
+						System.out.println("----------------------- FIM -------------------------");
+						
+						
+						
+					}
+					
+					}
+				});
+			}
 	
 	public void modularBotoes () {
 		  
@@ -702,172 +773,129 @@ public class TabParecerControlador implements Initializable {
 	    
 	    btnNovo.setDisable(false);
 	}
-	
+
 	public void acionarBotoes() {
-		   
-	    btnNovo.setOnAction(new EventHandler<ActionEvent>() {
-	        @Override public void handle(ActionEvent e) {
-	        	habilitarDocumento();
-	        }
-	    });
-	    
-	    
-		    btnSalvar.setOnAction(new EventHandler<ActionEvent>() {
-		        @Override public void handle(ActionEvent e) {
-		        	salvarDocumento();
-		        }
-		    });
-	    
-	    
-			    btnEditar.setOnAction(new EventHandler<ActionEvent>() {
-			        @Override public void handle(ActionEvent e) {
-			        	editarDocumento();
-			        }
-			    });
-	   
-	    
-	    
-				    btnExcluir.setOnAction(new EventHandler<ActionEvent>() {
-				        @Override public void handle(ActionEvent e) {
-				        	excluirDocumento();
-				        }
-				    });
-	   
-	    
-					    btnCancelar.setOnAction(new EventHandler<ActionEvent>() {
-					        @Override public void handle(ActionEvent e) {
-					        	cancelarDocumento();
-					        }
-					    });
-	   
-	    
-						    btnPesquisar.setOnAction(new EventHandler<ActionEvent>() {
-						        @Override public void handle(ActionEvent e) {
-						        	
-						        	pesquisarDocumento();
-						        	
-						        	if (obsListModelosHTML.isEmpty()) {
-						        	
-						        		ModelosDao mDao = new  ModelosDao();
-						        	
-						        		List<ModelosHTML> docList = mDao.listarModelo("");
-						    	    
-							    	    for (ModelosHTML d : docList) {
-							    	      obsListModelosHTML.add(d);
-							    	    }
-						    	    
-						        	}
-						        	
-						        }
-						    });
-						   
-	    
-	    
-	    tfPesquisar.setOnKeyReleased(event -> {
-			  if (event.getCode() == KeyCode.ENTER){
-			     btnPesquisar.fire();
-			  }
-			});
-	    
-	   // inicializar tela usuario
-	    btnUsuario.setOnAction(new EventHandler<ActionEvent>() {
-	        @Override public void handle(ActionEvent e) {
-	        	
-	        	inicializarTelaUsuario();
-	        
-	        	TelaUsuarioControlador.telaUsCon.setDocumento(documento);
-	        	
-	        }
-	    });
-	   
-	   
-	 // inicializar tela usuario
-	    btnParecer.setOnAction(new EventHandler<ActionEvent>() {
-	        @Override public void handle(ActionEvent e) {
-	        	
-	        	System.out.println("bntParecer clicado - gerar html");
-	        	
-	        	System.out.println("\n|||||||| INÍCIO |||||||||||||");
-	        	
-	        	for (Usuario u : setUsuarios) {
-					
-	        		
-					Iterator<Endereco> enderecos = setEnderecos.iterator();
-		            	while (enderecos.hasNext()){
-		            		Endereco ee = enderecos.next();
-		            	 
-		            	 	if (ee.getEndUsuarioFK().getUsID() == u.getUsID()) {
-		            	 		System.out.println("Usuario " + u.getUsNome()
-		            	 				+ ", Endereco: " + ee.getEndLogradouro()
-		            	 				
-		            	 				);
-		            	 		
-		            	 				for(Documento d : ee.getDocumentos()) {
-		            	 					System.out.println( "documentos " + d.getDocNumeracao());
-		            	 					
-		            	 					if  (d.getDocProcessoFK().getProSEI() != null ) {
-		            	 					System.out.println("------------ processo principal " + d.getDocProcessoFK().getProSEI());
-		            	 					}
-		            	 					contadorDemandas ++;
-		            	 				}
-		            	 			
-		            	 		Iterator<Interferencia> interferencias = setInterferencias.iterator();
-		            	 		while (interferencias.hasNext()){
-		            	 			Interferencia i = interferencias.next();
-			            	 
-			            	 	if (i.getInterEnderecoFK().getEndID() == ee.getEndID()) {
-			            	 		System.out.println(" Interferencias: " 
-			            	 				+ i.getInterID() + " : " + i.getInterDDLatitude() + "," + i.getInterDDLongitude());
-			            	 	} // fim white interferencia
-		            	 		}
-		            	 		
-		            	 	}
-		            	 	
-		            	 	
-		            	 	
-		             }
-		                   
-				} // fim loop for
-	        
-	        	String modeloHTML = cbModelosHTML.getSelectionModel().getSelectedItem().getModConteudo();
-	        	
-	        	MalaDiretaDocumentos mlDoc = new MalaDiretaDocumentos(modeloHTML, documento, setUsuarios, setEnderecos, setInterferencias);
-	        	mlDoc.criarDocumento();
-	        	
-	        	
-	        }
-	       
-	    });
-	    
-	    // inicializar tela usuario
-	    btnSelecao.setOnAction(new EventHandler<ActionEvent>() {
-	        @Override public void handle(ActionEvent e) {
-	        	
-	        	documento = null;
-	        	setEnderecos.clear();
-	        	setInterferencias.clear();
-	        	setUsuarios.clear();
-	        	
-	        	System.out.println("btnSelecao clicado - limpar lista de interferencias, endereco e usuario");
-	        	
-	        }
-	    });
-	    
-	 // inicializar tela usuario
-	    btnInterferencia.setOnAction(new EventHandler<ActionEvent>() {
-	        @Override public void handle(ActionEvent e) {
-	        	
-	        	setInterferencias.remove(tvInterferencia.getSelectionModel().getSelectedItem());
-	        	
-	        	System.out.println("btnInterferencia clicado - remover interferencia");
-	        	
-	        }
-	    });
+
+		btnNovo.setOnAction(new EventHandler<ActionEvent>() {
+			@Override public void handle(ActionEvent e) {
+				habilitarDocumento();
+			}
+		});
+
+
+		btnSalvar.setOnAction(new EventHandler<ActionEvent>() {
+			@Override public void handle(ActionEvent e) {
+				salvarDocumento();
+			}
+		});
+
+
+		btnEditar.setOnAction(new EventHandler<ActionEvent>() {
+			@Override public void handle(ActionEvent e) {
+				editarDocumento();
+			}
+		});
+
+
+
+		btnExcluir.setOnAction(new EventHandler<ActionEvent>() {
+			@Override public void handle(ActionEvent e) {
+				excluirDocumento();
+			}
+		});
+
+
+		btnCancelar.setOnAction(new EventHandler<ActionEvent>() {
+			@Override public void handle(ActionEvent e) {
+				cancelarDocumento();
+			}
+		});
+
+
+		btnPesquisar.setOnAction(new EventHandler<ActionEvent>() {
+			@Override public void handle(ActionEvent e) {
+
+				pesquisarDocumento();
+
+				if (obsListModelosHTML.isEmpty()) {
+
+					ModelosDao mDao = new  ModelosDao();
+
+					List<ModelosHTML> docList = mDao.listarModelo("");
+
+					for (ModelosHTML d : docList) {
+						obsListModelosHTML.add(d);
+					}
+
+
+				}
+
+			}
+		});
+
+		tfPesquisar.setOnKeyReleased(event -> {
+			if (event.getCode() == KeyCode.ENTER){
+				btnPesquisar.fire();
+			}
+		});
+
+		// inicializar tela usuario
+		btnUsuario.setOnAction(new EventHandler<ActionEvent>() {
+			@Override public void handle(ActionEvent e) {
+
+				inicializarTelaUsuario();
+
+				TelaUsuarioControlador.telaUsCon.setDocumento(documento);
+
+			}
+		});
+
+		// inicializar tela usuario
+		btnParecer.setOnAction(new EventHandler<ActionEvent>() {
+			@Override public void handle(ActionEvent e) {
+
+
+				String modeloHTML = cbModelosHTML.getSelectionModel().getSelectedItem().getModConteudo();
+
+				MalaDiretaDocumentos mlDoc = new MalaDiretaDocumentos(modeloHTML, documento, listMalaDireta);
+				mlDoc.criarDocumento();
+
+			}
+
+		});
+
+		// inicializar tela usuario
+		btnSelecao.setOnAction(new EventHandler<ActionEvent>() {
+			@Override public void handle(ActionEvent e) {
+
+				listMalaDireta.clear();
+			
+			}
+		});
+
+		// inicializar tela usuario
+		btnInterferencia.setOnAction(new EventHandler<ActionEvent>() {
+			@Override public void handle(ActionEvent e) {
+				
+				System.out.println(listMalaDireta.size());
+				
+				for (int i=0; i<listMalaDireta.size();i++) {
+					System.out.println(i +  ": " + listMalaDireta.get(i));
+				}
+				
+				if(listMalaDireta.size()>0) {
+				listMalaDireta.remove(listMalaDireta.size()-1);
+				}
+				
+				for (int i=0; i<listMalaDireta.size();i++) {
+					System.out.println(i +  ": " + listMalaDireta.get(i));
+				}
+			
+			}
+		});
 	   
 	}
-	 
-	 int contadorDemandas = 1;
-	 
+	
 	public void habilitarDocumento () {
 		  
 	  tfDocumento.setText("");
@@ -1129,16 +1157,68 @@ public class TabParecerControlador implements Initializable {
 	  }
 	  
 	public void movimentarTelaUsuario (Double dbltransEsquerda)	{
-		 
-		dblTUsuario = Double.valueOf(pTelaUsuario.getTranslateX());
-	    
-		  if (dblTUsuario.equals(dbltransEsquerda)) {
-		    	tDireita.play();
-		    } else {
-		    	tEsquerda.play();
-		    }
-		    
-		  }
-		  
 
+		dblTUsuario = Double.valueOf(pTelaUsuario.getTranslateX());
+
+		if (dblTUsuario.equals(dbltransEsquerda)) {
+			tDireita.play();
+		} else {
+			tEsquerda.play();
+		}
+
+	}
 }
+
+
+
+/*
+System.out.println(s+ "\n|||||||| INÍCIO |||||||||||||");
+
+s = s + s;
+
+for (Usuario u : setUsuarios) {
+	
+	System.out.println(s+ u.getUsNome());
+	
+	Iterator<Endereco> enderecos = setEnderecos.iterator();
+    	while (enderecos.hasNext()){
+    		Endereco ee = enderecos.next();
+    	 
+    	 	if (ee.getEndUsuarioFK().getUsID() == u.getUsID()) {
+    	 		System.out.println("Endereco: " + ee.getEndLogradouro()
+    	 				
+    	 				);
+    	 		
+    	 				for(Documento d : setDocumentos) {
+    	 					System.out.println(s+ "setDocumentos " + d.getDocNumeracao());
+    	 					
+    	 					if  (d.getDocProcessoFK().getProSEI() != null ) {
+    	 					System.out.println(s+ "||| ------------ processo principal " 
+    	 								+ d.getDocProcessoFK().getProSEI()
+    	 								+ "|||");
+    	 					}
+    	 					contadorDemandas ++;
+    	 				}
+    	 			
+    	 		Iterator<Interferencia> interferencias = setInterferencias.iterator();
+    	 		while (interferencias.hasNext()){
+    	 			Interferencia i = interferencias.next();
+        	 
+        	 	if (i.getInterEnderecoFK().getEndID() == ee.getEndID()) {
+        	 		System.out.println(s+ "||| +++++++++++++++++++++++++++++++++++++ Interferencias: " 
+        	 				+ i.getInterID() + " : " 
+        	 				+ i.getInterDDLatitude() + "," + i.getInterDDLongitude()
+        	 				
+        	 				+ "|||"
+        	 				);
+        	 	} // fim white interferencia
+    	 		}
+    	 		
+    	 	}
+    	 	
+    	 	
+    	 	
+     }
+           
+} // fim loop for
+*/

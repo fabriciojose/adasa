@@ -70,7 +70,6 @@ public void salvarDocumento (Documento documento) {
 		
 		Session s = HibernateUtil.getSessionFactory().openSession();
 		
-		
 		s.beginTransaction();
 		
 		Criteria crit = s.createCriteria(Parecer.class, "d");
@@ -78,7 +77,6 @@ public void salvarDocumento (Documento documento) {
 		crit.createAlias("d.usuarios" , "usuarios", JoinType.LEFT_OUTER_JOIN);
 		crit.createAlias("d.usuarios.enderecos" , "usEnderecos", JoinType.LEFT_OUTER_JOIN);
 		crit.createAlias("usEnderecos.interferencias" , "usInterferencias", JoinType.LEFT_OUTER_JOIN);
-		
 			crit.createAlias("usEnderecos.endRAFK", "regiaoAdm", JoinType.LEFT_OUTER_JOIN);
 			
 			//crit.createAlias("usEnderecos.documentos", "endDocumentos", JoinType.LEFT_OUTER_JOIN);
@@ -102,7 +100,7 @@ public void salvarDocumento (Documento documento) {
 			crit.createAlias("usInterferencias.supLocalCaptacaoFK", "localCaptacao", JoinType.LEFT_OUTER_JOIN);
 			crit.createAlias("usInterferencias.supMetodoIrrigacaoFK", "metodoIrrigacao", JoinType.LEFT_OUTER_JOIN);
 		
-		crit.createAlias("usEnderecos.endUsuarioFK", "endUsuarioFK", JoinType.LEFT_OUTER_JOIN);
+		//crit.createAlias("usEnderecos.endUsuarioFK", "endUsuarioFK", JoinType.LEFT_OUTER_JOIN);
 		
 		crit.createAlias("d.docProcessoFK", "p", JoinType.LEFT_OUTER_JOIN);
 		

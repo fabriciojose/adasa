@@ -296,7 +296,10 @@ public class GoogleMap extends Parent {
 	    }
 	    
 	    private JSObject doc;
-	    private EventHandler<MapEvent> onMapLatLngChanged;
+	    
+	    @SuppressWarnings("unused")
+		private EventHandler<MapEvent> onMapLatLngChanged;
+	    
 	    private WebView webView;
 	    private WebEngine webEngine;
 	    public boolean ready;

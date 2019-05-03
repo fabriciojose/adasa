@@ -31,7 +31,6 @@ public class MalaDireta {
 	 * Dados das finalidades
 	 */
 	List<String> supplierNames;
-	
 		
 	List<String> listVariaveisFinalidades;
 	List<String> listVariaveisSubfinaldades;

@@ -88,7 +88,7 @@ public class TelaProcessoControlador implements Initializable {
     componentesDocumento.add(pDocumento = new Pane());
     componentesDocumento.add(new Label("DEMANDA:"));
     componentesDocumento.add(lblDocumento = new Label());
-    componentesDocumento.add(btnDocumento = new Button(">>>"));
+    componentesDocumento.add(btnDocumento = new Button("x"));
     
     prefSizeWHeLayXY = new Double [][] { 
     	{930.0,60.0,10.0,10.0},
@@ -266,139 +266,139 @@ public class TelaProcessoControlador implements Initializable {
   }
 	
   public void acionarBotoes () {
-	  
-	    btnDocumento.setOnAction(new EventHandler<ActionEvent>() {
-	    	@Override public void handle(ActionEvent e) {
-	     
-	        	if (intControlador == 0) {
-	        		TabDocumentoControlador.controladorAtendimento.movimentarTelaProcesso(15.0);
-	        	}
-	        	if (intControlador == 1) {
-	        		TabDocumentoControlador.controladorFiscalizacao.movimentarTelaProcesso(15.0);
-	        	}
-	        	if (intControlador == 2) {
-	        		TabDocumentoControlador.controladorOutorga.movimentarTelaProcesso(15.0);
-	        	}
-	        	
-	        	System.out.println("valor do intControlador TelaProcesso " + intControlador);
-	        	
-	        }
-	    	
-	    
-	    });
-	    
-	    btnNovo.setOnAction(new EventHandler<ActionEvent>() {
-	        @Override public void handle(ActionEvent e) {
-	        	habilitarProcesso();
-	        }
-	    });
-	    
-	    btnSalvar.setOnAction(new EventHandler<ActionEvent>() {
-	        @Override public void handle(ActionEvent e) {
-	        	salvarProcesso();
-	        }
-	    });
-	    
-	    btnEditar.setOnAction(new EventHandler<ActionEvent>() {
-	        @Override public void handle(ActionEvent e) {
-	        	editarProcesso();
-	        }
-	    });
-	    
-	    btnExcluir.setOnAction(new EventHandler<ActionEvent>() {
-	        @Override public void handle(ActionEvent e) {
-	        	excluiProcesso();
-	        }
-	    });
-	    
-	    btnCancelar.setOnAction(new EventHandler<ActionEvent>() {
-	        @Override public void handle(ActionEvent e) {
-	        	cancelarProcesso();
-	        }
-	    });
-	    
-	    btnPesquisar.setOnAction(new EventHandler<ActionEvent>() {
-	        @Override public void handle(ActionEvent e) {
-	        	pesquisarProcesso();
-	        }
-	    });
-	    
+
+	  btnDocumento.setOnAction(new EventHandler<ActionEvent>() {
+		  @Override public void handle(ActionEvent e) {
+
+			  if (intControlador == 0) {
+				  TabDocumentoControlador.controladorAtendimento.movimentarTelaProcesso(15.0);
+			  }
+			  if (intControlador == 1) {
+				  TabDocumentoControlador.controladorFiscalizacao.movimentarTelaProcesso(15.0);
+			  }
+			  if (intControlador == 2) {
+				  TabDocumentoControlador.controladorOutorga.movimentarTelaProcesso(15.0);
+			  }
+
+			  System.out.println("valor do intControlador TelaProcesso " + intControlador);
+
+		  }
+
+
+	  });
+
+	  btnNovo.setOnAction(new EventHandler<ActionEvent>() {
+		  @Override public void handle(ActionEvent e) {
+			  habilitarProcesso();
+		  }
+	  });
+
+	  btnSalvar.setOnAction(new EventHandler<ActionEvent>() {
+		  @Override public void handle(ActionEvent e) {
+			  salvarProcesso();
+		  }
+	  });
+
+	  btnEditar.setOnAction(new EventHandler<ActionEvent>() {
+		  @Override public void handle(ActionEvent e) {
+			  editarProcesso();
+		  }
+	  });
+
+	  btnExcluir.setOnAction(new EventHandler<ActionEvent>() {
+		  @Override public void handle(ActionEvent e) {
+			  excluiProcesso();
+		  }
+	  });
+
+	  btnCancelar.setOnAction(new EventHandler<ActionEvent>() {
+		  @Override public void handle(ActionEvent e) {
+			  cancelarProcesso();
+		  }
+	  });
+
+	  btnPesquisar.setOnAction(new EventHandler<ActionEvent>() {
+		  @Override public void handle(ActionEvent e) {
+			  pesquisarProcesso();
+		  }
+	  });
+
   }
   
   public void habilitarProcesso()	{
-		  
-		    tfProcNumero.setText("");
-		    dpProcDataCriacao.getEditor().clear();
-		    tfProcInteressado.setText("");
-		    
-		    tfProcNumero.setDisable(false);
-		    dpProcDataCriacao.setDisable(false);
-		    tfProcInteressado.setDisable(false);
-		    
-		    btnSalvar.setDisable(false);
-		    
-		    btnNovo.setDisable(true);
-		    btnEditar.setDisable(true);
-		    btnExcluir.setDisable(true);
-		    
-		  }
-		  
+
+	  tfProcNumero.setText("");
+	  dpProcDataCriacao.getEditor().clear();
+	  tfProcInteressado.setText("");
+
+	  tfProcNumero.setDisable(false);
+	  dpProcDataCriacao.setDisable(false);
+	  tfProcInteressado.setDisable(false);
+
+	  btnSalvar.setDisable(false);
+
+	  btnNovo.setDisable(true);
+	  btnEditar.setDisable(true);
+	  btnExcluir.setDisable(true);
+
+  }
+
   public void salvarProcesso()	{
-	
-      if (tfProcNumero.getText().isEmpty())
-      {
-        Alerta a = new Alerta();
-        a.alertar(new Alert(Alert.AlertType.ERROR, "Informe: Número do processo - SEI!!!", new ButtonType[] { ButtonType.OK }));
-      }
-      else	{
-    	 
-    	  try	{
-    	    	
-		        Processo pro = new Processo();
-		        
-		        pro.setProSEI(tfProcNumero.getText());
-		        if (dpProcDataCriacao.getValue() == null) {
-		          pro.setProDataCriacao(null);
-		        } else {
-		          pro.setProDataCriacao(Date.valueOf((LocalDate)dpProcDataCriacao.getValue()));
-		        }
-		        pro.setProInteressado(tfProcInteressado.getText());
-		        
-		        pro.setProAtualizacao(Timestamp.valueOf(LocalDateTime.now()));
-		        
-		        Documento doc = new  Documento();
-		        doc = documento;
-		        doc.setDocProcessoFK(pro);
-        
-		        pro.getDocumentos().add(doc);
-		        
-		        ProcessoDao proDao = new ProcessoDao();
-		        
-		        proDao.salvarProcesso(pro);
-		        proDao.mergeProcesso(pro);
-		        
-		        obsListProcessos.add(pro);
-		        
-		        modularBotoesProcesso();
-		        
-		        Alerta a = new Alerta();
-		        
-		        a.alertar(new Alert(Alert.AlertType.INFORMATION, "Cadastro salvo com sucesso!!!", new ButtonType[] { ButtonType.OK }));
-     
-      
-    	  } catch (Exception ex) {
-		    	
-		      ex.printStackTrace();
-		      
-		      Alerta a = new Alerta();
-		      a.alertar(new Alert(Alert.AlertType.ERROR, "erro na conexão, tente novamente!", new ButtonType[] { ButtonType.OK }));
+
+	  if (tfProcNumero.getText().isEmpty())
+	  {
+		  Alerta a = new Alerta();
+		  a.alertar(new Alert(Alert.AlertType.ERROR, "Informe: Número do processo - SEI!!!", new ButtonType[] { ButtonType.OK }));
+	  }
+	  else	{
+
+		  try	{
+
+			  Processo pro = new Processo();
+
+			  pro.setProSEI(tfProcNumero.getText());
+			  if (dpProcDataCriacao.getValue() == null) {
+				  pro.setProDataCriacao(null);
+			  } else {
+				  pro.setProDataCriacao(Date.valueOf((LocalDate)dpProcDataCriacao.getValue()));
+			  }
+			  pro.setProInteressado(tfProcInteressado.getText());
+
+			  pro.setProAtualizacao(Timestamp.valueOf(LocalDateTime.now()));
+
+			  Documento doc = new  Documento();
+			  doc = documento;
+			  doc.setDocProcessoFK(pro);
+
+			  pro.getDocumentos().add(doc);
+
+			  ProcessoDao proDao = new ProcessoDao();
+
+			  proDao.salvarProcesso(pro);
+			  proDao.mergeProcesso(pro);
+
+			  obsListProcessos.add(pro);
+
+			  modularBotoesProcesso();
+
+			  Alerta a = new Alerta();
+
+			  a.alertar(new Alert(Alert.AlertType.INFORMATION, "Cadastro salvo com sucesso!!!", new ButtonType[] { ButtonType.OK }));
+
+
+		  } catch (Exception ex) {
+
+			  ex.printStackTrace();
+
+			  Alerta a = new Alerta();
+			  a.alertar(new Alert(Alert.AlertType.ERROR, "erro na conexão, tente novamente!", new ButtonType[] { ButtonType.OK }));
 		  } 
-	 }
-    
+	  }
+
   }
   
   public void editarProcesso()	{
-	  
+
 	  if (tfProcNumero.isDisable()) {
 		  tfProcNumero.setDisable(false);
 		  dpProcDataCriacao.setDisable(false);
@@ -431,7 +431,7 @@ public class TelaProcessoControlador implements Initializable {
 			  Documento doc = new Documento();
 			  doc = documento;
 			  doc.setDocProcessoFK(pro);
-			  
+
 			  Set<Documento> hashDoc = new HashSet<Documento>();
 			  hashDoc = pro.getDocumentos();
 
@@ -442,8 +442,8 @@ public class TelaProcessoControlador implements Initializable {
 					  itDoc.remove();
 				  }
 			  }
-			  
-			pro.getDocumentos().add(doc);
+
+			  pro.getDocumentos().add(doc);
 
 		  }
 
@@ -460,155 +460,155 @@ public class TelaProcessoControlador implements Initializable {
 		  a.alertar(new Alert(Alert.AlertType.ERROR, "Cadastro editado com sucesso!!!", new ButtonType[] { ButtonType.OK }));
 
 	  }
-    
+
   }
   
   public void excluiProcesso() {
-	  
-    try {
-    	
-	      Processo pro = (Processo) tvProcessos.getSelectionModel().getSelectedItem();
-	      
-	      int id = pro.getProID();
-	      
-	      ProcessoDao proDao = new ProcessoDao();
-	      
-	      proDao.removerProcesso(Integer.valueOf(id));
-	      
-	      obsListProcessos.remove(pro);
-	      
-	      modularBotoesProcesso();
-	      
-	      Alerta a = new Alerta();
-	      a.alertar(new Alert(Alert.AlertType.INFORMATION, "Cadastro excluÍdo com sucesso!!!", new ButtonType[] { ButtonType.OK }));
-	      
-	 }
+
+	  try {
+
+		  Processo pro = (Processo) tvProcessos.getSelectionModel().getSelectedItem();
+
+		  int id = pro.getProID();
+
+		  ProcessoDao proDao = new ProcessoDao();
+
+		  proDao.removerProcesso(Integer.valueOf(id));
+
+		  obsListProcessos.remove(pro);
+
+		  modularBotoesProcesso();
+
+		  Alerta a = new Alerta();
+		  a.alertar(new Alert(Alert.AlertType.INFORMATION, "Cadastro excluÍdo com sucesso!!!", new ButtonType[] { ButtonType.OK }));
+
+	  }
 	  catch (Exception e)	{
-		  
-	      Alerta a = new Alerta();
-	      a.alertar(new Alert(Alert.AlertType.ERROR, "Erro ao excluir o cadastro!!!", new ButtonType[] { ButtonType.OK }));
-	      
-	    }
-    
-	    System.out.println("btn excluir processo clicado");
+
+		  Alerta a = new Alerta();
+		  a.alertar(new Alert(Alert.AlertType.ERROR, "Erro ao excluir o cadastro!!!", new ButtonType[] { ButtonType.OK }));
+
+	  }
+
+	  System.out.println("btn excluir processo clicado");
   }
-		  
+
   public void cancelarProcesso() {
-	  
-    modularBotoesProcesso();
-    
+
+	  modularBotoesProcesso();
+
   }
-  
+
   public void pesquisarProcesso()	{
-	  
-    strPesquisa = tfPesquisar.getText();
-    
-    listarProcessos(strPesquisa);
-    
-    modularBotoesProcesso();
-    
+
+	  strPesquisa = tfPesquisar.getText();
+
+	  listarProcessos(strPesquisa);
+
+	  modularBotoesProcesso();
+
   }
-  
+
   private void modularBotoesProcesso() {
-	 
-    tfProcNumero.setDisable(true);
-    dpProcDataCriacao.setDisable(true);
-    tfProcInteressado.setDisable(true);
-    
-    btnSalvar.setDisable(true);
-    btnEditar.setDisable(true);
-    btnExcluir.setDisable(true);
-    
-    btnNovo.setDisable(false);
-}
+
+	  tfProcNumero.setDisable(true);
+	  dpProcDataCriacao.setDisable(true);
+	  tfProcInteressado.setDisable(true);
+
+	  btnSalvar.setDisable(true);
+	  btnEditar.setDisable(true);
+	  btnExcluir.setDisable(true);
+
+	  btnNovo.setDisable(false);
+  }
 
   public void listarProcessos(String strPesquisaProcesso) {
-	  
-	ProcessoDao proDao = new ProcessoDao();
-    
-    Set<Processo> proList = new HashSet<Processo>(proDao.listarProcessos(strPesquisaProcesso));
-    
-    if (!obsListProcessos.isEmpty()) {
-      obsListProcessos.clear();
-    }
-    
-    for (Processo p : proList) {
-    
-      obsListProcessos.add(p);
-    }
-    
-    tvProcessos.setItems(obsListProcessos);
- }
-	
+
+	  ProcessoDao proDao = new ProcessoDao();
+
+	  Set<Processo> proList = new HashSet<Processo>(proDao.listarProcessos(strPesquisaProcesso));
+
+	  if (!obsListProcessos.isEmpty()) {
+		  obsListProcessos.clear();
+	  }
+
+	  for (Processo p : proList) {
+
+		  obsListProcessos.add(p);
+	  }
+
+	  tvProcessos.setItems(obsListProcessos);
+  }
+
   //-- selecionar demandas -- //
   public void selecionarProcesso () {
-		
-	// TableView - selecionar demandas ao clicar //
-	  tvProcessos.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Object>() {
-		
-		public void changed(ObservableValue<?> observable , Object oldValue, Object newValue) {
-		
-		Processo pro = (Processo) newValue;
-		
-		if (pro == null) {
-			
-			tfProcNumero.setText("");
-			tfProcInteressado.setText("");
-			dpProcDataCriacao.getEditor().clear();
-		
-			btnNovo.setDisable(true);
-			btnSalvar.setDisable(true);
-			btnEditar.setDisable(false);
-			btnExcluir.setDisable(false);
-			btnCancelar.setDisable(false);
-			
-		} else {
 
-			// preencher os campos //
-			
-			tfProcNumero.setText(pro.getProSEI());
-			tfProcInteressado.setText(pro.getProInteressado());
-			dpProcDataCriacao.getEditor().clear();
-			
-			if (pro.getProDataCriacao() == null) {
-				dpProcDataCriacao.setValue(null);
-				
- 				} else {
- 					Date dataDis = pro.getProDataCriacao();
- 							dpProcDataCriacao.setValue(dataDis.toLocalDate());
- 				}
-			
-			obsListDocumentos.clear();
-			obsListDocumentos.addAll(pro.getDocumentos());
-			
-			// mostrar data de atualizacao //
-			FormatoData d = new FormatoData();
-			try {lblDataAtualizacao.setText("Data de Atualização: " + d.formatarData(pro.getProAtualizacao()));  // d.formatarData(demanda.getDemAtualizacao())
-					lblDataAtualizacao.setTextFill(Color.BLACK);
-			}catch (Exception e) {lblDataAtualizacao.setText("Não há data de atualização!");
-					lblDataAtualizacao.setTextFill(Color.RED);}
-			
-			
-			// copiar número sei da demanda ao selecionar //
-			Clipboard clip = Clipboard.getSystemClipboard();
-            ClipboardContent conteudo = new ClipboardContent();
-            conteudo.putString(pro.getProSEI());
-            clip.setContent(conteudo);
-			
-			// habilitar e desabilitar botões //
-			btnNovo.setDisable(true);
-			btnSalvar.setDisable(true);
-			btnEditar.setDisable(false);
-			btnExcluir.setDisable(false);
-			btnCancelar.setDisable(false);
-			
-		} // fim do else
-		
-	} // fim do metodo changed
-			
-			
-	}); // fim do selection model
-		
-	}
+	  // TableView - selecionar demandas ao clicar //
+	  tvProcessos.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Object>() {
+
+		  public void changed(ObservableValue<?> observable , Object oldValue, Object newValue) {
+
+			  Processo pro = (Processo) newValue;
+
+			  if (pro == null) {
+
+				  tfProcNumero.setText("");
+				  tfProcInteressado.setText("");
+				  dpProcDataCriacao.getEditor().clear();
+
+				  btnNovo.setDisable(true);
+				  btnSalvar.setDisable(true);
+				  btnEditar.setDisable(false);
+				  btnExcluir.setDisable(false);
+				  btnCancelar.setDisable(false);
+
+			  } else {
+
+				  // preencher os campos //
+
+				  tfProcNumero.setText(pro.getProSEI());
+				  tfProcInteressado.setText(pro.getProInteressado());
+				  dpProcDataCriacao.getEditor().clear();
+
+				  if (pro.getProDataCriacao() == null) {
+					  dpProcDataCriacao.setValue(null);
+
+				  } else {
+					  Date dataDis = pro.getProDataCriacao();
+					  dpProcDataCriacao.setValue(dataDis.toLocalDate());
+				  }
+
+				  obsListDocumentos.clear();
+				  obsListDocumentos.addAll(pro.getDocumentos());
+
+				  // mostrar data de atualizacao //
+				  FormatoData d = new FormatoData();
+				  try {lblDataAtualizacao.setText("Data de Atualização: " + d.formatarData(pro.getProAtualizacao()));  // d.formatarData(demanda.getDemAtualizacao())
+				  lblDataAtualizacao.setTextFill(Color.BLACK);
+				  }catch (Exception e) {lblDataAtualizacao.setText("Não há data de atualização!");
+				  lblDataAtualizacao.setTextFill(Color.RED);}
+
+
+				  // copiar número sei da demanda ao selecionar //
+				  Clipboard clip = Clipboard.getSystemClipboard();
+				  ClipboardContent conteudo = new ClipboardContent();
+				  conteudo.putString(pro.getProSEI());
+				  clip.setContent(conteudo);
+
+				  // habilitar e desabilitar botões //
+				  btnNovo.setDisable(true);
+				  btnSalvar.setDisable(true);
+				  btnEditar.setDisable(false);
+				  btnExcluir.setDisable(false);
+				  btnCancelar.setDisable(false);
+
+			  } // fim do else
+
+		  } // fim do metodo changed
+
+
+	  }); // fim do selection model
+
+  }
   
 }
