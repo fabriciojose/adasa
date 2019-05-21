@@ -45,7 +45,6 @@ public class TelaEnderecoControlador implements Initializable {
 	
 	Object objetoDeEdicao = new Object();
 	
-
 	public void setObjetoDeEdicao (Object objetoDeEdicao) {
 		
 		this.objetoDeEdicao = objetoDeEdicao;
@@ -62,39 +61,7 @@ public class TelaEnderecoControlador implements Initializable {
 	}
 	
 	@FXML Pane pTelaEndereco;
-	
-	Pane pDocumento;
-		Label lblDocumento;
-			Button btnDocumento;
-
-				ArrayList<Node> componentesDocumento = new ArrayList<Node>();
-				
-				
-				Pane pDadosEndereco;
-					TextField tfLogradouro;
-						ComboBox<String> cbRA;
-							TextField tfCEP;
-								TextField tfCidade;
-									ComboBox<String> cbUF;
-										TextField tfLatitude;
-											TextField tfLongitude;
-												Button btnLatLon;
-											
-												ArrayList<Node> componentesEndereco = new ArrayList<Node>();
-										
-												 Pane pPersistencia;
-												  	Button btnNovo;
-												  		Button btnSalvar;
-												  			Button btnEditar;
-												  				Button btnExcluir;
-												  					Button btnCancelar;
-												  						Button btnPesquisar;
-												  						
-												  							TextField tfPesquisar;
-												  							
-												  								ArrayList<Node> componentesPersistencia = new ArrayList<Node>();
-												  								
-												 
+											 
 	//-- TableView endereco --//
 	private TableView <Endereco> tvLista = new TableView<>();
 
@@ -186,11 +153,6 @@ public class TelaEnderecoControlador implements Initializable {
 	
 	public static TelaEnderecoControlador tabEndCon;
 	
-	/* array de posicoes prefWidth prefHeight Layout Y e X */
-	Double prefSizeWHeLayXY [][];
-	
-	/* classe necessaria para atribuir as medidas pref width e heigh layout x e y para os componentes de cada tab ou tela */
-	Componentes com;
 	/* lista de enderecos para adicionar a tableview */
 	ObservableList<Endereco> obsList = FXCollections.observableArrayList();
 	
@@ -200,90 +162,10 @@ public class TelaEnderecoControlador implements Initializable {
 		tabEndCon = this;
 	
 		pTelaEndereco.setStyle("-fx-background-color:#FFFFFF;");
-	    
-		componentesDocumento.add(pDocumento = new Pane());
-			componentesDocumento.add(new Label("DOCUMENTO:"));
-				componentesDocumento.add(lblDocumento = new Label());
-					componentesDocumento.add(btnDocumento = new Button(">>>"));
-	    
-	    prefSizeWHeLayXY = new Double [][] { 
-	    	{930.0,60.0,10.0,10.0},
-	    	{120.0,30.0,18.0,15.0},
-	    	{690.0,30.0,138.0,15.0},
-	    	{75.0,20.0,838.0,19.0},
-    				};
-	    	
-	    com = new Componentes();
-	    com.popularTela(componentesDocumento, prefSizeWHeLayXY, pTelaEndereco);
-	    
-	    
-	    componentesEndereco.add(pDadosEndereco = new Pane());
-	    	componentesEndereco.add(new Label("ENDEREÇO DO EMPREENDIMENTO:"));
-	    	componentesEndereco.add(tfLogradouro = new TextField());
-	    		componentesEndereco.add(new Label("REGIÃO ADMINISTRATIVA:"));
-	    		componentesEndereco.add(cbRA = new  ComboBox<>());
-	    			componentesEndereco.add(new Label("CEP:"));
-	    			componentesEndereco.add(tfCEP = new TextField());
-					    componentesEndereco.add(new Label("CIDADE:"));
-					    componentesEndereco.add(tfCidade = new TextField());
-						    componentesEndereco.add(new Label("UF:"));
-							componentesEndereco.add(cbUF = new  ComboBox<>());
-								componentesEndereco.add(new Label("LATITUDE (Y):"));
-							    componentesEndereco.add(tfLatitude = new TextField());
-							    	componentesEndereco.add(new Label("LONGITUDE(X):"));
-								    componentesEndereco.add(tfLongitude = new TextField());
-								    	componentesEndereco.add(btnLatLon = new Button());
-								    	
-								    	cbRA.setItems(olEndRA);
-								 	    cbRA.setValue("Plano Piloto");
-								 	    cbUF.setItems(olEndUF);
-								 	
-	
-	    prefSizeWHeLayXY = new Double [][] { 
-	    	
-	    	{900.0,130.0,25.0,83.0},
-	    	{380.0,30.0,18.0,0.0},
-	    	{370.0,30.0,18.0,30.0},
-	    	{160.0,30.0,398.0,0.0},
-	    	{160.0,30.0,398.0,30.0},
-	    	{100.0,30.0,568.0,0.0},
-	    	{100.0,30.0,568.0,30.0},
-	    	{90.0,30.0,680.0,0.0},
-	    	{90.0,30.0,680.0,30.0},
-	    	{100.0,30.0,782.0,0.0},
-	    	{100.0,30.0,782.0,30.0},
-	    	{100.0,30.0,183.0,79.0},
-	    	{140.0,30.0,283.0,79.0},
-	    	{100.0,30.0,438.0,79.0},
-	    	{140.0,30.0,538.0,79.0},
-	    	{25.0,25.0,693.0,82.0},
-	    };
-	    	
-	    com = new Componentes();
-	    com.popularTela(componentesEndereco, prefSizeWHeLayXY, pTelaEndereco);
-	    
-	    
-	    componentesPersistencia.add(pPersistencia = new Pane());
-	    componentesPersistencia.add(btnNovo = new Button("NOVO"));
-	    componentesPersistencia.add(btnSalvar = new Button("SALVAR"));
-	    componentesPersistencia.add(btnEditar = new Button("EDITAR"));
-	    componentesPersistencia.add(btnExcluir = new Button("EXCLUIR"));
-	    componentesPersistencia.add(btnCancelar = new Button("CANCELAR"));
-	    componentesPersistencia.add(tfPesquisar = new TextField());
-	    componentesPersistencia.add(btnPesquisar = new Button("PESQUISAR"));
-	    
-	    prefSizeWHeLayXY = new Double[][] { 
-	    	{900.0,60.0,25.0,225.0}, 
-	    		{95.0,25.0,13.0,18.0}, 
-	    			{95.0,25.0,118.0,18.0}, 
-	    				{95.0,25.0,223.0,18.0}, 
-					    	{95.0,25.0,328.0,18.0}, 
-					    		{95.0,25.0,433.0,18.0}, 
-					    			{245.0,25.0,538.0,18.0}, 
-					    				{95.0,25.0,793.0,18.0} }; 
-					    				
-					    				 com = new Componentes();
-					    				    com.popularTela(componentesPersistencia, prefSizeWHeLayXY, pTelaEndereco);
+		
+		inicializarComponentes ();
+		    
+		pTelaEndereco.getChildren().addAll(pPrincipal);
 	    
 	    // para trazer o valor da entidade principal, no caso Endereco
 		tcLogradouro.setCellValueFactory(new PropertyValueFactory<Endereco, String>("endLogradouro"));
@@ -294,28 +176,8 @@ public class TelaEnderecoControlador implements Initializable {
 		       
 		    }
 		});
-		
-	    tcLogradouro.setPrefWidth(409);
-		tcEndRA.setPrefWidth(232);
-		tcCidade.setPrefWidth(232);
-			
-	    tvLista.getColumns().add(tcLogradouro);
-	    tvLista.getColumns().add(tcEndRA);
-	    tvLista.getColumns().add(tcCidade);
-	  
-	    tvLista.setItems(obsList);
-	    
-	    tvLista.setPrefSize(900, 185);
-		tvLista.setLayoutX(25);
-		tvLista.setLayoutY(305);
-		
-		lblDataAtualizacao.setPrefSize(247, 22);
-		lblDataAtualizacao.setLayoutX(677);
-		lblDataAtualizacao.setLayoutY(500);
-		
-		pTelaEndereco.getChildren().addAll(tvLista, lblDataAtualizacao);
-		    
-		 cbRA.getSelectionModel().selectedIndexProperty().addListener(new
+		 
+		cbRA.getSelectionModel().selectedIndexProperty().addListener(new
 		            ChangeListener<Number>() {
 		    	public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
 		    		Number value, Number new_value) {
@@ -327,29 +189,181 @@ public class TelaEnderecoControlador implements Initializable {
 		    		System.out.println("região adminsitrativa  tela Endereco " + strRA);
 		    		
 	            }
-		    });
+		 });
 		    
-		    cbRA.getSelectionModel()
+		 cbRA.getSelectionModel()
 		    	.selectedItemProperty()
 		    	.addListener( 
 		    	(ObservableValue<? extends String> observable, String oldValue, String newValue) ->
 		    	
 		    	strRA = (String) newValue 
-		    );
-		    
-		    
-		
-		
+		 );
+		 
 	    acionarBotoes ();
-	    
 	    selecionarEndereco();
 		
 	} // FIM INITIALIZE
 	
+	/* array de posicoes prefWidth prefHeight Layout Y e X */
+	Double prefSizeWHeLayXY [][];
+	
+	/* classe necessaria para atribuir as medidas pref width e heigh layout x e y para os componentes de cada tab ou tela */
+	Componentes com;
+	
 	/*@intControlador - valor referente ao controlador chamado. 0 para atendimento e 1 para fiscalizacao
 	 *  Utilizado no método acionarBotoes e assim movimentar a tela a partir do controlador chamado
 	 */
+	
+	Pane pPrincipal = new Pane();
+	
+	
+	Pane pDocumento;
+	Label lblDocumento;
+	Button btnDocumento;
+
+	ArrayList<Node> componentesDocumento = new ArrayList<Node>();
+
+	Pane pDadosEndereco;
+	TextField tfLogradouro;
+	ComboBox<String> cbRA;
+	TextField tfCEP;
+	TextField tfCidade;
+	ComboBox<String> cbUF;
+	TextField tfLatitude;
+	TextField tfLongitude;
+	Button btnLatLon;
+
+	ArrayList<Node> componentesEndereco = new ArrayList<Node>();
+
+	Pane pPersistencia;
+	Button btnNovo;
+	Button btnSalvar;
+	Button btnEditar;
+	Button btnExcluir;
+	Button btnCancelar;
+	Button btnPesquisar;
+
+	TextField tfPesquisar;
+
+	ArrayList<Node> componentesPersistencia = new ArrayList<Node>();
+
 	int intControlador;
+	
+	public void inicializarComponentes () {
+
+		componentesDocumento.add(pDocumento = new Pane());
+		componentesDocumento.add(new Label("DOCUMENTO:"));
+		componentesDocumento.add(lblDocumento = new Label());
+		componentesDocumento.add(btnDocumento = new Button(">>>"));
+
+		prefSizeWHeLayXY = new Double [][] { 
+			{850.0,60.0,25.0,14.0},
+			{90.0,30.0,15.0,15.0},
+			{648.0,30.0,110.0,15.0},
+			{65.0,25.0,770.0,19.0},
+		};
+
+		com = new Componentes();
+		com.popularTela(componentesDocumento, prefSizeWHeLayXY, pPrincipal);
+
+		componentesEndereco.add(pDadosEndereco = new Pane());
+		componentesEndereco.add(new Label("ENDEREÇO DO EMPREENDIMENTO:"));
+		componentesEndereco.add(tfLogradouro = new TextField());
+		componentesEndereco.add(new Label("REGIÃO ADMINISTRATIVA:"));
+		componentesEndereco.add(cbRA = new  ComboBox<>());
+		componentesEndereco.add(new Label("CEP:"));
+		componentesEndereco.add(tfCEP = new TextField());
+		componentesEndereco.add(new Label("CIDADE:"));
+		componentesEndereco.add(tfCidade = new TextField());
+		componentesEndereco.add(new Label("UF:"));
+		componentesEndereco.add(cbUF = new  ComboBox<>());
+		componentesEndereco.add(new Label("LATITUDE (Y):"));
+		componentesEndereco.add(tfLatitude = new TextField());
+		componentesEndereco.add(new Label("LONGITUDE(X):"));
+		componentesEndereco.add(tfLongitude = new TextField());
+		componentesEndereco.add(btnLatLon = new Button());
+
+		cbRA.setItems(olEndRA);
+		cbRA.setValue("Plano Piloto");
+		cbUF.setItems(olEndUF);
+
+		prefSizeWHeLayXY = new Double [][] { 
+
+			{850.0,125.0,20.0,85.0},
+			{330.0,30.0,13.0,0.0},
+			{330.0,30.0,13.0,30.0},
+			{160.0,30.0,353.0,0.0},
+			{160.0,30.0,353.0,30.0},
+			{100.0,30.0,523.0,0.0},
+			{100.0,30.0,523.0,30.0},
+			{90.0,30.0,633.0,0.0},
+			{90.0,30.0,633.0,30.0},
+			{100.0,30.0,733.0,0.0},
+			{100.0,30.0,733.0,30.0},
+			{100.0,30.0,158.0,76.0},
+			{140.0,30.0,258.0,76.0},
+			{100.0,30.0,413.0,76.0},
+			{140.0,30.0,513.0,76.0},
+			{25.0,25.0,668.0,79.0},
+		};
+
+		com = new Componentes();
+		com.popularTela(componentesEndereco, prefSizeWHeLayXY, pPrincipal);
+
+
+		componentesPersistencia.add(pPersistencia = new Pane());
+		componentesPersistencia.add(btnNovo = new Button("NOVO"));
+		componentesPersistencia.add(btnSalvar = new Button("SALVAR"));
+		componentesPersistencia.add(btnEditar = new Button("EDITAR"));
+		componentesPersistencia.add(btnExcluir = new Button("EXCLUIR"));
+		componentesPersistencia.add(btnCancelar = new Button("CANCELAR"));
+		componentesPersistencia.add(tfPesquisar = new TextField());
+		componentesPersistencia.add(btnPesquisar = new Button("PESQUISAR"));
+
+		prefSizeWHeLayXY = new Double[][] { 
+			{850.0,60.0,20.0,225.0},
+			{95.0,25.0,15.0,18.0},
+			{95.0,25.0,120.0,18.0},
+			{95.0,25.0,225.0,18.0},
+			{95.0,25.0,330.0,18.0},
+			{95.0,25.0,435.0,18.0},
+			{190.0,25.0,540.0,18.0},
+			{95.0,25.0,740.0,18.0}, 
+		}; 
+
+		com = new Componentes();
+		com.popularTela(componentesPersistencia, prefSizeWHeLayXY, pPrincipal);
+
+
+		tcLogradouro.setPrefWidth(375);
+		tcEndRA.setPrefWidth(220);
+		tcCidade.setPrefWidth(220);
+
+		tvLista.getColumns().add(tcLogradouro);
+		tvLista.getColumns().add(tcEndRA);
+		tvLista.getColumns().add(tcCidade);
+
+		tvLista.setItems(obsList);
+
+		tvLista.setPrefSize(840, 185);
+		tvLista.setLayoutX(25);
+		tvLista.setLayoutY(300);
+
+		lblDataAtualizacao.setPrefSize(247, 22);
+		lblDataAtualizacao.setLayoutX(615);
+		lblDataAtualizacao.setLayoutY(495);
+
+		pPrincipal.getChildren().addAll(tvLista, lblDataAtualizacao);
+
+		pTelaEndereco.setStyle("-fx-background-color: rgba(223,226,227, 0.7);");
+
+		pPrincipal.setStyle("-fx-background-color: white");
+		pPrincipal.setPrefSize(890, 670);
+		pPrincipal.setLayoutX(60);
+		pPrincipal.setLayoutY(0.0);
+
+
+	}
 	
 	public TelaEnderecoControlador (int intControlador) {
 		  this.intControlador = intControlador;

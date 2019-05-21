@@ -856,28 +856,25 @@ public class TabEnderecoControlador implements Initializable {
 	        @Override
 	        public void handle(ActionEvent event) {
 	        	
-	            inicializarTelaDemanda();
+	            inicializarTelaDocumento();
 	            TelaDocumentoControlador.telaDocCon.setEndereco(endereco);
-	          //  TelaDemandaControlador.telaDemCon.setEndereco(endereco);
-	            
+	      
 	        }
 	    });
-	    
-	   
-		
+	  	
 	}
 	
 	TranslateTransition transDireita;
 	TranslateTransition transEsquerda;
-	Pane pTelaDemanda;
+	Pane pTelaDocumento;
 	Double dblTransicaoDemanda;
 	  
-	public void inicializarTelaDemanda () {
+	public void inicializarTelaDocumento () {
 		  
-	    if (pTelaDemanda == null) {
+	    if (pTelaDocumento == null) {
 	    	
-	    	pTelaDemanda = new Pane();
-	    	pTelaDemanda.setPrefSize(500.0, 500.0);
+	    	pTelaDocumento = new Pane();
+	    	pTelaDocumento.setPrefSize(500.0, 500.0);
 	
 	    	Pane p = new Pane();
 	    	
@@ -893,17 +890,17 @@ public class TabEnderecoControlador implements Initializable {
 					e.printStackTrace();
 				}
 		
-			pTelaDemanda.getChildren().add(p);
+			pTelaDocumento.getChildren().add(p);
 			
-			p1.getChildren().add(pTelaDemanda);
+			p1.getChildren().add(pTelaDocumento);
 		
-				transEsquerda = new TranslateTransition(new Duration(350.0), pTelaDemanda);
+				transEsquerda = new TranslateTransition(new Duration(350.0), pTelaDocumento);
 					transEsquerda.setToX(15.0);
 				  
-				transDireita = new TranslateTransition(new Duration(350.0), pTelaDemanda);
+				transDireita = new TranslateTransition(new Duration(350.0), pTelaDocumento);
 					transDireita.setToX(1300.0);
 		  
-					pTelaDemanda.setTranslateX(1300.0);
+					pTelaDocumento.setTranslateX(1300.0);
 		  
 		}
 	    
@@ -931,7 +928,7 @@ public class TabEnderecoControlador implements Initializable {
 	      	lbl_TP_Demanda.setTextFill(Color.BLACK);
 	    }*/
 	    
-		  dblTransicaoDemanda = Double.valueOf(pTelaDemanda.getTranslateX());
+		  dblTransicaoDemanda = Double.valueOf(pTelaDocumento.getTranslateX());
 	    
 	    if (dblTransicaoDemanda.equals(dbltransEsquerda)) {
 	    	transDireita.play();

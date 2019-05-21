@@ -15,9 +15,14 @@ import dao.DocumentoDao;
 import dao.ModelosDao;
 import entidades.Documento;
 import entidades.Endereco;
+import entidades.Finalidade;
+import entidades.FinalidadeAutorizada;
+import entidades.FinalidadeRequerida;
 import entidades.Interferencia;
 import entidades.ModelosHTML;
 import entidades.Parecer;
+import entidades.Subterranea;
+import entidades.Superficial;
 import entidades.Usuario;
 import javafx.animation.TranslateTransition;
 import javafx.beans.property.SimpleStringProperty;
@@ -685,10 +690,6 @@ public class TabParecerControlador implements Initializable {
 			});
 	}
 
-	String[][] malaDireta = new String [][] {
-		
-	};
-	
 	List<Object[][]> listMalaDireta = new ArrayList<>();
 	
 	// metodo selecionar interferencia -- //
@@ -707,16 +708,6 @@ public class TabParecerControlador implements Initializable {
 					
 					} else {
 						
-						/*
-						setUsuarios.add(tvUsuarios.getSelectionModel().getSelectedItem());
-						setEnderecos.add(cbEndereco.getSelectionModel().getSelectedItem());
-						setInterferencias.add(tvInterferencia.getSelectionModel().getSelectedItem());
-						
-						if (cbDocumento.getSelectionModel().getSelectedItem() != null) {
-							setDocumentos.add(cbDocumento.getSelectionModel().getSelectedItem());	
-						
-						}
-						*/
 						
 						Object[][] dados = new Object [][] {
 							{
@@ -725,31 +716,74 @@ public class TabParecerControlador implements Initializable {
 							tvInterferencia.getSelectionModel().getSelectedItem(),
 							},
 						} ;
-						
-						System.out.println(cbDocumento.getSelectionModel().getSelectedItem());
-						System.out.println(tvUsuarios.getSelectionModel().getSelectedItem());
-						System.out.println(tvInterferencia.getSelectionModel().getSelectedItem());
-						
+				
 						listMalaDireta.add(dados);
 						
 						System.out.println("||||||||||||||||| INÍCIO ||||||||||||||||||||||||");
 						
 						for (int i = 0; i<listMalaDireta.size(); i++) {
-							
-							System.out.println("Parecer " + documento.getDocNumeracao());
-							
+
 							for (int ii=0; ii < listMalaDireta.get(i)[0].length; ii++) {
 								
-								System.out.println(listMalaDireta.get(i)[0][ii]);
+								switch (listMalaDireta.get(i)[0][ii].getClass().getName()) {
+								
+								case "entidades.Subterranea":
+
+									for (Finalidade f : ((Subterranea)listMalaDireta.get(i)[0][ii]).getFinalidades() ) {
+
+										System.out.println("subterranea");
+										
+										if (f.getClass().getName() == "entidades.FinalidadeRequerida") {
+											System.out.println(" +++++ Requerida: " + ((FinalidadeRequerida) f).getFrFinalidade1());
+										}
+										
+										if (f.getClass().getName() == "entidades.FinalidadeAutorizada") {
+											System.out.println(" +++++ Autorizada: " + ((FinalidadeAutorizada) f).getFaFinalidade1());
+										}
+
+									}
+									
+									/*
+									for (int a = 0; a<5; a++) {
+										
+										if (f.getClass().getName() == "entidades.FinalidadeRequerida") {
+											fr = (FinalidadeRequerida) f;
+											System.out.println("sub - finalidade requerida ID " + fr.getFinID());
+										}
+
+									}*/
+
+									break;
+								case "entidades.Superficial":
+
+									for (Finalidade f : ((Superficial)listMalaDireta.get(i)[0][ii]).getFinalidades() ) {
+
+										System.out.println("superficial");
+										
+										if (f.getClass().getName() == "entidades.FinalidadeRequerida") {
+											System.out.println(" +++++ Requerida: " + ((FinalidadeRequerida) f).getFrFinalidade1());
+										}
+										
+										if (f.getClass().getName() == "entidades.FinalidadeAutorizada") {
+											System.out.println(" +++++ Autorizada: " + ((FinalidadeAutorizada) f).getFaFinalidade1());
+										}
+
+									}
+
+									break;
+
+								default:
+									break;
+									
+								} // fim while
+
 							}
-							
-							
-							
+
+
 						} // fim loop for
 						
+						
 						System.out.println("----------------------- FIM -------------------------");
-						
-						
 						
 					}
 					
@@ -858,7 +892,14 @@ public class TabParecerControlador implements Initializable {
 				String modeloHTML = cbModelosHTML.getSelectionModel().getSelectedItem().getModConteudo();
 
 				MalaDiretaDocumentos mlDoc = new MalaDiretaDocumentos(modeloHTML, documento, listMalaDireta);
-				mlDoc.criarDocumento();
+				String strHTML = mlDoc.criarDocumento();
+				
+				try { ControladorNavegacao.conNav.setHTML(strHTML); } 
+				catch (Exception ee) {
+
+					Alerta a = new Alerta ();
+					a.alertar(new Alert(Alert.AlertType.ERROR, "Inicialize o navegador SEI !!!", ButtonType.OK));
+				}
 
 			}
 

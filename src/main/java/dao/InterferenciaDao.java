@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 
@@ -33,10 +35,10 @@ public class InterferenciaDao {
 		List<Interferencia> list = new ArrayList<Interferencia>();
 		
 		Criteria crit = s.createCriteria(Interferencia.class, "i");
-		crit.createAlias("i.interEnderecoFK", "endereco", JoinType.LEFT_OUTER_JOIN);
 		
-		//crit.createAlias("i.intSubFK", "subterranea", JoinType.LEFT_OUTER_JOIN);
-		//crit.createAlias("i.intSupFK", "superficial", JoinType.LEFT_OUTER_JOIN);
+		crit.createAlias("i.interEnderecoFK", "endereco", JoinType.LEFT_OUTER_JOIN);
+		crit.createAlias("endereco.endRAFK", "regiaoAdm", JoinType.LEFT_OUTER_JOIN);
+	
 		
 		crit.createAlias("i.interTipoInterferenciaFK", "tipoInter", JoinType.LEFT_OUTER_JOIN);
 		
@@ -48,8 +50,6 @@ public class InterferenciaDao {
 		crit.createAlias("i.interBaciaFK", "baciaInter", JoinType.LEFT_OUTER_JOIN);
 		crit.createAlias("i.interUHFK", "unidaHidInter", JoinType.LEFT_OUTER_JOIN);
 		
-		crit.createAlias("endereco.endRAFK", "regiaoAdm", JoinType.LEFT_OUTER_JOIN);
-		
 		crit.createAlias("i.subTipoPocoFK", "tipoPoco", JoinType.LEFT_OUTER_JOIN);
 		crit.createAlias("i.subSubSistemaFK", "subSistema", JoinType.LEFT_OUTER_JOIN);
 		
@@ -57,9 +57,20 @@ public class InterferenciaDao {
 		crit.createAlias("i.supLocalCaptacaoFK", "localCaptacao", JoinType.LEFT_OUTER_JOIN);
 		crit.createAlias("i.supMetodoIrrigacaoFK", "metodoIrrigacao", JoinType.LEFT_OUTER_JOIN);
 		
+		crit.createAlias("i.finalidades", "finalidades", JoinType.LEFT_OUTER_JOIN);
 		
-		crit.add(Restrictions.like("endereco.endLogradouro", '%' + strPesquisa + '%'))
-				.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		Criterion c1 = Restrictions.like("interNumeroAto", '%' + strPesquisa + '%');
+		Criterion c2 = Restrictions.like("interProcRenovacao", '%' + strPesquisa + '%');
+		Criterion c3 = Restrictions.like("interDespachoRenovacao", '%' + strPesquisa + '%');
+		Criterion c4 = Restrictions.like("endereco.endLogradouro", '%' + strPesquisa + '%');
+		
+		Disjunction orExp = Restrictions.or(c1,c2, c3, c4);
+		
+		// adicionar os critérios e garantir resultados não  repetidos
+		crit.add(orExp).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		
+		//crit.add(Restrictions.like("interNumeroAto", '%' + strPesquisa + '%'));//.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		//crit.add(Restrictions.like("endereco.endLogradouro", '%' + strPesquisa + '%')).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		list = crit.list();
 		
 		s.getTransaction().commit();

@@ -66,11 +66,13 @@
       <Label fx:id="lblDataAtualizacao" layoutX="705.0" layoutY="600.0" prefHeight="22.0" prefWidth="247.0" />
       <Pane layoutX="25.0" layoutY="630.0" prefHeight="81.0" prefWidth="930.0">
          <children>
-            <Label layoutX="21.0" layoutY="9.0" prefHeight="30.0" prefWidth="350.0" text="Endereço: " />
-            <ComboBox layoutX="21.0" layoutY="42.0" prefHeight="30.0" prefWidth="350.0" />
-            <Label layoutX="381.0" layoutY="9.0" prefHeight="30.0" prefWidth="350.0" text="Interferencia: " />
-            <ComboBox layoutX="381.0" layoutY="42.0" prefHeight="30.0" prefWidth="350.0" />
-            <Button fx:id="btnGerarRequerimento" layoutX="741.0" layoutY="45.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="175.0" text="GERAR REQUERIMENTO" />
+            <Label layoutX="18.0" layoutY="9.0" prefHeight="30.0" prefWidth="265.0" text="Endereço: " />
+            <ComboBox layoutX="18.0" layoutY="42.0" prefHeight="30.0" prefWidth="265.0" />
+            <Label layoutX="538.0" layoutY="9.0" prefHeight="30.0" prefWidth="235.0" text="Interferencia: " />
+            <ComboBox layoutX="538.0" layoutY="42.0" prefHeight="30.0" prefWidth="235.0" />
+            <Button fx:id="btnGerarRequerimento" layoutX="782.0" layoutY="45.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="130.0" text="REQUERIMENTO" />
+            <Label layoutX="293.0" layoutY="9.0" prefHeight="30.0" prefWidth="235.0" text="Documento:" />
+            <ComboBox layoutX="293.0" layoutY="42.0" prefHeight="30.0" prefWidth="235.0" />
          </children>
       </Pane>
    </children>

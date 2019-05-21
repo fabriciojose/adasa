@@ -8,17 +8,27 @@ import javafx.scene.Scene;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-
+/**
+ * Classe Principal
+ * @author fabricio.barrozo
+ * @version 1.0
+ *
+ */
 public class Principal extends Application{
 	
 	public Parent rootNode;
 	
-	// metodo main //
+	/** Método principal - Main
+	 * 
+	 * @param args
+	 */
     public static void main(String[] args) {
         Application.launch(args);
     }
     
-    // metodo controller //
+    /** Método de leitura do arquivo fxml da classe principal
+     * 
+     */
     public void init() throws Exception {
         
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/principal/Principal.fxml"));
@@ -26,6 +36,9 @@ public class Principal extends Application{
         
     }
 
+    /** Método de inicialização do JavaFX
+     * 
+     */
 	public void start(Stage stage) throws Exception {
 		
 		Scene scene = new Scene (rootNode);
@@ -34,7 +47,7 @@ public class Principal extends Application{
         
         stage.setTitle("Welcome to JavaFX!"); 
         
-        // para o programacao abrir de acordo com a dimensao da tela do computador
+        // Redimensionamento da do stage de acordo com as dimensões do monitor
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
         
         stage.setX(primaryScreenBounds.getMinX());
@@ -51,7 +64,6 @@ public class Principal extends Application{
         stage.setMinWidth(1366);
         stage.setMaxHeight(1080);
         stage.setMaxWidth(1920);
-        
         
         //stage.sizeToScene(); 
         stage.show();

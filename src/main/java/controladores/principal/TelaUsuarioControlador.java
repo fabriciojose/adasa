@@ -147,7 +147,6 @@ public class TelaUsuarioControlador implements Initializable {
 		
 		System.out.println("tela usuario inicializada");
 		
-		
 		tcNome.setCellValueFactory(new PropertyValueFactory<Usuario, String>("usNome"));
 		tcCPFCNPJ.setCellValueFactory(new PropertyValueFactory<Usuario, String>("usCPFCNPJ"));
 		tcEndereco.setCellValueFactory(new PropertyValueFactory<Usuario, String>("usLogadouro"));
@@ -525,7 +524,7 @@ public class TelaUsuarioControlador implements Initializable {
 				});
 		}
 		
-	public void btnNovoHab () {
+	public void habilitarNovoUsuario () {
 			
 			cbTipoPessoa.setValue(null);
 			
@@ -568,7 +567,7 @@ public class TelaUsuarioControlador implements Initializable {
 			
 		}
 		
-	public void btnSalvarHab () {
+	public void salvarUsuario () {
 			
 			if (documento == null) {
 				
@@ -642,7 +641,7 @@ public class TelaUsuarioControlador implements Initializable {
 				
 		}
 		
-	public void btnEditarHab () {
+	public void editarUsuario () {
 			
 			if (cbTipoPessoa.isDisable()) {
 				
@@ -749,7 +748,7 @@ public class TelaUsuarioControlador implements Initializable {
 			
 		}
 		
-	public void btnExcluirHab () {
+	public void excluirUsuario () {
 		
 		try {
 			//-- capturar usuário selecionado --//
@@ -774,7 +773,7 @@ public class TelaUsuarioControlador implements Initializable {
 		}
 	}
 	
-	public void btnCancelarHab () {
+	public void cancelarUsuario () {
 		
 		modularBotoes ();
 		
@@ -799,7 +798,7 @@ public class TelaUsuarioControlador implements Initializable {
 	
 	String strPesquisa = "";
 	//-- botão pesquisar usuário --//
-	public void btnPesquisarHab () {
+	public void pesquisarUsuario () {
 		
 		strPesquisa = tfPesquisar.getText();
 		
@@ -839,67 +838,64 @@ public class TelaUsuarioControlador implements Initializable {
 	}
 	
 	public void acionarBotoes () {
-			
-			 btnNovo.setOnAction(new EventHandler<ActionEvent>() {
 
-			        @Override
-			        public void handle(ActionEvent event) {
-			            btnNovoHab();
-			        }
-			    });
-				    
-			    btnSalvar.setOnAction(new EventHandler<ActionEvent>() {
+		btnNovo.setOnAction(new EventHandler<ActionEvent>() {
 
-			        @Override
-			        public void handle(ActionEvent event) {
-			            btnSalvarHab();
-			        }
-			    });
-			    
-			    btnEditar.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				habilitarNovoUsuario();
+			}
+		});
 
-			        @Override
-			        public void handle(ActionEvent event) {
-			            btnEditarHab();
-			        }
-			    });
-			    
-			    btnCancelar.setOnAction(new EventHandler<ActionEvent>() {
+		btnSalvar.setOnAction(new EventHandler<ActionEvent>() {
 
-			        @Override
-			        public void handle(ActionEvent event) {
-			            btnCancelarHab();
-			        }
-			    });
-			    
-			    btnPesquisar.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				salvarUsuario();
+			}
+		});
 
-			        @Override
-			        public void handle(ActionEvent event) {
-			            btnPesquisarHab();
-			        }
-			    });
-			    
-			    checkEnderecoEmpreendimento.selectedProperty().addListener(new ChangeListener<Boolean>() {
-			        public void changed(ObservableValue<? extends Boolean> ov,
-			            Boolean old_val, Boolean new_val) {
-			                if(new_val == true) {
-			                	//imprimirEnderecoEmpreendimento();
-			                }
-			        }
-			    });
-			 
-			  			
-			    btnExcluir.setOnAction(new EventHandler<ActionEvent>() {
+		btnEditar.setOnAction(new EventHandler<ActionEvent>() {
 
-			        @Override
-			        public void handle(ActionEvent event) {
-			        	btnExcluirHab ();
-			        }
-			    });
-			
-			     
-			  
-		}
+			@Override
+			public void handle(ActionEvent event) {
+				editarUsuario();
+			}
+		});
+
+		btnCancelar.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				cancelarUsuario();
+			}
+		});
+
+		btnPesquisar.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				pesquisarUsuario();
+			}
+		});
+
+		checkEnderecoEmpreendimento.selectedProperty().addListener(new ChangeListener<Boolean>() {
+			public void changed(ObservableValue<? extends Boolean> ov,
+					Boolean old_val, Boolean new_val) {
+				if(new_val == true) {
+					//imprimirEnderecoEmpreendimento();
+				}
+			}
+		});
+
+		btnExcluir.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				excluirUsuario();
+			}
+		});
+
+	}
 
 }

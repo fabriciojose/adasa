@@ -83,137 +83,23 @@ public class TelaProcessoControlador implements Initializable {
 	/* inicializar objeto para movimentar dados entre as telas */
 	telaProCon = this;
 	
-    pTelaProcesso.setStyle("-fx-background-color:#FFFFFF;");
+    inicializarComponentes ();
     
-    componentesDocumento.add(pDocumento = new Pane());
-    componentesDocumento.add(new Label("DEMANDA:"));
-    componentesDocumento.add(lblDocumento = new Label());
-    componentesDocumento.add(btnDocumento = new Button("x"));
-    
-    prefSizeWHeLayXY = new Double [][] { 
-    	{930.0,60.0,10.0,10.0},
-    	{100.0,30.0,25.0,15.0},
-    	{720.0,30.0,115.0,15.0},
-    	{60.0,25.0,845.0,18.0},
-				
-    };
-    	
-    Componentes comEditorProcesso = new Componentes();
-    comEditorProcesso.popularTela(componentesDocumento, prefSizeWHeLayXY, pTelaProcesso);
-    
-    componentesProcesso.add(TelaProcessoDados = new Pane());
-    componentesProcesso.add(new Label("PROCESSO:"));
-    componentesProcesso.add(tfProcNumero = new TextField());
-    componentesProcesso.add(new Label("DATA DE CRIAÇÃO:"));
-    componentesProcesso.add(dpProcDataCriacao = new DatePicker());
-    componentesProcesso.add(new Label("INTERESSADO:"));
-    componentesProcesso.add(tfProcInteressado = new TextField());
-    
-    prefSizeWHeLayXY =  new Double [][] { 
-    	
-    	{930.0,60.0,7.0,82.0},
-    	{95.0,30.0,8.0,15.0},
-    	{130.0,30.0,113.0,15.0},
-    	{130.0,30.0,253.0,15.0},
-    	{140.0,30.0,383.0,15.0},
-    	{100.0,30.0,533.0,15.0},
-    	{280.0,30.0,643.0,15.0},
-							
-    };
+    pTelaProcesso.getChildren().addAll(pPrincipal);
    
-    Componentes comDadosProcesso = new Componentes();
-    comDadosProcesso.popularTela(componentesProcesso, prefSizeWHeLayXY, pTelaProcesso);
-    
-    componentesPersistencia.add(pPersistencia = new Pane());
-    componentesPersistencia.add(btnNovo = new Button("NOVO"));
-    componentesPersistencia.add(btnSalvar = new Button("SALVAR"));
-    componentesPersistencia.add(btnEditar = new Button("EDITAR"));
-    componentesPersistencia.add(btnExcluir = new Button("EXCLUIR"));
-    componentesPersistencia.add(btnCancelar = new Button("CANCELAR"));
-    componentesPersistencia.add(tfPesquisar = new TextField());
-    componentesPersistencia.add(btnPesquisar = new Button("PESQUISAR"));
-    
-    prefSizeWHeLayXY = new Double[][] { 
-    	{930.0,60.0,7.0,153.0},
-    	{95.0,25.0,18.0,18.0},
-    	{95.0,25.0,123.0,18.0},
-    	{95.0,25.0,228.0,18.0},
-    	{95.0,25.0,333.0,18.0},
-    	{95.0,25.0,438.0,18.0},
-    	{265.0,25.0,543.0,18.0},
-    	{95.0,25.0,818.0,18.0},
-				    			
-    }; 
-				    				
-    Componentes comPersistencia = new Componentes();
-    comPersistencia.popularTela(componentesPersistencia, prefSizeWHeLayXY, pTelaProcesso);
-    
-    tcNumeroProcesso.setCellValueFactory(new PropertyValueFactory<Processo, String>("proSEI"));
-    tcDataCriacao.setCellValueFactory(new PropertyValueFactory<Processo, String>("proDataCriacao"));
-    tcInteressado.setCellValueFactory(new PropertyValueFactory<Processo, String>("proInteressado"));
-    
-    
-    tcNumeroProcesso.setPrefWidth(200.0);
-    tcDataCriacao.setPrefWidth(200.0);
-    tcInteressado.setPrefWidth(480.0);
-    
-    tvProcessos.setPrefSize(900.0, 185.0);
-    tvProcessos.setLayoutX(25.0D);
-    tvProcessos.setLayoutY(228.0);
-    
-    tvProcessos.getColumns().add(tcNumeroProcesso);
-    tvProcessos.getColumns().add(tcDataCriacao);
-    tvProcessos.getColumns().add(tcInteressado);
-    
-    tvProcessos.setItems(obsListProcessos);
-    
-    pTelaProcesso.getChildren().add(tvProcessos);
-    
-    lblDataAtualizacao = new Label();
-    
-    lblDataAtualizacao.setPrefSize(247.0, 22.0);
-    lblDataAtualizacao.setLayoutX(692.0);
-    lblDataAtualizacao.setLayoutY(425.0);
-    
-    pTelaProcesso.getChildren().add(lblDataAtualizacao);
-    
-    tcTipo.setCellValueFactory(new PropertyValueFactory<Documento, String>("docTipo"));
-    tcNumeracao.setCellValueFactory(new PropertyValueFactory<Documento, String>("docNumeracao"));
-    tcSEI.setCellValueFactory(new PropertyValueFactory<Documento, String>("docSEI"));
-    tcProcesso.setCellValueFactory(new PropertyValueFactory<Documento, String>("docProcesso"));
-    
-	    tcTipo.setPrefWidth(200.0);
-	    tcNumeracao.setPrefWidth(200.0);
-	    tcSEI.setPrefWidth(200.0);
-	    tcProcesso.setPrefWidth(220.0);
-    
-    tvLista.setPrefSize(840.0, 185.0);
-    tvLista.setLayoutX(55.0);
-    tvLista.setLayoutY(458.0);
-    
-    
-    tvLista.getColumns().add(tcTipo); //, tcDocsSEI, tcProcsSEI });
-    tvLista.getColumns().add(tcNumeracao);
-    tvLista.getColumns().add(tcSEI);
-    tvLista.getColumns().add(tcProcesso);
-    
-    tvLista.setItems(obsListDocumentos);
-    
-    pTelaProcesso.getChildren().add(tvLista);
-    
-    modularBotoesProcesso();
-    
+    modularBotoes();
+    selecionarProcesso ();
     acionarBotoes ();
     
-    selecionarProcesso ();
-	
 	} // FIM INITIALIZE
 
-
+  Componentes com;
+  Double prefSizeWHeLayXY [][];
+  Pane pPrincipal = new Pane();
+  
   Pane pDocumento;
   Label lblDocumento;
   Button btnDocumento;
-
 
   ArrayList<Node> componentesDocumento = new ArrayList<Node>();
 
@@ -251,14 +137,138 @@ public class TelaProcessoControlador implements Initializable {
 
   ObservableList<Documento> obsListDocumentos = FXCollections.observableArrayList();
 
-
-  Double prefSizeWHeLayXY [][];
   String strPesquisa = "";
+  
+  public void inicializarComponentes () {
+
+	  componentesDocumento.add(pDocumento = new Pane());
+	  componentesDocumento.add(new Label("DOCUMENTO:"));
+	  componentesDocumento.add(lblDocumento = new Label());
+	  componentesDocumento.add(btnDocumento = new Button("x"));
+
+	  prefSizeWHeLayXY = new Double [][] { 
+		  {850.0,60.0,20.0,14.0},
+		  {90.0,30.0,15.0,15.0},
+		  {648.0,30.0,110.0,15.0},
+		  {65.0,25.0,770.0,19.0},
+
+	  };
+
+	  com = new Componentes();
+	  com.popularTela(componentesDocumento, prefSizeWHeLayXY, pPrincipal);
+
+	  componentesProcesso.add(TelaProcessoDados = new Pane());
+	  componentesProcesso.add(new Label("PROCESSO:"));
+	  componentesProcesso.add(tfProcNumero = new TextField());
+	  componentesProcesso.add(new Label("DATA DE CRIAÇÃO:"));
+	  componentesProcesso.add(dpProcDataCriacao = new DatePicker());
+	  componentesProcesso.add(new Label("INTERESSADO:"));
+	  componentesProcesso.add(tfProcInteressado = new TextField());
+
+	  prefSizeWHeLayXY =  new Double [][] { 
+
+		  {850.0,60.0,20.0,85.0},
+		  {85.0,30.0,10.0,15.0},
+		  {130.0,30.0,95.0,15.0},
+		  {130.0,30.0,235.0,15.0},
+		  {120.0,30.0,365.0,15.0},
+		  {100.0,30.0,495.0,15.0},
+		  {235.0,30.0,605.0,15.0},
+
+	  };
+
+	  com = new Componentes();
+	  com.popularTela(componentesProcesso, prefSizeWHeLayXY, pPrincipal);
+
+	  componentesPersistencia.add(pPersistencia = new Pane());
+	  componentesPersistencia.add(btnNovo = new Button("NOVO"));
+	  componentesPersistencia.add(btnSalvar = new Button("SALVAR"));
+	  componentesPersistencia.add(btnEditar = new Button("EDITAR"));
+	  componentesPersistencia.add(btnExcluir = new Button("EXCLUIR"));
+	  componentesPersistencia.add(btnCancelar = new Button("CANCELAR"));
+	  componentesPersistencia.add(tfPesquisar = new TextField());
+	  componentesPersistencia.add(btnPesquisar = new Button("PESQUISAR"));
+
+	  prefSizeWHeLayXY = new Double[][] { 
+
+		  {850.0,60.0,20.0,154.0},
+		  {95.0,25.0,15.0,18.0},
+		  {95.0,25.0,120.0,18.0},
+		  {95.0,25.0,225.0,18.0},
+		  {95.0,25.0,330.0,18.0},
+		  {95.0,25.0,435.0,18.0},
+		  {190.0,25.0,540.0,18.0},
+		  {95.0,25.0,740.0,18.0},
+
+	  }; 
+
+	  Componentes comPersistencia = new Componentes();
+	  comPersistencia.popularTela(componentesPersistencia, prefSizeWHeLayXY, pPrincipal);
+
+	  tcNumeroProcesso.setCellValueFactory(new PropertyValueFactory<Processo, String>("proSEI"));
+	  tcDataCriacao.setCellValueFactory(new PropertyValueFactory<Processo, String>("proDataCriacao"));
+	  tcInteressado.setCellValueFactory(new PropertyValueFactory<Processo, String>("proInteressado"));
+
+	  tcNumeroProcesso.setPrefWidth(230.0);
+	  tcDataCriacao.setPrefWidth(230.0);
+	  tcInteressado.setPrefWidth(370.0);
+
+	  tvProcessos.setPrefSize(840.0, 185.0);
+	  tvProcessos.setLayoutX(25.0D);
+	  tvProcessos.setLayoutY(229.0);
+
+	  tvProcessos.getColumns().add(tcNumeroProcesso);
+	  tvProcessos.getColumns().add(tcDataCriacao);
+	  tvProcessos.getColumns().add(tcInteressado);
+
+	  tvProcessos.setItems(obsListProcessos);
+
+	  pPrincipal.getChildren().add(tvProcessos);
+
+	  lblDataAtualizacao = new Label();
+
+	  lblDataAtualizacao.setPrefSize(247.0, 22.0);
+	  lblDataAtualizacao.setLayoutX(615.0);
+	  lblDataAtualizacao.setLayoutY(425.0);
+
+	  pPrincipal.getChildren().add(lblDataAtualizacao);
+
+	  tcTipo.setCellValueFactory(new PropertyValueFactory<Documento, String>("docTipo"));
+	  tcNumeracao.setCellValueFactory(new PropertyValueFactory<Documento, String>("docNumeracao"));
+	  tcSEI.setCellValueFactory(new PropertyValueFactory<Documento, String>("docSEI"));
+	  tcProcesso.setCellValueFactory(new PropertyValueFactory<Documento, String>("docProcesso"));
+
+	  tcTipo.setPrefWidth(200.0);
+	  tcNumeracao.setPrefWidth(180.0);
+	  tcSEI.setPrefWidth(180.0);
+	  tcProcesso.setPrefWidth(260.0);
+
+	  tvLista.setPrefSize(840.0, 185.0);
+	  tvLista.setLayoutX(20.0);
+	  tvLista.setLayoutY(460.0);
+
+	  tvLista.getColumns().add(tcTipo);
+	  tvLista.getColumns().add(tcNumeracao);
+	  tvLista.getColumns().add(tcSEI);
+	  tvLista.getColumns().add(tcProcesso);
+
+	  tvLista.setItems(obsListDocumentos);
+
+	  pPrincipal.getChildren().add(tvLista);
+
+	  pTelaProcesso.setStyle("-fx-background-color: rgba(223,226,227, 0.7);");
+
+	  pPrincipal.setStyle("-fx-background-color: white");
+	  pPrincipal.setPrefSize(890, 670);
+	  pPrincipal.setLayoutX(60);
+	  pPrincipal.setLayoutY(0.0);
+
+  }
   
   /*@intControlador - valor referente ao controlador chamado. 0 para atendimento e 1 para fiscalizacao
 	 *  Utilizado no método acionarBotoes e assim movimentar a tela a partir do controlador chamado
 	 */
-	int intControlador;
+  int intControlador;
 	
 	/* construtor para trazer o intControlador correto. 0 para atendimento e 1 para fiscalizacao */
   public TelaProcessoControlador (int intControlador) {
@@ -379,7 +389,7 @@ public class TelaProcessoControlador implements Initializable {
 
 			  obsListProcessos.add(pro);
 
-			  modularBotoesProcesso();
+			  modularBotoes();
 
 			  Alerta a = new Alerta();
 
@@ -454,7 +464,7 @@ public class TelaProcessoControlador implements Initializable {
 		  obsListProcessos.remove(pro);
 		  obsListProcessos.add(pro);
 
-		  modularBotoesProcesso();
+		  modularBotoes();
 
 		  Alerta a = new Alerta();
 		  a.alertar(new Alert(Alert.AlertType.ERROR, "Cadastro editado com sucesso!!!", new ButtonType[] { ButtonType.OK }));
@@ -477,7 +487,7 @@ public class TelaProcessoControlador implements Initializable {
 
 		  obsListProcessos.remove(pro);
 
-		  modularBotoesProcesso();
+		  modularBotoes();
 
 		  Alerta a = new Alerta();
 		  a.alertar(new Alert(Alert.AlertType.INFORMATION, "Cadastro excluÍdo com sucesso!!!", new ButtonType[] { ButtonType.OK }));
@@ -495,7 +505,7 @@ public class TelaProcessoControlador implements Initializable {
 
   public void cancelarProcesso() {
 
-	  modularBotoesProcesso();
+	  modularBotoes();
 
   }
 
@@ -505,11 +515,11 @@ public class TelaProcessoControlador implements Initializable {
 
 	  listarProcessos(strPesquisa);
 
-	  modularBotoesProcesso();
+	  modularBotoes();
 
   }
 
-  private void modularBotoesProcesso() {
+  private void modularBotoes() {
 
 	  tfProcNumero.setDisable(true);
 	  dpProcDataCriacao.setDisable(true);

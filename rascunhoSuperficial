@@ -1,0 +1,316 @@
+
+		pFinalidade = new Pane();
+		pFinalidade.setPrefSize(910, 150);
+		pFinalidade.setLayoutX(60);
+		pFinalidade.setLayoutY(190);
+
+		pVazoes = new Pane();
+		pVazoes.setPrefSize(910, 120);
+		pVazoes.setLayoutX(60);
+		pVazoes.setLayoutY(370);
+
+		pSuperficial.getChildren().addAll(pFinalidade, pVazoes);
+
+		pFinalidade = new Pane();
+		pFinalidade.setPrefSize(910, 150);
+		pFinalidade.setLayoutX(60);
+		pFinalidade.setLayoutY(190);
+
+		pVazoes = new Pane();
+		pVazoes.setPrefSize(910, 120);
+		pVazoes.setLayoutX(60);
+		pVazoes.setLayoutY(370);
+
+		pSuperficial.getChildren().addAll(pFinalidade, pVazoes);
+
+		pFinalidade.getChildren().add(gpFinalidades);
+		pVazoes.getChildren().add(gpVazoes);
+
+		//Setting size for the pane  
+		gpVazoes.setMaxSize(910, 190); 
+
+
+		Label lbl;
+
+		String[] strLabelFinalidade = {
+				"Finalidade", " ","Subfinalidade", " ", "Quant (unid)", "Consumo(L/dia)", "TOTAL", " "
+		};
+		for (int i = 0; i<8; i++ ) {
+			gpFinalidades.add(lbl = new Label(strLabelFinalidade[i]), i, 0); // child, columnIndex, rowIndex
+			lbl.setAlignment( Pos.CENTER );
+			lbl.setMinSize(50, 20);
+		}
+
+		/////////////////////
+
+		for (int i = 0; i<5; i++ ) {
+
+			TextField tfFin = tfListFinalidades [i] = new TextField();
+			TextField tfSub = tfListSubfinalidades [i] = new TextField();
+			TextField tfQuant = tfListQuantidades [i] = new TextField();
+			TextField tfCon = tfListConsumo [i] = new TextField();
+			TextField tfVaz = tfListFinVazoes [i] = new TextField();
+
+			Button btnCal = btnListCalcular[i] = new Button();
+
+			btnCal.setPrefSize(25, 25);
+
+			ChoiceBox<String> cbFin =  listCbFinalidade [i] = new ChoiceBox<String>();
+			cbFin.setItems(olFinalidades);
+			cbFin.setPrefSize(50, 20);
+
+			ChoiceBox<String> cbSub =  listCbSubfinalidades [i] = new ChoiceBox<String>();
+			cbSub.setItems(olSubFinalidades);
+			cbSub.setPrefSize(50, 20);
+
+			gpFinalidades.add(tfFin, 0, i+1); // child, columnIndex, rowIndex
+			gpFinalidades.add(cbFin, 1, i+1);
+
+
+			gpFinalidades.add(tfSub, 2, i+1);
+			gpFinalidades.add(cbSub, 3, i+1);
+
+			gpFinalidades.add(tfQuant, 4, i+1); 
+			gpFinalidades.add(tfCon, 5, i+1); 
+
+			gpFinalidades.add(tfVaz, 6, i+1);
+
+			gpFinalidades.add(btnCal, 7, i+1);
+
+			tfQuant.lengthProperty().addListener(new ChangeListener<Number>() {
+
+				@Override
+				public void changed(ObservableValue<? extends Number> observable,
+						Number oldValue, Number newValue) {
+
+					if (newValue.intValue() > oldValue.intValue()) {
+						// Check if the new character is greater than LIMIT
+						if (tfQuant.getText().length() >= 0) {
+
+							/*   Nao permitir letras - variavel double, somente numeros com ponto ou virgula
+							 */
+							if ( tfQuant.getText().matches("(.*)[a-zA-Z](.*)") == true ) {
+								// buscar letras entre os numeros
+								Alerta a = new Alerta ();
+								a.alertar(new Alert(Alert.AlertType.ERROR, "Somente números!!!", ButtonType.OK));
+
+								// retirar caracter errado, como letra, virgula etc
+								tfQuant.setText(tfQuant.getText().substring(0, tfQuant.getText().length() - 1));
+
+							}
+
+						}
+
+					} // fim if length
+				}
+			});
+
+			tfCon.lengthProperty().addListener(new ChangeListener<Number>() {
+
+				@Override
+				public void changed(ObservableValue<? extends Number> observable,
+						Number oldValue, Number newValue) {
+
+					if (newValue.intValue() > oldValue.intValue()) {
+						// Check if the new character is greater than LIMIT
+						if (tfCon.getText().length() >= 0) {
+
+							/*  Nao permitir letras - variavel double, somente numeros com ponto ou virgula
+							 */
+							if ( tfCon.getText().matches("(.*)[a-zA-Z](.*)") == true ) {
+								// buscar letras entre os numeros
+								Alerta a = new Alerta ();
+								a.alertar(new Alert(Alert.AlertType.ERROR, "Somente números!!!", ButtonType.OK));
+
+								// retirar caracter errado, como letra, virgula etc
+								tfCon.setText(tfCon.getText().substring(0, tfCon.getText().length() - 1));
+
+							}
+
+						}
+
+					} // fim if length
+				}
+			});
+
+			cbFin.getSelectionModel().selectedItemProperty().addListener( 
+
+					(ObservableValue<? extends String> observable, String oldValue, String newValue) ->
+
+					tfFin.setText(newValue)
+					);
+
+			cbSub.getSelectionModel().selectedItemProperty().addListener( 
+
+					(ObservableValue<? extends String> observable, String oldValue, String newValue) ->
+
+					tfSub.setText(newValue)
+					);
+
+			btnCal.setOnAction(new EventHandler<ActionEvent>() {
+
+				@Override
+				public void handle(ActionEvent event) {
+					Double result = Double.parseDouble(tfQuant.getText().replace(",", ".")) * Double.parseDouble(tfCon.getText().replace(",", "."));
+					tfVaz.setText(String.valueOf(result));
+				}
+			});
+
+		}
+
+		String[] lblVazoesMeses = {
+				"Mês","JAN", "FEV", "MAR", "ABR", "MAI", "JUN", "JUL", "AGO", "SET", "OUT", "NOV", "DEZ", " ",
+		};
+
+		for (int i = 0; i<14; i++ ) {
+			gpVazoes.add(lbl = new Label(lblVazoesMeses[i]), i, 0); // child, columnIndex, rowIndex
+			lbl.setMinSize(50, 20);
+		}
+
+
+
+		for (int i = 0; i<12; i++ ) {
+
+			TextField tfVazLD = tfVazoesLD [i] = new TextField();
+			gpVazoes.add(tfVazLD, i+1, 1); // child, columnIndex, rowIndex
+
+		}
+
+		for (int i = 0; i<12; i++ ) {
+
+			TextField tfVazHD = tfVazoesHD [i] = new TextField();
+			gpVazoes.add(tfVazHD, i+1, 2);
+
+			tfVazHD.lengthProperty().addListener(new ChangeListener<Number>() {
+
+				@Override
+				public void changed(ObservableValue<? extends Number> observable,
+						Number oldValue, Number newValue) {
+
+					if (newValue.intValue() > oldValue.intValue()) {
+						// Check if the new character is greater than LIMIT
+						if (tfVazHD.getText().length() >= 0) {
+
+							/*  Nao permitir virgula e ponto no tempo de captacao e nos dias 
+							 *  por mes que sempre e um numero inteiro
+							 */
+							if ( tfVazHD.getText().matches("(.*)\\D(.*)") == true ) {
+								// "(.*)\\D(.*)" buscar qualquer digito diferente de numero no meio do que foi digitado
+								Alerta a = new Alerta ();
+								a.alertar(new Alert(Alert.AlertType.ERROR, "Somente números!!!", ButtonType.OK));
+
+								// retirar caracter errado, como letra, virgula etc
+								tfVazHD.setText(tfVazHD.getText().substring(0, tfVazHD.getText().length() - 1));
+
+							}
+
+						}
+
+					} // fim if length
+				}
+			});
+
+		}
+
+		for (int i = 0; i<12; i++ ) {
+
+			TextField tfPerDM = tfPeriodoDM [i] = new TextField();
+			gpVazoes.add(tfPerDM, i+1, 3);
+
+			tfPerDM.lengthProperty().addListener(new ChangeListener<Number>() {
+
+				@Override
+				public void changed(ObservableValue<? extends Number> observable,
+						Number oldValue, Number newValue) {
+
+					if (newValue.intValue() > oldValue.intValue()) {
+						// Check if the new character is greater than LIMIT
+						if (tfPerDM.getText().length() >= 0) {
+
+							/*  Nao permitir virgula e ponto no tempo de captacao e nos dias 
+							 *  por mes que sempre e um numero inteiro
+							 */
+							if (tfPerDM.getText().matches("(.*)\\D(.*)") == true ) { 
+								// "(.*)\\D(.*)" buscar qualquer digito diferente de numero no meio do que foi digitado
+
+								Alerta a = new Alerta ();
+								a.alertar(new Alert(Alert.AlertType.ERROR, "Somente números!!!", ButtonType.OK));
+
+								tfPerDM.setText(tfPerDM.getText().substring(0, tfPerDM.getText().length() - 1));
+
+							}
+
+						}
+
+					} // fim if length
+				}
+			});
+
+		}
+
+		String[] lblMesVazaoTempoPeriodo = {
+				"Vazão (l/dia) (*)","Tempo (h/dia)", "Período (dia/mês)",
+		};
+
+		for (int i = 0; i<3; i++ ) {
+
+			Button btnCalMes = btnListCalMeses[i] = new Button();
+			btnCalMes.setPrefSize(25, 25);
+			gpVazoes.add(btnCalMes, 13, i+1);
+			gpVazoes.add(lbl = new Label(lblMesVazaoTempoPeriodo[i]), 0, i+1);  // child, columnIndex, rowIndex
+			lbl.setMinSize(110, 20);
+			lbl.setAlignment( Pos.CENTER );
+		} // fim loop for
+
+		// botao para calcular o valor total de TODAS as finalidades
+		Button btnCal6 = btnListCalcular[5] = new Button();
+		btnCal6.setPrefSize(25, 25);
+		gpFinalidades.add(btnCal6, 7, 6);
+
+		// adicionar label com resultado total no gridpane e centralizar o texto
+		lblCalTotal.setText("0.0");
+		lblCalTotal.setMaxWidth(Double.MAX_VALUE);
+		lblCalTotal.setAlignment(Pos.CENTER);
+		gpFinalidades.add(lblCalTotal, 6, 6);
+
+		// calcular o valor total das finalidades
+		btnCal6.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				Double result = 0.0;
+
+				for (int i = 0; i<5;i++) {
+					if (! tfListFinVazoes[i].getText().isEmpty())
+						result += Double.parseDouble(
+								tfListFinVazoes[i].getText());
+
+
+				}
+				lblCalTotal.setText(String.valueOf(result));
+
+			}
+		});
+
+		// facilitar o cadastro dos meses 
+		btnListCalMeses[2].setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				int meses [] =  {31,28,31,30,31,30,31,31,30,31,30,31};
+				for (int i = 0; i<12;i++) {
+					tfPeriodoDM [i].setText(String.valueOf(meses[i]));
+				}
+
+			}
+		});
+
+
+		// facilitar o cadastro dos meses 
+		btnLatLon.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				capturarCoordenadas();
+
+			}
+		});

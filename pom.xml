@@ -84,6 +84,12 @@
   	
   	<dependencies>
   	
+	  	<dependency>
+		    <groupId>com.thoughtworks.xstream</groupId>
+		    <artifactId>xstream</artifactId>
+		    <version>1.4.5</version>
+		</dependency>
+  	
   		<!-- para o tipo geometry no banco de dados -->
   		<dependency>
   	    	<groupId>com.vividsolutions</groupId>

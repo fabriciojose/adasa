@@ -164,7 +164,7 @@ public class TabDemandaControlador implements Initializable {
   
   public void editarDemanda()	{
 	  
-	    if (cbTipoDemanda.isDisable()) {
+	    if (tfNumeroDemanda.isDisable()) {
 	    	
 	      cbTipoDemanda.setDisable(false);
 	      tfNumeroDemanda.setDisable(false);
@@ -173,6 +173,8 @@ public class TabDemandaControlador implements Initializable {
 	      
 	      dpDataDistribuicao.setDisable(false);
 	      dpDataRecebimento.setDisable(false);
+	      
+	      System.out.println("editar demanda if tfnumero demana is disable");
 	      
 	    }
 	    
@@ -185,6 +187,9 @@ public class TabDemandaControlador implements Initializable {
 	    
 			    else
 			    {
+			    	
+			    
+			    System.out.println(" else ");
 			      Demanda dem = (Demanda)tvLista.getSelectionModel().getSelectedItem();
 			      
 				      dem.setDemTipo(cbTipoDemanda.getValue());
@@ -533,6 +538,7 @@ public class TabDemandaControlador implements Initializable {
 		    btnEditar.setOnAction(new EventHandler<ActionEvent>() {
 		        @Override public void handle(ActionEvent e) {
 		        	editarDemanda();
+		        	System.out.println("bnt editar demanda clicado");
 		        }
 		    });
    

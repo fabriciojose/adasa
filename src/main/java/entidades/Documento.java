@@ -33,20 +33,6 @@ public class Documento implements Serializable {
 	@Column (name="doc_ID")
 	private int docID;
 	
-	@ManyToOne
-	@JoinColumn(name="doc_Endereco_FK")
-	private Endereco docEnderecoFK;
-	
-		@ManyToOne
-		@JoinColumn(name="doc_Processo_FK")
-		private Processo docProcessoFK;
-		
-			//-- Lista de enderecos vinculados --//
-			@OneToMany (mappedBy = "usDocumentoFK", cascade = CascadeType.MERGE,
-					fetch = FetchType.LAZY, targetEntity = Usuario.class)
-			@Fetch(FetchMode.SUBSELECT)
-			private Set<Usuario> usuarios = new HashSet<Usuario>();
-				
 	@Column(name="doc_Tipo", columnDefinition="varchar(50)")
 	private String docTipo;
 		 
@@ -74,6 +60,49 @@ public class Documento implements Serializable {
 	@Basic
 	@Column(name="doc_Data_Atualizacao")
 	private Timestamp docDataAtualizacao;
+	
+	@Column(name="doc_XML_Requerimento", columnDefinition="varchar(500)")
+	private String docXMLRequerimento;
+
+	
+	@ManyToOne
+	@JoinColumn(name="doc_Endereco_FK")
+	private Endereco docEnderecoFK;
+	
+		@ManyToOne
+		@JoinColumn(name="doc_Processo_FK")
+		private Processo docProcessoFK;
+		
+			//-- Lista de enderecos vinculados --//
+			@OneToMany (mappedBy = "usDocumentoFK", cascade = CascadeType.MERGE,
+					fetch = FetchType.LAZY, targetEntity = Usuario.class)
+			@Fetch(FetchMode.SUBSELECT)
+			private Set<Usuario> usuarios = new HashSet<Usuario>();
+	
+	// Construtor padrão
+	public Documento () {
+		
+	}
+	
+	public Documento (String docTipo, String docNumeracao, String docSEI, String docProcesso, Endereco docEnderecoFK) {
+		
+		this.docTipo = docTipo;
+		this.docNumeracao = docNumeracao;
+		this.docSEI = docSEI;
+		this.docProcesso = docProcesso;
+		this.docEnderecoFK = docEnderecoFK;
+	
+		
+	}
+				
+	
+	public String getDocXMLRequerimento() {
+		return docXMLRequerimento;
+	}
+
+	public void setDocXMLRequerimento(String docXMLRequerimento) {
+		this.docXMLRequerimento = docXMLRequerimento;
+	}
 
 	public int getDocID() {
 		return docID;

@@ -9,7 +9,7 @@
     
     		<!-- Configuração de conexão com o Banco de Dados -->
     		
-		<property name="connection.url">jdbc:sqlserver://srvsqlhomolog1;databaseName=DB_SRH;integratedSecurity=true;</property>
+		<property name="connection.url">jdbc:sqlserver://srvsqlhomolog1;databaseName=DB_SRH_TESTE2;integratedSecurity=true;</property>
 		<!-- <property name="connection.url"></property>-->
     	<property name="connection.driver_class">com.microsoft.sqlserver.jdbc.SQLServerDriver</property>
     	
@@ -74,6 +74,10 @@
 		<mapping class="entidades.Ato"/>
 		
 		<mapping class="entidades.ModelosHTML"/>
+		
+		<mapping class="entidades.Finalidade"/>
+			<mapping class="entidades.FinalidadeRequerida"/>
+			<mapping class="entidades.FinalidadeAutorizada"/>
 		
     </session-factory>
     

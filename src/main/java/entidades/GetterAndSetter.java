@@ -42,6 +42,8 @@ public class GetterAndSetter {
 		} catch (IntrospectionException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 		
 			e.printStackTrace();
+			
+			System.out.println(e.toString());
 		}
 		
 		return s;

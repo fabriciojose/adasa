@@ -50,6 +50,7 @@ public class Endereco implements Serializable{
 	@Column (name="end_DD_Longitude")
 	private Double endDDLongitude;
 	
+	
 	@Basic
 	@Column (name="end_Atualizacao")
 	private java.sql.Timestamp endAtualizacao;
@@ -103,7 +104,28 @@ public class Endereco implements Serializable{
 	public Endereco () {
 		
 	}
-
+	
+	//-- construtor padrao -- //
+	public Endereco (String endLogradouro, String endCEP, String endCidade, String endUF, Double endDDLatitude, Double endDDLongitude) {
+	
+		this.endLogradouro = endLogradouro;
+		this.endCEP = endCEP;
+		this.endCidade = endCidade;
+		this.endUF = endUF;
+		this.endDDLatitude = endDDLatitude;
+		this.endDDLongitude = endDDLongitude;
+				
+	}
+	
+	//-- construtor padrao -- //
+	public Endereco (String endLogradouro) {
+		
+			this.endLogradouro = endLogradouro;
+			
+	}
+		
+			
+	
 	public int getEndID() {
 		return endID;
 	}

@@ -147,159 +147,159 @@ public class TelaDemandaControlador implements Initializable {
 	}
 	
 	public void inicializarComponentes () {
-		
-				
-		listComponentesEndereco.add(pEndereco = new Pane());
-			listComponentesEndereco.add(new Label ("ENDEREÇO"));
-				listComponentesEndereco.add(lblEndereco = new Label ());
-					listComponentesEndereco.add(btnEndereco = new  Button(">>>"));
-			
-			 prefSizeWHeLayXY = new Double[][] { 
-				 {850.0,60.0,20.0,10.0},
-				 {90.0,30.0,15.0,15.0},
-				 {648.0,30.0,110.0,15.0},
-				 {65.0,25.0,770.0,19.0},
-				};
-			
-				com = new Componentes();
-			    com.popularTela(listComponentesEndereco, prefSizeWHeLayXY, pPrincipal);
-			
-			
-		 listComponentesDemanda.add(pDadosDemanda = new Pane());
-		    
-		 listComponentesDemanda.add(new Label("TIPO:"));
-		 listComponentesDemanda.add(cbTipoDemanda =  new ComboBox<String>());
-			 listComponentesDemanda.add(new Label("NUMERAÇÃO:"));
-			 listComponentesDemanda.add(tfNumeroDemanda = new TextField());
-				 listComponentesDemanda.add(new Label("SEI:"));
-				 listComponentesDemanda.add(tfDemandaSei = new TextField());
-					 listComponentesDemanda.add(new Label("PROCESSO:"));
-					 listComponentesDemanda.add(tfProcessoSei = new TextField());
-			    	
-						 listComponentesDemanda.add(new Label("DATA DE RECEBIMENTO:"));
-						 listComponentesDemanda.add(dpDataRecebimento = new DatePicker());
-							 listComponentesDemanda.add(new Label("DATA DE DISTRIBUIÇÃO:"));
-							 listComponentesDemanda.add(dpDataDistribuicao = new DatePicker());
-		    
-							    prefSizeWHeLayXY = new Double[][] { 
-							    	{850.0,149.0,19.0,85.0},
-							    	{200.0,30.0,90.0,5.0},
-							    	{200.0,30.0,90.0,35.0},
-							    	{130.0,30.0,300.0,5.0},
-							    	{130.0,30.0,300.0,35.0},
-							    	{150.0,30.0,441.0,5.0},
-							    	{150.0,30.0,441.0,35.0},
-							    	{160.0,30.0,601.0,5.0},
-							    	{160.0,30.0,601.0,35.0},
-							    	{160.0,30.0,265.0,70.0},
-							    	{160.0,30.0,265.0,105.0},
-							    	{160.0,30.0,435.0,70.0},
-							    	{160.0,30.0,435.0,106.0},
-							    	};
-							    	
-	    pTelaDemanda.setStyle("-fx-background-color: rgba(223,226,227, 0.7);");
 
-	    pPrincipal.setStyle("-fx-background-color: white");
-	    pPrincipal.setPrefSize(890, 670);
-	    pPrincipal.setLayoutX(60);
-	    pPrincipal.setLayoutY(0.0);
-	    
-	    
-	    com = new Componentes();
-	    com.popularTela(listComponentesDemanda, prefSizeWHeLayXY, pPrincipal);
-	    
-	    
-	    ObservableList<String> obsListTiposDemanda = FXCollections
-	    		.observableArrayList(
-	    				
-	    				"Requerimento de Outorga"	,
-	    				"Memorando"	,
-	    				"Ofício"	,
-	    				"Carta",
-	    				"Recurso"
-	    				
-	    				); 	
-	    
-	    cbTipoDemanda.setItems(obsListTiposDemanda);
-	    
-	
-	    
-	    listComponentesPersistencia.add(pPersistencia = new Pane());
-	    	listComponentesPersistencia.add(btnNovo = new Button("NOVO"));
-	    		listComponentesPersistencia.add(btnSalvar = new Button("SALVAR"));
-	    			listComponentesPersistencia.add(btnEditar = new Button("EDITAR"));
-	    				listComponentesPersistencia.add(btnExcluir = new Button("EXCLUIR"));
-	    					listComponentesPersistencia.add(btnCancelar = new Button("CANCELAR"));
-    
-	    						listComponentesPersistencia.add(tfPesquisar = new TextField());
-    
-	    							listComponentesPersistencia.add(btnPesquisar = new Button("PESQUISAR"));
-    
-								    prefSizeWHeLayXY = new Double[][] { 
-								    	
-								    	{850.0,60.0,19.0,245.0},
-								    	{95.0,25.0,15.0,18.0},
-								    	{95.0,25.0,120.0,18.0},
-								    	{95.0,25.0,225.0,18.0},
-								    	{95.0,25.0,330.0,18.0},
-								    	{95.0,25.0,435.0,18.0},
-								    	{190.0,25.0,540.0,18.0},
-								    	{95.0,25.0,740.0,18.0},
-								    	
-								    };
-		    	
+
+		listComponentesEndereco.add(pEndereco = new Pane());
+		listComponentesEndereco.add(new Label ("ENDEREÇO"));
+		listComponentesEndereco.add(lblEndereco = new Label ());
+		listComponentesEndereco.add(btnEndereco = new  Button(">>>"));
+
+		prefSizeWHeLayXY = new Double[][] { 
+			{850.0,60.0,20.0,10.0},
+			{90.0,30.0,15.0,15.0},
+			{648.0,30.0,110.0,15.0},
+			{65.0,25.0,770.0,19.0},
+		};
+
 		com = new Componentes();
-	    com.popularTela(listComponentesPersistencia, prefSizeWHeLayXY, pPrincipal);
-	   
-	   
-	    tcTipoDemanda.setCellValueFactory(new PropertyValueFactory<Demanda, String>("demTipo"));
-	    tcNumeroDemanda.setCellValueFactory(new PropertyValueFactory<Demanda, String>("demNumero"));
-	    tcNumeroDemandaSEI.setCellValueFactory(new PropertyValueFactory<Demanda, String>("demNumeroSEI"));
-	    tcNumeroProcesso.setCellValueFactory(new PropertyValueFactory<Demanda, String>("demProcesso"));
-	    
-	    tcTipoDemanda.setPrefWidth(200.0);
-	    	tcNumeroDemanda.setPrefWidth(200.0);
-	    		tcNumeroDemandaSEI.setPrefWidth(200.0);
-	    			tcNumeroProcesso.setPrefWidth(210.0);
-	    
-	    tvLista.setPrefSize(840.0, 185.0);
-	    	tvLista.setLayoutX(25.0);
-	    		tvLista.setLayoutY(320.0);
-	    
-	    tvLista.getColumns().add(tcTipoDemanda); //, tcDocsSEI, tcProcsSEI });
-	    	tvLista.getColumns().add(tcNumeroDemanda);
-	    		tvLista.getColumns().add(tcNumeroDemandaSEI);
-	    			tvLista.getColumns().add(tcNumeroProcesso);
-	    
-	    tvLista.setItems(obsList);
-	    
-	    lblDataAtualizacao.setPrefSize(247.0, 22.0);
-	    lblDataAtualizacao.setLayoutX(615.0);
-	    lblDataAtualizacao.setLayoutY(515.0);
-	    
-	    pPrincipal.getChildren().addAll(tvLista, lblDataAtualizacao);
-	    
-	    btnEndereco.setOnAction(new EventHandler<ActionEvent>() {
-	    	
-	        @Override public void handle(ActionEvent e) {
-	     
-	        	if (intControlador == 0) {
-	        		TabEnderecoControlador.controladorAtendimento.movimentarTelaDemanda(15.0);
-	        	}
-	        	if (intControlador == 1) {
-	        		TabEnderecoControlador.controladorFiscalizacao.movimentarTelaDemanda(15.0);
-	        	}
-	        	if (intControlador == 2) {
-	        		TabEnderecoControlador.controladorOutorga.movimentarTelaDemanda(15.0);
-	        	}
-	        	
-	        	System.out.println("valor do intControlador TelaDemanda " + intControlador);
-	        	
-	        }
-	    });
-	    
-	selecionarDemanda ();
-		    
+		com.popularTela(listComponentesEndereco, prefSizeWHeLayXY, pPrincipal);
+
+
+		listComponentesDemanda.add(pDadosDemanda = new Pane());
+
+		listComponentesDemanda.add(new Label("TIPO:"));
+		listComponentesDemanda.add(cbTipoDemanda =  new ComboBox<String>());
+		listComponentesDemanda.add(new Label("NUMERAÇÃO:"));
+		listComponentesDemanda.add(tfNumeroDemanda = new TextField());
+		listComponentesDemanda.add(new Label("SEI:"));
+		listComponentesDemanda.add(tfDemandaSei = new TextField());
+		listComponentesDemanda.add(new Label("PROCESSO:"));
+		listComponentesDemanda.add(tfProcessoSei = new TextField());
+
+		listComponentesDemanda.add(new Label("DATA DE RECEBIMENTO:"));
+		listComponentesDemanda.add(dpDataRecebimento = new DatePicker());
+		listComponentesDemanda.add(new Label("DATA DE DISTRIBUIÇÃO:"));
+		listComponentesDemanda.add(dpDataDistribuicao = new DatePicker());
+
+		prefSizeWHeLayXY = new Double[][] { 
+			{850.0,149.0,19.0,85.0},
+			{200.0,30.0,90.0,5.0},
+			{200.0,30.0,90.0,35.0},
+			{130.0,30.0,300.0,5.0},
+			{130.0,30.0,300.0,35.0},
+			{150.0,30.0,441.0,5.0},
+			{150.0,30.0,441.0,35.0},
+			{160.0,30.0,601.0,5.0},
+			{160.0,30.0,601.0,35.0},
+			{160.0,30.0,265.0,70.0},
+			{160.0,30.0,265.0,105.0},
+			{160.0,30.0,435.0,70.0},
+			{160.0,30.0,435.0,106.0},
+		};
+
+		pTelaDemanda.setStyle("-fx-background-color: rgba(223,226,227, 0.7);");
+
+		pPrincipal.setStyle("-fx-background-color: white");
+		pPrincipal.setPrefSize(890, 670);
+		pPrincipal.setLayoutX(60);
+		pPrincipal.setLayoutY(0.0);
+
+
+		com = new Componentes();
+		com.popularTela(listComponentesDemanda, prefSizeWHeLayXY, pPrincipal);
+
+
+		ObservableList<String> obsListTiposDemanda = FXCollections
+				.observableArrayList(
+
+						"Requerimento de Outorga"	,
+						"Memorando"	,
+						"Ofício"	,
+						"Carta",
+						"Recurso"
+
+						); 	
+
+		cbTipoDemanda.setItems(obsListTiposDemanda);
+
+
+
+		listComponentesPersistencia.add(pPersistencia = new Pane());
+		listComponentesPersistencia.add(btnNovo = new Button("NOVO"));
+		listComponentesPersistencia.add(btnSalvar = new Button("SALVAR"));
+		listComponentesPersistencia.add(btnEditar = new Button("EDITAR"));
+		listComponentesPersistencia.add(btnExcluir = new Button("EXCLUIR"));
+		listComponentesPersistencia.add(btnCancelar = new Button("CANCELAR"));
+
+		listComponentesPersistencia.add(tfPesquisar = new TextField());
+
+		listComponentesPersistencia.add(btnPesquisar = new Button("PESQUISAR"));
+
+		prefSizeWHeLayXY = new Double[][] { 
+
+			{850.0,60.0,19.0,245.0},
+			{95.0,25.0,15.0,18.0},
+			{95.0,25.0,120.0,18.0},
+			{95.0,25.0,225.0,18.0},
+			{95.0,25.0,330.0,18.0},
+			{95.0,25.0,435.0,18.0},
+			{190.0,25.0,540.0,18.0},
+			{95.0,25.0,740.0,18.0},
+
+		};
+
+		com = new Componentes();
+		com.popularTela(listComponentesPersistencia, prefSizeWHeLayXY, pPrincipal);
+
+
+		tcTipoDemanda.setCellValueFactory(new PropertyValueFactory<Demanda, String>("demTipo"));
+		tcNumeroDemanda.setCellValueFactory(new PropertyValueFactory<Demanda, String>("demNumero"));
+		tcNumeroDemandaSEI.setCellValueFactory(new PropertyValueFactory<Demanda, String>("demNumeroSEI"));
+		tcNumeroProcesso.setCellValueFactory(new PropertyValueFactory<Demanda, String>("demProcesso"));
+
+		tcTipoDemanda.setPrefWidth(200.0);
+		tcNumeroDemanda.setPrefWidth(200.0);
+		tcNumeroDemandaSEI.setPrefWidth(200.0);
+		tcNumeroProcesso.setPrefWidth(210.0);
+
+		tvLista.setPrefSize(840.0, 185.0);
+		tvLista.setLayoutX(25.0);
+		tvLista.setLayoutY(320.0);
+
+		tvLista.getColumns().add(tcTipoDemanda); //, tcDocsSEI, tcProcsSEI });
+		tvLista.getColumns().add(tcNumeroDemanda);
+		tvLista.getColumns().add(tcNumeroDemandaSEI);
+		tvLista.getColumns().add(tcNumeroProcesso);
+
+		tvLista.setItems(obsList);
+
+		lblDataAtualizacao.setPrefSize(247.0, 22.0);
+		lblDataAtualizacao.setLayoutX(615.0);
+		lblDataAtualizacao.setLayoutY(515.0);
+
+		pPrincipal.getChildren().addAll(tvLista, lblDataAtualizacao);
+
+		btnEndereco.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override public void handle(ActionEvent e) {
+
+				if (intControlador == 0) {
+					TabEnderecoControlador.controladorAtendimento.movimentarTelaDemanda(15.0);
+				}
+				if (intControlador == 1) {
+					TabEnderecoControlador.controladorFiscalizacao.movimentarTelaDemanda(15.0);
+				}
+				if (intControlador == 2) {
+					TabEnderecoControlador.controladorOutorga.movimentarTelaDemanda(15.0);
+				}
+
+				System.out.println("valor do intControlador TelaDemanda " + intControlador);
+
+			}
+		});
+
+		selecionarDemanda ();
+
 	}
 	
 	public void habilitarDemanda() {
