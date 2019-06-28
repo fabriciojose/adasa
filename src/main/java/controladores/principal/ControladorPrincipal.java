@@ -38,6 +38,7 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import mapas.GoogleMap;
+import principal.ListasComboBox;
 
 /** Casse controlador da classe principal, onde serao chamados as telas necessarias para os cadastros
  * 
@@ -130,6 +131,9 @@ public class ControladorPrincipal {
 
 	TranslateTransition baixarTabPaneOutorga;
 	TranslateTransition subirTabPaneOutorga;
+	
+	ListasComboBox listasComboBox;
+	
 
 	/** Metodo para capturar as coordenadas clicadas no mapa principal
 	 * 
@@ -625,6 +629,16 @@ public class ControladorPrincipal {
 		upSearch.setToY(2.0);
 
 		btnAtendimento.setOnAction((ActionEvent evt)->{
+			
+			/*
+			 * preencher os combobox das tabelas relacionadas
+			 */
+			if (listasComboBox == null) {
+				System.out.println("lista combobox ! null");
+				listasComboBox = new ListasComboBox();
+					listasComboBox.preencherListasComboBox();
+					
+			}
 
 			if (pAtendimento == null) {
 
@@ -690,8 +704,16 @@ public class ControladorPrincipal {
 		});
 
 		btnOutorga.setOnAction((ActionEvent evt)->{
+			
+			if (listasComboBox == null) {
+				System.out.println("lista combobox ! null");
+				listasComboBox = new ListasComboBox();
+					listasComboBox.preencherListasComboBox();
+					
+			}
 
 			if (pOutorga == null ) {
+				
 
 				pOutorga = new Pane();
 
@@ -761,6 +783,16 @@ public class ControladorPrincipal {
 
 
 		btnFiscalizacao.setOnAction((ActionEvent evt)->{
+			
+			/*
+			 * preencher os combobox das tabelas relacionadas
+			 */
+			if (listasComboBox == null) {
+				System.out.println("lista combobox ! null");
+				listasComboBox = new ListasComboBox();
+					listasComboBox.preencherListasComboBox();
+					
+			}
 
 			if (pFiscalizacao == null) {
 

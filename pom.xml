@@ -1,311 +1,124 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.adasa</groupId>
-  <artifactId>adasa</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  
-  <build>
-  
-    <plugins>
-      
-       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>attach-sources</id>
-            <phase>package</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>3.0.2</version>
-        <configuration>
-          <archive>
-            <manifest>
-              <mainClass>principal/Principal</mainClass>
-            </manifest>
-          </archive>
-        </configuration>
-      </plugin>
-      
-       <plugin>
-			<!--             Responsável por resolver dependências -->
-        <artifactId>maven-assembly-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
-           <archive>
-	      <manifest>
-	        <mainClass>principal/Principal</mainClass>
-	      </manifest>
-	    </archive>
-	        </configuration>
-	      </plugin>
-      
-	    </plugins>
-    
-    
-  </build>
-  
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.adasa</groupId>
+	<artifactId>adasa</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
 	<properties>
-    	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    	<maven.compiler.source>1.8</maven.compiler.source>
-    	<maven.compiler.target>1.8</maven.compiler.target>
-  	</properties>
-  	
-  	<repositories>
-            <repository>
-                    <id>OSGEO GeoTools repo</id>
-                    <url>http://download.osgeo.org/webdav/geotools</url>
-            </repository>
-            <repository>
-                    <id>Hibernate Spatial repo</id>
-                    <url>http://www.hibernatespatial.org/repository</url>
-            </repository>
+		<!-- https://maven.apache.org/general.html#encoding-warning -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+	</properties>
 
-    </repositories>
-    
-  	
-  	<dependencies>
-  	
-	  	<dependency>
-		    <groupId>com.thoughtworks.xstream</groupId>
-		    <artifactId>xstream</artifactId>
-		    <version>1.4.5</version>
-		</dependency>
-  	
-  		<!-- para o tipo geometry no banco de dados -->
-  		<dependency>
-  	    	<groupId>com.vividsolutions</groupId>
-    		<artifactId>jts</artifactId>
-    		<version>1.13</version>
-		</dependency>
-  	
-  		<!--  para a persistencia -->
-	  	<dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-spatial</artifactId>
-                <version>5.1.0.Final</version>
-        </dependency>
-        
-	        <dependency> 
-			    <groupId>org.hibernate</groupId>
-			    <artifactId>hibernate-entitymanager</artifactId>
-			    <version>5.1.0.Final</version>
-			    <!--  para nao repetir bibliotecas dentro de bibliotecas -->
-			    <exclusions>
-			    	<exclusion>
-			    		<groupId>org.hibernate.common</groupId>
-			    		<artifactId>
-			    			hibernate-commons-annotations
-			    		</artifactId>
-			    	</exclusion>
-			    	<exclusion>
-			    		<groupId>org.hibernate.javax.persistence</groupId>
-			    		<artifactId>hibernate-jpa-2.1-api</artifactId>
-			    	</exclusion>
-			    	<exclusion>
-			    		<groupId>org.javassist</groupId>
-			    		<artifactId>javassist</artifactId>
-			    	</exclusion>
-			    	<exclusion>
-			    		<groupId>antlr</groupId>
-			    		<artifactId>antlr</artifactId>
-			    	</exclusion>
-			    	<exclusion>
-			    		<groupId>dom4j</groupId>
-			    		<artifactId>dom4j</artifactId>
-			    	</exclusion>
-			    	<exclusion>
-			    		<groupId>org.apache.geronimo.specs</groupId>
-			    		<artifactId>geronimo-jta_1.1_spec</artifactId>
-			    	</exclusion>
-			    	<exclusion>
-			    		<groupId>org.jboss.logging</groupId>
-			    		<artifactId>jboss-logging</artifactId>
-			    	</exclusion>
-			    </exclusions>
-		  	</dependency>
-		  	
-		  	<dependency>
-			    <groupId>org.hibernate.common</groupId>
-			    <artifactId>hibernate-commons-annotations</artifactId>
-			    <version>5.0.1.Final</version>
-			    
-			    <exclusions>
-			    	<exclusion>
-			    		<groupId>org.jboss.logging</groupId>
-			    		<artifactId>jboss-logging</artifactId>
-			    	</exclusion>
-			    </exclusions>
-	  		</dependency>
-	  	
-	  	<dependency>
-		    <groupId>org.jboss.logging</groupId>
-		    <artifactId>jboss-logging</artifactId>
-		    <version>3.3.0.Final</version>
-		</dependency>
-	  	
-	  	<dependency>
-		    <groupId>org.javassist</groupId>
-		    <artifactId>javassist</artifactId>
-		    <version>3.20.0-GA</version>
-		 </dependency>
-		
+	<dependencies>
+		<!-- TESTES -->
 		<dependency>
-		    <groupId>commons-collections</groupId>
-		    <artifactId>commons-collections</artifactId>
-		    <version>2.1</version>
-		</dependency>
-		
-		<dependency>
-		    <groupId>commons-logging</groupId>
-		    <artifactId>commons-logging</artifactId>
-		    <version>1.0.4</version>
-		 </dependency>
-		
-		<dependency>
-		    <groupId>dom4j</groupId>
-		    <artifactId>dom4j</artifactId>
-		    <version>1.6.1</version>
-		</dependency>
-		
-		
-		<dependency>
-		    <groupId>asm</groupId>
-		    <artifactId>asm</artifactId>
-		    <version>1.5.3</version>
-		</dependency>
-		
-		<dependency>
-		    <groupId>antlr</groupId>
-		    <artifactId>antlr</artifactId>
-		    <version>2.7.7</version>
-		 </dependency>
-	  	
-	  	
-	  	<dependency>
-		    <groupId>org.hibernate.javax.persistence</groupId>
-		    <artifactId>hibernate-jpa-2.1-api</artifactId>
-		    <version>1.0.2.Final</version>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
 		</dependency>
 
-	  	
-	  	
-	  	<dependency>
-		    <groupId>org.apache.geronimo.specs</groupId>
-		    <artifactId>geronimo-jta_1.0.1B_spec</artifactId>
-		    <version>1.1.1</version>
-		</dependency>
-	  	
-	  	<!-- banco mysql -->
-		<dependency>
-		    <groupId>mysql</groupId>
-		    <artifactId>mysql-connector-java</artifactId>
-		    <version>5.1.45</version>
-		    
-		</dependency>
-		
-		<!--  banco de dados sql sever -->
+		<!-- SQL SERVER -->
 		<dependency>
 		    <groupId>com.microsoft.sqlserver</groupId>
 		    <artifactId>mssql-jdbc</artifactId>
 		    <version>7.0.0.jre8</version>
 		</dependency>
-		
-		<!--  para testes -->
-	    <dependency>
-		     <groupId>junit</groupId>
-			 <artifactId>junit</artifactId>
-			 <version>4.11</version>
-			 
-	    </dependency>
-	    
-	    <!-- leitor de arquivos xls (excel) -->
-	    <dependency>
-		    <groupId>org.apache.poi</groupId>
-		    <artifactId>poi</artifactId>
-		    <version>3.11</version>
-		</dependency>
-
+	
+		<!-- HIBERNATE -->
+	
 		<dependency>
-		    <groupId>org.apache.poi</groupId>
-		    <artifactId>poi-ooxml</artifactId>
-		    <version>3.11</version>
+		    <groupId>org.hibernate</groupId>
+		    <artifactId>hibernate-spatial</artifactId>
+		    <version>5.1.0.Final</version>
 		</dependency>
-	    
-    
-    	<!--  ERRO JAXBExeption  -->
-    	<!-- Caused by: java.lang.ClassNotFoundException: javax.xml.bind.JAXBException  -->
-		    <dependency>
-		  	<groupId>javax.xml.bind</groupId>
-		 	<artifactId>jaxb-api</artifactId>
-		  	<version>2.3.0</version>
-		  	
-			</dependency>
-			
-			<dependency>
-			 	<groupId>com.sun.xml.bind</groupId>
-			  	<artifactId>jaxb-core</artifactId>
-			  	<version>2.3.0</version>
-		  	</dependency>
-			
-			<dependency>
-			  	<groupId>com.sun.xml.bind</groupId>
-			  	<artifactId>jaxb-impl</artifactId>
-			  	<version>2.3.0</version>
-		  	</dependency>
-			
-			<!-- https://mvnrepository.com/artifact/javax.activation/activation --> 
-			<!-- https://github.com/javaee/javamail/issues/266 --> 
-			<!-- Caused by: java.lang.ClassNotFoundException: javax.activation.DataSource  --> 
+		
+		<!--  CP30 GERENCIAR A CONEXAO -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-c3p0</artifactId>
+			<version>5.3.1.Final</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.jboss.logging</groupId>
+					<artifactId>jboss-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 
-            <dependency> 
-				<groupId>javax.activation</groupId> 
-				<artifactId>activation</artifactId> 
-				<version>1.1.1</version>
-			</dependency> 
-			 
-			 <dependency>
-			      <groupId>javax.transaction</groupId>
-			      <artifactId>jta</artifactId>
-			      <version>1.1</version>
-			  </dependency>
-  
-			<dependency>
-			    <groupId>org.jsoup</groupId>
-			    <artifactId>jsoup</artifactId>
-			    <version>1.10.3</version>
-			 </dependency>
-		    
-		    <dependency>
-			    <groupId>org.hibernate</groupId>
-			    <artifactId>hibernate-c3p0</artifactId>
-			    <version>5.3.1.Final</version>
-			</dependency>
-			
-			<dependency>
-		        <groupId>de.jensd</groupId>
-		        <artifactId>fontawesomefx</artifactId>
-		        <version>8.9</version>
-	    	</dependency>
-		    
-  		</dependencies>
+
+		<!-- LEITOR EXCEL -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.11</version>
+		</dependency>
+
+		<!-- LEITOR EXCEL -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>3.11</version>
+		</dependency>
+
+		<!-- SERIALIZAR O TIPO GEOMETRY -->
+
+		<!-- FONTE DE ICONES -->
+		<dependency>
+			<groupId>de.jensd</groupId>
+			<artifactId>fontawesomefx</artifactId>
+			<version>8.9</version>
+		</dependency>
+
+		<!-- EDITOR DE HTML -->
+		<dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>1.10.3</version>
+		</dependency>
+
+	
+		<!-- LEITOR XML -->
+		<dependency>
+		    <groupId>com.thoughtworks.xstream</groupId>
+		    <artifactId>xstream</artifactId>
+		    <version>1.4.5</version>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.2.0</version>
+				<executions>
+					<!-- Attach the shade into the package phase -->
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<transformers>
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<mainClass>principal.Principal</mainClass>
+								</transformer>
+							</transformers>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+	</build>
+
 
 </project>

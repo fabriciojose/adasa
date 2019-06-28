@@ -9,7 +9,35 @@
     
     		<!-- Configuração de conexão com o Banco de Dados -->
     		
-		<property name="connection.url">jdbc:sqlserver://srvsqlhomolog1;databaseName=DB_SRH_TESTE2;integratedSecurity=true;</property>
+    		<!-- 	<property 
+    					name="connection.url">
+    					jdbc:sqlserver://srvsqlhomolog1;
+    					databaseName=DB_SRH_TESTE2;
+    					integratedSecurity=true;
+    					</property> -->
+    					
+    					<!-- 
+    					
+    					jdbc:sqlserver://srvsqlhomolog1.database.windows.net:1433;
+    						database=DB_SRH;user=fabricio.barrozo@srvsqlhomolog1;
+    						password={your_password_here};
+    						encrypt=true;
+    						trustServerCertificate=false;
+    						hostNameInCertificate=*.database.windows.net;
+    						loginTimeout=30;
+    						
+    						
+    						OUTRO BANCO
+    						DB_SRH_TESTE
+    					
+    					 -->
+    		
+		<property name="connection.url">jdbc:sqlserver://srvsqlhomolog1.database.windows.net:1433;databaseName=DB_SRH;
+							encrypt=true;
+    						trustServerCertificate=false;
+    						hostNameInCertificate=*.database.windows.net;
+    						loginTimeout=30;
+		</property>
 		<!-- <property name="connection.url"></property>-->
     	<property name="connection.driver_class">com.microsoft.sqlserver.jdbc.SQLServerDriver</property>
     	

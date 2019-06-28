@@ -23,6 +23,8 @@ import org.hibernate.annotations.FetchMode;
 
 import com.vividsolutions.jts.geom.Geometry;
 
+
+
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Interferencia implements Serializable {

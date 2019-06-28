@@ -46,18 +46,36 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import principal.Alerta;
 import principal.Componentes;
+import principal.ListasComboBox;
 
 public class TabSubterraneaController implements Initializable {
 
 	public Subterranea subterranea = new Subterranea();
+	
+	BaciasHidrograficas bacia_hidrografica = new  BaciasHidrograficas();
+	UnidadeHidrografica unidade_hidrografica = new UnidadeHidrografica();
+	TipoPoco tipo_poco = new TipoPoco();
+	SubSistema subsistema = new SubSistema();
 
 	public Subterranea getSubterranea () {
 
 		Subterranea sub = subterranea;
 
+		// capturar coordenadas, caso esteja vazia de mensagem de erro
+		try {
 		// valores double de coordenadas - latitude e longitude
 		sub.setInterDDLatitude(Double.parseDouble(tfLatitude.getText()));
 		sub.setInterDDLongitude(Double.parseDouble(tfLongitude.getText()));
+		
+		} catch (Exception e) {
+			
+			// buscar letras entre os numeros
+			Alerta a = new Alerta ();
+			a.alertar(new Alert(Alert.AlertType.ERROR, "Coordenadas inválidas!!!", ButtonType.OK));
+			
+			e.printStackTrace();
+			
+		}
 
 		// valor geometry de  coordenadas latitude longitude
 		GeometryFactory geoFac = new GeometryFactory();
@@ -71,22 +89,18 @@ public class TabSubterraneaController implements Initializable {
 
 			sub.setInterGeom(p);
 
-		// adicionar o id escolhido no combobox
-		baciaHidrografica.setBaciaID(baciaID);
-		unidadeHidrografica.setUhID(unidHidID);
-		tipoPoco.setTipoPocoID(tipoPocoID);
-		subSistema.setSubID(subSistemaID);
-
-		sub.setInterBaciaFK(baciaHidrografica);
-		sub.setInterUHFK(unidadeHidrografica);
-		sub.setSubTipoPocoFK(tipoPoco);
-		sub.setSubSubSistemaFK(subSistema);
-
+		sub.setInterBaciaFK(bacia_hidrografica);
+		sub.setInterUHFK(unidade_hidrografica);
+		sub.setSubTipoPocoFK(tipo_poco);
+		sub.setSubSubSistemaFK(subsistema);
+		
+		sub.setSubCaesb(cbSubCaesb.getValue());
+		
 		sub.setSubVazao(tfVazaoPoco.getText());
 		sub.setSubEstatico(tfEstatico.getText());
 		sub.setSubDinamico(tfDinamico.getText());
 		sub.setSubProfundidade(tfProfundidade.getText());
-		sub.setSubCaesb(cbSubCaesb.getValue());
+		
 
 		if (dpDataOperacao.getValue() == null) {
 
@@ -151,13 +165,11 @@ public class TabSubterraneaController implements Initializable {
 
 	public void setSubterranea (Subterranea sub) {
 
-		System.out.println("TabSub - setSubterranea id " + sub.getInterID());
-
 		tfLatitude.setText(String.valueOf(sub.getInterDDLatitude()));
 		tfLongitude.setText(String.valueOf(sub.getInterDDLongitude()));
 
 		cbBaciaHidrografica.setValue(sub.getInterBaciaFK().getBaciaNome());
-		cbUnidadeHidrografica.setValue(String.valueOf(sub.getInterUHFK().getUhID()));
+		cbUnidadeHidrografica.setValue(String.valueOf(sub.getInterUHFK().getUhCodigo()));
 
 		cbTipoPoco.setValue(sub.getSubTipoPocoFK().getTipoPocoDescricao());
 		cbSubsistema.setValue(sub.getSubSubSistemaFK().getSubDescricao());
@@ -265,18 +277,6 @@ public class TabSubterraneaController implements Initializable {
 
 	}
 
-	int baciaID = 1;
-	final int [] listaBaciasID = new int [] { 1,2,3,4,5,6,7,8 };
-
-	int unidHidID = 1;
-	final int [] listaUHID = new int [] { 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,
-			22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41};
-
-	int tipoPocoID = 1;
-	final int [] listaTipoPoco = new int [] { 1,2 };
-
-	int subSistemaID = 1;
-	final int [] listaSubsistema = new int [] { 1,2,3,4,5,6,7,8,9,10,11,12,13 };
 
 	ObservableList<String> olFinalidades = FXCollections.observableArrayList(
 
@@ -351,64 +351,13 @@ public class TabSubterraneaController implements Initializable {
 
 			);
 
-	ObservableList<String> olSubSis = FXCollections
-			.observableArrayList(
-
-					"S/A       ",
-					"A         ",
-					"R3/Q3     ",
-					"R4        ",
-					"F         ",
-					"PPC       ",
-					"F/Q/M     ",
-					"P1        ",
-					"P2        ",
-					"P3        ",
-					"P4        ",
-					"BAMBUÍ    ",
-					"ARAXÁ     "
-
-					); 
-
-	ObservableList<String> olTipoPoco = FXCollections
-			.observableArrayList(
-					"Manual", 
-					"Tubular"
-
-					); 
-
 	ObservableList<String> olSubCaesb = FXCollections
 			.observableArrayList(
 					"Sim", 
 					"Não"
 					); 
 
-	ObservableList<String>  olBacia = FXCollections
-			.observableArrayList(
-
-					"Rio Corumbá"			,
-					"Rio Descoberto"		,
-					"Rio Paranã"			,
-					"Rio São Bartolomeu"	,
-					"Rio São Marcos"		,
-					"Rio Maranhão"			,
-					"Rio Paranoá"			,
-					"Rio Preto"	
-
-					); 
-
-	ObservableList<String> 	olUniHid = FXCollections
-			.observableArrayList(
-
-					"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20",
-					"21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41"
-					); 
-
-	SubSistema subSistema = new SubSistema ();
-	TipoPoco tipoPoco = new TipoPoco();
-	BaciasHidrograficas baciaHidrografica = new  BaciasHidrograficas();
-	UnidadeHidrografica unidadeHidrografica = new UnidadeHidrografica();
-
+	
 	@FXML Pane pSubterranea;
 
 	public static TabSubterraneaController tabSubCon;
@@ -421,64 +370,95 @@ public class TabSubterraneaController implements Initializable {
 
 		inicializarComponentes();
 
-		cbBaciaHidrografica.setItems(olBacia);
-		cbUnidadeHidrografica.setItems(olUniHid);
-		cbBaciaHidrografica.setItems(olBacia);
-		cbUnidadeHidrografica.setItems(olUniHid);
-		cbTipoPoco.setItems(olTipoPoco);
+		cbBaciaHidrografica.setItems(ListasComboBox.obsListBacia);
+		cbUnidadeHidrografica.setItems(ListasComboBox.obsListUH);
+
+		cbTipoPoco.setItems(ListasComboBox.obsListTipoPoco);
+		cbSubsistema.setItems(ListasComboBox.obsListSubsistema);
+		
 		cbSubCaesb.setItems(olSubCaesb);
-		cbSubsistema.setItems(olSubSis);
 
 		cbBaciaHidrografica.getSelectionModel().selectedIndexProperty().addListener(new
 				ChangeListener<Number>() {
 			public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
 					Number value, Number new_value) {
 
-				if ( (Integer) new_value !=  -1)
-
-					baciaID = listaBaciasID [(int) new_value];
-
-				//System.out.println(" bacia id" + baciaID);
+				bacia_hidrografica.setBaciaID((Integer) new_value + 1); 
+				//System.out.println("sub =  bacia hidrografica id " +  bacia_hidrografica.getBaciaID());
 
 			}
 		});
+		
+		cbBaciaHidrografica.getSelectionModel()
+    	.selectedItemProperty()
+    	.addListener( 
+    	(ObservableValue<? extends String> observable, String old_value, String new_value) ->
+
+    		bacia_hidrografica.setBaciaNome(new_value)
+    		//System.out.println("sub = bacia hidrografica nome " + new_value)
+    	);
 
 		cbUnidadeHidrografica.getSelectionModel().selectedIndexProperty().addListener(new
 				ChangeListener<Number>() {
 			public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
-					Number value, Number new_value) {
+					Number old_value, Number new_value) {
 
-				if ( (Integer) new_value !=  -1)
-					unidHidID = listaUHID [(int) new_value];
-
-				//System.out.println("unidade hidr selecionada " + unidHidID);
+				unidade_hidrografica.setUhID((Integer) new_value + 1);
+				//System.out.println("sub = id unidade hidrografica " + unidade_hidrografica.getUhID());
 
 			}
 		});
+		
+		cbUnidadeHidrografica.getSelectionModel()
+    	.selectedItemProperty()
+    	.addListener( 
+    	(ObservableValue<? extends String> observable, String old_value, String new_value) ->
+    
+    		unidade_hidrografica.setUhCodigo(Integer.parseInt(new_value))
+    	//System.out.println("sub = uh código " + new_value)
+    	);
 
 		cbTipoPoco.getSelectionModel().selectedIndexProperty().addListener(new
 				ChangeListener<Number>() {
 			public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
 					Number value, Number new_value) {
 
-				if ( (Integer) new_value !=  -1)
-					tipoPocoID = listaTipoPoco [(int) new_value];
-				//System.out.println(" tipo poço id" + tipoPocoID);
+				tipo_poco.setTipoPocoID((Integer) new_value + 1); 
+				//System.out.println("sub = itipo poco id " + tipo_poco.getTipoPocoID());
 
 			}
 		});
+		
+		
+		cbTipoPoco.getSelectionModel()
+    	.selectedItemProperty()
+    	.addListener( 
+    	(ObservableValue<? extends String> observable, String old_value, String new_value) ->
+    
+    	 tipo_poco.setTipoPocoDescricao(new_value)
+    	//System.out.println("sub = tipo poco descricao " + new_value)
+    	);
 
 		cbSubsistema.getSelectionModel().selectedIndexProperty().addListener(new
 				ChangeListener<Number>() {
 			public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
 					Number value, Number new_value) {
 
-				if ( (Integer) new_value !=  -1)
-					subSistemaID = listaSubsistema [(int) new_value];
-				//System.out.println("susbsistema ID tabSubterranea " + subSistemaID);
+				subsistema.setSubID((Integer) new_value + 1);
+				//System.out.println("sub = subisistema id " + subsistema.getSubID());
 
 			}
 		});
+		
+		cbSubsistema.getSelectionModel()
+    	.selectedItemProperty()
+    	.addListener( 
+    	(ObservableValue<? extends String> observable, String old_value, String new_value) ->
+    
+    		subsistema.setSubDescricao(new_value)
+    	//System.out.println("sub = subisistema descricao " + new_value)
+    	);
+		
 
 		// listeners para envitar valor maior que cinco caracteres
 		tfVazaoPoco.lengthProperty().addListener(new ChangeListener<Number>() {

@@ -9,8 +9,8 @@ public class HibernateUtil {
 	
 	private static Configuration conf;
 	
-	private static String newUserName = "user";
-	private static String newPassword = "password";
+	private static String newUserName = "fabricio.barrozo";
+	private static String newPassword = "ifConni1";
 	
 	public static void getUserPass ( String newUserName, String newPassword) {
 		

@@ -10,6 +10,8 @@ import org.hibernate.sql.JoinType;
 
 import entidades.Endereco;
 import entidades.HibernateUtil;
+import entidades.Interferencia;
+import entidades.RA;
 
 
 public class EnderecoDao {
@@ -22,6 +24,19 @@ public class EnderecoDao {
 		s.save(endereco);
 		s.getTransaction().commit();
 		s.close();
+		
+	}
+	
+
+	public Endereco obterEnderecoPorID (Integer endID) {
+		
+		Session s = HibernateUtil.getSessionFactory().openSession();
+		
+		s.beginTransaction();
+		
+		Endereco endereco = s.get(Endereco.class, endID);
+		
+		return endereco;
 		
 	}
 	
@@ -89,6 +104,44 @@ public class EnderecoDao {
 		s.getTransaction().commit();
 		//s.flush(); // para retornar o id do objeto gravado
 		s.close();
+	}
+	
+	
+
+	@SuppressWarnings("unchecked")
+	public List<RA> listarRA() {
+	
+		List<RA> list = new ArrayList<RA>();
+		
+		Session s = HibernateUtil.getSessionFactory().openSession();
+		
+		s.beginTransaction();
+		
+		Criteria crit = s.createCriteria(RA.class, "ra");
+
+		list = crit.list();
+		
+		s.getTransaction().commit();
+		s.close();
+		return list;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Object> listarObjeto(Object o) {
+	
+		List<Object> list = new ArrayList<Object>();
+		
+		Session s = HibernateUtil.getSessionFactory().openSession();
+		
+		s.beginTransaction();
+		
+		Criteria crit = s.createCriteria(o.getClass(), "obj");
+
+		list = crit.list();
+		
+		s.getTransaction().commit();
+		s.close();
+		return list;
 	}
 	
 	

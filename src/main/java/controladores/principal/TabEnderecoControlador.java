@@ -20,6 +20,7 @@ import entidades.Demanda;
 import entidades.Documento;
 import entidades.Endereco;
 import entidades.Interferencia;
+import entidades.PreenchimentoComboBox;
 import entidades.RA;
 import javafx.animation.TranslateTransition;
 import javafx.beans.property.SimpleStringProperty;
@@ -53,6 +54,7 @@ import mapas.GoogleMap;
 import principal.Alerta;
 import principal.Componentes;
 import principal.FormatoData;
+import principal.ListasComboBox;
 
 public class TabEnderecoControlador implements Initializable {
 	
@@ -128,41 +130,7 @@ public class TabEnderecoControlador implements Initializable {
 			1,15,17,21,12,13,14,25,29,5,26,22,3,23,30,
 	};
 	
-	ObservableList<String> olEndRA = FXCollections
-	.observableArrayList(
-			
-			"Águas Claras"	,
-			"Brazlândia"	,
-			"Candangolândia"	,
-			"Ceilândia"	,
-			"Cruzeiro"	,
-			"Fercal"	,
-			"Gama"	,
-			"Guará"	,
-			"Itapoã"	,
-			"Jardim Botânico"	,
-			"Lago Norte"	,
-			"Lago Sul"	,
-			"Núcleo Bandeirante"	,
-			"Paranoá"	,
-			"Park Way"	,
-			"Planaltina"	,
-			"Plano Piloto"	,
-			"Recanto das Emas"	,
-			"Riacho Fundo"	,
-			"Riacho Fundo II"	,
-			"Samambaia"	,
-			"Santa Maria"	,
-			"São Sebastião"	,
-			"SCIA/Estrutural"	,
-			"SIA"	,
-			"Sobradinho"	,
-			"Sobradinho II"	,
-			"Sudoeste/Octogonal"	,
-			"Taguatinga"	,
-			"Varjão"	,
-			"Vicente Pires"	
-			); 	
+	//ObservableList<String> obsListRA = FXCollections.observableArrayList(); 	
 		
 	ObservableList<String> olEndUF = FXCollections
 				.observableArrayList("DF" , "GO", "Outro");
@@ -207,6 +175,8 @@ public class TabEnderecoControlador implements Initializable {
 		
 	}
 	
+	RA ra = new RA ();
+	
 	public void salvarEndereco () {
 		
 		if (tfLatitude.getText().isEmpty() || 
@@ -234,13 +204,11 @@ public class TabEnderecoControlador implements Initializable {
 			
 		} else {
 		
-			RA ra = new RA ();
-				ra.setRaID(intRA);
-				ra.setRaNome(strRA);
-	
 			Endereco end = new Endereco();
 		
 			end.setEndLogradouro(tfLogradouro.getText());
+			
+			// tabela relacionada - regiao adiministrativa //
 			end.setEndRAFK(ra);
 				
 			end.setEndCEP(tfCEP.getText());
@@ -347,17 +315,15 @@ public class TabEnderecoControlador implements Initializable {
 				}
 		
 				else {
-					
-					RA ra = new RA ();
-					ra.setRaID(intRA);
-					ra.setRaNome(strRA);
-	
+				
 					Endereco end = new Endereco ();
 					
 					end = tvLista.getSelectionModel().getSelectedItem();
 						
 					end.setEndLogradouro(tfLogradouro.getText());
+					// tabela relacionada - regiao adiministrativa //
 					end.setEndRAFK(ra);
+					
 					end.setEndCEP(tfCEP.getText());
 					end.setEndCidade(tfCidade.getText());
 					end.setEndUF(cbUF.getValue());
@@ -684,7 +650,7 @@ public class TabEnderecoControlador implements Initializable {
 		    com = new Componentes();
 		    com.popularTela(listNodeDadosEndereco, prefSizeWHeLayXY, p1);
 	    
-	    cbRA.setItems(olEndRA);
+	   // cbRA.setItems(olEndRA);
 	    cbUF.setItems(olEndUF);
 	    
 	    
@@ -721,6 +687,10 @@ public class TabEnderecoControlador implements Initializable {
 		       
 		    }
 		});
+
+		// para trazer o valor da entidade principal, no caso Endereco
+		//tcEndCid.setCellValueFactory(new PropertyValueFactory<Endereco, String>("endCEP")); // endCEP
+	    
 		
 		tcDesEnd.setPrefWidth(440);
 		tcEndRA.setPrefWidth(232);
@@ -740,15 +710,6 @@ public class TabEnderecoControlador implements Initializable {
 	    lblDataAtualizacao.setLayoutX(705);
 	    lblDataAtualizacao.setLayoutY(500);
 	  
-	    
-		// para trazer o valor da entidade principal, no caso Endereco
-		//tcEndCid.setCellValueFactory(new PropertyValueFactory<Endereco, String>("endCEP")); // endCEP
-	    
-	    cbRA.setItems(olEndRA);
-	    cbRA.setValue("Plano Piloto");
-	    cbUF.setItems(olEndUF);
-	    
-	    
 	    pEnderecoMapa.setPrefSize(930, 400);
 	    pEnderecoMapa.setLayoutX(25);
 	    pEnderecoMapa.setLayoutY(530);
@@ -760,28 +721,28 @@ public class TabEnderecoControlador implements Initializable {
 	    
 	    p1.getChildren().addAll(tvLista,lblDataAtualizacao, pEnderecoMapa);
 	    
+	    cbRA.setItems(ListasComboBox.obsListRA);
+	    cbRA.setValue("Plano Piloto");
+	    cbUF.setItems(olEndUF);
+	    
 	    cbRA.getSelectionModel().selectedIndexProperty().addListener(new
 	            ChangeListener<Number>() {
 	    	public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
-	    		Number value, Number new_value) {
-	    		
-	    		if ( (Integer) new_value !=  -1)
-	    		intRA = listaRA[(int) new_value];
-	    		
-	    		System.out.println("região adminsitrativa TABEndereco " + intRA);
-	    		System.out.println("região adminsitrativa TABEndereco " + strRA);
-	    		
+	    		Number old_value, Number new_value) {
+	    		// setar id da RA selecinada de acordo com a selecao no ComboBox
+	    		ra.setRaID((Integer) new_value + 1);
+
             }
 	    });
 	    
 	    cbRA.getSelectionModel()
 	    	.selectedItemProperty()
 	    	.addListener( 
-	    	(ObservableValue<? extends String> observable, String oldValue, String newValue) ->
-	    	
-	    	strRA = (String) newValue 
+	    	(ObservableValue<? extends String> observable, String old_value, String new_value) ->
+	    	// setar nome (descricao) da RA selecinada de acordo com a selecao no ComboBox
+	    	ra.setRaNome(new_value)
 	    );
-	    
+	 
 	    habilitarAcoesDosBotoes ();
 	    // ao abrir fechar os campos para edicao //
 	    modularBotoesInicial();
@@ -1005,6 +966,10 @@ public class TabEnderecoControlador implements Initializable {
 					
 					cbRA.setValue(end.getEndRAFK().getRaNome()); 
 					
+						// setar a RA selecinada de acordo com a selecao no TableView
+						ra.setRaID(end.getEndRAFK().getRaID());
+						ra.setRaNome(end.getEndRAFK().getRaNome());
+					
 					tfCEP.setText(end.getEndCEP());
 					tfCidade.setText(end.getEndCidade());
 					
@@ -1083,7 +1048,7 @@ public class TabEnderecoControlador implements Initializable {
 								
 								strDetalhes += "|" + i.getInterTipoInterferenciaFK().getTipoInterDescricao() 
 												+ "," + i.getInterBaciaFK().getBaciaNome()
-												+ "," + i.getInterUHFK().getUhID()
+												+ "," + i.getInterUHFK().getUhCodigo()
 												+ "," +  i.getInterSituacaoProcessoFK().getSituacaoProcessoDescricao();
 								
 							} // fim loop for

@@ -49,6 +49,7 @@ import javafx.util.Callback;
 import principal.Alerta;
 import principal.Componentes;
 import principal.FormatoData;
+import principal.ListasComboBox;
 
 public class TabInterferenciaControlador  implements Initializable{
 
@@ -88,23 +89,13 @@ public class TabInterferenciaControlador  implements Initializable{
 
 	Label lblDataAtualizacao = new Label();
 
-	int tipoInterferenciaID = 1;
-	String strTipoInterferencia = "Superficial";
-	final int [] listaTipoInterID = new int [] { 1,2,3,4,5,6,7 };
-
-
-	int tipoOutorgaID = 1;
-	final int [] listaTipoOutorgaID = new int [] { 1,2,3};
-
-	int subtipoOutorgaID = 1;
-	final int [] listaSubtipoOutorgaID = new int [] { 1,2,3,4};
-
-	int tipoAtoID = 1;
-	final int [] listaTipoAtoID = new int [] { 1,2,3,4,5,6 };
-
-	int situacaoProcessoID = 1;
-	final int [] listaSituacaoProcessoID = new int [] { 1,2,3,4,5,6,7,8 };
-
+	
+	TipoInterferencia tipoInterferencia = new TipoInterferencia();
+	TipoOutorga tipoOutorga = new TipoOutorga();
+	SubtipoOutorga subtipoOutorga = new SubtipoOutorga();
+	TipoAto tipoAto = new TipoAto();
+	SituacaoProcesso situacaoProcesso = new  SituacaoProcesso();
+	
 	/**
 	 * Habilitar os botoes para adicionar nova interferencia
 	 */
@@ -137,21 +128,6 @@ public class TabInterferenciaControlador  implements Initializable{
 
 	public void salvarInterferencia () {
 
-		TipoInterferencia tipoInterferencia = new TipoInterferencia();
-		tipoInterferencia.setTipoInterID(tipoInterferenciaID);
-		tipoInterferencia.setTipoInterDescricao(strTipoInterferencia);
-
-		TipoOutorga tipoOutorga = new TipoOutorga();
-		tipoOutorga.setTipoOutorgaID(tipoOutorgaID);
-
-		SubtipoOutorga subtipoOutorga = new SubtipoOutorga();
-		subtipoOutorga.setSubtipoOutorgaID(subtipoOutorgaID);
-
-		TipoAto tipoAto = new TipoAto();
-		tipoAto.setTipoAtoID(tipoAtoID);
-
-		SituacaoProcesso situacaoProcesso = new  SituacaoProcesso();
-		situacaoProcesso.setSituacaoProcessoID(situacaoProcessoID);
 
 		if (endereco == null) { // colocar na tabela que não pode ser nulo o id do endereco
 
@@ -161,10 +137,10 @@ public class TabInterferenciaControlador  implements Initializable{
 
 		} else {
 
-			if (tipoInterferenciaID == 2) {
+			if (tipoInterferencia.getTipoInterID() == 2) {
 
 				Subterranea sub = new Subterranea ();
-				sub = TabSubterraneaController.tabSubCon.getSubterranea();
+					sub = TabSubterraneaController.tabSubCon.getSubterranea();
 
 				if (sub.getSubTipoPocoFK() == null ||
 						sub.getSubCaesb() == null ||
@@ -184,9 +160,6 @@ public class TabInterferenciaControlador  implements Initializable{
 					sub.setInterSituacaoProcessoFK(situacaoProcesso);
 
 					sub.setIntAtualizacao(Timestamp.valueOf((LocalDateTime.now())));
-
-					//sub.setInterDataPublicacao(Date.valueOf(dpDataPublicacao.getValue()));
-					//sub.setInterDataVencimento(Date.valueOf(dpDataVencimento.getValue()));
 
 					if (dpDataPublicacao.getValue() == null) {
 						sub.setInterDataPublicacao(null);}
@@ -227,7 +200,7 @@ public class TabInterferenciaControlador  implements Initializable{
 			} // fim subterranea
 
 
-			else if (tipoInterferenciaID == 1) {
+			else if (tipoInterferencia.getTipoInterID() == 1) {
 
 				Superficial sup = TabSuperficialController.tabSupCon.getSuperficial();
 
@@ -342,30 +315,11 @@ public class TabInterferenciaControlador  implements Initializable{
 	//-- botao editar --//
 	public void editarInterferencia () {
 
-		TipoInterferencia tipoInterferencia = new TipoInterferencia();
-		tipoInterferencia.setTipoInterID(tipoInterferenciaID);
-		tipoInterferencia.setTipoInterDescricao(strTipoInterferencia);
-
-		TipoOutorga tipoOutorga = new TipoOutorga();
-		tipoOutorga.setTipoOutorgaID(tipoOutorgaID);
-
-		SubtipoOutorga subtipoOutorga = new SubtipoOutorga();
-		subtipoOutorga.setSubtipoOutorgaID(subtipoOutorgaID);
-
-		TipoAto tipoAto = new TipoAto();
-		tipoAto.setTipoAtoID(tipoAtoID);
-
-		SituacaoProcesso situacaoProcesso = new  SituacaoProcesso();
-		situacaoProcesso.setSituacaoProcessoID(situacaoProcessoID);
-
-
-		// ver excecao de querer editar sem esconlher o endereco da interferencia...
-
 		// habilitar os campos para edição //
 		if (cbTipoOutorga.isDisable()) {
 
 			// O tipo de interferência escolhido não pode ser editado
-			//cbTipoInterferencia.setDisable(false);
+				//cbTipoInterferencia.setDisable(false);
 			cbTipoOutorga.setDisable(false);
 			cbSubtipoOutorga.setDisable(false);
 			cbTipoAto.setDisable(false);
@@ -382,7 +336,7 @@ public class TabInterferenciaControlador  implements Initializable{
 
 		else {
 
-			if (tipoInterferenciaID == 2) {
+			if (tipoInterferencia.getTipoInterID() == 2) {
 				
 				Subterranea sub = new Subterranea ();
 				sub = TabSubterraneaController.tabSubCon.getSubterranea();
@@ -448,7 +402,7 @@ public class TabInterferenciaControlador  implements Initializable{
 			} // fim subterranea
 
 
-			else if (tipoInterferenciaID == 1) {
+			else if (tipoInterferencia.getTipoInterID() == 1) {
 				
 				Superficial sup = TabSuperficialController.tabSupCon.getSuperficial();
 
@@ -721,16 +675,13 @@ public class TabInterferenciaControlador  implements Initializable{
 		lblDataAtualizacao.setLayoutX(730);
 		lblDataAtualizacao.setLayoutY(530);
 
-
 		p1.getChildren().addAll(lblDataAtualizacao, tvLista);
 
-
-
-		cbTipoInterferencia.setItems(olTipoInterferencia);
-		cbTipoOutorga.setItems(olTipoOutorga);
-		cbSubtipoOutorga.setItems(olSubtipoOutorga);
-		cbTipoAto.setItems(olTipoAto);
-		cbSituacao.setItems(olSituacao);
+		cbTipoInterferencia.setItems(ListasComboBox.obsListTipoInterferencia);
+		cbTipoOutorga.setItems(ListasComboBox.obsListTipoOutorga);
+		cbSubtipoOutorga.setItems(ListasComboBox.obsListSubtipoOutorga);
+		cbTipoAto.setItems(ListasComboBox.obsListTipoAto);
+		cbSituacao.setItems(ListasComboBox.obsListSituacao);
 
 		// capturar o id do tipo de interferencia, se 1 - superficial, 2 - subterranea etc 
 		cbTipoInterferencia.getSelectionModel().selectedIndexProperty().addListener(new
@@ -738,24 +689,23 @@ public class TabInterferenciaControlador  implements Initializable{
 			public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
 					Number value, Number new_value) {
 
-				if ( (Integer) new_value !=  -1)
-					tipoInterferenciaID = listaTipoInterID [(int) new_value];
-
+				tipoInterferencia.setTipoInterID((Integer) new_value + 1);
+				System.out.println("id " + tipoInterferencia.getTipoInterID() + " descrição " + tipoInterferencia.getTipoInterDescricao());
+				
 				try {
-					abrirTabs(tipoInterferenciaID);
-				} catch (IOException e) {
-					System.out.println("erro ao abrirTabs" + e);
-
-				}
+					abrirTabs(tipoInterferencia.getTipoInterID());
+					} catch (IOException e) {
+						System.out.println("erro ao abrirTabs" + e);
+					}
 			}
 		});
-
+		
 		// capturar a descrição do tipo de interferência, se superficial, subterranea etc 
 		cbTipoInterferencia.getSelectionModel().selectedItemProperty().addListener( 
 
-				(ObservableValue<? extends String> observable, String oldValue, String newValue) ->
+				(ObservableValue<? extends String> observable, String old_value, String new_value) ->
 
-				strTipoInterferencia = (String) newValue
+				tipoInterferencia.setTipoInterDescricao(new_value)
 				);
 
 		// capturar o id tipo outorga
@@ -764,12 +714,19 @@ public class TabInterferenciaControlador  implements Initializable{
 			public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
 					Number value, Number new_value) {
 
-				if ( (Integer) new_value !=  -1)
-					tipoOutorgaID = listaTipoOutorgaID [(int) new_value];
-				//System.out.println("tipo outorga " + tipoOutorgaID);
+				tipoOutorga.setTipoOutorgaID((Integer )new_value + 1);
 
 			}
 		});
+		
+		cbTipoOutorga.getSelectionModel()
+	    	.selectedItemProperty()
+	    	.addListener( 
+	    	(ObservableValue<? extends String> observable, String old_value, String new_value) ->
+	    	// setar nome (descricao) da RA selecinada de acordo com a selecao no ComboBox
+	    	tipoOutorga.setTipoOutorgaDescricao(new_value)
+	    );
+		 
 
 		// capturar o id tipo outorga
 		cbSubtipoOutorga.getSelectionModel().selectedIndexProperty().addListener(new
@@ -777,12 +734,18 @@ public class TabInterferenciaControlador  implements Initializable{
 			public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
 					Number value, Number new_value) {
 
-				if ( (Integer) new_value !=  -1)
-					subtipoOutorgaID = listaSubtipoOutorgaID [(int) new_value];
-				//System.out.println("subtipo outorga " + subtipoOutorgaID);
+				subtipoOutorga.setSubtipoOutorgaID((Integer )new_value + 1);
 
 			}
 		});
+		
+		cbSubtipoOutorga.getSelectionModel()
+    	.selectedItemProperty()
+    	.addListener( 
+    	(ObservableValue<? extends String> observable, String old_value, String new_value) ->
+    		// setar nome (descricao) da Subtipo_Outorga selecinada de acordo com a selecao no ComboBox
+    		subtipoOutorga.setSubtipoOutorgaDescricao(new_value)
+    	);
 
 
 		// capturar o id tipo ato 
@@ -790,26 +753,36 @@ public class TabInterferenciaControlador  implements Initializable{
 				ChangeListener<Number>() {
 			public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
 					Number value, Number new_value) {
-
-				if ( (Integer) new_value !=  -1)
-					tipoAtoID = listaTipoAtoID [(int) new_value];
-				//System.out.println("situação " + tipoAtoID);
-
+				tipoAto.setTipoAtoID((Integer )new_value + 1);
+		
 			}
 		});
+		
+		cbTipoAto.getSelectionModel()
+    	.selectedItemProperty()
+    	.addListener( 
+    	(ObservableValue<? extends String> observable, String old_value, String new_value) ->
+    		// setar nome (descricao) da Tipo_Ato selecinada de acordo com a selecao no ComboBox
+    		tipoAto.setTipoAtoDescricao(new_value)
+    	);
+		
 
 		// capturar id tipo situação
 		cbSituacao.getSelectionModel().selectedIndexProperty().addListener(new
 				ChangeListener<Number>() {
 			public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
 					Number value, Number new_value) {
-
-				if ( (Integer) new_value !=  -1)
-					situacaoProcessoID = listaSituacaoProcessoID [(int) new_value];
-				//System.out.println("situação " + situacaoProcessoID);
-
+				situacaoProcesso.setSituacaoProcessoID((Integer )new_value + 1);
 			}
 		});
+		
+		cbSituacao.getSelectionModel()
+    	.selectedItemProperty()
+    	.addListener( 
+    	(ObservableValue<? extends String> observable, String old_value, String new_value) ->
+    	// setar nome (descricao) da RA selecinada de acordo com a selecao no ComboBox
+    	situacaoProcesso.setSituacaoProcessoDescricao(new_value)
+    	);
 
 		modularBotoes ();
 		habilitarAcoesDosBotoes ();
@@ -1235,6 +1208,22 @@ public class TabInterferenciaControlador  implements Initializable{
 					cbSubtipoOutorga.setValue(inter.getInterSubtipoOutorgaFK().getSubtipoOutorgaDescricao());
 					cbTipoAto.setValue(inter.getInterTipoAtoFK().getTipoAtoDescricao());
 					cbSituacao.setValue(inter.getInterSituacaoProcessoFK().getSituacaoProcessoDescricao());
+					
+					// setar as tabelas relacionadas
+						tipoInterferencia.setTipoInterID(inter.getInterTipoInterferenciaFK().getTipoInterID());
+						tipoInterferencia.setTipoInterDescricao(inter.getInterTipoInterferenciaFK().getTipoInterDescricao());
+						
+						tipoOutorga.setTipoOutorgaID(inter.getInterTipoOutorgaFK().getTipoOutorgaID());
+						tipoOutorga.setTipoOutorgaDescricao(inter.getInterTipoOutorgaFK().getTipoOutorgaDescricao());
+						
+						subtipoOutorga.setSubtipoOutorgaID(inter.getInterSubtipoOutorgaFK().getSubtipoOutorgaID());
+						subtipoOutorga.setSubtipoOutorgaDescricao(inter.getInterSubtipoOutorgaFK().getSubtipoOutorgaDescricao());
+						
+						tipoAto.setTipoAtoID(inter.getInterTipoAtoFK().getTipoAtoID());
+						tipoAto.setTipoAtoDescricao(inter.getInterTipoAtoFK().getTipoAtoDescricao());
+						
+						situacaoProcesso.setSituacaoProcessoID(inter.getInterSituacaoProcessoFK().getSituacaoProcessoID());
+						situacaoProcesso.setSituacaoProcessoDescricao(inter.getInterSituacaoProcessoFK().getSituacaoProcessoDescricao());
 
 
 					Date dPub = inter.getInterDataPublicacao();
@@ -1260,12 +1249,11 @@ public class TabInterferenciaControlador  implements Initializable{
 
 					setEndereco(inter.getInterEnderecoFK());
 
-					tipoInterferenciaID = inter.getInterTipoInterferenciaFK().getTipoInterID();
 
-					if (tipoInterferenciaID == 2) {
+					if (tipoInterferencia.getTipoInterID() == 2) {
 
 						try {
-							abrirTabs (tipoInterferenciaID);
+							abrirTabs (tipoInterferencia.getTipoInterID());
 						} catch (IOException e) {
 
 							e.printStackTrace();
@@ -1278,10 +1266,10 @@ public class TabInterferenciaControlador  implements Initializable{
 
 					}
 
-					if (tipoInterferenciaID == 1 || tipoInterferenciaID == 3) {
+					if (tipoInterferencia.getTipoInterID() == 1 || tipoInterferencia.getTipoInterID()  == 4) {
 
 						try {
-							abrirTabs (tipoInterferenciaID);
+							abrirTabs (tipoInterferencia.getTipoInterID());
 						} catch (IOException e) {
 
 							e.printStackTrace();

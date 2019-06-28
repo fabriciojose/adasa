@@ -190,7 +190,7 @@ public class MalaDireta {
 
 
 		/*
-		 * dados do endereco
+		 * dados do endereco do empreendimento
 		 */
 
 		if (endereco.getEndLogradouro() != null) {
@@ -398,6 +398,7 @@ public class MalaDireta {
 		} // FIM IF SUBTERRANEA
 
 
+			// dados da captacao - vazao listros dia
 		String strListrosDiaTag [] = {
 
 				"listros_dia_jan_tag",
@@ -416,8 +417,10 @@ public class MalaDireta {
 		};
 
 		String strListrosHoraTag [] = {
+				
+				// <litros_hora_jan_tag></litros_hora_jan_tag>
 
-				"litros_hora_jan_tag",
+				"litros_hora_jan_tag", 
 				"litros_hora_fev_tag",
 				"litros_hora_mar_tag",
 				"litros_hora_abr_tag",
@@ -434,6 +437,8 @@ public class MalaDireta {
 
 		String strPeriodoMesTag [] = {
 
+				// <periodo_mes_jan_tag></periodo_mes_jan_tag>
+				
 				"periodo_mes_jan_tag",
 				"periodo_mes_fev_tag",
 				"periodo_mes_mar_tag",

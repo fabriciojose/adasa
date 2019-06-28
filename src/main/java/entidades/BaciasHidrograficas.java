@@ -19,12 +19,6 @@ import org.hibernate.annotations.FetchMode;
 
 import com.vividsolutions.jts.geom.Geometry;
 
-
-
-
-
-
-
 @Entity
 @Table (name="Bacias_Hidrograficas")
 public class BaciasHidrograficas implements Serializable {

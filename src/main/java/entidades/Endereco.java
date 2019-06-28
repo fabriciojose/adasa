@@ -23,6 +23,8 @@ import org.hibernate.annotations.FetchMode;
 
 import com.vividsolutions.jts.geom.Geometry;
 
+
+
 @Entity
 public class Endereco implements Serializable{
 
@@ -221,7 +223,7 @@ public class Endereco implements Serializable{
 	public void setEndGeom(Geometry endGeom) {
 		this.endGeom = endGeom;
 	}
-
+	
 	public List<Interferencia> getInterferencias() {
 		return interferencias;
 	}

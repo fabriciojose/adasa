@@ -50,37 +50,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import principal.Alerta;
 import principal.Componentes;
+import principal.ListasComboBox;
 
 public class TabSuperficialController implements Initializable{
 
 	Superficial superficial = new Superficial();
-
-	ObservableList<String> olLocalCaptacao = FXCollections
-			.observableArrayList(
-
-					"Nascente",
-					"Rio",
-					"Reservatório",
-					"Canal",
-					"Lago Natural"
-
-					); 
-
-	ObservableList<String> olFormaCaptacao = FXCollections
-			.observableArrayList(
-					"Bombeamento" , 
-					"Gravidade"
-					); 
-
-	ObservableList<String> olMetodoIrrigacao = FXCollections
-			.observableArrayList(
-					"Aspersão"	,
-					"Gotejamento",
-					"Pivô",
-					"Manual",
-					"Aspersão/gotejamento"	
-
-					); 
 
 	ObservableList<String> olBarramento = FXCollections
 			.observableArrayList(
@@ -94,57 +68,18 @@ public class TabSuperficialController implements Initializable{
 					"Não"
 					); 
 
-	ObservableList<String>  olBacia = FXCollections
-			.observableArrayList(
+	BaciasHidrograficas bacia_hidrografica = new  BaciasHidrograficas();
+	UnidadeHidrografica unidade_hidrografica = new UnidadeHidrografica();
+	LocalCaptacao local_captacao = new LocalCaptacao();
+	FormaCaptacao forma_captacao = new FormaCaptacao();
+	MetodoIrrigacao metodo_irrigacao = new MetodoIrrigacao();
 
-					"Rio Corumbá"			,
-					"Rio Descoberto"		,
-					"Rio Paranã"			,
-					"Rio São Bartolomeu"	,
-					"Rio São Marcos"		,
-					"Rio Maranhão"			,
-					"Rio Paranoá"			,
-					"Rio Preto"	
-
-					); 
-
-	ObservableList<String> 	olUniHid = FXCollections
-			.observableArrayList(
-
-					"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20",
-					"21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41"
-					); 
-
-
-	int baciaID = 1;
-	final int [] listaBaciasID = new int [] { 1,2,3,4,5,6,7,8 };
-
-	int unidHidID = 1;
-	final int [] listaUHID = new int [] { 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,
-			22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41};
-
-	int localCaptacaoID = 1;
-	String strLocalCaptacao = "Nascente";
-	final int [] listaLocalCaptacao = new int [] { 1,2,3,4,5 };
-
-	int formaCaptacaoID = 1;
-	String strFormaCaptacao = "Bombeamento";
-	final int [] listaFormaCaptacao = new int [] { 1,2};
-
-	int metodoIrrigacaoID = 1;
-	String strMetodoIrrigacao = "Aspersão";
-	final int [] listaMetodoIrrigacao = new int [] { 1,2,3,4,5 };
-
-	
-
-	BaciasHidrograficas baciaHidrografica = new  BaciasHidrograficas();
-	UnidadeHidrografica unidadeHidrografica = new UnidadeHidrografica();
 
 	public Superficial getSuperficial () {
 
 		Superficial sup = superficial;
 
-		
+		// capturar coordenadas, caso esteja vazia de mensagem de erro
 		try {
 		// valores double de coordenadas - latitude e longitude
 		sup.setInterDDLatitude(Double.parseDouble(tfLatitude.getText()));
@@ -156,7 +91,6 @@ public class TabSuperficialController implements Initializable{
 			a.alertar(new Alert(Alert.AlertType.ERROR, "Coordenadas inválidas!!!", ButtonType.OK));
 			
 			e.printStackTrace();
-			
 			
 		}
 		
@@ -173,28 +107,17 @@ public class TabSuperficialController implements Initializable{
 
 		sup.setInterGeom(p);
 
-		// adicionar o id escolhido no combobox
-		baciaHidrografica.setBaciaID(baciaID);
-		unidadeHidrografica.setUhID(unidHidID);
-
-		LocalCaptacao lc = new LocalCaptacao();
-		lc.setLocalCatacaoID(localCaptacaoID);
-
-		FormaCaptacao fc = new FormaCaptacao();
-		fc.setFormaCaptacaoID(formaCaptacaoID);
-
-		MetodoIrrigacao mi = new MetodoIrrigacao();
-		mi.setMetodoIrrigacaoID(metodoIrrigacaoID);
-
+		sup.setInterBaciaFK(bacia_hidrografica);
+		sup.setInterUHFK(unidade_hidrografica);
+		
+		sup.setSupLocalCaptacaoFK(local_captacao);		// sup_Local; //-- () canal () rio () reservatório () lago natural () nascente
+		sup.setSupFormaCaptacaoFK(forma_captacao); // bombeamento gravidade 
+		sup.setSupMetodoIrrigacaoFK(metodo_irrigacao); // Aspersão Gotejamento Pivô Manual Aspersão/gotejamento
+		
 		sup.setSupBarramento(cbBarramento.getValue());
+		sup.setSupCaesb(cbCaesb.getValue());
 
-		sup.setInterBaciaFK(baciaHidrografica);
-		sup.setInterUHFK(unidadeHidrografica);
-
-		sup.setSupLocalCaptacaoFK(lc);		// sup_Local; //-- () canal () rio () reservatório () lago natural () nascente
-		sup.setSupFormaCaptacaoFK(fc); // bombeamento gravidade 
-		sup.setSupMetodoIrrigacaoFK(mi); // Aspersão Gotejamento Pivô Manual Aspersão/gotejamento
-
+	
 		if (dpDataOperacao.getValue() == null) {
 
 			sup.setSupDataOperacao(null);}
@@ -203,8 +126,7 @@ public class TabSuperficialController implements Initializable{
 
 		}
 
-		sup.setSupCaesb(cbCaesb.getValue());
-
+	
 		sup.setSupCorpoHidrico(tfCorpoHidrico.getText());
 		sup.setSupAreaIrrigada(tfAreaIrrigada.getText());
 		sup.setSupAreaContribuicao(tfAreaContribuicao.getText());
@@ -273,25 +195,15 @@ public class TabSuperficialController implements Initializable{
 		tfLatitude.setText(String.valueOf(sup.getInterDDLatitude()));
 		tfLongitude.setText(String.valueOf(sup.getInterDDLongitude()));
 
-		// valor geometry de  coordenadas latitude longitude
-		GeometryFactory geoFac = new GeometryFactory();
-
-		Point p = geoFac.createPoint(new Coordinate(
-				Double.parseDouble(tfLongitude.getText()),
-				Double.parseDouble(tfLatitude.getText()
-						)));
-
-		p.setSRID(4674);
-
-		sup.setInterGeom(p);
-
 		cbBaciaHidrografica.setValue(sup.getInterBaciaFK().getBaciaNome());
-		cbUnidadeHidrografica.setValue(String.valueOf(sup.getInterUHFK().getUhID()));
+		cbUnidadeHidrografica.setValue(String.valueOf(sup.getInterUHFK().getUhCodigo()));
 
 		cbLocalCaptacao.setValue(sup.getSupLocalCaptacaoFK().getLocalCaptacaoDescricao());
 		cbFormaCaptacao.setValue(sup.getSupFormaCaptacaoFK().getFormaCaptacaoDescricao());
 		cbMetodoIrrigacao.setValue(sup.getSupMetodoIrrigacaoFK().getMetodoIrrigacaoDescricao());
+		
 		cbBarramento.setValue(sup.getSupBarramento());
+		cbCaesb.setValue(sup.getSupCaesb());
 
 		if (sup.getSupDataOperacao() == null) {
 			dpDataOperacao.getEditor().clear();
@@ -307,8 +219,6 @@ public class TabSuperficialController implements Initializable{
 		tfAreaIrrigada.setText(sup.getSupAreaIrrigada());
 		tfAreaContribuicao.setText(sup.getSupAreaContribuicao());
 		tfAreaPropriedade.setText(sup.getSupAreaPropriedade());
-
-		cbCaesb.setValue(sup.getSupCaesb());
 
 		// FINALIDADES REQUERIDAS
 				FinalidadeRequerida fr = new FinalidadeRequerida(); 
@@ -346,12 +256,9 @@ public class TabSuperficialController implements Initializable{
 						System.out.println("TABSUPERFICIAL - finalidade já existente? Iterator " + ( f.getFinID() == fr.getFinID()));
 					}
 				}
-				System.out.println("tab SUP depois antes de adicionar fr " + sup.getFinalidades().size());
-
+		
 				sup.getFinalidades().add(fr);
 
-				System.out.println("tab SUP depois " + sup.getFinalidades().size());
-				
 				
 				// FINALIDADES AUTORIZADAS
 				FinalidadeAutorizada fa = new FinalidadeAutorizada();
@@ -389,12 +296,9 @@ public class TabSuperficialController implements Initializable{
 						System.out.println("TabSUPERFICIAL - finalidade autorizada já existente? Iterator " + ( f.getFinID() == fa.getFinID()));
 					}
 				}
-				System.out.println("tab SUP depois antes de adicionar fa " + sup.getFinalidades().size());
-
+			
 				sup.getFinalidades().add(fa);
 
-				System.out.println("tab SUP depois finalida autorizada " + sup.getFinalidades().size());
-		
 		this.superficial = sup;
 
 	}
@@ -410,84 +314,108 @@ public class TabSuperficialController implements Initializable{
 
 		inicializarComponentes();
 
-		cbBaciaHidrografica.setItems(olBacia);
-		cbUnidadeHidrografica.setItems(olUniHid);
-		cbLocalCaptacao.setItems(olLocalCaptacao);
-		cbFormaCaptacao.setItems(olFormaCaptacao);
-		cbMetodoIrrigacao.setItems(olMetodoIrrigacao);
+		cbBaciaHidrografica.setItems(ListasComboBox.obsListBacia);
+		cbUnidadeHidrografica.setItems(ListasComboBox.obsListUH);
+		cbLocalCaptacao.setItems(ListasComboBox.obsListLocalCaptacao);
+		cbFormaCaptacao.setItems(ListasComboBox.obsListFormaCaptacao);
+		cbMetodoIrrigacao.setItems(ListasComboBox.obsListMetodoIrrigacao);
+		
 		cbBarramento.setItems(olBarramento);
 		cbCaesb.setItems(olCaesb);
 
 		cbBaciaHidrografica.getSelectionModel().selectedIndexProperty().addListener(new
 				ChangeListener<Number>() {
 			public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
-					Number value, Number new_value) {
+					Number old_value, Number new_value) {
 
-				if ( (Integer) new_value !=  -1)
-
-					baciaID = listaBaciasID [(int) new_value];
-
-				//System.out.println(" bacia id" + baciaID);
+				bacia_hidrografica.setBaciaID((Integer) new_value + 1); 
+				//System.out.println("bacia hidrografica id " + bacia_hidrografica.getBaciaID());
 
 			}
 		});
+		
+		cbBaciaHidrografica.getSelectionModel()
+    	.selectedItemProperty()
+    	.addListener( 
+    	(ObservableValue<? extends String> observable, String old_value, String new_value) ->
+
+    		bacia_hidrografica.setBaciaNome(new_value)
+    		//System.out.println("bacia hidrografica nome " + new_value)
+    	);
 
 		cbUnidadeHidrografica.getSelectionModel().selectedIndexProperty().addListener(new
 				ChangeListener<Number>() {
 			public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
-					Number value, Number new_value) {
+					Number old_value, Number new_value) {
 
-				if ( (Integer) new_value !=  -1)
-					unidHidID = listaUHID [(int) new_value];
-
-				//System.out.println("unidade hidr selecionada " + unidHidID);
+				unidade_hidrografica.setUhID((Integer) new_value + 1);
+				//System.out.println("id unidade hidrografica " + unidade_hidrografica.getUhID());
 
 			}
 		});
-
-
+		
+		cbUnidadeHidrografica.getSelectionModel()
+    	.selectedItemProperty()
+    	.addListener( 
+    	(ObservableValue<? extends String> observable, String old_value, String new_value) ->
+    
+    	unidade_hidrografica.setUhCodigo(Integer.parseInt(new_value))
+    	//System.out.println("uh código " + new_value)
+    	);
+		
 		cbLocalCaptacao.getSelectionModel().selectedIndexProperty().addListener(new
 				ChangeListener<Number>() {
 			public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
-					Number value, Number new_value) {
-
-				if ( (Integer) new_value !=  -1)
-
-					localCaptacaoID = listaLocalCaptacao [(int) new_value];
-
-				//System.out.println("+++ local captacao id " + localCaptacaoID);
-
+					Number old_value, Number new_value) {
+				
+				local_captacao.setLocalCatacaoID((Integer) new_value + 1); 
+				//System.out.println("local captacao id " + local_captacao.getLocalCatacaoID());
 			}
 		});
-
+		
+		cbLocalCaptacao.getSelectionModel()
+	    	.selectedItemProperty()
+	    	.addListener( 
+	    	(ObservableValue<? extends String> observable, String old_value, String new_value) ->
+	    	 
+	    	local_captacao.setLocalCaptacaoDescricao(new_value)
+	    );
+	 
+		
 		cbFormaCaptacao.getSelectionModel().selectedIndexProperty().addListener(new
 				ChangeListener<Number>() {
 			public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
 					Number value, Number new_value) {
 
-				if ( (Integer) new_value !=  -1)
-
-					formaCaptacaoID = listaFormaCaptacao [(int) new_value];
-
-				//System.out.println("---------------------------- forma captacao id " + formaCaptacaoID);
-
+				forma_captacao.setFormaCaptacaoID((Integer) new_value + 1); 
+				//System.out.println("forma captacao id " + forma_captacao.getFormaCaptacaoID());
 			}
 		});
 
+		cbFormaCaptacao.getSelectionModel()
+    	.selectedItemProperty()
+    	.addListener( 
+    	(ObservableValue<? extends String> observable, String old_value, String new_value) ->
+    	 		forma_captacao.setFormaCaptacaoDescricao(new_value)
+        );
+		
 		cbMetodoIrrigacao.getSelectionModel().selectedIndexProperty().addListener(new
 				ChangeListener<Number>() {
 			public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
 					Number value, Number new_value) {
 
-				if ( (Integer) new_value !=  -1)
-
-					metodoIrrigacaoID = listaMetodoIrrigacao [(int) new_value];
-
-				//System.out.println("/////////////////////////////////////////////// metodo irrigacao id " + metodoIrrigacaoID);
+				metodo_irrigacao.setMetodoIrrigacaoID((Integer) new_value + 1); 
+				//System.out.println("metodo irrigacao id " + metodo_irrigacao.getMetodoIrrigacaoID());
 
 			}
 		});
-
+		
+		cbMetodoIrrigacao.getSelectionModel()
+    	.selectedItemProperty()
+    	.addListener( 
+    	(ObservableValue<? extends String> observable, String old_value, String new_value) ->
+    		metodo_irrigacao.setMetodoIrrigacaoDescricao(new_value)
+    	);
 
 		tfPotenciaBomba.lengthProperty().addListener(new ChangeListener<Number>() {
 

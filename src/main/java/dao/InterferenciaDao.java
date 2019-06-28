@@ -12,6 +12,7 @@ import org.hibernate.sql.JoinType;
 
 import entidades.HibernateUtil;
 import entidades.Interferencia;
+import entidades.ModelosHTML;
 
 public class InterferenciaDao {
 	
@@ -22,6 +23,18 @@ public class InterferenciaDao {
 		s.save(interferencia);
 		s.getTransaction().commit();
 		s.close();
+		
+	}
+	
+	public Interferencia obterInterferenciaPorID (Integer interID) {
+		
+		Session s = HibernateUtil.getSessionFactory().openSession();
+		
+		s.beginTransaction();
+		
+		Interferencia interferencia = s.get(Interferencia.class, interID);
+		
+		return interferencia;
 		
 	}
 	
