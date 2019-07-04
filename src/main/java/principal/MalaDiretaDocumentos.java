@@ -339,7 +339,7 @@ public class MalaDiretaDocumentos {
 					break;
 				} // fim while
 
-				System.out.println(listMalaDireta.get(i)[0][ii].getClass().getName());
+				//System.out.println(listMalaDireta.get(i)[0][ii].getClass().getName());
 
 			}
 

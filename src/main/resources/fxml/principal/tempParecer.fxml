@@ -79,6 +79,7 @@
             <Button layoutX="850.0" layoutY="220.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" text="limpar" />
             <Button layoutX="850.0" layoutY="255.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" text="remover" />
             <Button layoutX="14.0" layoutY="386.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="833.0" text="GERAR PARECER" />
+            <Button layoutX="850.0" layoutY="389.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" text="excel" />
          </children>
       </Pane>
    </children>

@@ -44,9 +44,8 @@ public class ModelosDao {
 				"SELECT mod FROM ModelosHTML AS mod "
 						+ "WHERE ( mod.modIdentificacao LIKE '%"+strPesquisa+"%')" 
 				).list();
-		
-		s.beginTransaction();
-		
+
+
 		s.getTransaction().commit();
 		s.close();
 		return list;

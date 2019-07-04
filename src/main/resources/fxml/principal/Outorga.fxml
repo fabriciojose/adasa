@@ -14,7 +14,7 @@
           	<Tab fx:id="tpTabInterferencia" styleClass="tabPaneClass" text="INTERFERÊNCIA" />
           	<Tab fx:id="tpTabUsuario" styleClass="tabPaneClass" text="  USUÁRIO  " />
           	<Tab fx:id="tpTabParecer" styleClass="tabPaneClass" text="  PARECER  " />
-          	<Tab fx:id="tpTabAtoAdministrativo" styleClass="tabPaneClass" text="    ATOS    " />
+          	<Tab fx:id="tpTabAtosOutorga" styleClass="tabPaneClass" text="    ATOS    " />
          </tabs>
          <cursor>
             <Cursor fx:constant="DEFAULT" />

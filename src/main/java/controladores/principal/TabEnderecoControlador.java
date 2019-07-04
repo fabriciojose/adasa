@@ -1001,6 +1001,7 @@ public class TabEnderecoControlador implements Initializable {
 					 TabInterferenciaControlador.controladorAtendimento.setEndereco(end);
 					 TabUsuarioControlador.controladorAtendimento.setEndereco(end);
 					 TabParecerControlador.controladorAtendimento.setEndereco(end);
+					 TabAtosOutorgaControlador.controladorAtendimento.setEndereco(end);
 			
 				 	}
 				     
@@ -1008,12 +1009,14 @@ public class TabEnderecoControlador implements Initializable {
 				    	TabInterferenciaControlador.controladorFiscalizacao.setEndereco(end);
 				    	TabUsuarioControlador.controladorFiscalizacao.setEndereco(end);
 				    	TabParecerControlador.controladorFiscalizacao.setEndereco(end);
+				    	TabAtosOutorgaControlador.controladorFiscalizacao.setEndereco(end);
 				    }
 				    
 				    if (intControlador == 2) {
 				    	TabInterferenciaControlador.controladorOutorga.setEndereco(end);
 				    	TabUsuarioControlador.controladorOutorga.setEndereco(end);
 				    	TabParecerControlador.controladorOutorga.setEndereco(end);
+				    	TabAtosOutorgaControlador.controladorOutorga.setEndereco(end);
 				    }
 					
 					/* caso não haja demanda relacionada ao endereco, setar demanda vazia */

@@ -32,7 +32,7 @@ public class MalaDireta {
 	/*
 	 * Dados das finalidades
 	 */
-	List<String> supplierNames;
+	//List<String> supplierNames;
 
 	List<String> listVariaveisFinalidades = Arrays.asList("frFinalidade1", "frFinalidade2", "frFinalidade3", "frFinalidade4", "frFinalidade5");
 	List<String> listVariaveisSubfinaldades = Arrays.asList("frSubfinalidade1", "frSubfinalidade2", "frSubfinalidade3", "frSubfinalidade4", "frSubfinalidade5");
@@ -355,7 +355,7 @@ public class MalaDireta {
 			String strPosicoesRequerimentoSubterranea  [] = {
 
 					"inter_tipo_outorga_tag", 
-					"inter_tipocaptacao_tag", 
+					"inter_tipo_poco_tag", //  <inter_tipo_poco_tag></inter_tipo_poco_tag>
 					"inter_caesb_tag", 
 					"inter_vazao_tag", 
 					"inter_nivel_est_tag", 

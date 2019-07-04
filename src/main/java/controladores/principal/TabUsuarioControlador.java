@@ -92,7 +92,7 @@ public class TabUsuarioControlador implements Initializable {
 		}
 
 
-		System.out.println("tabUsuario setEndereco" + endereco.getEndLogradouro());
+		//System.out.println("tabUsuario setEndereco" + endereco.getEndLogradouro());
 
 
 	}

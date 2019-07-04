@@ -27,6 +27,9 @@ public class ControladorOutorga {
 				
 					@FXML Tab tpTabParecer;
 					String strPar = "/fxml/principal/TabParecer.fxml";
+					
+						@FXML Tab tpTabAtosOutorga;
+						String strAtosOutorga = "/fxml/principal/TabAtosOutorga.fxml";
 				
 				
 	
@@ -41,6 +44,7 @@ public class ControladorOutorga {
 				abrirTab (new Pane() ,  new TabInterferenciaControlador(2), strInt, tpTabInterferencia );
 					abrirTab (new Pane() ,  new TabUsuarioControlador(2), strUs, tpTabUsuario );
 						abrirTab (new Pane() ,  new TabParecerControlador(2), strPar, tpTabParecer );
+							abrirTab (new Pane() ,  new TabAtosOutorgaControlador(2), strAtosOutorga, tpTabAtosOutorga );
 		
 	}
 	

@@ -441,6 +441,8 @@ public class TabDocumentoControlador implements Initializable {
 
 						"Requerimento de Outorga"	,
 						"Solicitação",
+						"Despacho"	,
+						"Registro",
 						"Ofício"	,
 						"Carta",
 						"Memorando"	,

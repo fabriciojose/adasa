@@ -1,5 +1,8 @@
 package controladores.principal;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
@@ -7,9 +10,15 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
+
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 
 import dao.DocumentoDao;
 import dao.ModelosDao;
@@ -18,6 +27,7 @@ import entidades.Endereco;
 import entidades.Finalidade;
 import entidades.FinalidadeAutorizada;
 import entidades.FinalidadeRequerida;
+import entidades.GetterAndSetter;
 import entidades.Interferencia;
 import entidades.ModelosHTML;
 import entidades.Parecer;
@@ -199,11 +209,13 @@ public class TabParecerControlador implements Initializable {
 	Componentes com;
 	Double prefSizeWHeLayXY [][];
 	
+	// inicializacao do endereco relacionado
 	Pane pEndereco;
 		Label lblEndereco;
 		Button btnEndereco;
 		ArrayList<Node> componentesEndereco = new ArrayList<Node>();
 	
+	// inicializacao dos dados basicos de cadastro
 	Pane pDadosParecer;
 		TextField tfDocumento;
   		TextField tfSEI;
@@ -214,6 +226,7 @@ public class TabParecerControlador implements Initializable {
   		
   		ArrayList<Node> componentesParecer = new ArrayList<Node>();
 	
+  		// inicializacao dos botoes de persistencia
 		Pane  pPersistencia;
   		Button btnNovo;
 		Button btnSalvar;
@@ -227,15 +240,20 @@ public class TabParecerControlador implements Initializable {
 		
 		Pane pUsuario;
 
+		// table view para visualizar todos os atos da outorga ou pesquisar um especifico
 		TableView<Usuario> tvUsuarios;
 		TableColumn<Usuario, String> tcNomeUsuario = new TableColumn<Usuario, String>("Nome");
 		TableColumn<Usuario, String> tcCPFCNPJ = new TableColumn<Usuario, String>("CPF/CNPJ");
 		ObservableList<Usuario> obsListUsuario = FXCollections.observableArrayList();
+		
+		// listar usuarios
 		Set<Usuario> setListUsuarios; 
 
+		// combobox para listar enderecos
 		ComboBox<Endereco> cbEndereco;		
 		ObservableList<Endereco> obsListEnderecos = FXCollections.observableArrayList();
 		
+		// combobox para listar documentos
 		ComboBox<Documento> cbDocumento;		
 		ObservableList<Documento> obsListDocumentos = FXCollections.observableArrayList();
 		
@@ -247,11 +265,10 @@ public class TabParecerControlador implements Initializable {
 		TableColumn<Interferencia, String> tcSituacaoInterferencia  = new TableColumn<>("Situação");
 		ObservableList<Interferencia> obsListInterferencia = FXCollections.observableArrayList();
 
-  	
 		Button btnUsuario;
 		Button btnParecer;
-		
-		Button btnSelecao, btnInterferencia, btn3, btn4;
+	
+		Button btnLimpaListaMalaDireta, btnRemoveInterferenciaMalaDireta, btnExcel;
 		ComboBox<ModelosHTML> cbModelosHTML;
 			ObservableList<ModelosHTML> obsListModelosHTML = FXCollections.observableArrayList();
 		
@@ -356,34 +373,32 @@ public class TabParecerControlador implements Initializable {
 		componentesDocumento.add(new Label("MODELOS:"));
 		componentesDocumento.add(cbModelosHTML = new ComboBox<>());
 
-		componentesDocumento.add(btnSelecao = new Button("limpar"));
-		componentesDocumento.add(btnInterferencia = new Button("remover"));
+		componentesDocumento.add(btnLimpaListaMalaDireta = new Button("limpar"));
+		componentesDocumento.add(btnRemoveInterferenciaMalaDireta = new Button("remover"));
 
 		componentesDocumento.add(btnParecer = new Button("GERAR PARECER"));
+		componentesDocumento.add(btnExcel = new Button("excel"));
 
 		prefSizeWHeLayXY = new Double [][] { 
 
 			{930.0,431.0,25.0,480.0},
 			{70.0,25.0,850.0,10.0},
 			{420.0,30.0,14.0,41.0},
-			
-			{420.0,300.0,14.0,71.0}, // tableview ususario
-			
+			//--- TableView --
+			{420.0,300.0,14.0,71.0},
 			{400.0,30.0,444.0,41.0},
 			{400.0,30.0,444.0,71.0},
 			{400.0,30.0,444.0,101.0},
 			{400.0,30.0,444.0,131.0},
 			{400.0,30.0,444.0,161.0},
-			
-			{400.0,120.0,444.0,191.0}, // tableView interferencia
-			
+			//--- TableView --
+			{400.0,120.0,444.0,191.0},
 			{400.0,30.0,444.0,311.0},
 			{400.0,30.0,444.0,341.0},
-			
 			{70.0,25.0,850.0,220.0},
 			{70.0,25.0,850.0,255.0},
-			
 			{833.0,30.0,14.0,386.0},
+			{70.0,25.0,850.0,389.0},
 
 		};
 
@@ -714,6 +729,7 @@ public class TabParecerControlador implements Initializable {
 							cbDocumento.getSelectionModel().getSelectedItem(),
 							tvUsuarios.getSelectionModel().getSelectedItem(),
 							tvInterferencia.getSelectionModel().getSelectedItem(),
+							cbEndereco.getSelectionModel().getSelectedItem()
 							},
 						} ;
 				
@@ -808,6 +824,9 @@ public class TabParecerControlador implements Initializable {
 	    btnNovo.setDisable(false);
 	}
 
+	
+	List<ModelosHTML> docList;
+	
 	public void acionarBotoes() {
 
 		btnNovo.setOnAction(new EventHandler<ActionEvent>() {
@@ -855,7 +874,7 @@ public class TabParecerControlador implements Initializable {
 
 					ModelosDao mDao = new  ModelosDao();
 
-					List<ModelosHTML> docList = mDao.listarModelo("");
+					docList = mDao.listarModelo("");
 
 					for (ModelosHTML d : docList) {
 						obsListModelosHTML.add(d);
@@ -890,23 +909,48 @@ public class TabParecerControlador implements Initializable {
 
 
 				String modeloHTML = cbModelosHTML.getSelectionModel().getSelectedItem().getModConteudo();
-
+				
 				MalaDiretaDocumentos mlDoc = new MalaDiretaDocumentos(modeloHTML, documento, listMalaDireta);
 				String strHTML = mlDoc.criarDocumento();
 				
-				try { ControladorNavegacao.conNav.setHTML(strHTML); } 
-				catch (Exception ee) {
+				try { ControladorNavegacao.conNav.setHTML(strHTML);
+				
+				
+				
+				String strAnexoParecer = obsListModelosHTML.get(6).getModConteudo();
+				
+				
+				String strTabela1 = obsListModelosHTML.get(7).getModConteudo();
+				String strTabela2 = obsListModelosHTML.get(3).getModConteudo();
+				
+				strAnexoParecer = strAnexoParecer.replace("\"", "'");
+				strAnexoParecer = strAnexoParecer.replace("\n", "");
+				strAnexoParecer =  "\"" + strAnexoParecer + "\"";
+		
+				ObservableList<Interferencia> obsListInterferencia = FXCollections.observableArrayList();
+				
+				for (int i=0; i<listMalaDireta.size();i++) {
+					
+					obsListInterferencia.add((Interferencia) listMalaDireta.get(i)[0][2]);
+					
+				}
+			
+				ControladorNavegacao.conNav.setObjetosAnexo(listMalaDireta, obsListInterferencia, strAnexoParecer, strTabela1, strTabela2);
+				
+				
+				} catch (Exception ee) {
 
 					Alerta a = new Alerta ();
 					a.alertar(new Alert(Alert.AlertType.ERROR, "Inicialize o navegador SEI !!!", ButtonType.OK));
 				}
+				
 
 			}
 
 		});
 
 		// inicializar tela usuario
-		btnSelecao.setOnAction(new EventHandler<ActionEvent>() {
+		btnLimpaListaMalaDireta.setOnAction(new EventHandler<ActionEvent>() {
 			@Override public void handle(ActionEvent e) {
 
 				listMalaDireta.clear();
@@ -915,7 +959,7 @@ public class TabParecerControlador implements Initializable {
 		});
 
 		// inicializar tela usuario
-		btnInterferencia.setOnAction(new EventHandler<ActionEvent>() {
+		btnRemoveInterferenciaMalaDireta.setOnAction(new EventHandler<ActionEvent>() {
 			@Override public void handle(ActionEvent e) {
 				
 				System.out.println(listMalaDireta.size());
@@ -931,6 +975,137 @@ public class TabParecerControlador implements Initializable {
 				for (int i=0; i<listMalaDireta.size();i++) {
 					System.out.println(i +  ": " + listMalaDireta.get(i));
 				}
+			
+			}
+		});
+		
+		List<String> listVariaveisVazaoHoraAutorizadas = Arrays.asList(
+
+				"faQHoraJan","faQHoraFev","faQHoraMar","faQHoraAbr","faQHoraMai","faQHoraJun",
+				"faQHoraJul","faQHoraAgo","faQHoraSet","faQHoraOut","faQHoraNov","faQHoraDez"
+
+				);
+
+		List<String> listVariaveisTempoAutorizadas = Arrays.asList(
+
+				"faTempoCapJan","faTempoCapFev","faTempoCapMar","faTempoCapAbr","faTempoCapMai","faTempoCapJun",
+				"faTempoCapJul","faTempoCapAgo","faTempoCapSet","faTempoCapOut","faTempoCapNov","faTempoCapDez"
+
+				);
+		
+		// inicializar tela usuario
+		btnExcel.setOnAction(new EventHandler<ActionEvent>() {
+			@Override public void handle(ActionEvent e) {
+				
+				System.out.println("C:/Users/" + System.getProperty("user.name") + "/Documents/outorgasEmitidas.xls");
+		
+				 String s = Timestamp.valueOf((LocalDateTime.now())).toString();
+				 
+				 	s = s.replace(":", "");
+					s = s.replace("-", "");
+					s = s.replace(".", "");
+					s = s.replace(" ", "");
+				
+				final String fileName = "C:/Users/" + System.getProperty("user.name") + "/Documents/outorgas" + s + ".xls";
+	
+				HSSFWorkbook workbook = new HSSFWorkbook();
+				           HSSFSheet sheetOutorgas = workbook.createSheet("Outorgas");
+				           
+				           GetterAndSetter gs  = new GetterAndSetter();
+				           
+				           for (int i = 0; i<listMalaDireta.size(); i++) {
+				           	
+				           	Row row = sheetOutorgas.createRow(i);
+				           	
+				           		// Subsistema - Interferencia  	
+				               Cell cellSubsistema = row.createCell(5);
+						             
+				               		cellSubsistema.setCellValue(((Subterranea)listMalaDireta.get(i)[0][2]).getSubSubSistemaFK().getSubDescricao());
+				           	
+				           		// Usuario listMalaDireta.get(i)[0][1]
+				                Cell cellNome = row.createCell(6);
+				                
+				                	cellNome.setCellValue(((Usuario)listMalaDireta.get(i)[0][1]).getUsNome());
+				                	
+				                Cell cellCPF = row.createCell(7);
+						                
+				                	cellCPF.setCellValue(((Usuario)listMalaDireta.get(i)[0][1]).getUsCPFCNPJ());	
+				                	
+				                
+				                	
+				               // Endereco do Empreendimento listMalaDireta.get(i)[0][3] 	
+				               Cell cellEnderecoEmpreendimento = row.createCell(8);
+						                
+				                	cellEnderecoEmpreendimento.setCellValue(((Endereco)listMalaDireta.get(i)[0][3]).getEndLogradouro());	
+				                
+				                // Interferencia listMalaDireta.get(i)[0][2]	
+				                Cell cellInterferenciaLatitude = row.createCell(10);
+						                
+				                	cellInterferenciaLatitude.setCellValue(((Interferencia)listMalaDireta.get(i)[0][2]).getInterDDLatitude());	
+					                
+					                
+					            Cell cellInterferenciaLongitude= row.createCell(11);
+					                
+					            	cellInterferenciaLongitude.setCellValue(((Interferencia)listMalaDireta.get(i)[0][2]).getInterDDLongitude());
+					            	
+					            Cell cellInterferenciaTipoPoco = row.createCell(12);
+						                
+					            	cellInterferenciaTipoPoco.setCellValue(((Subterranea)listMalaDireta.get(i)[0][2]).getSubTipoPocoFK().getTipoPocoDescricao());
+				                	
+				               
+					            Cell cellInterferenciaProcesso = row.createCell(18);
+						                
+					            	cellInterferenciaProcesso.setCellValue(((Documento)listMalaDireta.get(i)[0][0]).getDocProcessoFK().getProSEI());
+					            	
+					            for (Finalidade f : ((Interferencia) listMalaDireta.get(i)[0][2]).getFinalidades()) {
+					            	
+					            	if ( f.getClass().getName() == "entidades.FinalidadeAutorizada") {
+				    					
+				    					for (int ii = 41; ii<53; ii++) {
+				    						
+				    						Cell c = row.createCell(ii);
+				    						 	c.setCellValue( (((Subterranea)listMalaDireta.get(i)[0][2]).getSubVazao() ));
+				    						
+				    					}
+				    					
+				    					
+				    					for (int ii = 65; ii<77; ii++) {
+				    				
+				    						Cell c = row.createCell(ii);
+				    						 	c.setCellValue( (gs.callGetter(f, listVariaveisVazaoHoraAutorizadas.get(i))));
+				    						
+				    					}
+				    					
+				    					for (int ii = 77; ii<89; ii++) {
+						    				
+				    						Cell c = row.createCell(ii);
+				    						 	c.setCellValue( (gs.callGetter(f, listVariaveisTempoAutorizadas.get(i))));
+				    						
+				    					}
+				    					
+				    					
+					            	}
+				    					
+					            	
+					            }
+					          
+				           	 
+				           }
+				         
+				           try {
+				                    FileOutputStream out = new FileOutputStream(new File(fileName));
+				                    workbook.write(out);
+				                    out.close();
+				                    System.out.println("Arquivo Excel criado com sucesso!");
+				                      
+				                } catch (FileNotFoundException ffe) {
+				                ffe.printStackTrace();
+				                       System.out.println("Arquivo não encontrado!");
+				                } catch (IOException ioe) {
+				                ioe.printStackTrace();
+				                       System.out.println("Erro na edição do arquivo!");
+				                }
+				
 			
 			}
 		});
