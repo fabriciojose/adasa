@@ -226,7 +226,15 @@ public class MalaDiretaAnexoParecer {
 		}
 		
 		
-		try { docHtml.select("inter_tipo_poco_tag").prepend(((Subterranea)listMalaDireta.get(in)[0][2]).getInterTipoInterferenciaFK().getTipoInterDescricao());} catch (Exception e) {docHtml.select("us_cpfcnpj_tag").prepend("");};
+		try { docHtml.select("inter_lat_tag").prepend(
+				((Subterranea)listMalaDireta.get(in)[0][2]).getInterDDLatitude()
+				+ "," +
+				((Subterranea)listMalaDireta.get(in)[0][2]).getInterDDLongitude())
+			;
+		
+		} catch (Exception e) {docHtml.select("us_cpfcnpj_tag").prepend("");};
+		
+		try { docHtml.select("inter_tipo_poco_tag").prepend(((Subterranea)listMalaDireta.get(in)[0][2]).getSubTipoPocoFK().getTipoPocoDescricao());} catch (Exception e) {docHtml.select("us_cpfcnpj_tag").prepend("");};
 		try { docHtml.select("inter_prof_tag").prepend(((Subterranea)listMalaDireta.get(in)[0][2]).getSubProfundidade());} catch (Exception e) {docHtml.select("us_cpfcnpj_tag").prepend("");};
 		try { docHtml.select("inter_nivel_est_tag").prepend(((Subterranea)listMalaDireta.get(in)[0][2]).getSubEstatico());} catch (Exception e) {docHtml.select("us_cpfcnpj_tag").prepend("");};
 		try { docHtml.select("inter_niv_din_tag").prepend(((Subterranea)listMalaDireta.get(in)[0][2]).getSubDinamico());} catch (Exception e) {docHtml.select("us_cpfcnpj_tag").prepend("");};

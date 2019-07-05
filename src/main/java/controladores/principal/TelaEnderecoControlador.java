@@ -13,6 +13,7 @@ import java.util.Set;
 import dao.EnderecoDao;
 import entidades.Documento;
 import entidades.Endereco;
+import entidades.Interferencia;
 import entidades.RA;
 import entidades.Usuario;
 import javafx.beans.property.SimpleStringProperty;
@@ -548,6 +549,23 @@ public class TelaEnderecoControlador implements Initializable {
 									end.setEndUsuarioFK(us);
 								
 							}
+							
+							
+							else if (objetoDeEdicao.getClass().getName().equals("entidades.Interferencia")) {
+								
+								Interferencia inter = (Interferencia) objetoDeEdicao;
+								//us.setUsDataAtualizacao(Timestamp.valueOf((LocalDateTime.now())));
+								
+									// adiciona este endereco no setEnderecos do usuario
+									inter.setInterEnderecoFK(end);
+									
+									List<Interferencia> iList = end.getInterferencias();
+								
+									end.setInterferencias(iList);
+									
+								
+							}
+							
 							
 							EnderecoDao endDao = new EnderecoDao();
 							

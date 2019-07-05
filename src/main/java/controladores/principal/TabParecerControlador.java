@@ -902,6 +902,8 @@ public class TabParecerControlador implements Initializable {
 
 			}
 		});
+		
+		ObservableList<String> obsListUsuariosMalaDireta = FXCollections.observableArrayList();
 
 		// inicializar tela usuario
 		btnParecer.setOnAction(new EventHandler<ActionEvent>() {
@@ -927,15 +929,20 @@ public class TabParecerControlador implements Initializable {
 				strAnexoParecer = strAnexoParecer.replace("\n", "");
 				strAnexoParecer =  "\"" + strAnexoParecer + "\"";
 		
-				ObservableList<Interferencia> obsListInterferencia = FXCollections.observableArrayList();
+				obsListUsuariosMalaDireta.clear();
 				
 				for (int i=0; i<listMalaDireta.size();i++) {
 					
-					obsListInterferencia.add((Interferencia) listMalaDireta.get(i)[0][2]);
+					obsListUsuariosMalaDireta.add(
+							((Usuario)listMalaDireta.get(i)[0][1]).getUsNome()
+							+ ", " 
+							+ ((Endereco)listMalaDireta.get(i)[0][3]).getEndLogradouro()
+							+ ((Interferencia)listMalaDireta.get(i)[0][2]).getInterSubtipoOutorgaFK().getSubtipoOutorgaDescricao()
+							);
 					
 				}
 			
-				ControladorNavegacao.conNav.setObjetosAnexo(listMalaDireta, obsListInterferencia, strAnexoParecer, strTabela1, strTabela2);
+				ControladorNavegacao.conNav.setObjetosAnexo(listMalaDireta, obsListUsuariosMalaDireta, strAnexoParecer, strTabela1, strTabela2);
 				
 				
 				} catch (Exception ee) {
@@ -1006,7 +1013,12 @@ public class TabParecerControlador implements Initializable {
 					s = s.replace(".", "");
 					s = s.replace(" ", "");
 				
-				final String fileName = "C:/Users/" + System.getProperty("user.name") + "/Documents/outorgas" + s + ".xls";
+				final String fileName = "C:/Users/" + System.getProperty("user.name") + "/Documents/" 
+						+ "Parecer-"
+						+ documento.getDocSEI()
+						+ "-"
+						+ s 
+						+ ".xls";
 	
 				HSSFWorkbook workbook = new HSSFWorkbook();
 				           HSSFSheet sheetOutorgas = workbook.createSheet("Outorgas");

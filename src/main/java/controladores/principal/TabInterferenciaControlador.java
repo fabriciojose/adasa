@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import dao.InterferenciaDao;
+import entidades.Documento;
 import entidades.Endereco;
 import entidades.Finalidade;
 import entidades.Interferencia;
@@ -20,6 +21,7 @@ import entidades.Superficial;
 import entidades.TipoAto;
 import entidades.TipoInterferencia;
 import entidades.TipoOutorga;
+import javafx.animation.TranslateTransition;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -46,6 +48,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
+import javafx.util.Duration;
 import principal.Alerta;
 import principal.Componentes;
 import principal.FormatoData;
@@ -381,7 +384,13 @@ public class TabInterferenciaControlador  implements Initializable{
 
 					sub.setIntAtualizacao(Timestamp.valueOf((LocalDateTime.now())));
 
-					sub.setInterEnderecoFK(endereco);
+					if (sub.getInterEnderecoFK() == null) {
+						
+						System.out.println("endereco vazio " + sub.getInterEnderecoFK());
+						sub.setInterEnderecoFK(endereco);
+						
+					}
+					
 
 					InterferenciaDao interferenciaDao = new InterferenciaDao ();
 
@@ -857,6 +866,18 @@ public class TabInterferenciaControlador  implements Initializable{
 				excluirInterferencia();
 			}
 		});
+		
+		
+		btnEndereco.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+
+	            inicializarTelaEndereco();
+	            TelaEnderecoControlador.tabEndCon.setObjetoDeEdicao(tvLista.getSelectionModel().getSelectedItem());
+			}
+		});
+		
 
 	}
 
@@ -1199,6 +1220,9 @@ public class TabInterferenciaControlador  implements Initializable{
 				} else {
 
 
+					setEndereco(inter.getInterEnderecoFK());
+						
+					
 					// O tipo de interferência escolhido não pode ser editado
 					cbTipoInterferencia.setDisable(true);
 
@@ -1316,6 +1340,81 @@ public class TabInterferenciaControlador  implements Initializable{
 
 		btnNovo.setDisable(false);
 	}
+	
+	TranslateTransition transDireita;
+	TranslateTransition transEsquerda;
+	Pane pTelaEndereco;
+	Double dblTransicaoEndereco;
+	
+	public void inicializarTelaEndereco() {
+		  
+	    if (pTelaEndereco == null) {
+	    	
+	    	pTelaEndereco = new Pane();
+	    	pTelaEndereco.setPrefSize(500.0, 500.0);
+	
+	    	Pane p = new Pane();
+	    	
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/principal/TelaEndereco.fxml"));
+				loader.setRoot(p);
+					loader.setController(new TelaDocumentoControlador(intControlador));
+		
+			try {
+				loader.load();
+			}
+				catch (IOException e)	{
+					System.out.println("erro leitura do pane");
+					e.printStackTrace();
+				}
+		
+			pTelaEndereco.getChildren().add(p);
+			
+			p1.getChildren().add(pTelaEndereco);
+		
+				transEsquerda = new TranslateTransition(new Duration(350.0), pTelaEndereco);
+					transEsquerda.setToX(15.0);
+				  
+				transDireita = new TranslateTransition(new Duration(350.0), pTelaEndereco);
+					transDireita.setToX(1300.0);
+		  
+					pTelaEndereco.setTranslateX(1300.0);
+		  
+		}
+	    
+	    movimentarTelaEndereco (15.0);
+	    
+	  }
+	
+	
+	public void movimentarTelaEndereco (Double dbltransEsquerda)	{
+		  
+		  
+		  /*
+	    if (demanda.getDemID() == 0) {
+	    	
+	      lbl_TP_Demanda.setText("Não há demanda selecionada!!!");
+	      lbl_TP_Demanda.setTextFill(Color.RED);
+	      
+	    }
+	    else {
+	    	
+	      lbl_TP_Demanda.setText(demanda
+	        .getDemDocumento() + ", Sei nº" + demanda
+	        	.getDemDocumentoSEI() + ", Processo nº " + demanda
+	        		.getDemProcessoSEI());
+	      
+	      	lbl_TP_Demanda.setTextFill(Color.BLACK);
+	    }*/
+	    
+		dblTransicaoEndereco = Double.valueOf(pTelaEndereco.getTranslateX());
+	    
+	    if (dblTransicaoEndereco.equals(dbltransEsquerda)) {
+	    	transDireita.play();
+	    } else {
+	    		transEsquerda.play();
+	    }
+	    
+	  }
 
 }
 

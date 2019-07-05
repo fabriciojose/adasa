@@ -45,14 +45,14 @@ public class ControladorNavegacao implements Initializable {
 	String strTabela1;
 	String strTabela2;
 	
-	ObservableList<Interferencia> obsListInterferencia = FXCollections.observableArrayList();
+	ObservableList<String> obsListUsuariosMalaDireta = FXCollections.observableArrayList();
 	
 
 	List<Object[][]> listMalaDireta = new ArrayList<>();
 	
-	public void setObjetosAnexo (List<Object[][]> listMalaDireta, ObservableList<Interferencia>  obsListInterferencia, String strAnexoParecer, String strTabela1, String strTabela2) {
+	public void setObjetosAnexo (List<Object[][]> listMalaDireta, ObservableList<String>  obsListUsuariosMalaDireta, String strAnexoParecer, String strTabela1, String strTabela2) {
 		this.listMalaDireta = listMalaDireta;
-		this.obsListInterferencia = obsListInterferencia;
+		this.obsListUsuariosMalaDireta = obsListUsuariosMalaDireta;
 		this.strAnexoParecer = strAnexoParecer;
 		this.strTabela1 = strTabela1;
 		this.strTabela2 = strTabela2;
@@ -240,14 +240,14 @@ public class ControladorNavegacao implements Initializable {
 	} // FIM INITIALIZE
 	
 	Button btnAtoAdministrativo;
-	ComboBox<Interferencia> cbUsuarios;
+	ComboBox<String> cbUsuarios;
 	Button btnAnexo;
 	
 	public void inicializarBotoesPopUp (){
 		
 		btnAtoAdministrativo = new Button("ATO ADMINISTRATIVO");
 		cbUsuarios = new ComboBox<>();
-		cbUsuarios.setItems(obsListInterferencia);
+		cbUsuarios.setItems(obsListUsuariosMalaDireta);
 		
 		btnAnexo = new Button("ANEXO");
 		
@@ -365,7 +365,7 @@ public class ControladorNavegacao implements Initializable {
 			             }
 			 	    });
 			    	
-			    	
+			    	/*
 			    	cbUsuarios.setConverter(new StringConverter<Interferencia>() {
 
 						public String toString(Interferencia i) {
@@ -381,6 +381,7 @@ public class ControladorNavegacao implements Initializable {
 							return null;
 						}
 					});
+					*/
 			    	
 			    	
 			    	AnchorPane.setTopAnchor(hbPopUp, 0.0);

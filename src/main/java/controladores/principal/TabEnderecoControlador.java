@@ -236,6 +236,11 @@ public class TabEnderecoControlador implements Initializable {
 				Documento doc = new Documento();
 				
 				doc = documento;
+				
+				
+				System.out.println("id do documento salvo tab endereco " + doc.getDocID());
+				
+				
 				doc.setDocEnderecoFK(end);
 			
 				// adicionar o documento editada //
@@ -243,6 +248,11 @@ public class TabEnderecoControlador implements Initializable {
 				docList.add(doc);
 				
 				end.setDocumentos(docList);
+				
+				for (Documento d : docList) {
+					System.out.println("listar documentos " + doc.getDocID());
+				}
+				
 				
 				EnderecoDao endDao = new EnderecoDao();
 					

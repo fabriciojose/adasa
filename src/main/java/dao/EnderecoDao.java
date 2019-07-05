@@ -40,6 +40,7 @@ public class EnderecoDao {
 		
 	}
 	
+	
 	@SuppressWarnings("unchecked")
 	public List<Endereco> listarEndereco(String strPesquisa) {
 	

@@ -896,7 +896,8 @@ public class TabAtosOutorgaControlador implements Initializable {
 					
 					EnderecoDao endDao = new EnderecoDao();
 					
-					Endereco end = endDao.obterEnderecoPorID (doc.getDocEnderecoFK().getEndID());
+					//Endereco end = endDao.obterEnderecoPorID (doc.getDocEnderecoFK().getEndID());
+					Endereco end = endDao.obterEnderecoPorID(doc.getDocEnderecoFK().getEndID());
 					
 					endereco = end;
 					
