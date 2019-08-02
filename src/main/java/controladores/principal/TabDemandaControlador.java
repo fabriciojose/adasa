@@ -569,7 +569,7 @@ public class TabDemandaControlador implements Initializable {
         @Override public void handle(ActionEvent e) {
         	inicializarTelaEndereco();
         	
-        	TelaEnderecoControlador.tabEndCon.setObjetoDeEdicao(demanda);
+        	//TelaEnderecoControlador.telaEndCon.setObjetoDeEdicao(demanda);
         	
         }
     });
@@ -745,7 +745,7 @@ public class TabDemandaControlador implements Initializable {
       Pane p = new Pane();
       FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/principal/TelaEndereco.fxml"));
       loader.setRoot(p);
-      loader.setController(new TelaEnderecoControlador(intControlador));
+     // loader.setController(new TelaEnderecoControlador(intControlador));
       try
       {
         loader.load();

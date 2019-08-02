@@ -18,6 +18,7 @@ import entidades.Interferencia;
 import entidades.ModelosHTML;
 import entidades.Subterranea;
 import entidades.Usuario;
+import javafx.animation.TranslateTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -57,6 +58,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 import javafx.util.StringConverter;
 import principal.Alerta;
 import principal.Componentes;
@@ -455,30 +457,6 @@ public class TabUsuarioControlador implements Initializable {
 	Label lblDataAtualizacao = new Label();
 
 	public static TabUsuarioControlador tabUsCon;
-
-	public static TabUsuarioControlador controladorAtendimento;
-	public static TabUsuarioControlador controladorFiscalizacao;
-	public static TabUsuarioControlador controladorOutorga;
-
-	int intControlador;
-
-	public TabUsuarioControlador (int i) {
-
-		if (i==0) {
-			controladorAtendimento = this;
-			intControlador = i;
-		}
-		if(i==1) {
-			controladorFiscalizacao = this;
-			intControlador = i;
-		}
-
-		if(i==2) {
-			controladorOutorga = this;
-			intControlador = i;
-		}
-
-	}
 
 	public void initialize(URL url, ResourceBundle rb) {
 
@@ -938,6 +916,18 @@ public class TabUsuarioControlador implements Initializable {
 				excluirEndereco ();
 			}
 		});
+		
+		btnEndereco.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+
+	            inicializarTelaEndereco();
+	            System.out.println(usuario.getUsNome());
+	            TelaEnderecoControlador.telaEnderecoControladorUsuario.setObjetoDeEdicao(usuario);
+			}
+		});
+		
 
 		cbEndereco.setConverter(new StringConverter<Endereco>() {
 
@@ -1180,38 +1170,86 @@ public class TabUsuarioControlador implements Initializable {
 		});
 	}
 
-	/*
-	public void selecionarInterferencia () {
+	TranslateTransition ttDireita;
+	TranslateTransition ttEsquerda;
+	Pane pTelaEndereco;
+	Double dblTransicaoEndereco = 0.0;
+	
+	public static TabUsuarioControlador controladorAtendimento;
+	public static TabUsuarioControlador controladorFiscalizacao;
+	public static TabUsuarioControlador controladorOutorga;
 
+	int intTableView; // 0 Atendimento 1 Fiscalizacao 2 Outorga
 
+	public TabUsuarioControlador (int intTableView) {
+		
+		System.out.println("tabInterferenciaControlador "  +  intTableView);
 
+		if (intTableView == 0) {
+			controladorAtendimento = this;
+			this.intTableView = intTableView;
+		}
+		if(intTableView ==1) {
+			controladorFiscalizacao = this;
+			this.intTableView = intTableView;
+		}
 
+		if(intTableView ==2) {
+			controladorOutorga = this;
+			this.intTableView = intTableView;
+		}
 
-		/*
-		tvListaInterferencia.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Object>() {
-			public void changed(ObservableValue<?> observable , Object oldValue, Object newValue) {
+	}
 
-				Interferencia inter = (Interferencia) newValue;
-
-				if (inter == null) {
-
-					System.out.println("metodo selecionar interferencia - não há interferencia ");
-
-				} else {
-
-					interferencia = inter;
-
-					System.out.println(inter.getInterDDLatitude());
-
+	public void inicializarTelaEndereco() {
+		  
+	    if (pTelaEndereco == null) {
+	    	
+	    	pTelaEndereco = new Pane();
+	    	pTelaEndereco.setPrefSize(500.0, 500.0);
+	
+	    	Pane p = new Pane();
+	    	
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/principal/TelaEndereco.fxml"));
+				loader.setRoot(p);
+				
+				System.out.println(" tela interferencia intTablView"  + intTableView);
+					// TabDocumento = 0 TabInterferencia = 1 TabUsuario 2
+					loader.setController(new TelaEnderecoControlador(2, intTableView));
+		
+			try {
+				loader.load();
+			}
+				catch (IOException e)	{
+					System.out.println("erro leitura do pane");
+					e.printStackTrace();
 				}
-				}
-			});
-	 */
-	//}
+		
+			pTelaEndereco.getChildren().add(p);
+			
+			p1.getChildren().add(pTelaEndereco);
+		
+			ttEsquerda = new TranslateTransition(new Duration(350.0), pTelaEndereco);
+			ttEsquerda.setToX(15.0);
+				  
+			ttDireita = new TranslateTransition(new Duration(350.0), pTelaEndereco);
+			ttDireita.setToX(1300.0);
+		  
+			pTelaEndereco.setTranslateX(1300.0);
+		  
+		}
+	    
+	    ttEsquerda.play();
+	    
+	  }
+	
+	public void movimentarTelaEndereco ()	{
+		
+		if (ttDireita != null)
+			ttDireita.play();
 
-
-	//EditarEnderecoControlador editarEnderecoControlador;
-
+	  }
+	
 	public void abrirPaneEditarEndereco () {
 
 		Pane pEndereco = new Pane();

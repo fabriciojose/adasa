@@ -43,6 +43,7 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import mapas.GoogleMap;
@@ -127,16 +128,16 @@ public class TabDocumentoControlador implements Initializable {
 				docDao.salvarDocumento(doc);
 
 
-				if (intControlador == 0) {
+				if (intTableView == 0) {
 					TabEnderecoControlador.controladorAtendimento.setDocumento(doc);
 
 				}
 
-				if (intControlador == 1) {
+				if (intTableView == 1) {
 					TabEnderecoControlador.controladorFiscalizacao.setDocumento(doc);
 				}
 
-				if (intControlador == 2) {
+				if (intTableView == 2) {
 					TabEnderecoControlador.controladorOutorga.setDocumento(doc);
 				}
 
@@ -214,16 +215,16 @@ public class TabDocumentoControlador implements Initializable {
 
 			/* transmitir demanda para a tab endereco */
 
-			if (intControlador == 0) {
+			if (intTableView == 0) {
 				TabEnderecoControlador.controladorAtendimento.setDocumento(doc);
 
 			}
 
-			if (intControlador == 1) {
+			if (intTableView == 1) {
 				TabEnderecoControlador.controladorFiscalizacao.setDocumento(doc);
 			}
 
-			if (intControlador == 2) {
+			if (intTableView == 2) {
 				TabEnderecoControlador.controladorOutorga.setDocumento(doc);
 			}
 
@@ -304,25 +305,28 @@ public class TabDocumentoControlador implements Initializable {
 	public static TabDocumentoControlador controladorFiscalizacao;
 	public static TabDocumentoControlador controladorOutorga;
 
-	int intControlador;
+	int intTableView;  // 0: Atendimento 1: Fiscalizacao 2: Outorga
 
 	public TabDocumentoControlador (int i) {
 
 		if (i==0) {
 			controladorAtendimento = this;
-			intControlador = i;
+			intTableView = i;
 		}
 		if(i==1) {
 			controladorFiscalizacao = this;
-			intControlador = i;
+			intTableView = i;
 		}
 		if(i==2) {
 			controladorOutorga = this;
-			intControlador = i;
+			intTableView = i;
 		}
 
 	}
 
+	VBox vBox  = new VBox();
+	Button btnLimparMapa = new Button("limpar");
+	
 	public void initialize(URL url, ResourceBundle rb) {
 
 		bp1.minWidthProperty().bind(pDocumento.widthProperty());
@@ -372,17 +376,25 @@ public class TabDocumentoControlador implements Initializable {
 
 		tvLista.setItems(obsList);
 
-		pMapa.setPrefSize(930.0, 400.0);
+		pMapa.setPrefSize(850.0, 400.0);
 		pMapa.setLayoutX(25.0);
-		pMapa.setLayoutY(543.0);
+		pMapa.setLayoutY(540.0);
+		
 		pMapa.getStyleClass().add("panes");
-
 		pMapa.getChildren().add(googleMaps);
-		googleMaps.setWidth(930.0);
+		
+		googleMaps.setWidth(850.0);
 		googleMaps.setHeight(400.0);
 		googleMaps.switchHybrid();
+		
+	    vBox.setPrefSize(65, 400);
+	    vBox.setLayoutX(885);
+	    vBox.setLayoutY(540);
+	    
+	    vBox.getChildren().add(btnLimparMapa);
+	    
 
-		p1.getChildren().addAll(tvLista, lblDataAtualizacao, pMapa);
+		p1.getChildren().addAll(tvLista, lblDataAtualizacao, pMapa, vBox);
 
 		listNodesProcesso.add(pProcesso = new Pane());
 		listNodesProcesso.add(new Label("PROCESSO PRINCIPAL:"));
@@ -568,7 +580,7 @@ public class TabDocumentoControlador implements Initializable {
 			@Override public void handle(ActionEvent e) {
 				inicializarTelaEndereco();
 
-				TelaEnderecoControlador.tabEndCon.setObjetoDeEdicao(documento);
+				TelaEnderecoControlador.telaEnderecoControladorDocumento.setObjetoDeEdicao(documento);
 
 			}
 		});
@@ -591,6 +603,17 @@ public class TabDocumentoControlador implements Initializable {
 
 			}
 		});
+		
+		btnLimparMapa.setOnAction(new EventHandler<ActionEvent>() {
+
+	        @Override
+	        public void handle(ActionEvent event) {
+	        	
+	        	googleMaps.limparMapa();
+	        	System.out.println("bnt limpa mapa clicado");
+	      
+	        }
+		 });
 
 	}
 
@@ -653,8 +676,8 @@ public class TabDocumentoControlador implements Initializable {
 
 	}
 
-	TranslateTransition tDireita;
-	TranslateTransition tEsquerda;
+	TranslateTransition ttDireita;
+	TranslateTransition ttEsquerda;
 	Pane pTelaEndereco;
 	Double dblTransEndereco;
 
@@ -667,11 +690,11 @@ public class TabDocumentoControlador implements Initializable {
 
 			Pane p = new Pane();
 
-			System.out.println("intControlador na tab Demanda " + intControlador);
+			//System.out.println("intControlador na tab Demanda " + intControlador);
 			//telaProCon = new TelaProcessoControlador();
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/principal/TelaProcesso.fxml"));
 			loader.setRoot(p);
-			loader.setController(new TelaProcessoControlador(intControlador));
+			loader.setController(new TelaProcessoControlador(intTableView));
 
 			try {
 				loader.load();
@@ -737,7 +760,8 @@ public class TabDocumentoControlador implements Initializable {
 			Pane p = new Pane();
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/principal/TelaEndereco.fxml"));
 			loader.setRoot(p);
-			loader.setController(new TelaEnderecoControlador(intControlador));
+			// TabDocumento = 0 TabInterferencia = 1
+			loader.setController(new TelaEnderecoControlador(0, intTableView));
 			try
 			{
 				loader.load();
@@ -751,29 +775,26 @@ public class TabDocumentoControlador implements Initializable {
 
 			p1.getChildren().add(pTelaEndereco);
 
-			tEsquerda = new TranslateTransition(new Duration(350.0D), pTelaEndereco);
-			tEsquerda.setToX(15.0D);
+			ttEsquerda = new TranslateTransition(new Duration(350.0), pTelaEndereco);
+			ttEsquerda.setToX(15.0);
 
-			tDireita = new TranslateTransition(new Duration(350.0D), pTelaEndereco);
-			tDireita.setToX(1300.0D);
+			ttDireita = new TranslateTransition(new Duration(350.0), pTelaEndereco);
+			ttDireita.setToX(1300.0);
 
-			pTelaEndereco.setTranslateX(1300.0D);
+			pTelaEndereco.setTranslateX(1300.0);
 		}
-		movimentarTelaEndereco(15.0);
+		
+		//movimentarTelaEndereco(15.0);
+		ttEsquerda.play();
 	}
 
-	public void movimentarTelaEndereco(Double dbltransEsquerda){
+	public void movimentarTelaEndereco(){
+		
+		System.out.println("valor da table view chamada " + intTableView);
 
-		System.out.println("movimentar tela endereco ");
-
-		dblTransEndereco = Double.valueOf(pTelaEndereco.getTranslateX());
-		if (dblTransEndereco.equals(dbltransEsquerda)) {
-			tDireita.play();
-		} else {
-			tEsquerda.play();
-		}
-
-
+		if (ttDireita != null)
+			ttDireita.play();
+		
 	}
 
 	public void modularBotoes () {
@@ -924,18 +945,18 @@ public class TabDocumentoControlador implements Initializable {
 					//tabEndCon.setDemanda(demanda);
 					//enditarEnderecoControlador.setObjetoDeEdicao(demanda);
 
-					System.out.println("valor do int controlador " + intControlador);
+					//System.out.println("valor do int controlador " + intControlador);
 
-					if (intControlador == 0) {
+					if (intTableView == 0) {
 						TabEnderecoControlador.controladorAtendimento.setDocumento(doc);
 
 					}
 
-					if (intControlador == 1) {
+					if (intTableView == 1) {
 						TabEnderecoControlador.controladorFiscalizacao.setDocumento(doc);
 					}
 
-					if (intControlador == 2) {
+					if (intTableView == 2) {
 						TabEnderecoControlador.controladorOutorga.setDocumento(doc);
 					}
 

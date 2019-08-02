@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 
+
 import dao.EnderecoDao;
 import entidades.Documento;
 import entidades.Endereco;
@@ -41,6 +42,7 @@ import javafx.util.Callback;
 import principal.Alerta;
 import principal.Componentes;
 import principal.FormatoData;
+import principal.ListasComboBox;
 
 public class TelaEnderecoControlador implements Initializable {
 	
@@ -50,14 +52,78 @@ public class TelaEnderecoControlador implements Initializable {
 		
 		this.objetoDeEdicao = objetoDeEdicao;
 		
-		if (objetoDeEdicao.getClass().getName() == "entidades.Documento")
-			
-			lblDocumento.setText(
-					((Documento) objetoDeEdicao).getDocTipo()
-					+ ", Sei n° " + ((Documento) objetoDeEdicao).getDocSEI()
-					+ ", Processo n° " + ((Documento) objetoDeEdicao).getDocProcesso()
-					);
+		System.out.println(objetoDeEdicao.getClass().getName());
 		
+		if (objetoDeEdicao != null) {
+		
+			if (objetoDeEdicao.getClass().getName() == "entidades.Documento") {
+				
+				lblTipoObjeto.setText("DOCUMENTO:");
+				
+				lblDescricaoObjeto.setText(
+						((Documento) objetoDeEdicao).getDocTipo()
+						+ ", Sei n° " + ((Documento) objetoDeEdicao).getDocSEI()
+						+ ", Processo n° " + ((Documento) objetoDeEdicao).getDocProcesso()
+						);
+				
+			}
+			
+			else if (objetoDeEdicao.getClass().getName() == "entidades.Subterranea" || objetoDeEdicao.getClass().getName() == "entidades.Superficial" ) {
+				
+				lblTipoObjeto.setText("INTERFERÊNCIA:");
+				
+				lblDescricaoObjeto.setText(
+						((Interferencia) objetoDeEdicao).getInterTipoInterferenciaFK().getTipoInterDescricao()
+						+ ", Latitude: " + ((Interferencia) objetoDeEdicao).getInterDDLatitude() + ", Longitude: " + ((Interferencia) objetoDeEdicao).getInterDDLongitude()
+						);
+				
+			}
+			
+			else if (objetoDeEdicao.getClass().getName() == "entidades.Usuario") {
+				
+				lblTipoObjeto.setText("USUÁRIO:");
+				
+				lblDescricaoObjeto.setText(
+						((Usuario) objetoDeEdicao).getUsNome()
+						
+						);
+				
+			}
+		
+		}
+		
+
+	}
+	
+	public static TelaEnderecoControlador telaEnderecoControladorDocumento;
+	public static TelaEnderecoControlador telaEnderecoControladorInterferencia;
+	public static TelaEnderecoControlador telaEnderecoControladorUsuario;
+	
+	int intTableView;
+	int intTab;
+	
+	public TelaEnderecoControlador (int intTab, int intTableView) {
+		
+		this.intTableView = intTableView;
+		
+		// 0 = Documento
+		if (intTab == 0) {
+			telaEnderecoControladorDocumento = this;
+			this.intTab = intTab;
+		}
+		
+		// 1 = Interferencia
+		if(intTab == 1) {
+			telaEnderecoControladorInterferencia = this;
+			this.intTab = intTab;
+		}
+		
+		// 2 = Usuario
+		if(intTab == 2) {
+			telaEnderecoControladorUsuario = this;
+			this.intTab = intTab;
+		}
+				
 		
 	}
 	
@@ -71,96 +137,22 @@ public class TelaEnderecoControlador implements Initializable {
 	TableColumn<Endereco, String> tcCidade = new TableColumn<>("CEP");
 	
 	Label lblDataAtualizacao = new Label();
-												
-	int intRA = 1;
-	String strRA = "Plano Piloto";
 	
-	final int [] listaRA = new int [] {
-			
-			20	,
-			4	,
-			19	,
-			9	,
-			11	,
-			31	,
-			2	,
-			10	,
-			28	,
-			27	,
-			18	,
-			16	,
-			8	,
-			7	,
-			24	,
-			6	,
-			1	,
-			15	,
-			17	,
-			21	,
-			12	,
-			13	,
-			14	,
-			25	,
-			29	,
-			5	,
-			26	,
-			22	,
-			3	,
-			23	,
-			30	,
-
-	};
+	Endereco endereco = new Endereco();
 	
-	ObservableList<String> olEndRA = FXCollections
-			.observableArrayList(
-					
-					"Águas Claras"	,
-					"Brazlândia"	,
-					"Candangolândia"	,
-					"Ceilândia"	,
-					"Cruzeiro"	,
-					"Fercal"	,
-					"Gama"	,
-					"Guará"	,
-					"Itapoã"	,
-					"Jardim Botânico"	,
-					"Lago Norte"	,
-					"Lago Sul"	,
-					"Núcleo Bandeirante"	,
-					"Paranoá"	,
-					"Park Way"	,
-					"Planaltina"	,
-					"Plano Piloto"	,
-					"Recanto das Emas"	,
-					"Riacho Fundo"	,
-					"Riacho Fundo II"	,
-					"Samambaia"	,
-					"Santa Maria"	,
-					"São Sebastião"	,
-					"SCIA/Estrutural"	,
-					"SIA"	,
-					"Sobradinho"	,
-					"Sobradinho II"	,
-					"Sudoeste/Octogonal"	,
-					"Taguatinga"	,
-					"Varjão"	,
-					"Vicente Pires"	
-
-
-					); 	
 	
 	ObservableList<String> olEndUF = FXCollections
 			.observableArrayList("DF" , "GO", "Outro");
 	
-	public static TelaEnderecoControlador tabEndCon;
+	//public static TelaEnderecoControlador telaEndCon;
 	
 	/* lista de enderecos para adicionar a tableview */
 	ObservableList<Endereco> obsList = FXCollections.observableArrayList();
 	
+	RA ra = new RA ();
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		
-		tabEndCon = this;
 	
 		pTelaEndereco.setStyle("-fx-background-color:#FFFFFF;");
 		
@@ -178,27 +170,31 @@ public class TelaEnderecoControlador implements Initializable {
 		    }
 		});
 		 
-		cbRA.getSelectionModel().selectedIndexProperty().addListener(new
-		            ChangeListener<Number>() {
-		    	public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
-		    		Number value, Number new_value) {
-		    		
-		    		if ( (Integer) new_value !=  -1)
-		    		intRA = listaRA[(int) new_value];
-
-		    		System.out.println("região adminsitrativa tela Endereco " + intRA);
-		    		System.out.println("região adminsitrativa  tela Endereco " + strRA);
-		    		
-	            }
-		 });
-		    
-		 cbRA.getSelectionModel()
-		    	.selectedItemProperty()
-		    	.addListener( 
-		    	(ObservableValue<? extends String> observable, String oldValue, String newValue) ->
-		    	
-		    	strRA = (String) newValue 
-		 );
+	    cbRA.setItems(ListasComboBox.obsListRA);
+	    cbRA.setValue("Plano Piloto");
+	    
+	    cbUF.setItems(olEndUF);
+	    cbUF.setValue("DF");
+	    
+	    
+	    cbRA.getSelectionModel().selectedIndexProperty().addListener(new
+	            ChangeListener<Number>() {
+	    	public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
+	    		Number old_value, Number new_value) {
+	    		// setar id da RA selecinada de acordo com a selecao no ComboBox
+	    		ra.setRaID((Integer) new_value + 1);
+	    
+            }
+	    });
+	    
+	    cbRA.getSelectionModel()
+	    	.selectedItemProperty()
+	    	.addListener( 
+	    	(ObservableValue<? extends String> observable, String old_value, String new_value) ->
+	    	// setar nome (descricao) da RA selecinada de acordo com a selecao no ComboBox
+	    	ra.setRaNome(new_value)
+	    
+	    );
 		 
 	    acionarBotoes ();
 	    selecionarEndereco();
@@ -219,7 +215,8 @@ public class TelaEnderecoControlador implements Initializable {
 	
 	
 	Pane pDocumento;
-	Label lblDocumento;
+	Label lblTipoObjeto;
+	Label lblDescricaoObjeto;
 	Button btnDocumento;
 
 	ArrayList<Node> componentesDocumento = new ArrayList<Node>();
@@ -248,20 +245,18 @@ public class TelaEnderecoControlador implements Initializable {
 
 	ArrayList<Node> componentesPersistencia = new ArrayList<Node>();
 
-	int intControlador;
-	
 	public void inicializarComponentes () {
 
 		componentesDocumento.add(pDocumento = new Pane());
-		componentesDocumento.add(new Label("DOCUMENTO:"));
-		componentesDocumento.add(lblDocumento = new Label());
+		componentesDocumento.add(lblTipoObjeto = new Label());
+		componentesDocumento.add(lblDescricaoObjeto = new Label());
 		componentesDocumento.add(btnDocumento = new Button(">>>"));
 
 		prefSizeWHeLayXY = new Double [][] { 
 			{850.0,60.0,25.0,14.0},
-			{90.0,30.0,15.0,15.0},
-			{648.0,30.0,110.0,15.0},
-			{65.0,25.0,770.0,19.0},
+			{115.0,30.0,15.0,15.0},
+			{630.0,30.0,130.0,15.0},
+			{65.0,25.0,771.0,18.0},
 		};
 
 		com = new Componentes();
@@ -284,7 +279,7 @@ public class TelaEnderecoControlador implements Initializable {
 		componentesEndereco.add(tfLongitude = new TextField());
 		componentesEndereco.add(btnLatLon = new Button());
 
-		cbRA.setItems(olEndRA);
+		cbRA.setItems(ListasComboBox.obsListRA);
 		cbRA.setValue("Plano Piloto");
 		cbUF.setItems(olEndUF);
 
@@ -366,26 +361,25 @@ public class TelaEnderecoControlador implements Initializable {
 
 	}
 	
-	public TelaEnderecoControlador (int intControlador) {
-		  this.intControlador = intControlador;
-	}
-	 
 	public void acionarBotoes () {
 		  
 	    btnDocumento.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override public void handle(ActionEvent e) {
+	        
+	        	if (intTableView == 0) {
+	        		TabInterferenciaControlador.controladorAtendimento.movimentarTelaEndereco();
+	        	}
+	        	if(intTableView == 1) {
+	        		TabInterferenciaControlador.controladorFiscalizacao.movimentarTelaEndereco();
+	        	}
+	        	if (intTableView == 2) {
+	        		
+	        			TabInterferenciaControlador.controladorOutorga.movimentarTelaEndereco();
+	        			TabDocumentoControlador.controladorOutorga.movimentarTelaEndereco();
+	        			TabUsuarioControlador.controladorOutorga.movimentarTelaEndereco();
+	        		
+	        	}
 	        	
-	        	if (intControlador == 0) {
-	        		TabDocumentoControlador.controladorAtendimento.movimentarTelaEndereco(15.0);
-	        	}
-	        	if(intControlador == 1) {
-	        		TabDocumentoControlador.controladorFiscalizacao.movimentarTelaEndereco(15.0);
-	        	}
-	        	if (intControlador == 2) {
-	        		TabDocumentoControlador.controladorOutorga.movimentarTelaEndereco(15.0);
-	        	}
-	        	
-	        	System.out.println("valor do intControlador TelaEndereco " + intControlador);
 	        }
 	    });
 	    
@@ -502,13 +496,8 @@ public class TelaEnderecoControlador implements Initializable {
 						
 					} else {
 					
-						RA ra = new RA ();
-						ra.setRaID(intRA);
-						ra.setRaNome(strRA);
-						
 						Endereco end = new Endereco();
 						
-
 						try {
 							
 							end.setEndLogradouro(tfLogradouro.getText());
@@ -526,14 +515,13 @@ public class TelaEnderecoControlador implements Initializable {
 
 							if (objetoDeEdicao.getClass().getName().equals("entidades.Documento")) {
 								
-							
-							Documento doc = (Documento) objetoDeEdicao;
-								doc.setDocEnderecoFK(end);
-								
-								Set<Documento> docList = new HashSet<>();
-								docList.add(doc);
-								
-								end.setDocumentos(docList);
+								Documento doc = (Documento) objetoDeEdicao;
+									doc.setDocEnderecoFK(end);
+									
+									Set<Documento> docList = new HashSet<>();
+									docList.add(doc);
+									
+									end.setDocumentos(docList);
 							
 							}
 							
@@ -551,7 +539,30 @@ public class TelaEnderecoControlador implements Initializable {
 							}
 							
 							
-							else if (objetoDeEdicao.getClass().getName().equals("entidades.Interferencia")) {
+							else if (objetoDeEdicao.getClass().getName().equals("entidades.Subterranea") || objetoDeEdicao.getClass().getName().equals("entidades.Superficial") ) {
+								
+								System.out.println("nome da classe - btn edicao " + objetoDeEdicao.getClass().getName());
+								
+								Interferencia inter = (Interferencia) objetoDeEdicao;
+								
+									// adiciona este endereco no setEnderecos do usuario
+									inter.setInterEnderecoFK(end);
+									
+									//List<Interferencia> iList = end.getInterferencias();
+								
+									//end.setInterferencias(iList);
+									
+									end.getInterferencias().add(inter);
+									
+								
+							}
+							
+							
+							else if (objetoDeEdicao.getClass().getName().equals("entidades.Subterranea") || objetoDeEdicao.getClass().getName().equals("entidades.Superficial") ) {
+								
+								
+								System.out.println("nome da classe " + objetoDeEdicao.getClass().getName());
+								
 								
 								Interferencia inter = (Interferencia) objetoDeEdicao;
 								//us.setUsDataAtualizacao(Timestamp.valueOf((LocalDateTime.now())));
@@ -632,16 +643,14 @@ public class TelaEnderecoControlador implements Initializable {
 
 			else {
 
-				RA ra = new RA ();
-				ra.setRaID(intRA);
-				ra.setRaNome(strRA);
-
 				Endereco end = new Endereco ();
 
 				end = tvLista.getSelectionModel().getSelectedItem();
-
+				
 				end.setEndLogradouro(tfLogradouro.getText());
+	
 				end.setEndRAFK(ra);
+				
 				end.setEndCEP(tfCEP.getText());
 				end.setEndCidade(tfCidade.getText());
 				end.setEndUF(cbUF.getValue());
@@ -654,8 +663,6 @@ public class TelaEnderecoControlador implements Initializable {
 				Documento doc = new Documento();
 				Usuario us = new Usuario();
 
-				//System.out.println(objetoDeEdicao.getClass().getName());
-				//System.out.println("contador " + contador++);
 
 				if (objetoDeEdicao.getClass().getName().equals("entidades.Documento")) {
 
@@ -690,6 +697,24 @@ public class TelaEnderecoControlador implements Initializable {
 					// adiciona este endereco no setEnderecos do usuario
 					//us.getEnderecos().add(end);
 
+				}
+				
+				else if (objetoDeEdicao.getClass().getName().equals("entidades.Subterranea") || objetoDeEdicao.getClass().getName().equals("entidades.Superficial") ) {
+					
+					System.out.println("nome da classe - btn edicao " + objetoDeEdicao.getClass().getName());
+					
+					Interferencia inter = (Interferencia) objetoDeEdicao;
+					
+						// adiciona este endereco no setEnderecos do usuario
+						inter.setInterEnderecoFK(end);
+						
+						//List<Interferencia> iList = end.getInterferencias();
+					
+						//end.setInterferencias(iList);
+						
+						end.getInterferencias().add(inter);
+						
+					
 				}
 
 				// dao //
@@ -859,25 +884,23 @@ public class TelaEnderecoControlador implements Initializable {
 				
 				// levar o endereco salvo para a tabinterferencia //	
 				
-				 if (intControlador == 0) {
+				 if (intTableView == 0) {
 					 TabInterferenciaControlador.controladorAtendimento.setEndereco(end);
 					 TabUsuarioControlador.controladorAtendimento.setEndereco(end);
 			
 				 	}
 				     
-				    if (intControlador == 1) {
+				    if (intTableView == 1) {
 				    	TabInterferenciaControlador.controladorFiscalizacao.setEndereco(end);
 				    	TabUsuarioControlador.controladorFiscalizacao.setEndereco(end);
 				    }
 				    
-				    if (intControlador == 2) {
+				    if (intTableView == 2) {
 				    	TabInterferenciaControlador.controladorOutorga.setEndereco(end);
 				    	TabUsuarioControlador.controladorOutorga.setEndereco(end);
 				    	TabParecerControlador.controladorOutorga.setEndereco(end);
 				    }
 				
-				
-				System.out.println("selecionar endereco " + end.getEndLogradouro());
 				
 				// -- habilitar e desabilitar botoes -- //
 				btnNovo.setDisable(true);
@@ -894,6 +917,10 @@ public class TelaEnderecoControlador implements Initializable {
 						lblDataAtualizacao.setTextFill(Color.BLACK);
 				}catch (Exception e) {lblDataAtualizacao.setText("Não há data de atualização!");
 						lblDataAtualizacao.setTextFill(Color.RED);}
+				
+				
+				endereco = end;
+				
 				
 				// atualizar o valor da demanda //
 				

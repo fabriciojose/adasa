@@ -13,14 +13,17 @@ import java.util.Set;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.PrecisionModel;
+import com.vividsolutions.jts.geom.impl.CoordinateArraySequence;
 
 import dao.EnderecoDao;
 import entidades.Demanda;
 import entidades.Documento;
 import entidades.Endereco;
 import entidades.Interferencia;
-import entidades.PreenchimentoComboBox;
 import entidades.RA;
 import javafx.animation.TranslateTransition;
 import javafx.beans.property.SimpleStringProperty;
@@ -35,6 +38,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Accordion;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -44,13 +48,16 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import mapas.GoogleMap;
+import mapas.PoligonoCroqui;
 import principal.Alerta;
 import principal.Componentes;
 import principal.FormatoData;
@@ -122,15 +129,6 @@ public class TabEnderecoControlador implements Initializable {
 	TableColumn<Endereco, String> tcEndRA = new TableColumn<>("Região Administrativa");
 	TableColumn<Endereco, String> tcEndCid = new TableColumn<>("CEP");
 
-	int intRA = 1;
-	String strRA = "Plano Piloto";
-	
-	final int [] listaRA = new int [] {
-			20,4,19,9,11,31,2,10,28,27,18,16,8,7,24,6,
-			1,15,17,21,12,13,14,25,29,5,26,22,3,23,30,
-	};
-	
-	//ObservableList<String> obsListRA = FXCollections.observableArrayList(); 	
 		
 	ObservableList<String> olEndUF = FXCollections
 				.observableArrayList("DF" , "GO", "Outro");
@@ -230,6 +228,11 @@ public class TabEnderecoControlador implements Initializable {
 				
 			end.setEndGeom(p);
 			
+			// adicionar o poligono do croqui endereco
+			
+			
+			end.setEndCroqui(new PoligonoCroqui().obterPoligonoCroqui (strCroquiEndereco));
+			
 			end.setEndAtualizacao(
 					Timestamp.valueOf((LocalDateTime.now())));
 			
@@ -248,11 +251,6 @@ public class TabEnderecoControlador implements Initializable {
 				docList.add(doc);
 				
 				end.setDocumentos(docList);
-				
-				for (Documento d : docList) {
-					System.out.println("listar documentos " + doc.getDocID());
-				}
-				
 				
 				EnderecoDao endDao = new EnderecoDao();
 					
@@ -351,6 +349,8 @@ public class TabEnderecoControlador implements Initializable {
 					p.setSRID(4674);
 						
 					end.setEndGeom(p);
+					
+					end.setEndCroqui(new PoligonoCroqui().obterPoligonoCroqui (strCroquiEndereco));
 					
 					end.setEndAtualizacao(Timestamp.valueOf((LocalDateTime.now())));
 					
@@ -504,36 +504,9 @@ public class TabEnderecoControlador implements Initializable {
 
 	// pane para o mapa
 	Pane pEnderecoMapa = new Pane();
+	VBox vBox  = new VBox();
+	Button btnLimparMapa = new Button("limpar");
 	
-	Pane pDemanda;
-	Label lblDemanda;
-		Button btnDemanda;
-
-			ArrayList<Node> listNodesDemanda = new ArrayList<Node>();
-			
-			Pane pDadosEndereco;
-			TextField tfLogradouro;
-				ComboBox<String> cbRA;
-					TextField tfCEP;
-						TextField tfCidade;
-							ComboBox<String> cbUF;
-								TextField tfLatitude;
-									TextField tfLongitude;
-										Button btnLatLon;
-									
-										ArrayList<Node> listNodeDadosEndereco = new ArrayList<Node>();
-								
-										 Pane pPersistencia;
-										  	Button btnNovo;
-										  		Button btnSalvar;
-										  			Button btnEditar;
-										  				Button btnExcluir;
-										  					Button btnCancelar;
-										  						Button btnPesquisar;
-										  						
-										  							TextField tfPesquisar;
-										  							
-										  								ArrayList<Node> listNodesPersistencia= new ArrayList<Node>();
 										  								
 		
 	public static TabEnderecoControlador controladorAtendimento;
@@ -572,6 +545,22 @@ public class TabEnderecoControlador implements Initializable {
 	BorderPane bp2 = new BorderPane();
 	ScrollPane sp = new ScrollPane();
 	Pane pMapa = new Pane();
+	
+	String strCroquiEndereco;
+	
+	/**
+	 * 
+	 * @param strCroquiEndereco
+	 * 
+	 * Capturar no mapa as cordenadas para salvar um polígono com o croqui do endereco
+	 */
+	public void capturarCroquiEndereco (String strCroquiEndereco) {
+		
+		this.strCroquiEndereco = strCroquiEndereco;
+		
+		System.out.println(strCroquiEndereco);
+		
+	}
 	  
 	/* array de posicoes prefWidth prefHeight Layout Y e X */
 	Double prefSizeWHeLayXY [][];
@@ -587,7 +576,7 @@ public class TabEnderecoControlador implements Initializable {
 		    
 		    bp1.getStyleClass().add("border-pane");
 		    
-		    bp2.setPrefHeight(800.0D);
+		    bp2.setPrefHeight(800.0);
 		    bp2.minWidthProperty().bind(pEndereco.widthProperty());
 		    
 		    sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -604,89 +593,19 @@ public class TabEnderecoControlador implements Initializable {
 		    bp2.setTop(p1);
 		    BorderPane.setAlignment(p1, Pos.CENTER);
 		    
-		    listNodesDemanda.add(pDemanda = new Pane());
-			listNodesDemanda.add(new Label("DEMANDA:"));
-				listNodesDemanda.add(lblDemanda = new Label());
-					listNodesDemanda.add(btnDemanda = new Button("<<<"));
-	    
-	    prefSizeWHeLayXY = new Double [][] { 
-	    	{950.0,60.0,15.0,10.0},
-	    	{75.0,30.0,27.0,15.0},
-	    	{740.0,30.0,109.0,15.0},
-	    	{65.0,25.0,859.0,17.0},
-    				};
-	    	
-	    com = new Componentes();
-	    com.popularTela(listNodesDemanda, prefSizeWHeLayXY, p1);
-	    
-	    
-	    listNodeDadosEndereco.add(pDadosEndereco = new Pane());
-	    	listNodeDadosEndereco.add(new Label("ENDEREÇO DO EMPREENDIMENTO:"));
-	    	listNodeDadosEndereco.add(tfLogradouro = new TextField());
-	    		listNodeDadosEndereco.add(new Label("REGIÃO ADMINISTRATIVA:"));
-	    		listNodeDadosEndereco.add(cbRA = new  ComboBox<>());
-	    			listNodeDadosEndereco.add(new Label("CEP:"));
-	    			listNodeDadosEndereco.add(tfCEP = new TextField());
-					    listNodeDadosEndereco.add(new Label("CIDADE:"));
-					    listNodeDadosEndereco.add(tfCidade = new TextField());
-						    listNodeDadosEndereco.add(new Label("UF:"));
-							listNodeDadosEndereco.add(cbUF = new  ComboBox<>());
-								listNodeDadosEndereco.add(new Label("LATITUDE (Y):"));
-							    listNodeDadosEndereco.add(tfLatitude = new TextField());
-							    	listNodeDadosEndereco.add(new Label("LONGITUDE(X):"));
-								    listNodeDadosEndereco.add(tfLongitude = new TextField());
-								    	listNodeDadosEndereco.add(btnLatLon = new Button());
-	    
-	
-		    prefSizeWHeLayXY = new Double [][] { 
-		    	{930.0,130.0,25.0,85.0},
-		    	{425.0,30.0,15.0,5.0},
-		    	{420.0,30.0,15.0,35.0},
-		    	{165.0,30.0,445.0,5.0},
-		    	{165.0,30.0,445.0,35.0},
-		    	{100.0,30.0,620.0,5.0},
-		    	{100.0,30.0,620.0,35.0},
-		    	{100.0,30.0,730.0,5.0},
-		    	{100.0,30.0,730.0,35.0},
-		    	{60.0,30.0,840.0,5.0},
-		    	{75.0,30.0,840.0,35.0},
-		    	{110.0,30.0,180.0,80.0},
-		    	{140.0,30.0,300.0,80.0},
-		    	{110.0,30.0,450.0,80.0},
-		    	{140.0,30.0,570.0,80.0},
-		    	{25.0,25.0,725.0,83.0},
-		    };
-		    	
-		    com = new Componentes();
-		    com.popularTela(listNodeDadosEndereco, prefSizeWHeLayXY, p1);
+			p2 = new Pane ();
+			
+			p2.setPrefSize(950, 720);
+			p2.setLayoutX(15);
+			p2.setLayoutY(260);
+		    
+		    inicializarComponentes ();
+		    
+		    inicializarShapeAcordeon ();
 	    
 	   // cbRA.setItems(olEndRA);
 	    cbUF.setItems(olEndUF);
 	    
-	    
-	    listNodesPersistencia.add(pPersistencia = new Pane());
-	    listNodesPersistencia.add(btnNovo = new Button("NOVO"));
-	    listNodesPersistencia.add(btnSalvar = new Button("SALVAR"));
-	    listNodesPersistencia.add(btnEditar = new Button("EDITAR"));
-	    listNodesPersistencia.add(btnExcluir = new Button("EXCLUIR"));
-	    listNodesPersistencia.add(btnCancelar = new Button("CANCELAR"));
-	    listNodesPersistencia.add(tfPesquisar = new TextField());
-	    listNodesPersistencia.add(btnPesquisar = new Button("PESQUISAR"));
-	    
-			    prefSizeWHeLayXY = new Double[][] { 
-			    	{930.0,60.0,25.0,230.0},
-			    	{95.0,25.0,18.0,18.0},
-			    	{95.0,25.0,123.0,18.0},
-			    	{95.0,25.0,228.0,18.0},
-			    	{95.0,25.0,333.0,18.0},
-			    	{95.0,25.0,438.0,18.0},
-			    	{265.0,25.0,543.0,18.0},
-			    	{95.0,25.0,818.0,18.0},
-			    };
-							    				
-				 com = new Componentes();
-				    com.popularTela(listNodesPersistencia, prefSizeWHeLayXY, p1);    
-		    
 	    
 	    // para trazer o valor da entidade principal, no caso Endereco
 	    tcDesEnd.setCellValueFactory(new PropertyValueFactory<Endereco, String>("endLogradouro"));
@@ -698,60 +617,65 @@ public class TabEnderecoControlador implements Initializable {
 		    }
 		});
 
-		// para trazer o valor da entidade principal, no caso Endereco
-		//tcEndCid.setCellValueFactory(new PropertyValueFactory<Endereco, String>("endCEP")); // endCEP
-	    
-		
 		tcDesEnd.setPrefWidth(440);
 		tcEndRA.setPrefWidth(232);
 		tcEndCid.setPrefWidth(232);
 			
-	    tvLista.getColumns().add(tcDesEnd);
-	    	tvLista.getColumns().add(tcEndRA); 
-	    		tvLista.getColumns().add(tcEndCid); 
-	    			tvLista.setItems(obsList);
-	    
-					    tvLista.setPrefSize(930, 185);
-							tvLista.setLayoutX(25);
-								tvLista.setLayoutY(305);
-								
-	    
+		tvLista.getColumns().add(tcDesEnd);
+		tvLista.getColumns().add(tcEndRA); 
+		tvLista.getColumns().add(tcEndCid); 
+		tvLista.setItems(obsList);
+
+		tvLista.setPrefSize(930, 185);
+		tvLista.setLayoutX(10);
+		tvLista.setLayoutY(75);
+
 	    lblDataAtualizacao.setPrefSize(247, 22);
-	    lblDataAtualizacao.setLayoutX(705);
-	    lblDataAtualizacao.setLayoutY(500);
+	    lblDataAtualizacao.setLayoutX(690);
+	    lblDataAtualizacao.setLayoutY(270);
 	  
-	    pEnderecoMapa.setPrefSize(930, 400);
-	    pEnderecoMapa.setLayoutX(25);
-	    pEnderecoMapa.setLayoutY(530);
+	    pEnderecoMapa.setPrefSize(850, 400);
+	    pEnderecoMapa.setLayoutX(10);
+	    pEnderecoMapa.setLayoutY(300);
 	    pEnderecoMapa.getChildren().add(googleMaps);
 	    
-	    googleMaps.setWidth(930);
+	    vBox.setPrefSize(65, 400);
+	    vBox.setLayoutX(870);
+	    vBox.setLayoutY(300);
+	    
+	    vBox.getChildren().add(btnLimparMapa);
+	   
+	    googleMaps.setWidth(850);
 	    googleMaps.setHeight(400);
 	    googleMaps.switchHybrid();
 	    
-	    p1.getChildren().addAll(tvLista,lblDataAtualizacao, pEnderecoMapa);
+	    p2.getChildren().addAll(tvLista,lblDataAtualizacao, pEnderecoMapa, vBox);
+	    
+	    p1.getChildren().add(p2);
 	    
 	    cbRA.setItems(ListasComboBox.obsListRA);
 	    cbRA.setValue("Plano Piloto");
+	    
 	    cbUF.setItems(olEndUF);
+	    cbUF.setValue("DF");
 	    
 	    cbRA.getSelectionModel().selectedIndexProperty().addListener(new
-	            ChangeListener<Number>() {
+	    		ChangeListener<Number>() {
 	    	public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
-	    		Number old_value, Number new_value) {
+	    			Number old_value, Number new_value) {
 	    		// setar id da RA selecinada de acordo com a selecao no ComboBox
 	    		ra.setRaID((Integer) new_value + 1);
 
-            }
+	    	}
 	    });
-	    
+
 	    cbRA.getSelectionModel()
-	    	.selectedItemProperty()
-	    	.addListener( 
-	    	(ObservableValue<? extends String> observable, String old_value, String new_value) ->
-	    	// setar nome (descricao) da RA selecinada de acordo com a selecao no ComboBox
-	    	ra.setRaNome(new_value)
-	    );
+	    .selectedItemProperty()
+	    .addListener( 
+	    		(ObservableValue<? extends String> observable, String old_value, String new_value) ->
+	    		// setar nome (descricao) da RA selecinada de acordo com a selecao no ComboBox
+	    		ra.setRaNome(new_value)
+	    		);
 	 
 	    habilitarAcoesDosBotoes ();
 	    // ao abrir fechar os campos para edicao //
@@ -761,123 +685,424 @@ public class TabEnderecoControlador implements Initializable {
 	   
 	    	
 	}
+
 	
-	/* ativar metodo onAction para os botoes */
+	Pane pDemanda;
+	Label lblDemanda;
+	Button btnDemanda;
+
+	ArrayList<Node> listNodesDemanda = new ArrayList<Node>();
+
+	Pane pDadosEndereco;
+	TextField tfLogradouro;
+	ComboBox<String> cbRA;
+	TextField tfCEP;
+	TextField tfCidade;
+	ComboBox<String> cbUF;
+	TextField tfLatitude;
+	TextField tfLongitude;
+	Button btnLatLon;
+	Button btnShapeMap;
+
+	ArrayList<Node> listNodeDadosEndereco = new ArrayList<Node>();
+
+	Pane pPersistencia;
+	Button btnNovo;
+	Button btnSalvar;
+	Button btnEditar;
+	Button btnExcluir;
+	Button btnCancelar;
+	Button btnPesquisar;
+
+	TextField tfPesquisar;
+
+	ArrayList<Node> listNodesPersistencia= new ArrayList<Node>();
 	
-	public void habilitarAcoesDosBotoes () {
+	Pane p2;
+
+	public void inicializarComponentes () {
+
+		listNodesDemanda.add(pDemanda = new Pane());
+		listNodesDemanda.add(new Label("DEMANDA:"));
+		listNodesDemanda.add(lblDemanda = new Label());
+		listNodesDemanda.add(btnDemanda = new Button("<<<"));
+
+		prefSizeWHeLayXY = new Double [][] { 
+			{950.0,60.0,15.0,10.0},
+			{75.0,30.0,27.0,15.0},
+			{740.0,30.0,109.0,15.0},
+			{65.0,25.0,859.0,17.0},
+		};
+
+		com = new Componentes();
+		com.popularTela(listNodesDemanda, prefSizeWHeLayXY, p1);
+
+
+		listNodeDadosEndereco.add(pDadosEndereco = new Pane());
+		listNodeDadosEndereco.add(new Label("ENDEREÇO DO EMPREENDIMENTO:"));
+		listNodeDadosEndereco.add(tfLogradouro = new TextField());
+		listNodeDadosEndereco.add(new Label("REGIÃO ADMINISTRATIVA:"));
+		listNodeDadosEndereco.add(cbRA = new  ComboBox<>());
+		listNodeDadosEndereco.add(new Label("CEP:"));
+		listNodeDadosEndereco.add(tfCEP = new TextField());
+		listNodeDadosEndereco.add(new Label("CIDADE:"));
+		listNodeDadosEndereco.add(tfCidade = new TextField());
+		listNodeDadosEndereco.add(new Label("UF:"));
+		listNodeDadosEndereco.add(cbUF = new  ComboBox<>());
+		listNodeDadosEndereco.add(new Label("LATITUDE (Y):"));
+		listNodeDadosEndereco.add(tfLatitude = new TextField());
+		listNodeDadosEndereco.add(new Label("LONGITUDE(X):"));
+		listNodeDadosEndereco.add(tfLongitude = new TextField());
+		listNodeDadosEndereco.add(btnLatLon = new Button());
+		listNodeDadosEndereco.add(btnShapeMap = new Button());
+
+		prefSizeWHeLayXY = new Double [][] { 
+			{930.0,140.0,25.0,85.0},
+			{425.0,30.0,15.0,5.0},
+			{420.0,30.0,15.0,35.0},
+			{165.0,30.0,445.0,5.0},
+			{165.0,30.0,445.0,35.0},
+			{100.0,30.0,620.0,5.0},
+			{100.0,30.0,620.0,35.0},
+			{100.0,30.0,730.0,5.0},
+			{100.0,30.0,730.0,35.0},
+			{60.0,30.0,840.0,5.0},
+			{75.0,30.0,840.0,35.0},
+			{110.0,30.0,180.0,80.0},
+			{140.0,30.0,300.0,80.0},
+			{110.0,30.0,450.0,80.0},
+			{140.0,30.0,570.0,80.0},
+			{25.0,25.0,725.0,83.0},
+			{25.0,25.0,758.0,83.0},
+		};
+
+		com = new Componentes();
+		com.popularTela(listNodeDadosEndereco, prefSizeWHeLayXY, p1);
 		
-	    btnNovo.setOnAction(new EventHandler<ActionEvent>() {
+		
+		listNodesPersistencia.add(pPersistencia = new Pane());
+		listNodesPersistencia.add(btnNovo = new Button("NOVO"));
+		listNodesPersistencia.add(btnSalvar = new Button("SALVAR"));
+		listNodesPersistencia.add(btnEditar = new Button("EDITAR"));
+		listNodesPersistencia.add(btnExcluir = new Button("EXCLUIR"));
+		listNodesPersistencia.add(btnCancelar = new Button("CANCELAR"));
+		listNodesPersistencia.add(tfPesquisar = new TextField());
+		listNodesPersistencia.add(btnPesquisar = new Button("PESQUISAR"));
 
-	        @Override
-	        public void handle(ActionEvent event) {
-	        	habilitarEndereco ();
-	        }
-	    });
-		    
-	    btnSalvar.setOnAction(new EventHandler<ActionEvent>() {
+		prefSizeWHeLayXY = new Double[][] { 
+			{930.0,60.0,10.0,0.0},
+			{95.0,25.0,18.0,18.0},
+			{95.0,25.0,123.0,18.0},
+			{95.0,25.0,228.0,18.0},
+			{95.0,25.0,333.0,18.0},
+			{95.0,25.0,438.0,18.0},
+			{265.0,25.0,543.0,18.0},
+			{95.0,25.0,818.0,18.0},
+		};
 
-	        @Override
-	        public void handle(ActionEvent event) {
-	            salvarEndereco();
-	        }
-	    });
-	    
-	    btnEditar.setOnAction(new EventHandler<ActionEvent>() {
+		com = new Componentes();
+		com.popularTela(listNodesPersistencia, prefSizeWHeLayXY, p2);   
 
-	        @Override
-	        public void handle(ActionEvent event) {
-	           editarEndereco();
-	        }
-	    });
-	    
-	    btnCancelar.setOnAction(new EventHandler<ActionEvent>() {
+	}
+	/* ativar metodo onAction para os botoes */
+	public void habilitarAcoesDosBotoes () {
 
-	        @Override
-	        public void handle(ActionEvent event) {
-	            cancelarEndereco();
-	        }
-	    });
-	    
-	    btnPesquisar.setOnAction(new EventHandler<ActionEvent>() {
+		btnNovo.setOnAction(new EventHandler<ActionEvent>() {
 
-	        @Override
-	        public void handle(ActionEvent event) {
-	            pesquisarEndereco();
-	        }
-	    });
-	    
-	    btnExcluir.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				habilitarEndereco ();
+			}
+		});
 
-	        @Override
-	        public void handle(ActionEvent event) {
-	            excluirEndereco();
-	        }
-	    });
-	    
-	    btnLatLon.setOnAction(new EventHandler<ActionEvent>() {
+		btnSalvar.setOnAction(new EventHandler<ActionEvent>() {
 
-	        @Override
-	        public void handle(ActionEvent event) {
-	        	capturarLatitudeLongitude ();
-	        }
-	    });
-	    
-	    btnDemanda.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				salvarEndereco();
+			}
+		});
 
-	        @Override
-	        public void handle(ActionEvent event) {
-	        	
-	            inicializarTelaDocumento();
-	            TelaDocumentoControlador.telaDocCon.setEndereco(endereco);
-	      
-	        }
-	    });
-	  	
+		btnEditar.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				editarEndereco();
+			}
+		});
+
+		btnCancelar.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				cancelarEndereco();
+			}
+		});
+
+		btnPesquisar.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				pesquisarEndereco();
+			}
+		});
+
+		btnExcluir.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				excluirEndereco();
+			}
+		});
+
+		btnLatLon.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				capturarLatitudeLongitude ();
+			}
+		});
+
+		btnDemanda.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+
+				inicializarTelaDocumento();
+				TelaDocumentoControlador.telaDocCon.setEndereco(endereco);
+
+			}
+		});
+
+		btnLimparMapa.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+
+				googleMaps.limparMapa();
+
+			}
+		});
+
+
+		btnShapeMap.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+
+				inicializarTelaShapeEndereco ();
+
+			}
+		});
+		
+		
+
 	}
 	
+	
+	Button btnLimparShape;
+	Button fecharShapeEndereco;
+	
+	TranslateTransition transShapeEnderecoDireita;
+	TranslateTransition transShapeEnderecoEsquerda;
+	Pane pTelaShapeEndereco;
+	Double dblTransicaoShapeEndereco;
+	
+	GoogleMap googleMapsShape = new GoogleMap();
+	
+	Accordion accordion;
+	
+	TranslateTransition ttSubirAccordion;
+	TranslateTransition ttDescerAccordion;
+	
+	public void inicializarShapeAcordeon () {
+
+		if (ttSubirAccordion == null)
+
+			accordion = new Accordion();
+			accordion.setMinSize(930, 400);
+			accordion.setLayoutX(25);
+			accordion.setLayoutY(235);
+	
+			ttSubirAccordion = new TranslateTransition(new Duration(350.0), p2);
+			ttSubirAccordion.setToY(0.0);
+			ttDescerAccordion = new TranslateTransition(new Duration(350.0), p2);
+			ttDescerAccordion.setToY(380.0);
+	
+			GoogleMap googleMapsShape = new GoogleMap();
+	
+			googleMapsShape.setWidth(830);
+			googleMapsShape.setHeight(365);
+			googleMapsShape.setLayoutX(12);
+			googleMapsShape.setLayoutY(8);
+	
+			googleMapsShape.switchHybrid();
+			googleMapsShape.setZoom(17);
+	
+			VBox vBoxShape = new VBox();
+			vBoxShape.setPrefSize(65, 365);
+			vBoxShape.setLayoutX(852);
+			vBoxShape.setLayoutY(8);
+	
+			btnLimparShape = new Button("limpar");
+			btnLimparShape.setPrefSize(65, 25);
+	
+			vBoxShape.getChildren().addAll(btnLimparShape);
+	
+			Pane p = new Pane();
+			p.setPrefSize(925, 324);
+		
+			p.getChildren().addAll(googleMapsShape, vBoxShape);
+	
+			TitledPane tpAccordionPainel = new TitledPane("Croqui do Endereço", p);
+	
+			tpAccordionPainel.expandedProperty().addListener((obs, oldValue, newValue) -> {
+				if (newValue) {
+					ttDescerAccordion.play();
+					try {
+						googleMapsShape.setMarkerPosition(Double.parseDouble(tfLatitude.getText()), Double.parseDouble(tfLongitude.getText()));
+						googleMapsShape.setMapCenter(Double.parseDouble(tfLatitude.getText()), Double.parseDouble(tfLongitude.getText()));
+						googleMapsShape.setZoom(17);
+					} catch (Exception e) {
+						Alerta a = new Alerta ();
+						a.alertar(new Alert(Alert.AlertType.ERROR, "Coordenadas inválidas!!!", ButtonType.OK));
+						
+					}
+					
+				} else {
+					ttSubirAccordion.play();
+				}
+			});
+	
+			accordion.getPanes().addAll(tpAccordionPainel);
+	
+			p1.getChildren().add(accordion);
+	
+			btnLimparShape.setOnAction(new EventHandler<ActionEvent>() {
+	
+				@Override
+				public void handle(ActionEvent event) {
+	
+					googleMapsShape.limparMapa();
+	
+				}
+			});
+
+	}
+	
+	public void inicializarTelaShapeEndereco () {
+		
+		if (pTelaShapeEndereco == null) {
+			
+			pTelaShapeEndereco = new Pane();
+			pTelaShapeEndereco.setPrefSize(850.0, 400.0);
+			pTelaShapeEndereco.setLayoutY(300);
+
+			
+			GoogleMap googleMapsShape = new GoogleMap();
+	
+			googleMapsShape.setWidth(850);
+			googleMapsShape.setHeight(400);
+			googleMapsShape.setLayoutX(15);
+			
+			googleMapsShape.switchHybrid();
+			
+			VBox vBoxShape = new VBox();
+			vBoxShape.setPrefSize(90, 400);
+			
+			fecharShapeEndereco = new Button(">>>");
+			fecharShapeEndereco.setPrefSize(90, 25);
+			
+			btnLimparShape = new Button("limpar");
+			btnLimparShape.setPrefSize(90, 25);
+			
+			vBoxShape.setPrefSize(90, 400);
+			vBoxShape.setLayoutX(876);
+			
+			vBoxShape.getChildren().addAll(fecharShapeEndereco, btnLimparShape);
+			   
+		    pTelaShapeEndereco.getChildren().addAll(googleMapsShape, vBoxShape);
+		    
+			p1.getChildren().add(pTelaShapeEndereco);
+			
+			fecharShapeEndereco.setOnAction(new EventHandler<ActionEvent>() {
+
+				@Override
+				public void handle(ActionEvent event) {
+
+					transShapeEnderecoDireita.play();
+					
+				}
+			});
+			
+			btnLimparShape.setOnAction(new EventHandler<ActionEvent>() {
+
+				@Override
+				public void handle(ActionEvent event) {
+
+					googleMapsShape.limparMapa();
+
+				}
+			});
+		
+			
+			transShapeEnderecoEsquerda = new TranslateTransition(new Duration(350.0), pTelaShapeEndereco);
+			transShapeEnderecoEsquerda.setToX(15.0);
+
+			transShapeEnderecoDireita = new TranslateTransition(new Duration(350.0), pTelaShapeEndereco);
+			transShapeEnderecoDireita.setToX(1300.0);
+
+			pTelaShapeEndereco.setTranslateX(1300.0);
+			
+		}
+		
+		transShapeEnderecoEsquerda.play();
+		
+	}
+	 
 	TranslateTransition transDireita;
 	TranslateTransition transEsquerda;
 	Pane pTelaDocumento;
 	Double dblTransicaoDemanda;
-	  
-	public void inicializarTelaDocumento () {
-		  
-	    if (pTelaDocumento == null) {
-	    	
-	    	pTelaDocumento = new Pane();
-	    	pTelaDocumento.setPrefSize(500.0, 500.0);
 	
-	    	Pane p = new Pane();
-	    	
+	public void inicializarTelaDocumento () {
+
+		if (pTelaDocumento == null) {
+
+			pTelaDocumento = new Pane();
+			pTelaDocumento.setPrefSize(500.0, 500.0);
+
+			Pane p = new Pane();
+
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/principal/TelaDocumento.fxml"));
-				loader.setRoot(p);
-					loader.setController(new TelaDocumentoControlador(intControlador));
-		
+			loader.setRoot(p);
+			loader.setController(new TelaDocumentoControlador(intControlador));
+
 			try {
 				loader.load();
 			}
-				catch (IOException e)	{
-					System.out.println("erro leitura do pane");
-					e.printStackTrace();
-				}
-		
+			catch (IOException e)	{
+				System.out.println("erro leitura do pane");
+				e.printStackTrace();
+			}
+
 			pTelaDocumento.getChildren().add(p);
-			
+
 			p1.getChildren().add(pTelaDocumento);
-		
-				transEsquerda = new TranslateTransition(new Duration(350.0), pTelaDocumento);
-					transEsquerda.setToX(15.0);
-				  
-				transDireita = new TranslateTransition(new Duration(350.0), pTelaDocumento);
-					transDireita.setToX(1300.0);
-		  
-					pTelaDocumento.setTranslateX(1300.0);
-		  
+
+			transEsquerda = new TranslateTransition(new Duration(350.0), pTelaDocumento);
+			transEsquerda.setToX(15.0);
+
+			transDireita = new TranslateTransition(new Duration(350.0), pTelaDocumento);
+			transDireita.setToX(1300.0);
+
+			pTelaDocumento.setTranslateX(1300.0);
+
 		}
-	    
-	    movimentarTelaDemanda (15.0);
-	    
-	  }
+
+		movimentarTelaDemanda (15.0);
+
+	}
 	  
 	public void movimentarTelaDemanda (Double dbltransEsquerda)	{
 		  
@@ -1070,8 +1295,19 @@ public class TabEnderecoControlador implements Initializable {
 						zoom do mapa e deois centralizar o mapa de acordo com o endereco
 						*/
 					googleMaps.setEnderecoInterferencias(strEndereco, strInterferencias, strDetalhes);
+					
 					googleMaps.setZoom (15);
 					googleMaps.setMapCenter(end.getEndDDLatitude(), end.getEndDDLongitude());
+					
+					PoligonoCroqui pol = new PoligonoCroqui();
+					
+					try {
+						
+						pol.setarPoligono (end);
+						
+					} catch (Exception e) {
+						
+					}
 					
 				}
 				

@@ -64,6 +64,10 @@ public class Endereco implements Serializable{
 	@Column(name="end_Geom")
 	private Geometry endGeom;
 	
+	// salvar shape, poligono contendo o croqui da localizacao
+	@Column (name="end_Croqui", columnDefinition="org.hibernate.spatial.GeometryType")
+	private  Geometry endCroqui;
+	
 	//-- Lista de enderecos vinculados --//
 	@OneToMany (mappedBy = "demEnderecoFK", cascade = CascadeType.MERGE,
 			 fetch = FetchType.LAZY, targetEntity = Demanda.class)
@@ -125,8 +129,8 @@ public class Endereco implements Serializable{
 			this.endLogradouro = endLogradouro;
 			
 	}
-		
-			
+	
+	// getters e setters
 	
 	public int getEndID() {
 		return endID;
@@ -224,6 +228,16 @@ public class Endereco implements Serializable{
 		this.endGeom = endGeom;
 	}
 	
+	
+
+	public Geometry getEndCroqui() {
+		return endCroqui;
+	}
+
+	public void setEndCroqui(Geometry endCroqui) {
+		this.endCroqui = endCroqui;
+	}
+
 	public List<Interferencia> getInterferencias() {
 		return interferencias;
 	}

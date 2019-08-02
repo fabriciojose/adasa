@@ -4,6 +4,7 @@ function setMarkerPosition(lat, lng) {
             var clickLatLng = new google.maps.LatLng(lat, lng);
             marker.setPosition(clickLatLng);
         }
+
 function startJumping(){
     marker.setAnimation(google.maps.Animation.BOUNCE);
 }
@@ -76,6 +77,10 @@ function openShape(i) {
 	
  }
 
+var quadrado = [];
+var arrayQuadrados = [];
+var booPolyline = true;
+
 function getCoordClick(event){
 	
 	var location = event.latLng;
@@ -85,7 +90,79 @@ function getCoordClick(event){
 	setMarkerPosition(lat, lng);
 	
 	obterUTMDMSMapClick (lat,lng);
+	
+	if (booPolyline == true) {
+		
+		// Defina uma posicao do poligono
+		var quadradoCoords = {lat: lat, lng: lng};
+		// adiciona essa posicao em uma array de posicoes
+		quadrado.push(quadradoCoords);
+		
+		// quando houver 4 posicoes criara o poligono
+		if (quadrado.length == 4)  {
+			
+			// Construcao do poligono
+			var quadradoPoly = new google.maps.Polygon({
+				paths: quadrado,
+				strokeColor:  '#2E2EFE',
+				strokeOpacity: 0.8,
+				strokeWeight: 1,
+				fillColor:  '#2E2EFE',
+				fillOpacity: 0.35
+			});
+			// setar poligono no mapa		
+			quadradoPoly.setMap(map);
+			// adicionar todos os  poligonos aqui para depois conseguir deleta-los
+			arrayQuadrados.push(quadradoPoly);
+			// adicionar um ouvinte (listener) para abrir as infomacoes do poligono (infoWindow)
+			quadradoPoly.addListener('click', showArrays);
+	
+			infoWindow = new google.maps.InfoWindow;
+			// limpa a array de pontos para poder criar outro poligono
+			
+			// levar as coordenadas do poligono para o controlador endereco (java)
+			var strShapeEndereco = '';
+			
+			for (i = 0; i < quadrado.length; i++) {
+				
+				strShapeEndereco += ';' + quadrado[i].lat + ',' + quadrado[i].lng;
+			}	
+			
+			appShapeEndereco.handleShapeEndereco(strShapeEndereco);
+			
+			//app.handle (typeCoordinate, lat + "," + lon, latLon, toUTM);
+			
+			quadrado = [];
+	 
+		}
+	  
+	}
+	
+}
 
+/** @this {google.maps.Polygon} */
+function showArrays(event) {
+  // Since this polygon has only one path, we can call getPath() to return the
+  // MVCArray of LatLngs.
+  var vertices = this.getPath();
+
+  var contentString = '<b>Bermuda quadrado polygon</b><br>' +
+      'Clicked location: <br>' 
+      	+ event.latLng.lat() + ',' + event.latLng.lng() +
+      '<br>';
+
+  // Iterate over the vertices.
+  for (var i =0; i < vertices.getLength(); i++) {
+    var xy = vertices.getAt(i);
+    contentString += '<br>' + 'Coordinate ' + i + ':<br>' + xy.lat() + ',' +
+        xy.lng();
+  }
+
+  // Replace the info window's content and position.
+  infoWindow.setContent(contentString);
+  infoWindow.setPosition(event.latLng);
+
+  infoWindow.open(map);
 }
 
 function setMarkerPosition (lat, lng) {
@@ -113,11 +190,11 @@ function setMarkerPosition (lat, lng) {
 	console.log(lat + ',' + lng);
 
 }
+
 function setZoom (i) {
 	map.setZoom(i);
 	map.setCenter(marker.getPosition());
 }
-
 
 function obterUTMDMS (typeCoordinate, lat,lon) {
 	// conversão DD para DMS //
@@ -235,9 +312,7 @@ function setZoomOut () {
 }
 
 function setEnderecoInterferencias (strEndereco, strInterferencia,strDetalhes) {
-	// array de marcadores
-	var markers = [];
-
+	
 	/*
 	separar strDetalhes por interferencias
 	0 = "" 
@@ -296,7 +371,7 @@ function setEnderecoInterferencias (strEndereco, strInterferencia,strDetalhes) {
 	var list = [endereco,interferencia[i]];
 	
 				// criar linha
-		  var linhas = new google.maps.Polyline({
+		  linha = new google.maps.Polyline({
 		  path: list,
 		  geodesic: true,
 		  strokeColor: '#62CBEC',
@@ -304,8 +379,10 @@ function setEnderecoInterferencias (strEndereco, strInterferencia,strDetalhes) {
 		  strokeWeight: 2
 		  });
 	  
-			// mostrar linha
-			linhas.setMap(map);
+		  // mostrar linha
+		  linha.setMap(map);
+			
+		  linhas.push(linha);
 
 	marker = new google.maps.Marker({
 	    position: interferencia[i],
@@ -327,23 +404,25 @@ function setEnderecoInterferencias (strEndereco, strInterferencia,strDetalhes) {
 	google.maps.event.addListener(marker, 'click', function() {
 		this.infowindow.open(map, this); 
 	});
+	
+	markers.push(marker);
 
 
 	} // fim loop for
 
 	// marcador do endereco
-	marker [0] = new google.maps.Marker({
+	marker = new google.maps.Marker({
 	position: endereco,
 	icon: imgEndereco,
 	map: map,
 	title: 'Hello World!'
 	});
+	
+	markers.push(marker);
 
 } // fim funcao setEnderecoInterferencias
 
-
 function mostrarDemandas (strEndereco, strInfoDemandas) {
-	
 	
 	var e = strEndereco.split(',');
 		  
@@ -401,12 +480,14 @@ function mostrarDemandas (strEndereco, strInfoDemandas) {
 		+	"</table>";
 	  
 	 // criar marcador 
-	var marker = new google.maps.Marker({
+	marker = new google.maps.Marker({
 	    position: endereco,
 	    map: map,
 	    icon: imgEndereco,
 	    title: 'Endereço'
 	});
+	
+	markers.push(marker);
 	
 	// criar infoWindow
 	var infowindow = new google.maps.InfoWindow({
@@ -424,8 +505,6 @@ function mostrarDemandas (strEndereco, strInfoDemandas) {
 
 } // fim funcao mostrar demandas
 
-
-
 //variavel com lista dos estilos do mapa
 var listStyles = ["default","night", "darkBlue", "green", "retro"];
 
@@ -439,7 +518,6 @@ function mudarEstiloMapa (i) {
 	    
 	map.setOptions({styles: styles[listStyles[i]]});
 }
-
 
 var styles = {
 		
@@ -1402,5 +1480,21 @@ function inicializarBuscaPorEndereco (){
     });
     map.fitBounds(bounds);
   });
+  
+}
 
+//retirar as linhas e marcadores do mapa
+function limparMapa() {
+
+	for (var i = 0; i < markers.length; i++) {
+		markers[i].setMap(null);
+	}
+	
+	for (var i = 0; i < linhas.length; i++) {
+		linhas[i].setMap(null);
+	}
+	
+	for (var i = 0; i < arrayQuadrados.length; i++) {
+		arrayQuadrados[i].setMap(null);
+	}
 }

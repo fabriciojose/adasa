@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import dao.InterferenciaDao;
-import entidades.Documento;
 import entidades.Endereco;
 import entidades.Finalidade;
 import entidades.Interferencia;
@@ -60,6 +59,7 @@ public class TabInterferenciaControlador  implements Initializable{
 	TabSuperficialController tabSupCon;
 
 	Endereco endereco = new Endereco ();
+	Interferencia interferencia = new Interferencia();
 
 	/**
 	 * Setar o endereco na TabInterferencia
@@ -92,7 +92,6 @@ public class TabInterferenciaControlador  implements Initializable{
 
 	Label lblDataAtualizacao = new Label();
 
-	
 	TipoInterferencia tipoInterferencia = new TipoInterferencia();
 	TipoOutorga tipoOutorga = new TipoOutorga();
 	SubtipoOutorga subtipoOutorga = new SubtipoOutorga();
@@ -598,22 +597,24 @@ public class TabInterferenciaControlador  implements Initializable{
 	public static TabInterferenciaControlador controladorFiscalizacao;
 	public static TabInterferenciaControlador controladorOutorga;
 
-	int intControlador;
+	int intTableView; // 0 Atendimento 1 Fiscalizacao 2 Outorga
 
-	public TabInterferenciaControlador (int i) {
+	public TabInterferenciaControlador (int intTableView) {
+		
+		System.out.println("tabInterferenciaControlador "  +  intTableView);
 
-		if (i==0) {
+		if (intTableView == 0) {
 			controladorAtendimento = this;
-			intControlador = i;
+			this.intTableView = intTableView;
 		}
-		if(i==1) {
+		if(intTableView ==1) {
 			controladorFiscalizacao = this;
-			intControlador = i;
+			this.intTableView = intTableView;
 		}
 
-		if(i==2) {
+		if(intTableView ==2) {
 			controladorOutorga = this;
-			intControlador = i;
+			this.intTableView = intTableView;
 		}
 
 	}
@@ -794,13 +795,13 @@ public class TabInterferenciaControlador  implements Initializable{
     	);
 
 		modularBotoes ();
-		habilitarAcoesDosBotoes ();
+		acionarBotoes ();
 		selecionarInterferencia();
 
 
 	} // FIM INITIALIZE 
 
-	public void habilitarAcoesDosBotoes () {
+	public void acionarBotoes () {
 
 		btnNovo.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -867,14 +868,14 @@ public class TabInterferenciaControlador  implements Initializable{
 			}
 		});
 		
-		
+
 		btnEndereco.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
 
 	            inicializarTelaEndereco();
-	            TelaEnderecoControlador.tabEndCon.setObjetoDeEdicao(tvLista.getSelectionModel().getSelectedItem());
+	            TelaEnderecoControlador.telaEnderecoControladorInterferencia.setObjetoDeEdicao(interferencia);
 			}
 		});
 		
@@ -981,7 +982,6 @@ public class TabInterferenciaControlador  implements Initializable{
 	ArrayList<Node> listComponentesPersistencia = new ArrayList<Node>();
 
 	Pane pTipoInterferencia;  	
-
 
 	public void inicializarComponentes () {
 
@@ -1249,13 +1249,21 @@ public class TabInterferenciaControlador  implements Initializable{
 						situacaoProcesso.setSituacaoProcessoID(inter.getInterSituacaoProcessoFK().getSituacaoProcessoID());
 						situacaoProcesso.setSituacaoProcessoDescricao(inter.getInterSituacaoProcessoFK().getSituacaoProcessoDescricao());
 
+						if (inter.getInterDataPublicacao() == null) {
+							dpDataPublicacao.setValue(null);
+						} else {
+							Date dPub = inter.getInterDataPublicacao();
+							dpDataPublicacao.setValue(dPub.toLocalDate());
+						}
+					
+						if (inter.getInterDataVencimento() == null) {
+							dpDataVencimento.setValue(null);
+						} else {
+							Date dVen = inter.getInterDataVencimento();
+							dpDataVencimento.setValue(dVen.toLocalDate());
+						}
 
-					Date dPub = inter.getInterDataPublicacao();
-					dpDataPublicacao.setValue(dPub.toLocalDate());
-
-					Date dVen = inter.getInterDataVencimento();
-					dpDataVencimento.setValue(dVen.toLocalDate());
-
+						
 					tfNumeroAto.setText(inter.getInterNumeroAto());
 					tfProcesoOutorga.setText(inter.getInterProcRenovacao());
 					tfDespachoOutorga.setText(inter.getInterDespachoRenovacao());
@@ -1272,8 +1280,10 @@ public class TabInterferenciaControlador  implements Initializable{
 					}
 
 					setEndereco(inter.getInterEnderecoFK());
-
-
+					
+					// para exportar esta interferencia para a TelaEndereco
+					interferencia = inter;
+					
 					if (tipoInterferencia.getTipoInterID() == 2) {
 
 						try {
@@ -1285,8 +1295,6 @@ public class TabInterferenciaControlador  implements Initializable{
 
 						TabSubterraneaController.tabSubCon.setSubterranea(((Subterranea) inter));
 
-						//System.out.println("tabIinterferencia - metodo selecionarInterferencia - inter subterranea id " + 
-								//inter.getInterID());
 
 					}
 
@@ -1300,10 +1308,6 @@ public class TabInterferenciaControlador  implements Initializable{
 						}
 
 						TabSuperficialController.tabSupCon.setSuperficial(((Superficial) inter));
-
-						//System.out.println("tabInterferencia - metodo selecionarInterferencia - inter superficial id " + 
-								//inter.getInterID());
-
 
 					}
 
@@ -1341,10 +1345,10 @@ public class TabInterferenciaControlador  implements Initializable{
 		btnNovo.setDisable(false);
 	}
 	
-	TranslateTransition transDireita;
-	TranslateTransition transEsquerda;
+	TranslateTransition ttDireita;
+	TranslateTransition ttEsquerda;
 	Pane pTelaEndereco;
-	Double dblTransicaoEndereco;
+	Double dblTransicaoEndereco = 0.0;
 	
 	public void inicializarTelaEndereco() {
 		  
@@ -1357,7 +1361,10 @@ public class TabInterferenciaControlador  implements Initializable{
 	    	
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/principal/TelaEndereco.fxml"));
 				loader.setRoot(p);
-					loader.setController(new TelaDocumentoControlador(intControlador));
+				
+				System.out.println(" tela interferencia intTablView"  + intTableView);
+					// TabDocumento = 0 TabInterferencia = 1
+					loader.setController(new TelaEnderecoControlador(1, intTableView));
 		
 			try {
 				loader.load();
@@ -1371,50 +1378,27 @@ public class TabInterferenciaControlador  implements Initializable{
 			
 			p1.getChildren().add(pTelaEndereco);
 		
-				transEsquerda = new TranslateTransition(new Duration(350.0), pTelaEndereco);
-					transEsquerda.setToX(15.0);
+			ttEsquerda = new TranslateTransition(new Duration(350.0), pTelaEndereco);
+			ttEsquerda.setToX(15.0);
 				  
-				transDireita = new TranslateTransition(new Duration(350.0), pTelaEndereco);
-					transDireita.setToX(1300.0);
+			ttDireita = new TranslateTransition(new Duration(350.0), pTelaEndereco);
+			ttDireita.setToX(1300.0);
 		  
-					pTelaEndereco.setTranslateX(1300.0);
+			pTelaEndereco.setTranslateX(1300.0);
 		  
 		}
 	    
-	    movimentarTelaEndereco (15.0);
+	    ttEsquerda.play();
 	    
 	  }
 	
-	
-	public void movimentarTelaEndereco (Double dbltransEsquerda)	{
-		  
-		  
-		  /*
-	    if (demanda.getDemID() == 0) {
-	    	
-	      lbl_TP_Demanda.setText("Não há demanda selecionada!!!");
-	      lbl_TP_Demanda.setTextFill(Color.RED);
-	      
-	    }
-	    else {
-	    	
-	      lbl_TP_Demanda.setText(demanda
-	        .getDemDocumento() + ", Sei nº" + demanda
-	        	.getDemDocumentoSEI() + ", Processo nº " + demanda
-	        		.getDemProcessoSEI());
-	      
-	      	lbl_TP_Demanda.setTextFill(Color.BLACK);
-	    }*/
-	    
-		dblTransicaoEndereco = Double.valueOf(pTelaEndereco.getTranslateX());
-	    
-	    if (dblTransicaoEndereco.equals(dbltransEsquerda)) {
-	    	transDireita.play();
-	    } else {
-	    		transEsquerda.play();
-	    }
-	    
+	public void movimentarTelaEndereco ()	{
+		
+		if (ttDireita != null)
+			ttDireita.play();
+
 	  }
+	  
 
 }
 

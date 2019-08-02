@@ -3,6 +3,7 @@ var map;
 var marker;
 var markers = [];
 var layers = [];
+var linhas = []; // para alocar as polylines que ligam os marcadores endereço interferencia
 
 
 function initAutocomplete() {

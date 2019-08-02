@@ -1,7 +1,18 @@
 package mapas;
 
 
+import java.util.ArrayList;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.PrecisionModel;
+
+import adasa.PoligonoContendoCroquiEndereco;
 import controladores.principal.ControladorPrincipal;
+import controladores.principal.TabEnderecoControlador;
+import dao.EnderecoDao;
+import entidades.Endereco;
+import entidades.RA;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -63,8 +74,6 @@ public class GoogleMap extends Parent {
 	       
 		}
 		
-	   
-
 		// inicializacao do webview e mapa html javascript //
 	    void initMap()
 	    {
@@ -105,6 +114,8 @@ public class GoogleMap extends Parent {
 	                    doc = (JSObject) webEngine.executeScript("window");
 	                    
 	                    doc.setMember("app", GoogleMap.this);
+	                    
+	                    doc.setMember("appShapeEndereco", GoogleMap.this);
 	                }
 	               
 	                System.out.println(" initComunicantion funcionando");
@@ -169,6 +180,15 @@ public class GoogleMap extends Parent {
 	    	
 	    }
 	    
+	    // capturar evendo de manipulacao do mapa em javascritp, adiquirir o poligono  (croqui) do endereco
+	    public void handleShapeEndereco(String strCroquiEndereco) {
+	    	
+	    	TabEnderecoControlador.controladorOutorga.capturarCroquiEndereco(strCroquiEndereco);
+	    	
+	    	System.out.println(strCroquiEndereco);
+	    	
+	    }
+ 
 	    public void setAllCoords(String dd, String dms, String utm) {
 	    	
 	    	ControladorPrincipal.lblDD.setText(dd);
@@ -178,7 +198,6 @@ public class GoogleMap extends Parent {
 	    	//System.out.println(dd + " e " + dms + " e " + utm);
 	    }
 	    
-	    
 	    public void setCoords(String lat, String lon) {
 	    	this.lat = lat;
 	    	this.lon = lon;
@@ -186,7 +205,6 @@ public class GoogleMap extends Parent {
 	    	//System.out.println("lat e lon para cadastros " + this.lat + "," + this.lon);
 	    	
 	    }
-
 
 	    public void convDD (String typeCoord, String lat, String lon) {
 	    
@@ -274,7 +292,7 @@ public class GoogleMap extends Parent {
 	    public void switchTerrain() {
 	        invokeJS("switchTerrain()");
 	    }
-
+	    
 	    public void startJumping() {
 	        invokeJS("startJumping()");
 	    }
@@ -291,6 +309,10 @@ public class GoogleMap extends Parent {
 	        webView.setPrefWidth(w);
 	    }
 	  
+	    public void limparMapa () {
+	    	invokeJS("limparMapa()");
+	    	
+	    }
 	    public ReadOnlyDoubleProperty widthProperty() {
 	        return webView.widthProperty();
 	    }
