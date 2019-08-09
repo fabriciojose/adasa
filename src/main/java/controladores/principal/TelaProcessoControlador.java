@@ -270,16 +270,28 @@ public class TelaProcessoControlador implements Initializable {
 	 */
   int intControlador;
 	
+  
 	/* construtor para trazer o intControlador correto. 0 para atendimento e 1 para fiscalizacao */
+  /*
   public TelaProcessoControlador (int intControlador) {
 		  this.intControlador = intControlador;
   }
+  */
 	
+  /*
+   * Construtor
+   */
+  TabDocumentoControlador tabDocCon;
+  public TelaProcessoControlador  (TabDocumentoControlador tabDocCon) {
+	  this.tabDocCon = tabDocCon;
+  }
+  
   public void acionarBotoes () {
 
 	  btnDocumento.setOnAction(new EventHandler<ActionEvent>() {
 		  @Override public void handle(ActionEvent e) {
 
+			  /*
 			  if (intControlador == 0) {
 				  TabDocumentoControlador.controladorAtendimento.movimentarTelaProcesso(15.0);
 			  }
@@ -292,6 +304,9 @@ public class TelaProcessoControlador implements Initializable {
 
 			  System.out.println("valor do intControlador TelaProcesso " + intControlador);
 
+*/
+			  tabDocCon.movimentarTelaProcesso();
+			  
 		  }
 
 

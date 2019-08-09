@@ -60,9 +60,6 @@ public class Documento implements Serializable {
 	@Basic
 	@Column(name="doc_Data_Atualizacao")
 	private Timestamp docDataAtualizacao;
-	
-	@Column(name="doc_XML_Requerimento", columnDefinition="varchar(500)")
-	private String docXMLRequerimento;
 
 	
 	@ManyToOne
@@ -95,14 +92,6 @@ public class Documento implements Serializable {
 		
 	}
 				
-	
-	public String getDocXMLRequerimento() {
-		return docXMLRequerimento;
-	}
-
-	public void setDocXMLRequerimento(String docXMLRequerimento) {
-		this.docXMLRequerimento = docXMLRequerimento;
-	}
 
 	public int getDocID() {
 		return docID;

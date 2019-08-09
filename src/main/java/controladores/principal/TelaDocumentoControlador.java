@@ -75,17 +75,13 @@ public class TelaDocumentoControlador implements Initializable {
 		
 	}
 		
-	/* construtor para trazer o intControlador correto. 
-	 * 0 para atendimento 
-	 * 1 para fiscalizacao 
-	 * 2 para outorga
-	 
-	 * */
-		
-	int intControlador;
-	
-	public TelaDocumentoControlador (int intControlador) {
-		  this.intControlador = intControlador;
+	TabEnderecoControlador tabEndCon;
+	/**
+	 * Construtor
+	 * @param tabEndCon
+	 */
+	public TelaDocumentoControlador (TabEnderecoControlador tabEndCon) {
+		this.tabEndCon = tabEndCon;
 	}
 	
 	public static TelaDocumentoControlador telaDocCon;
@@ -286,17 +282,7 @@ public class TelaDocumentoControlador implements Initializable {
 
   			@Override public void handle(ActionEvent e) {
 
-  				if (intControlador == 0) {
-  					TabEnderecoControlador.controladorAtendimento.movimentarTelaDemanda(15.0);
-  				}
-  				if (intControlador == 1) {
-  					TabEnderecoControlador.controladorFiscalizacao.movimentarTelaDemanda(15.0);
-  				}
-  				if (intControlador == 2) {
-  					TabEnderecoControlador.controladorOutorga.movimentarTelaDemanda(15.0);
-  				}
-
-  				System.out.println("valor do intControlador TelaDemanda " + intControlador);
+  				tabEndCon.movimentarTelaDocumento();
 
   			}
   		});
@@ -373,6 +359,7 @@ public class TelaDocumentoControlador implements Initializable {
 				docDao.salvarDocumento(doc);
 
 
+				/*
 				if (intControlador == 0) {
 					TabEnderecoControlador.controladorAtendimento.setDocumento(doc);
 
@@ -385,6 +372,7 @@ public class TelaDocumentoControlador implements Initializable {
 				if (intControlador == 2) {
 					TabEnderecoControlador.controladorOutorga.setDocumento(doc);
 				}
+				*/
 
 				obsList.add(doc);
 
@@ -463,6 +451,7 @@ public class TelaDocumentoControlador implements Initializable {
 
 			/* transmitir demanda para a tab endereco */
 
+			/*
 			if (intControlador == 0) {
 				TabEnderecoControlador.controladorAtendimento.setDocumento(doc);
 
@@ -475,6 +464,7 @@ public class TelaDocumentoControlador implements Initializable {
 			if (intControlador == 2) {
 				TabEnderecoControlador.controladorOutorga.setDocumento(doc);
 			}
+			*/
 
 			modularBotoes();
 
@@ -673,6 +663,7 @@ public class TelaDocumentoControlador implements Initializable {
 					} catch (Exception e) {lblDataAtualizacao.setText("Não há data de atualização!");
 					lblDataAtualizacao.setTextFill(Color.RED);}
 
+					/*
 					if (intControlador == 0) {
 						TabEnderecoControlador.controladorAtendimento.setDocumento(doc);
 
@@ -685,6 +676,7 @@ public class TelaDocumentoControlador implements Initializable {
 					if (intControlador == 2) {
 						TabEnderecoControlador.controladorOutorga.setDocumento(doc);
 					}
+					*/
 
 
 					// copiar número sei da demanda ao selecionar //

@@ -283,6 +283,7 @@ public class TelaDemandaControlador implements Initializable {
 
 			@Override public void handle(ActionEvent e) {
 
+				/*
 				if (intControlador == 0) {
 					TabEnderecoControlador.controladorAtendimento.movimentarTelaDemanda(15.0);
 				}
@@ -292,6 +293,7 @@ public class TelaDemandaControlador implements Initializable {
 				if (intControlador == 2) {
 					TabEnderecoControlador.controladorOutorga.movimentarTelaDemanda(15.0);
 				}
+				*/
 
 				System.out.println("valor do intControlador TelaDemanda " + intControlador);
 
@@ -374,12 +376,12 @@ public class TelaDemandaControlador implements Initializable {
 			        
 			        /* passar a demanda para a tabEndereco e preencher a lblDemanda */ 
 				    if (intControlador == 0) {
-				    	TabEnderecoControlador.controladorAtendimento.setDemanda(dem);
+				    	//TabEnderecoControlador.controladorAtendimento.setDemanda(dem);
 			
 				 	}
 				     
 				    if (intControlador == 1) {
-				 			TabEnderecoControlador.controladorFiscalizacao.setDemanda(dem);
+				 			//TabEnderecoControlador.controladorFiscalizacao.setDemanda(dem);
 				    }
 				    
 			        
@@ -462,12 +464,12 @@ public class TelaDemandaControlador implements Initializable {
 				     
 				    /* passar a demanda para a tabEndereco e preencher a lblDemanda */ 
 				    if (intControlador == 0) {
-				    	TabEnderecoControlador.controladorAtendimento.setDemanda(dem);
+				    //	TabEnderecoControlador.controladorAtendimento.setDemanda(dem);
 			
 				 	}
 				     
 				    if (intControlador == 1) {
-				 			TabEnderecoControlador.controladorFiscalizacao.setDemanda(dem);
+				 		//	TabEnderecoControlador.controladorFiscalizacao.setDemanda(dem);
 				    }
 					
 				    modularBotoesDemanda();

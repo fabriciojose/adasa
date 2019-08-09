@@ -129,16 +129,16 @@ public class TabDemandaControlador implements Initializable {
 		        
 
 			    if (intControlador == 0) {
-			    	TabEnderecoControlador.controladorAtendimento.setDemanda(dem);
+			    	//TabEnderecoControlador.controladorAtendimento.setDemanda(dem);
 		
 			 	}
 			     
 			    if (intControlador == 1) {
-			 		TabEnderecoControlador.controladorFiscalizacao.setDemanda(dem);
+			 		//TabEnderecoControlador.controladorFiscalizacao.setDemanda(dem);
 			    }
 			    
 			    if (intControlador == 2) {
-		 			TabEnderecoControlador.controladorOutorga.setDemanda(dem);
+		 			//TabEnderecoControlador.controladorOutorga.setDemanda(dem);
 			    }
 				
 		        obsList.add(dem);
@@ -220,16 +220,16 @@ public class TabDemandaControlador implements Initializable {
 			     /* transmitir demanda para a tab endereco */
 			   
 			    if (intControlador == 0) {
-			    	TabEnderecoControlador.controladorAtendimento.setDemanda(dem);
+			    	//TabEnderecoControlador.controladorAtendimento.setDemanda(dem);
 		
 			 	}
 			     
 			    if (intControlador == 1) {
-			 		TabEnderecoControlador.controladorFiscalizacao.setDemanda(dem);
+			 		//TabEnderecoControlador.controladorFiscalizacao.setDemanda(dem);
 			    }
 			    
 			    if (intControlador == 2) {
-		 			TabEnderecoControlador.controladorOutorga.setDemanda(dem);
+		 			//TabEnderecoControlador.controladorOutorga.setDemanda(dem);
 			    }
 				
 			    modularBotoesDemanda();
@@ -678,7 +678,7 @@ public class TabDemandaControlador implements Initializable {
 		//telaProCon = new TelaProcessoControlador();
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/principal/TelaProcesso.fxml"));
 		loader.setRoot(p);
-		loader.setController(new TelaProcessoControlador(intControlador));
+		//loader.setController(new TelaProcessoControlador(intControlador));
 	
 		try {
 			loader.load();
@@ -934,16 +934,16 @@ public class TabDemandaControlador implements Initializable {
 			System.out.println("valor do int controlador " + intControlador);
 			
 		    if (intControlador == 0) {
-		    	TabEnderecoControlador.controladorAtendimento.setDemanda(dem);
+		    	//TabEnderecoControlador.controladorAtendimento.setDemanda(dem);
 	
 		 	}
 		     
 		    if (intControlador == 1) {
-		 		TabEnderecoControlador.controladorFiscalizacao.setDemanda(dem);
+		 		//TabEnderecoControlador.controladorFiscalizacao.setDemanda(dem);
 		    }
 		    
 		    if (intControlador == 2) {
-	 			TabEnderecoControlador.controladorOutorga.setDemanda(dem);
+	 			//TabEnderecoControlador.controladorOutorga.setDemanda(dem);
 		    }
 			
 		    

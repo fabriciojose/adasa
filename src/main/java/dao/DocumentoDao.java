@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.Conjunction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Restrictions;
@@ -14,7 +13,6 @@ import org.hibernate.sql.JoinType;
 import entidades.Documento;
 import entidades.HibernateUtil;
 import entidades.Parecer;
-import entidades.Vistoria;
 
 public class DocumentoDao {
 	

@@ -2,8 +2,6 @@ package controladores.principal;
 
 import java.net.URL;
 import java.sql.Date;
-import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -20,7 +18,6 @@ import entidades.Finalidade;
 import entidades.FinalidadeAutorizada;
 import entidades.FinalidadeRequerida;
 import entidades.FormaCaptacao;
-import entidades.GetterAndSetter;
 import entidades.GetterAndSetterFinalidades;
 import entidades.LocalCaptacao;
 import entidades.MetodoIrrigacao;

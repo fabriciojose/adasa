@@ -2,6 +2,7 @@ package controladores.principal;
 
 import java.io.IOException;
 
+import entidades.Documento;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Tab;
@@ -9,39 +10,63 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
 
 public class ControladorFiscalizacao {
-	
+
 	@FXML Pane pFiscalizacao;
 	@FXML TabPane tpFiscalizacao = new TabPane();
-	
-	@FXML Tab tpTabDemanda;
-		String strDem = "/fxml/principal/TabDemanda.fxml";
-	
-		@FXML Tab tpTabEndereco;
-			String strEnd = "/fxml/principal/TabEndereco.fxml";
-	
-			@FXML Tab tpTabInterferencia;
-			String strInt = "/fxml/principal/TabInterferencia.fxml";
-	
-				@FXML Tab tpTabUsuario;
-				String strUs = "/fxml/principal/TabUsuario.fxml";
-	
-					@FXML Tab tpTabVistoria;
-					String strVis = "/fxml/fiscalizacao/TabVistoria.fxml";
-	
-						@FXML Tab tpTabAto;
-						String strAto = "/fxml/fiscalizacao/TabAto.fxml";
-	
-	
+
+	@FXML Tab tpTabDocumento;
+	String strDem = "/fxml/principal/TabDocumento.fxml";
+
+	@FXML Tab tpTabEndereco;
+	String strEnd = "/fxml/principal/TabEndereco.fxml";
+
+	@FXML Tab tpTabInterferencia;
+	String strInt = "/fxml/principal/TabInterferencia.fxml";
+
+	@FXML Tab tpTabUsuario;
+	String strUs = "/fxml/principal/TabUsuario.fxml";
+
+	@FXML Tab tpTabVistoria;
+	String strVis = "/fxml/fiscalizacao/TabVistoria.fxml";
+
+	@FXML Tab tpTabAto;
+	String strAto = "/fxml/fiscalizacao/TabAto.fxml";
+
+	TabDocumentoControlador tabDocCon;// = new TabDocumentoControlador(2);
+	TabEnderecoControlador tabEndCon;// = new TabEnderecoControlador(2);
+	TabInterferenciaControlador tabInterCon;
+	TabUsuarioControlador tabUsCon;
+	TabParecerControlador tabParCon;
+	TabAtosOutorgaControlador tabAtosOutCon;
+
+
+	ControladorPrincipal controladorPrincipal;
+	/*
+	 * Construtor
+	 * @ControladorPrincipal - transmitindo a inicialiacao do controlador principal para enviar objectos de uma aba para outra
+	 */
+	public ControladorFiscalizacao (ControladorPrincipal controladorPrincipal) {
+		this.controladorPrincipal = controladorPrincipal;
+	}
+
+	// setar documentos nas tabs da tabpane
+	public void setDocumento (Documento doc) {
+		tabEndCon.setDocumento(doc);
+	}
+						
 	@FXML 
     private void initialize() {
 		
 		tpFiscalizacao.prefWidthProperty().bind(pFiscalizacao.widthProperty());
 		tpFiscalizacao.prefHeightProperty().bind(pFiscalizacao.heightProperty());
-		
-		abrirTab (new Pane() , new TabDemandaControlador(1), strDem, tpTabDemanda );
-			abrirTab (new Pane() ,  new TabEnderecoControlador(1), strEnd, tpTabEndereco );
-				abrirTab (new Pane() ,  new TabInterferenciaControlador(1), strInt, tpTabInterferencia );
-					abrirTab (new Pane() ,  new TabUsuarioControlador(1), strUs, tpTabUsuario );
+
+
+
+		abrirTab (new Pane() , tabDocCon = new TabDocumentoControlador(this), strDem, tpTabDocumento );
+			abrirTab (new Pane()  , tabEndCon = new TabEnderecoControlador(this), strEnd, tpTabEndereco );
+				abrirTab (new Pane() , tabInterCon =  new TabInterferenciaControlador(this), strInt, tpTabInterferencia );
+					abrirTab (new Pane() , tabUsCon =  new TabUsuarioControlador(this), strUs, tpTabUsuario );
+					
 						abrirTab (new Pane() ,  new TabVistoriaControlador(), strVis, tpTabVistoria );
 							abrirTab (new Pane(),  new TabAtoControlador(), strAto, tpTabAto );
 							

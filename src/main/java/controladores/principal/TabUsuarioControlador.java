@@ -12,6 +12,7 @@ import java.util.Set;
 
 import dao.ModelosDao;
 import dao.UsuarioDao;
+import entidades.BancoAccess;
 import entidades.Documento;
 import entidades.Endereco;
 import entidades.Interferencia;
@@ -40,6 +41,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
@@ -63,7 +65,9 @@ import javafx.util.StringConverter;
 import principal.Alerta;
 import principal.Componentes;
 import principal.FormatoData;
+import principal.ListasComboBox;
 import principal.MalaDireta;
+import util.BuscadorBancos;
 
 public class TabUsuarioControlador implements Initializable {
 
@@ -118,42 +122,7 @@ public class TabUsuarioControlador implements Initializable {
 	ObservableList<String> olTipoPessoa = FXCollections
 			.observableArrayList("Física" , "Jurídica"); // box - seleção pessoa físcia ou jurídica
 
-	ObservableList<String> olRA = FXCollections
-			.observableArrayList(
-
-					"Águas Claras",
-					"Brasília",
-					"Brazlândia",
-					"Candangolândia",
-					"Ceilândia",
-					"Cruzeiro",
-					"Fercal",
-					"Gama",
-					"Guará",
-					"Itapoã",
-					"Jardim Botânico",
-					"Lago Norte",
-					"Lago Sul",
-					"Núcleo Bandeirante",
-					"Paranoá",
-					"Park Way",
-					"Planaltina",
-					"Recanto das Emas",
-					"Riacho Fundo II",
-					"Riacho Fundo",
-					"Samambaia",
-					"Santa Maria",
-					"São Sebastião",
-					"SCIA",
-					"SIA",
-					"Sobradinho II",
-					"Sobradinho	",
-					"Sudoeste/Octogonal",
-					"Taguatinga	",
-					"Varjão	",
-					"Vicente Pires"
-
-					); 	
+	
 
 	ObservableList<String> olDF = FXCollections
 			.observableArrayList("DF" , "GO", "Outro"); // box - seleção pessoa físcia ou jurídica
@@ -456,11 +425,26 @@ public class TabUsuarioControlador implements Initializable {
 
 	Label lblDataAtualizacao = new Label();
 
-	public static TabUsuarioControlador tabUsCon;
+	ControladorOutorga controladorOutorga;
+	ControladorAtendimento controladorAtendimento;
+	ControladorFiscalizacao controladorFiscalizacao;
 
+	public TabUsuarioControlador (ControladorOutorga controladorOutorga) {
+		this.controladorOutorga = controladorOutorga;
+
+	}
+	
+	public TabUsuarioControlador (ControladorAtendimento controladorAtendimento) {
+		this.controladorAtendimento = controladorAtendimento;
+
+	}
+	
+	public TabUsuarioControlador (ControladorFiscalizacao controladorFiscalizacao) {
+		this.controladorFiscalizacao = controladorFiscalizacao;
+
+	}
+	
 	public void initialize(URL url, ResourceBundle rb) {
-
-		tabUsCon = this;
 
 		bp1.minWidthProperty().bind(pUsuario.widthProperty());
 		bp1.maxHeightProperty().bind(pUsuario.heightProperty().subtract(60));
@@ -494,10 +478,11 @@ public class TabUsuarioControlador implements Initializable {
 		cbTipoPessoa.setValue("Física");
 		cbTipoPessoa.setItems(olTipoPessoa);
 
-		cbRA.setItems(olRA);
+		cbRA.setItems(ListasComboBox.obsListRA);
+	    cbRA.setValue("Plano Piloto");
 
-		cbUF.setValue("DF");
 		cbUF.setItems(olDF);
+		cbUF.setValue("DF");
 
 		tcNome.setCellValueFactory(new PropertyValueFactory<Usuario, String>("usNome"));
 		tcCPFCNPJ.setCellValueFactory(new PropertyValueFactory<Usuario, String>("usCPFCNPJ"));
@@ -573,6 +558,13 @@ public class TabUsuarioControlador implements Initializable {
 
 	Componentes com;
 	Double prefSizeWHeLayXY [][];
+	
+	
+	/* 
+	 * para pesquisar no banco de dados access
+	 */
+	List<BancoAccess> docList = new ArrayList<>();
+	ContextMenu contextMenu  = new ContextMenu();
 
 	public void inicializarComponentes () {
 
@@ -651,7 +643,72 @@ public class TabUsuarioControlador implements Initializable {
 
 		com = new Componentes();
 		com.popularTela(listaComponentesUsuario, prefSizeWHeLayXY, p1);
+		
+		
+		/*
+		 * buscar no banco da rosangela, que denominei Banco_Access
+		 */
+		
+		/*
+		BancoAccessDao bDao = new BancoAccessDao();
+		docList = bDao.listarBancoAccess(tfNome.getText());
+	
+		tfNome.textProperty().addListener((observable, oldValue, newValue) -> {
+			
+			
+			if (tfNome.getText() != null && tfNome.getText().length() > 2) {
+				
+				contextMenu.hide();
 
+				contextMenu = new ContextMenu();
+				contextMenu.setMaxWidth(300);
+				
+				tfNome.setContextMenu(contextMenu);
+			
+				for (BancoAccess b : docList) {
+					
+					if (
+							
+							(b.getBaInteressado() + "\n  | " + b.getBaNumeroProcesso() + "\n    | " + b.getBaEnderecoEmpreendimento()).toLowerCase()
+							
+							.indexOf(tfNome.getText().toLowerCase()) != -1) {
+						
+					Label lbl = new Label(b.getBaInteressado() + "\n  | " + b.getBaNumeroProcesso() + "\n    | " + b.getBaEnderecoEmpreendimento());
+					lbl.setPrefWidth(400);
+					lbl.setWrapText(true);
+					
+					MenuItem item = new MenuItem();
+					item.setGraphic(lbl);
+					
+					item.setOnAction(new EventHandler<ActionEvent>() {
+
+						@Override
+						public void handle(ActionEvent event) {
+
+							tfNome.setText(b.getBaInteressado());
+						}
+
+					});
+
+					// Add MenuItem to ContextMenu
+					contextMenu.getItems().add(item);
+					
+					}
+
+				} // fim loop for
+
+				contextMenu.show(tfNome, Side.RIGHT, 0, 0);
+		
+			
+			} // fim if (tf.getText().length() > 3
+
+		});
+		
+		*/
+		
+		BuscadorBancos bd = new BuscadorBancos(tfNome, contextMenu);
+		bd.buscar();
+		
 		listNodesPersistencia.add(pPersistencia = new Pane());
 		listNodesPersistencia.add(btnNovo = new Button("NOVO"));
 		listNodesPersistencia.add(btnSalvar = new Button("SALVAR"));
@@ -924,7 +981,7 @@ public class TabUsuarioControlador implements Initializable {
 
 	            inicializarTelaEndereco();
 	            System.out.println(usuario.getUsNome());
-	            TelaEnderecoControlador.telaEnderecoControladorUsuario.setObjetoDeEdicao(usuario);
+	           // TelaEnderecoControlador.telaEnderecoControladorUsuario.setObjetoDeEdicao(usuario);
 			}
 		});
 		
@@ -1175,31 +1232,6 @@ public class TabUsuarioControlador implements Initializable {
 	Pane pTelaEndereco;
 	Double dblTransicaoEndereco = 0.0;
 	
-	public static TabUsuarioControlador controladorAtendimento;
-	public static TabUsuarioControlador controladorFiscalizacao;
-	public static TabUsuarioControlador controladorOutorga;
-
-	int intTableView; // 0 Atendimento 1 Fiscalizacao 2 Outorga
-
-	public TabUsuarioControlador (int intTableView) {
-		
-		System.out.println("tabInterferenciaControlador "  +  intTableView);
-
-		if (intTableView == 0) {
-			controladorAtendimento = this;
-			this.intTableView = intTableView;
-		}
-		if(intTableView ==1) {
-			controladorFiscalizacao = this;
-			this.intTableView = intTableView;
-		}
-
-		if(intTableView ==2) {
-			controladorOutorga = this;
-			this.intTableView = intTableView;
-		}
-
-	}
 
 	public void inicializarTelaEndereco() {
 		  
@@ -1212,10 +1244,8 @@ public class TabUsuarioControlador implements Initializable {
 	    	
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/principal/TelaEndereco.fxml"));
 				loader.setRoot(p);
-				
-				System.out.println(" tela interferencia intTablView"  + intTableView);
-					// TabDocumento = 0 TabInterferencia = 1 TabUsuario 2
-					loader.setController(new TelaEnderecoControlador(2, intTableView));
+			
+					loader.setController(new TelaEnderecoControlador(this));
 		
 			try {
 				loader.load();

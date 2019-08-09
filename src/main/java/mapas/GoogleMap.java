@@ -1,18 +1,8 @@
 package mapas;
 
 
-import java.util.ArrayList;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.PrecisionModel;
-
-import adasa.PoligonoContendoCroquiEndereco;
 import controladores.principal.ControladorPrincipal;
 import controladores.principal.TabEnderecoControlador;
-import dao.EnderecoDao;
-import entidades.Endereco;
-import entidades.RA;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -183,7 +173,9 @@ public class GoogleMap extends Parent {
 	    // capturar evendo de manipulacao do mapa em javascritp, adiquirir o poligono  (croqui) do endereco
 	    public void handleShapeEndereco(String strCroquiEndereco) {
 	    	
-	    	TabEnderecoControlador.controladorOutorga.capturarCroquiEndereco(strCroquiEndereco);
+	    	//TabEnderecoControlador.controladorOutorga.capturarCroquiEndereco(strCroquiEndereco);
+	    	
+	    	TabEnderecoControlador.tabEnderecoControlador.capturarCroquiEndereco(strCroquiEndereco);
 	    	
 	    	System.out.println(strCroquiEndereco);
 	    	

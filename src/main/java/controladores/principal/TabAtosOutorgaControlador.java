@@ -1,5 +1,6 @@
 package controladores.principal;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -16,7 +17,7 @@ import entidades.Documento;
 import entidades.Endereco;
 import entidades.Interferencia;
 import entidades.ModelosHTML;
-import entidades.Usuario;
+import javafx.animation.TranslateTransition;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -25,6 +26,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -45,12 +47,12 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
+import javafx.util.Duration;
 import javafx.util.StringConverter;
 import principal.Alerta;
 import principal.Componentes;
 import principal.FormatoData;
 import principal.MalaDiretaAtosOutorga;
-import principal.MalaDiretaDocumentos;
 
 public class TabAtosOutorgaControlador implements Initializable {
 
@@ -84,7 +86,6 @@ public class TabAtosOutorgaControlador implements Initializable {
 
 	}
 
-
 	TableView<Documento> tvDocumento = new TableView<Documento>();
 	TableColumn<Documento, String> tcTipoDocumento = new TableColumn<Documento, String>("Parecer");
 	TableColumn<Documento, String> tcSEI = new TableColumn<Documento, String>("SEI");
@@ -102,31 +103,25 @@ public class TabAtosOutorgaControlador implements Initializable {
 	Label lblDataAtualizacao = new Label();
 
 
-	int intControlador;
+	ControladorOutorga controladorOutorga;
+	ControladorAtendimento controladorAtendimento;
+	ControladorFiscalizacao controladorFiscalizacao;
 
-
-	/**
-	 * para transmitir as variáveis para a tab correta
-	 */
-	public static TabAtosOutorgaControlador controladorAtendimento, controladorFiscalizacao, controladorOutorga;
-
-	public TabAtosOutorgaControlador (int i) {
-
-		if (i==0) {
-			controladorAtendimento = this;
-			intControlador = i;
-		}
-		if(i==1) {
-			controladorFiscalizacao = this;
-			intControlador = i;
-		}
-
-		if(i==2) {
-			controladorOutorga = this;
-			intControlador = i;
-		}
+	public TabAtosOutorgaControlador (ControladorOutorga controladorOutorga) {
+		this.controladorOutorga = controladorOutorga;
 
 	}
+	
+	public TabAtosOutorgaControlador (ControladorAtendimento controladorAtendimento) {
+		this.controladorAtendimento = controladorAtendimento;
+
+	}
+	
+	public TabAtosOutorgaControlador (ControladorFiscalizacao controladorFiscalizacao) {
+		this.controladorFiscalizacao = controladorFiscalizacao;
+
+	}
+	
 
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
@@ -625,6 +620,15 @@ public class TabAtosOutorgaControlador implements Initializable {
 		
 		});
 
+		
+		btnEndereco.setOnAction(new EventHandler<ActionEvent>() {
+			@Override public void handle(ActionEvent e) {
+
+				inicializarTelaEndereco();
+			
+			}
+		});
+		
 
 	}
 
@@ -938,4 +942,58 @@ public class TabAtosOutorgaControlador implements Initializable {
 
 	}
 
+	
+	TranslateTransition ttEndDireita;
+	TranslateTransition ttEndEsquerda;
+	Pane pTelaEndereco;
+	Double dblTransicaoEndereco = 0.0;
+
+
+	public void inicializarTelaEndereco() {
+
+		if (pTelaEndereco == null) {
+
+			pTelaEndereco = new Pane();
+			pTelaEndereco.setPrefSize(500.0, 500.0);
+
+			Pane p = new Pane();
+
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/principal/TelaEndereco.fxml"));
+			loader.setRoot(p);
+
+			loader.setController(new TelaEnderecoControlador(this));
+
+			try {
+				loader.load();
+			}
+			catch (IOException e)	{
+				System.out.println("erro leitura do pane");
+				e.printStackTrace();
+			}
+
+			pTelaEndereco.getChildren().add(p);
+
+			p1.getChildren().add(pTelaEndereco);
+
+			ttEndEsquerda = new TranslateTransition(new Duration(350.0), pTelaEndereco);
+			ttEndEsquerda.setToX(15.0);
+
+			ttEndDireita = new TranslateTransition(new Duration(350.0), pTelaEndereco);
+			ttEndDireita.setToX(1300.0);
+
+			pTelaEndereco.setTranslateX(1300.0);
+
+		}
+
+		ttEndEsquerda.play();
+
+	}
+
+	public void movimentarTelaEndereco ()	{
+
+		if (ttEndDireita != null)
+			ttEndDireita.play();
+
+	}
+	
 }

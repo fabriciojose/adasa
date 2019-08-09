@@ -106,6 +106,10 @@
 		<mapping class="entidades.Finalidade"/>
 			<mapping class="entidades.FinalidadeRequerida"/>
 			<mapping class="entidades.FinalidadeAutorizada"/>
+			
+			<mapping class="entidades.BancoAccess"/>
+			<mapping class="entidades.BancoCaesb"/>
+			
 		
     </session-factory>
     

@@ -10,7 +10,6 @@ import org.hibernate.sql.JoinType;
 
 import entidades.Endereco;
 import entidades.HibernateUtil;
-import entidades.Interferencia;
 import entidades.RA;
 
 

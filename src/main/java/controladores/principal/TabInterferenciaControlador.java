@@ -593,32 +593,25 @@ public class TabInterferenciaControlador  implements Initializable{
 
 	Componentes com;
 
-	public static TabInterferenciaControlador controladorAtendimento;
-	public static TabInterferenciaControlador controladorFiscalizacao;
-	public static TabInterferenciaControlador controladorOutorga;
+	ControladorOutorga controladorOutorga;
+	ControladorAtendimento controladorAtendimento;
+	ControladorFiscalizacao controladorFiscalizacao;
 
-	int intTableView; // 0 Atendimento 1 Fiscalizacao 2 Outorga
-
-	public TabInterferenciaControlador (int intTableView) {
-		
-		System.out.println("tabInterferenciaControlador "  +  intTableView);
-
-		if (intTableView == 0) {
-			controladorAtendimento = this;
-			this.intTableView = intTableView;
-		}
-		if(intTableView ==1) {
-			controladorFiscalizacao = this;
-			this.intTableView = intTableView;
-		}
-
-		if(intTableView ==2) {
-			controladorOutorga = this;
-			this.intTableView = intTableView;
-		}
+	public TabInterferenciaControlador (ControladorOutorga controladorOutorga) {
+		this.controladorOutorga = controladorOutorga;
 
 	}
+	
+	public TabInterferenciaControlador (ControladorAtendimento controladorAtendimento) {
+		this.controladorAtendimento = controladorAtendimento;
 
+	}
+	
+	public TabInterferenciaControlador (ControladorFiscalizacao controladorFiscalizacao) {
+		this.controladorFiscalizacao = controladorFiscalizacao;
+
+	}
+	
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 
@@ -875,7 +868,8 @@ public class TabInterferenciaControlador  implements Initializable{
 			public void handle(ActionEvent event) {
 
 	            inicializarTelaEndereco();
-	            TelaEnderecoControlador.telaEnderecoControladorInterferencia.setObjetoDeEdicao(interferencia);
+	           // TelaEnderecoControlador.telaEnderecoControladorInterferencia.setObjetoDeEdicao(interferencia);
+	            //telaend.setObjetoDeEdicao(interferencia);
 			}
 		});
 		
@@ -1362,9 +1356,9 @@ public class TabInterferenciaControlador  implements Initializable{
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/principal/TelaEndereco.fxml"));
 				loader.setRoot(p);
 				
-				System.out.println(" tela interferencia intTablView"  + intTableView);
+				//System.out.println(" tela interferencia intTablView"  + intTableView);
 					// TabDocumento = 0 TabInterferencia = 1
-					loader.setController(new TelaEnderecoControlador(1, intTableView));
+					loader.setController(new TelaEnderecoControlador(this));
 		
 			try {
 				loader.load();

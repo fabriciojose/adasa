@@ -97,25 +97,25 @@ public class ControladorPrincipal {
 	Pane pFiscalizacao;
 	Pane pAtendimento;
 	Pane pOutorga;
+	
+	Pane pBancosDiversos;
+	
 
-	Button btnHome = new Button();
-	Button btnMapa = new Button();
-	Button btnConversor = new Button();
-	Button btnAtendimento = new Button();
-	Button btnOutorga = new Button();
-	Button btnFiscalizacao = new Button();
-	Button btnNavegador = new Button();
-	Button btnEditorHTML = new Button();
+	Button btnHome;
+	Button btnMapa;
+	Button btnConversor;
+	Button btnAtendimento;
+	Button btnOutorga;
+	Button btnFiscalizacao;
+	Button btnNavegador;
+	Button btnEditorHTML;
+	Button btnBancoAccess;
 
 	static GoogleMap googleMaps;
 
 	ObservableList<String> olcbMainConverteCoord;
 
-	Double dblPesquisa;
-	Double dblNavegador;
-	Double dblFiscalizacao;
-	Double dblAtendimento;
-	Double dblOutorga;
+	Double dblPesquisa, dblNavegador, dblFiscalizacao, dblAtendimento, dblOutorga, dblBancoAccess;
 
 	TranslateTransition baixarTabPaneFiscalizacao;
 	TranslateTransition subirTabPaneFiscalizacao;
@@ -131,6 +131,12 @@ public class ControladorPrincipal {
 
 	TranslateTransition baixarTabPaneOutorga;
 	TranslateTransition subirTabPaneOutorga;
+	
+	
+
+	TranslateTransition ttBaixaBancoAccess;
+	TranslateTransition ttSobeBancoAccess;
+	
 	
 	ListasComboBox listasComboBox;
 	
@@ -171,6 +177,11 @@ public class ControladorPrincipal {
 
 	ScrollPane spWebBrowser;
 	WebView wBrowser;
+	
+	ControladorOutorga controladorOutorga;
+	ControladorAtendimento controladorAtendimento;
+	ControladorFiscalizacao controladorFiscalizacao;
+
 
 	@FXML 
 	private void initialize() {
@@ -597,6 +608,12 @@ public class ControladorPrincipal {
 		btnConversor.getStyleClass().add("button-lateral");
 		btnConversor.setLayoutX(10.0);
 		btnConversor.setLayoutY(250.0);
+	
+		btnBancoAccess = new Button("BANCOS");
+
+		btnBancoAccess.getStyleClass().add("button-lateral");
+		btnBancoAccess.setLayoutX(10.0);
+		btnBancoAccess.setLayoutY(289.0);
 
 		Text iconTabHome = GlyphsDude.createIcon(FontAwesomeIcon.HOME, "20px");
 		//iconTabHome.getStyleClass().add("classeIconTab");
@@ -615,7 +632,7 @@ public class ControladorPrincipal {
 
 		pLE2.getStyleClass().add("pane-lateral");
 
-		pLE1.getChildren().addAll(btnHome, btnNavegador, btnAtendimento, btnOutorga, btnFiscalizacao, btnConversor, btnEditorHTML);
+		pLE1.getChildren().addAll(btnHome, btnNavegador, btnAtendimento, btnOutorga, btnFiscalizacao, btnConversor, btnEditorHTML, btnBancoAccess);
 
 		tabLE1.setContent(pLE1);
 		tabLE2.setContent(pLE2);
@@ -652,7 +669,7 @@ public class ControladorPrincipal {
 				FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/atendimento/Atendimento.fxml"));
 
 				loader.setRoot(pAtendimento);
-				loader.setController(new ControladorAtendimento());
+				loader.setController(controladorAtendimento = new ControladorAtendimento(this));
 				try {
 					loader.load();
 				} catch (IOException e) {
@@ -685,6 +702,8 @@ public class ControladorPrincipal {
 					pFiscalizacao.setTranslateY(880.0);
 				if (pOutorga != null)
 					pOutorga.setTranslateY(880.0);
+				if (pBancosDiversos != null)
+					pBancosDiversos.setTranslateY(880.0);
 			} 
 
 			else {
@@ -696,10 +715,9 @@ public class ControladorPrincipal {
 					pFiscalizacao.setTranslateY(880.0);
 				if (pOutorga != null)
 					pOutorga.setTranslateY(880.0);
+				if (pBancosDiversos != null)
+					pBancosDiversos.setTranslateY(880.0);
 			}
-
-
-
 
 		});
 
@@ -734,7 +752,9 @@ public class ControladorPrincipal {
 				FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/principal/Outorga.fxml"));
 				Pane p = new  Pane();
 				loader.setRoot(p);
-				loader.setController(new ControladorOutorga ());
+				
+				loader.setController(controladorOutorga = new ControladorOutorga (this));
+				
 				try {
 					loader.load();
 				} catch (IOException e) {
@@ -749,6 +769,7 @@ public class ControladorPrincipal {
 				p.maxWidthProperty().bind(pOutorga.widthProperty());
 				p.maxHeightProperty().bind(pOutorga.heightProperty());
 
+				
 
 			}
 
@@ -765,6 +786,8 @@ public class ControladorPrincipal {
 
 					if (pNavegador != null)
 						pNavegador.setTranslateY(880.0);
+					if (pBancosDiversos != null)
+						pBancosDiversos.setTranslateY(880.0);
 
 			} else {
 
@@ -776,6 +799,8 @@ public class ControladorPrincipal {
 					pAtendimento.setTranslateY(880.0);
 				if (pNavegador != null)
 					pNavegador.setTranslateY(880.0);
+				if (pBancosDiversos != null)
+					pBancosDiversos.setTranslateY(880.0);
 
 			}
 
@@ -806,7 +831,8 @@ public class ControladorPrincipal {
 				FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/fiscalizacao/Fiscalizacao.fxml"));
 
 				loader.setRoot(pFiscalizacao);
-				loader.setController(new ControladorFiscalizacao());
+				loader.setController(controladorFiscalizacao = new ControladorFiscalizacao(this));
+				
 				try {
 					loader.load();
 				} catch (IOException e) {
@@ -838,6 +864,8 @@ public class ControladorPrincipal {
 					pAtendimento.setTranslateY(880.0);
 				if (pOutorga != null)
 					pOutorga.setTranslateY(880.0);
+				if (pBancosDiversos != null)
+					pBancosDiversos.setTranslateY(880.0);
 
 			} 
 
@@ -852,6 +880,8 @@ public class ControladorPrincipal {
 					pAtendimento.setTranslateY(880.0);
 				if (pOutorga != null)
 					pOutorga.setTranslateY(880.0);
+				if (pBancosDiversos != null)
+					pBancosDiversos.setTranslateY(880.0);
 
 			}
 
@@ -926,21 +956,26 @@ public class ControladorPrincipal {
 
 				if (pFiscalizacao != null)
 					pFiscalizacao.setTranslateY(880.0);//downFiscal.play();
-					if (pAtendimento != null)
-						pAtendimento.setTranslateY(880.0);
-					if (pOutorga != null)
-						pOutorga.setTranslateY(880.0);
+				if (pAtendimento != null)
+					pAtendimento.setTranslateY(880.0);
+				if (pOutorga != null)
+					pOutorga.setTranslateY(880.0);
+				if (pBancosDiversos != null)
+					pBancosDiversos.setTranslateY(880.0);
 
 
 			} else {
 
 				subirNavegador.play();
+				
 				if (pFiscalizacao != null)
 					pFiscalizacao.setTranslateY(880.0);
 				if (pAtendimento != null)
 					pAtendimento.setTranslateY(880.0);
 				if (pOutorga != null)
 					pOutorga.setTranslateY(880.0);
+				if (pBancosDiversos != null)
+					pBancosDiversos.setTranslateY(880.0);
 
 			}
 
@@ -970,6 +1005,85 @@ public class ControladorPrincipal {
 			stage.setResizable(false);
 			stage.setAlwaysOnTop(true); 
 			stage.show();
+
+		});
+		
+		btnBancoAccess.setOnAction((ActionEvent evt)->{
+
+			if (pBancosDiversos == null ) {
+
+				pBancosDiversos = new Pane();
+				
+				ttBaixaBancoAccess = new TranslateTransition(new Duration(350), pBancosDiversos);
+				ttBaixaBancoAccess.setToY(880.0);
+				ttSobeBancoAccess = new TranslateTransition(new Duration(350), pBancosDiversos);
+				ttSobeBancoAccess.setToY(0.0);
+
+				AnchorPane.setTopAnchor(pBancosDiversos, 150.0);
+				AnchorPane.setLeftAnchor(pBancosDiversos, 160.0);
+				AnchorPane.setRightAnchor(pBancosDiversos, 160.0);
+				AnchorPane.setBottomAnchor(pBancosDiversos, 115.0);
+
+				pBancosDiversos.setTranslateY(880.0);
+
+				apPrincipal.getChildren().add(pBancosDiversos);
+
+				FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/bancos_diversos/BancosDiversos.fxml"));
+				Pane p = new  Pane();
+				loader.setRoot(p);
+				loader.setController(new ControladorBancosDiversos ());
+				try {
+					loader.load();
+				} catch (IOException e) {
+					System.out.println("erro na abertura do pane bancos diversos");
+					e.printStackTrace();
+				}
+				pBancosDiversos.getChildren().add(p);
+				
+				p.minWidthProperty().bind(pBancosDiversos.widthProperty());
+				p.minHeightProperty().bind(pBancosDiversos.heightProperty());
+
+				p.maxWidthProperty().bind(pBancosDiversos.widthProperty());
+				p.maxHeightProperty().bind(pBancosDiversos.heightProperty());
+				
+				p.setStyle("-fx-background-color: white;");
+				
+			
+			} //  fim if pane null
+
+			dblBancoAccess =  pBancosDiversos.getTranslateY();
+
+
+			if(dblBancoAccess.equals(0.0)){
+
+				ttBaixaBancoAccess.play();
+
+				if (pFiscalizacao != null)
+					pFiscalizacao.setTranslateY(880.0);//downFiscal.play();
+				if (pAtendimento != null)
+					pAtendimento.setTranslateY(880.0);
+				if (pOutorga != null)
+					pOutorga.setTranslateY(880.0);
+				if (pNavegador != null)
+					pNavegador.setTranslateY(880.0);
+
+
+
+			} else {
+
+				ttSobeBancoAccess.play();
+
+				if (pFiscalizacao != null)
+					pFiscalizacao.setTranslateY(880.0);
+				if (pAtendimento != null)
+					pAtendimento.setTranslateY(880.0);
+				if (pOutorga != null)
+					pOutorga.setTranslateY(880.0);
+				if (pNavegador != null)
+					pNavegador.setTranslateY(880.0);
+
+			}
+			
 
 		});
 

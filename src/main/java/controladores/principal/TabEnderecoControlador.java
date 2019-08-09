@@ -13,11 +13,7 @@ import java.util.Set;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.geom.PrecisionModel;
-import com.vividsolutions.jts.geom.impl.CoordinateArraySequence;
 
 import dao.EnderecoDao;
 import entidades.Demanda;
@@ -69,29 +65,7 @@ public class TabEnderecoControlador implements Initializable {
 	Demanda demanda;
 	Endereco endereco = new Endereco();
 
-	// recebimento da demanda e preenchimento na parte superior - DOCUMENTO: ... 
-	public void setDemanda (Demanda demanda)  {
-		
-		this.demanda = demanda;
-		// preencher o label com a demanda selecionada //
-		
-		if(!(demanda == null)) {
-			lblDemanda.setText(
-					demanda.getDemTipo() 
-					+ ", Sei n° " + demanda.getDemNumeroSEI()
-					+ ", Processo n° " + demanda.getDemProcesso()
-					);
-			
-			lblDemanda.setStyle("-fx-text-fill: #4A4A4A;"); 
-		} else {
-			
-			lblDemanda.setText(
-					"Não há demanda relacionada a este endereco! "
-					);
-			lblDemanda.setStyle("-fx-text-fill: #FF0000;");
-		}
-	
-	}
+
 
 	Documento documento = new  Documento();
 	
@@ -101,19 +75,19 @@ public class TabEnderecoControlador implements Initializable {
 		// preencher o label com a demanda selecionada //
 		
 		if(!(documento == null)) {
-			lblDemanda.setText(
+			lblDocumento.setText(
 					documento.getDocTipo()
 					+ ", Sei n° " + documento.getDocSEI()
 					+ ", Processo n° " + documento.getDocProcesso()
 					);
 			
-			lblDemanda.setStyle("-fx-text-fill: #4A4A4A;"); 
+			lblDocumento.setStyle("-fx-text-fill: #4A4A4A;"); 
 		} else {
 			
-			lblDemanda.setText(
+			lblDocumento.setText(
 					"Não há demanda relacionada a este endereco! "
 					);
-			lblDemanda.setStyle("-fx-text-fill: #FF0000;");
+			lblDocumento.setStyle("-fx-text-fill: #FF0000;");
 		}
 	
 	}
@@ -257,6 +231,7 @@ public class TabEnderecoControlador implements Initializable {
 					endDao.salvarEndereco(end); //solução para recuperar o id do endereço
 					endDao.mergeEndereco(end); // assim adiciona o id end na demanda dem
 				
+					/*
 					// levar o endereco salvo para a tabinterferencia //	
 					if (intControlador == 0) {
 					 TabInterferenciaControlador.controladorAtendimento.setEndereco(end);
@@ -276,6 +251,7 @@ public class TabEnderecoControlador implements Initializable {
 						    	TabUsuarioControlador.controladorOutorga.setEndereco(end);
 						    	TabParecerControlador.controladorOutorga.setEndereco(end);
 						    }
+						    */
 							    
 							
 				//-- modular botoes--//
@@ -384,6 +360,8 @@ public class TabEnderecoControlador implements Initializable {
 					// levar o endereco salvo para a tabinterferencia //	
 
 					// levar o endereco salvo para a tabinterferencia //	
+						
+						/*
 					if (intControlador == 0) {
 					 TabInterferenciaControlador.controladorAtendimento.setEndereco(end);
 					 TabUsuarioControlador.controladorAtendimento.setEndereco(end);
@@ -402,6 +380,7 @@ public class TabEnderecoControlador implements Initializable {
 				    	TabUsuarioControlador.controladorOutorga.setEndereco(end);
 				    	TabParecerControlador.controladorOutorga.setEndereco(end);
 				    }
+				    */
 		
 						    
 					// atualizar a tableview //
@@ -431,6 +410,7 @@ public class TabEnderecoControlador implements Initializable {
 				
 				endDao.removerEndereco(id);
 				
+				/*
 				 if (intControlador == 0) {
 					 TabInterferenciaControlador.controladorAtendimento.setEndereco(null);
 					 TabUsuarioControlador.controladorAtendimento.setEndereco(null);
@@ -447,6 +427,7 @@ public class TabEnderecoControlador implements Initializable {
 				    	TabUsuarioControlador.controladorOutorga.setEndereco(null);
 				    	TabParecerControlador.controladorOutorga.setEndereco(null);
 				    }
+				    */
 				
 				obsList.remove(end);
 				
@@ -507,36 +488,25 @@ public class TabEnderecoControlador implements Initializable {
 	VBox vBox  = new VBox();
 	Button btnLimparMapa = new Button("limpar");
 	
-										  								
-		
-	public static TabEnderecoControlador controladorAtendimento;
-		public static TabEnderecoControlador controladorFiscalizacao;
-			public static TabEnderecoControlador controladorOutorga;
-			
-			int intControlador;
-	
-	/* transmitir valores entre as tabs 
-	 * @controladorAtendimento - caso o atendimento seja chamado
-	 * @controladorFiscalizacao - caso a fiscalizacao seja chamada
-	 * 		Resolve o problema de chamar as duas abas (atendimento e fiscalizacao) e os valores se confundirem ente elas
-	 */
-	public TabEnderecoControlador (int i) {
-		
-		if (i==0) {
-			controladorAtendimento = this;
-			intControlador = i;
-		}
-		if(i==1) {
-			controladorFiscalizacao = this;
-			intControlador = i;
-		}
-		
-		if(i==2) {
-			controladorOutorga = this;
-			intControlador = i;
-		}
-	
+	ControladorOutorga controladorOutorga;
+	ControladorAtendimento controladorAtendimento;
+	ControladorFiscalizacao controladorFiscalizacao;
+
+	public TabEnderecoControlador (ControladorOutorga controladorOutorga) {
+		this.controladorOutorga = controladorOutorga;
+
 	}
+	
+	public TabEnderecoControlador (ControladorAtendimento controladorAtendimento) {
+		this.controladorAtendimento = controladorAtendimento;
+
+	}
+	
+	public TabEnderecoControlador (ControladorFiscalizacao controladorFiscalizacao) {
+		this.controladorFiscalizacao = controladorFiscalizacao;
+
+	}	
+			
 	
 	@FXML Pane pEndereco;
 	  
@@ -545,6 +515,8 @@ public class TabEnderecoControlador implements Initializable {
 	BorderPane bp2 = new BorderPane();
 	ScrollPane sp = new ScrollPane();
 	Pane pMapa = new Pane();
+	
+	public static TabEnderecoControlador tabEnderecoControlador;
 	
 	String strCroquiEndereco;
 	
@@ -570,6 +542,8 @@ public class TabEnderecoControlador implements Initializable {
 	Pane pPrincipal = new Pane();
 	  
 	public void initialize(URL url, ResourceBundle rb) {
+		
+		tabEnderecoControlador = this;
 		
 		 bp1.minWidthProperty().bind(pEndereco.widthProperty());
 		    bp1.maxHeightProperty().bind(pEndereco.heightProperty().subtract(60));
@@ -686,9 +660,8 @@ public class TabEnderecoControlador implements Initializable {
 	    	
 	}
 
-	
 	Pane pDemanda;
-	Label lblDemanda;
+	Label lblDocumento;
 	Button btnDemanda;
 
 	ArrayList<Node> listNodesDemanda = new ArrayList<Node>();
@@ -724,7 +697,7 @@ public class TabEnderecoControlador implements Initializable {
 
 		listNodesDemanda.add(pDemanda = new Pane());
 		listNodesDemanda.add(new Label("DEMANDA:"));
-		listNodesDemanda.add(lblDemanda = new Label());
+		listNodesDemanda.add(lblDocumento = new Label());
 		listNodesDemanda.add(btnDemanda = new Button("<<<"));
 
 		prefSizeWHeLayXY = new Double [][] { 
@@ -804,6 +777,7 @@ public class TabEnderecoControlador implements Initializable {
 		com.popularTela(listNodesPersistencia, prefSizeWHeLayXY, p2);   
 
 	}
+	
 	/* ativar metodo onAction para os botoes */
 	public void habilitarAcoesDosBotoes () {
 
@@ -1060,8 +1034,8 @@ public class TabEnderecoControlador implements Initializable {
 		
 	}
 	 
-	TranslateTransition transDireita;
-	TranslateTransition transEsquerda;
+	TranslateTransition ttDocDireita;
+	TranslateTransition ttDocEsquerda;
 	Pane pTelaDocumento;
 	Double dblTransicaoDemanda;
 	
@@ -1076,7 +1050,7 @@ public class TabEnderecoControlador implements Initializable {
 
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/principal/TelaDocumento.fxml"));
 			loader.setRoot(p);
-			loader.setController(new TelaDocumentoControlador(intControlador));
+			loader.setController(new TelaDocumentoControlador(this));
 
 			try {
 				loader.load();
@@ -1090,47 +1064,24 @@ public class TabEnderecoControlador implements Initializable {
 
 			p1.getChildren().add(pTelaDocumento);
 
-			transEsquerda = new TranslateTransition(new Duration(350.0), pTelaDocumento);
-			transEsquerda.setToX(15.0);
+			ttDocEsquerda = new TranslateTransition(new Duration(350.0), pTelaDocumento);
+			ttDocEsquerda.setToX(15.0);
 
-			transDireita = new TranslateTransition(new Duration(350.0), pTelaDocumento);
-			transDireita.setToX(1300.0);
+			ttDocDireita = new TranslateTransition(new Duration(350.0), pTelaDocumento);
+			ttDocDireita.setToX(1300.0);
 
 			pTelaDocumento.setTranslateX(1300.0);
 
 		}
 
-		movimentarTelaDemanda (15.0);
+		ttDocEsquerda.play();
 
 	}
 	  
-	public void movimentarTelaDemanda (Double dbltransEsquerda)	{
+	public void movimentarTelaDocumento () {
 		  
-		  
-		  /*
-	    if (demanda.getDemID() == 0) {
-	    	
-	      lbl_TP_Demanda.setText("Não há demanda selecionada!!!");
-	      lbl_TP_Demanda.setTextFill(Color.RED);
-	      
-	    }
-	    else {
-	    	
-	      lbl_TP_Demanda.setText(demanda
-	        .getDemDocumento() + ", Sei nº" + demanda
-	        	.getDemDocumentoSEI() + ", Processo nº " + demanda
-	        		.getDemProcessoSEI());
-	      
-	      	lbl_TP_Demanda.setTextFill(Color.BLACK);
-	    }*/
-	    
-		  dblTransicaoDemanda = Double.valueOf(pTelaDocumento.getTranslateX());
-	    
-	    if (dblTransicaoDemanda.equals(dbltransEsquerda)) {
-	    	transDireita.play();
-	    } else {
-	    		transEsquerda.play();
-	    }
+		if (ttDocDireita != null)
+			ttDocDireita.play();
 	    
 	  }
 
@@ -1230,29 +1181,19 @@ public class TabEnderecoControlador implements Initializable {
 					
 					// levar o endereco salvo para a tabinterferencia //	
 					
-
-					// levar o endereco salvo para a tabinterferencia //	
-					if (intControlador == 0) {
-					 TabInterferenciaControlador.controladorAtendimento.setEndereco(end);
-					 TabUsuarioControlador.controladorAtendimento.setEndereco(end);
-					 TabParecerControlador.controladorAtendimento.setEndereco(end);
-					 TabAtosOutorgaControlador.controladorAtendimento.setEndereco(end);
-			
-				 	}
-				     
-				    if (intControlador == 1) {
-				    	TabInterferenciaControlador.controladorFiscalizacao.setEndereco(end);
-				    	TabUsuarioControlador.controladorFiscalizacao.setEndereco(end);
-				    	TabParecerControlador.controladorFiscalizacao.setEndereco(end);
-				    	TabAtosOutorgaControlador.controladorFiscalizacao.setEndereco(end);
-				    }
-				    
-				    if (intControlador == 2) {
-				    	TabInterferenciaControlador.controladorOutorga.setEndereco(end);
-				    	TabUsuarioControlador.controladorOutorga.setEndereco(end);
-				    	TabParecerControlador.controladorOutorga.setEndereco(end);
-				    	TabAtosOutorgaControlador.controladorOutorga.setEndereco(end);
-				    }
+					if (controladorOutorga != null) {
+						controladorOutorga.setEndereco(end);
+					}
+					
+					if (controladorFiscalizacao != null) {
+						controladorOutorga.setEndereco(end);
+					}
+					
+					if (controladorAtendimento != null) {
+						controladorOutorga.setEndereco(end);
+					}
+					
+					
 					
 					/* caso não haja demanda relacionada ao endereco, setar demanda vazia */
 					if (end.getDocumentos().size() == 0) {

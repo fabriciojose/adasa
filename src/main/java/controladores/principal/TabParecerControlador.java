@@ -117,28 +117,26 @@ public class TabParecerControlador implements Initializable {
   	BorderPane bp1 = new BorderPane();
   	BorderPane bp2 = new BorderPane();
   	ScrollPane sp = new ScrollPane();
-	  
-	public static TabParecerControlador controladorAtendimento, controladorFiscalizacao, controladorOutorga;
 
-	int intControlador;
-		
-	public TabParecerControlador (int i) {
-		
-		if (i==0) {
-			controladorAtendimento = this;
-			intControlador = i;
-		}
-		if(i==1) {
-			controladorFiscalizacao = this;
-			intControlador = i;
-		}
-		
-		if(i==2) {
-			controladorOutorga = this;
-			intControlador = i;
-		}
-	
+  	ControladorOutorga controladorOutorga;
+	ControladorAtendimento controladorAtendimento;
+	ControladorFiscalizacao controladorFiscalizacao;
+
+	public TabParecerControlador (ControladorOutorga controladorOutorga) {
+		this.controladorOutorga = controladorOutorga;
+
 	}
+	
+	public TabParecerControlador (ControladorAtendimento controladorAtendimento) {
+		this.controladorAtendimento = controladorAtendimento;
+
+	}
+	
+	public TabParecerControlador (ControladorFiscalizacao controladorFiscalizacao) {
+		this.controladorFiscalizacao = controladorFiscalizacao;
+
+	}
+	
 	  
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -1121,6 +1119,15 @@ public class TabParecerControlador implements Initializable {
 			
 			}
 		});
+		
+		btnEndereco.setOnAction(new EventHandler<ActionEvent>() {
+			@Override public void handle(ActionEvent e) {
+
+				inicializarTelaEndereco();
+			
+			}
+		});
+		
 	   
 	}
 	
@@ -1341,8 +1348,8 @@ public class TabParecerControlador implements Initializable {
 	  }
 
 	Pane pTelaUsuario;
-		TranslateTransition tDireita;
-		TranslateTransition tEsquerda;
+		TranslateTransition ttParUsDireita;
+		TranslateTransition ttParUsEsquerda;
 		Double dblTUsuario;
 	  
 	public void inicializarTelaUsuario () {
@@ -1356,7 +1363,7 @@ public class TabParecerControlador implements Initializable {
 	    
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/principal/TelaUsuario.fxml"));
 			loader.setRoot(p);
-			loader.setController(new TelaUsuarioControlador (intControlador));
+			loader.setController(new TelaUsuarioControlador (this));
 		
 			try {
 				loader.load();
@@ -1370,83 +1377,80 @@ public class TabParecerControlador implements Initializable {
 			
 			p1.getChildren().add(pTelaUsuario);
 		
-				tEsquerda = new TranslateTransition(new Duration(350.0), pTelaUsuario);
-					tEsquerda.setToX(15.0);
-				  
-				tDireita = new TranslateTransition(new Duration(350.0), pTelaUsuario);
-					tDireita.setToX(1300.0);
-		  
-					pTelaUsuario.setTranslateX(1300.0);
+			ttParUsEsquerda = new TranslateTransition(new Duration(350.0), pTelaUsuario);
+			ttParUsEsquerda.setToX(15.0);
+					  
+			ttParUsDireita = new TranslateTransition(new Duration(350.0), pTelaUsuario);
+			ttParUsDireita.setToX(1300.0);
+  
+			pTelaUsuario.setTranslateX(1300.0);
 		  
 		}
 	    
-	    movimentarTelaUsuario (15.0);
+	    ttParUsEsquerda.play();
 	    
 	  }
 	  
-	public void movimentarTelaUsuario (Double dbltransEsquerda)	{
+	public void movimentarTelaUsuario ()	{
 
-		dblTUsuario = Double.valueOf(pTelaUsuario.getTranslateX());
-
-		if (dblTUsuario.equals(dbltransEsquerda)) {
-			tDireita.play();
-		} else {
-			tEsquerda.play();
-		}
+		if (ttParUsDireita != null)
+			ttParUsDireita.play();
 
 	}
+	
+	
+	TranslateTransition ttEndDireita;
+	TranslateTransition ttEndEsquerda;
+	Pane pTelaEndereco;
+	Double dblTransicaoEndereco = 0.0;
+	
+
+	public void inicializarTelaEndereco() {
+		  
+	    if (pTelaEndereco == null) {
+	    	
+	    	pTelaEndereco = new Pane();
+	    	pTelaEndereco.setPrefSize(500.0, 500.0);
+	
+	    	Pane p = new Pane();
+	    	
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/principal/TelaEndereco.fxml"));
+				loader.setRoot(p);
+			
+					loader.setController(new TelaEnderecoControlador(this));
+		
+			try {
+				loader.load();
+			}
+				catch (IOException e)	{
+					System.out.println("erro leitura do pane");
+					e.printStackTrace();
+				}
+		
+			pTelaEndereco.getChildren().add(p);
+			
+			p1.getChildren().add(pTelaEndereco);
+		
+			ttEndEsquerda = new TranslateTransition(new Duration(350.0), pTelaEndereco);
+			ttEndEsquerda.setToX(15.0);
+				  
+			ttEndDireita = new TranslateTransition(new Duration(350.0), pTelaEndereco);
+			ttEndDireita.setToX(1300.0);
+		  
+			pTelaEndereco.setTranslateX(1300.0);
+		  
+		}
+	    
+	    ttEndEsquerda.play();
+	    
+	  }
+	
+	public void movimentarTelaEndereco ()	{
+		
+		if (ttEndDireita != null)
+			ttEndDireita.play();
+
+	  }
 }
 
 
-
-/*
-System.out.println(s+ "\n|||||||| INÍCIO |||||||||||||");
-
-s = s + s;
-
-for (Usuario u : setUsuarios) {
-	
-	System.out.println(s+ u.getUsNome());
-	
-	Iterator<Endereco> enderecos = setEnderecos.iterator();
-    	while (enderecos.hasNext()){
-    		Endereco ee = enderecos.next();
-    	 
-    	 	if (ee.getEndUsuarioFK().getUsID() == u.getUsID()) {
-    	 		System.out.println("Endereco: " + ee.getEndLogradouro()
-    	 				
-    	 				);
-    	 		
-    	 				for(Documento d : setDocumentos) {
-    	 					System.out.println(s+ "setDocumentos " + d.getDocNumeracao());
-    	 					
-    	 					if  (d.getDocProcessoFK().getProSEI() != null ) {
-    	 					System.out.println(s+ "||| ------------ processo principal " 
-    	 								+ d.getDocProcessoFK().getProSEI()
-    	 								+ "|||");
-    	 					}
-    	 					contadorDemandas ++;
-    	 				}
-    	 			
-    	 		Iterator<Interferencia> interferencias = setInterferencias.iterator();
-    	 		while (interferencias.hasNext()){
-    	 			Interferencia i = interferencias.next();
-        	 
-        	 	if (i.getInterEnderecoFK().getEndID() == ee.getEndID()) {
-        	 		System.out.println(s+ "||| +++++++++++++++++++++++++++++++++++++ Interferencias: " 
-        	 				+ i.getInterID() + " : " 
-        	 				+ i.getInterDDLatitude() + "," + i.getInterDDLongitude()
-        	 				
-        	 				+ "|||"
-        	 				);
-        	 	} // fim white interferencia
-    	 		}
-    	 		
-    	 	}
-    	 	
-    	 	
-    	 	
-     }
-           
-} // fim loop for
-*/

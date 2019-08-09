@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import dao.BancoAccessDao;
 import dao.UsuarioDao;
+import entidades.BancoAccess;
 import entidades.Documento;
 import entidades.Endereco;
 import entidades.Interferencia;
@@ -20,13 +22,16 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -38,6 +43,7 @@ import javafx.scene.paint.Color;
 import principal.Alerta;
 import principal.Componentes;
 import principal.FormatoData;
+import principal.ListasComboBox;
 
 public class TelaUsuarioControlador implements Initializable {
 	
@@ -45,14 +51,11 @@ public class TelaUsuarioControlador implements Initializable {
 	
 	Usuario usuario = new Usuario();
 	
-	/* construtor para trazer o intControlador correto. 
-	 * 0 para atendimento 
-	 * 1 para fiscalizacao 
-	 * 2 para outorga
-	 * */
+	TabParecerControlador tabParCon;
 	
-	public TelaUsuarioControlador (int intControlador) {
-		  this.intControlador = intControlador;
+	
+	public TelaUsuarioControlador (TabParecerControlador tabParCon) {
+		this.tabParCon = tabParCon;
 	}
 	
 	Documento documento;
@@ -99,47 +102,18 @@ public class TelaUsuarioControlador implements Initializable {
 	ObservableList<String> olTipoPessoa = FXCollections
 		.observableArrayList("Física" , "Jurídica"); // box - seleção pessoa físcia ou jurídica
 
-	ObservableList<String> olRA = FXCollections
-		.observableArrayList(
-					
-					"Águas Claras",
-					"Brasília",
-					"Brazlândia",
-					"Candangolândia",
-					"Ceilândia",
-					"Cruzeiro",
-					"Fercal",
-					"Gama",
-					"Guará",
-					"Itapoã",
-					"Jardim Botânico",
-					"Lago Norte",
-					"Lago Sul",
-					"Núcleo Bandeirante",
-					"Paranoá",
-					"Park Way",
-					"Planaltina",
-					"Recanto das Emas",
-					"Riacho Fundo II",
-					"Riacho Fundo",
-					"Samambaia",
-					"Santa Maria",
-					"São Sebastião",
-					"SCIA",
-					"SIA",
-					"Sobradinho II",
-					"Sobradinho	",
-					"Sudoeste/Octogonal",
-					"Taguatinga	",
-					"Varjão	",
-					"Vicente Pires"
-					
-					); 	
 
 	ObservableList<String> olDF = FXCollections
 		.observableArrayList("DF" , "GO", "Outro"); // box - seleção pessoa físcia ou jurídica
 
 
+	/* 
+	 * para pesquisar no banco de dados access
+	 */
+	List<BancoAccess> docList = new ArrayList<>();
+	ContextMenu contextMenu  = new ContextMenu();
+
+	   
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		
@@ -333,7 +307,7 @@ public class TelaUsuarioControlador implements Initializable {
 	    	
 	com = new Componentes();
     com.popularTela(componentesPersistencia, prefSizeWHeLayXY, pPrincipal);
-			    
+    
 			    
 	pTelaUsuario.getChildren().addAll(pPrincipal);
 	pTelaUsuario.setStyle("-fx-background-color: rgba(223,226,227, 0.7);");
@@ -342,8 +316,10 @@ public class TelaUsuarioControlador implements Initializable {
 	cbTipoPessoa.setValue("Física");
 	cbTipoPessoa.setItems(olTipoPessoa);
 	
-	cbRA.setItems(olRA);
-	
+    cbRA.setItems(ListasComboBox.obsListRA);
+    cbRA.setValue("Plano Piloto");
+
+
 	cbUF.setValue("DF");
 	cbUF.setItems(olDF);
 	
@@ -352,17 +328,7 @@ public class TelaUsuarioControlador implements Initializable {
 	    	
 	        @Override public void handle(ActionEvent e) {
 	     
-	        	if (intControlador == 0) {
-	        		TabParecerControlador.controladorAtendimento.movimentarTelaUsuario(15.0);
-	        	}
-	        	if (intControlador == 1) {
-	        		TabParecerControlador.controladorFiscalizacao.movimentarTelaUsuario(15.0);
-	        	}
-	        	if (intControlador == 2) {
-	        		TabParecerControlador.controladorOutorga.movimentarTelaUsuario(15.0);
-	        	}
-	        	
-	        	System.out.println("valor do intControlador TelaUsuario " + intControlador);
+	        	tabParCon.movimentarTelaUsuario();
 	        	
 	        }
 	    });

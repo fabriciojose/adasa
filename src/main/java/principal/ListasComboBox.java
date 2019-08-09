@@ -1,9 +1,6 @@
 package principal;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import dao.EnderecoDao;
 import entidades.BaciasHidrograficas;
@@ -20,11 +17,8 @@ import entidades.TipoInterferencia;
 import entidades.TipoOutorga;
 import entidades.TipoPoco;
 import entidades.UnidadeHidrografica;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.ComboBox;
 
 public class ListasComboBox {
 	

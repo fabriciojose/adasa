@@ -127,20 +127,10 @@ public class TabDocumentoControlador implements Initializable {
 
 				docDao.salvarDocumento(doc);
 
-
-				if (intTableView == 0) {
-					TabEnderecoControlador.controladorAtendimento.setDocumento(doc);
-
+				if (controladorOutorga != null) {
+					controladorOutorga.setDocumento(doc);
 				}
-
-				if (intTableView == 1) {
-					TabEnderecoControlador.controladorFiscalizacao.setDocumento(doc);
-				}
-
-				if (intTableView == 2) {
-					TabEnderecoControlador.controladorOutorga.setDocumento(doc);
-				}
-
+				
 				obsList.add(doc);
 
 				modularBotoes ();
@@ -214,19 +204,10 @@ public class TabDocumentoControlador implements Initializable {
 			obsList.add(doc);
 
 			/* transmitir demanda para a tab endereco */
-
-			if (intTableView == 0) {
-				TabEnderecoControlador.controladorAtendimento.setDocumento(doc);
-
+			if (controladorOutorga != null) {
+				controladorOutorga.setDocumento(doc);
 			}
 
-			if (intTableView == 1) {
-				TabEnderecoControlador.controladorFiscalizacao.setDocumento(doc);
-			}
-
-			if (intTableView == 2) {
-				TabEnderecoControlador.controladorOutorga.setDocumento(doc);
-			}
 
 			modularBotoes();
 
@@ -301,26 +282,22 @@ public class TabDocumentoControlador implements Initializable {
 
 	Componentes com;
 
-	public static TabDocumentoControlador controladorAtendimento;
-	public static TabDocumentoControlador controladorFiscalizacao;
-	public static TabDocumentoControlador controladorOutorga;
+	ControladorOutorga controladorOutorga;
+	ControladorAtendimento controladorAtendimento;
+	ControladorFiscalizacao controladorFiscalizacao;
 
-	int intTableView;  // 0: Atendimento 1: Fiscalizacao 2: Outorga
+	public TabDocumentoControlador (ControladorOutorga controladorOutorga) {
+		this.controladorOutorga = controladorOutorga;
 
-	public TabDocumentoControlador (int i) {
+	}
+	
+	public TabDocumentoControlador (ControladorAtendimento controladorAtendimento) {
+		this.controladorAtendimento = controladorAtendimento;
 
-		if (i==0) {
-			controladorAtendimento = this;
-			intTableView = i;
-		}
-		if(i==1) {
-			controladorFiscalizacao = this;
-			intTableView = i;
-		}
-		if(i==2) {
-			controladorOutorga = this;
-			intTableView = i;
-		}
+	}
+	
+	public TabDocumentoControlador (ControladorFiscalizacao controladorFiscalizacao) {
+		this.controladorFiscalizacao = controladorFiscalizacao;
 
 	}
 
@@ -328,7 +305,7 @@ public class TabDocumentoControlador implements Initializable {
 	Button btnLimparMapa = new Button("limpar");
 	
 	public void initialize(URL url, ResourceBundle rb) {
-
+		
 		bp1.minWidthProperty().bind(pDocumento.widthProperty());
 		bp1.maxHeightProperty().bind(pDocumento.heightProperty().subtract(60));
 
@@ -536,6 +513,14 @@ public class TabDocumentoControlador implements Initializable {
 		btnNovo.setOnAction(new EventHandler<ActionEvent>() {
 			@Override public void handle(ActionEvent e) {
 				habilitarDocumento();
+				
+				Documento doc = new Documento();
+				doc.setDocSEI("123456789");
+				
+				if (controladorOutorga != null) {
+					controladorOutorga.setDocumento(doc);
+				}
+				
 			}
 		});
 
@@ -578,9 +563,9 @@ public class TabDocumentoControlador implements Initializable {
 
 		btnTelaEndereco.setOnAction(new EventHandler<ActionEvent>() {
 			@Override public void handle(ActionEvent e) {
+				
 				inicializarTelaEndereco();
-
-				TelaEnderecoControlador.telaEnderecoControladorDocumento.setObjetoDeEdicao(documento);
+				telaEnderecoControlador.setObjetoDeEdicao(documento);
 
 			}
 		});
@@ -598,8 +583,8 @@ public class TabDocumentoControlador implements Initializable {
 
 				inicializarTelaProcesso ();
 
-				TelaProcessoControlador.telaProCon.setDocumento(documento);
-
+				//TelaProcessoControlador.telaProCon.setDocumento(documento);
+				telaProcessoControlador.setDocumento(documento);
 
 			}
 		});
@@ -653,8 +638,8 @@ public class TabDocumentoControlador implements Initializable {
 
 	ObservableList<Documento> obsList = FXCollections.observableArrayList();
 
-	TranslateTransition tProEsquerda;
-	TranslateTransition tProDireita;
+	TranslateTransition ttProEsquerda;
+	TranslateTransition ttProDireita;
 	Pane pTelaProcesso;
 	Double dblTransTelaProcesso;
 
@@ -676,11 +661,13 @@ public class TabDocumentoControlador implements Initializable {
 
 	}
 
-	TranslateTransition ttDireita;
-	TranslateTransition ttEsquerda;
+	TranslateTransition ttEndDireita;
+	TranslateTransition ttEndEsquerda;
 	Pane pTelaEndereco;
 	Double dblTransEndereco;
 
+	TelaProcessoControlador telaProcessoControlador;
+	
 	public void inicializarTelaProcesso () {
 
 		if (pTelaProcesso == null) {
@@ -694,7 +681,7 @@ public class TabDocumentoControlador implements Initializable {
 			//telaProCon = new TelaProcessoControlador();
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/principal/TelaProcesso.fxml"));
 			loader.setRoot(p);
-			loader.setController(new TelaProcessoControlador(intTableView));
+			loader.setController(telaProcessoControlador = new TelaProcessoControlador(this));
 
 			try {
 				loader.load();
@@ -708,50 +695,32 @@ public class TabDocumentoControlador implements Initializable {
 
 			p1.getChildren().add(pTelaProcesso);
 
-			tProEsquerda = new TranslateTransition(new Duration(350.0), pTelaProcesso);
-			tProEsquerda.setToX(15.0);
+			ttProEsquerda = new TranslateTransition(new Duration(350.0), pTelaProcesso);
+			ttProEsquerda.setToX(15.0);
 
-			tProDireita = new TranslateTransition(new Duration(350.0), pTelaProcesso);
-			tProDireita.setToX(1300.0);
+			ttProDireita = new TranslateTransition(new Duration(350.0), pTelaProcesso);
+			ttProDireita.setToX(1300.0);
 
 			pTelaProcesso.setTranslateX(1300.0);
 
 		}
 
-		movimentarTelaProcesso (15.0);
+		ttProEsquerda.play();
 
 	}
 
-	public void movimentarTelaProcesso (Double dbltransEsquerda)	{
+	public void movimentarTelaProcesso ()	{
 
-		/*
-	    if (demanda.getDemID() == 0) {
-
-	      lbl_TP_Demanda.setText("Não há demanda selecionada!!!");
-	      lbl_TP_Demanda.setTextFill(Color.RED);
-
-	    }
-	    else {
-
-	      lbl_TP_Demanda.setText(demanda
-	        .getDemDocumento() + ", Sei nº" + demanda
-	        	.getDemDocumentoSEI() + ", Processo nº " + demanda
-	        		.getDemProcessoSEI());
-
-	      	lbl_TP_Demanda.setTextFill(Color.BLACK);
-	    }*/
-
-		dblTransTelaProcesso = Double.valueOf(pTelaProcesso.getTranslateX());
-
-		if (dblTransTelaProcesso.equals(dbltransEsquerda)) {
-			tProDireita.play();
-		} else {
-			tProEsquerda.play();
-		}
+		if (ttProDireita != null)
+			ttProDireita.play();
 
 	}
 
+	TelaEnderecoControlador telaEnderecoControlador;
+	
+	
 	public void inicializarTelaEndereco () {
+		
 		if (pTelaEndereco == null)
 		{
 			pTelaEndereco = new Pane();
@@ -761,7 +730,7 @@ public class TabDocumentoControlador implements Initializable {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/principal/TelaEndereco.fxml"));
 			loader.setRoot(p);
 			// TabDocumento = 0 TabInterferencia = 1
-			loader.setController(new TelaEnderecoControlador(0, intTableView));
+			loader.setController(telaEnderecoControlador = new TelaEnderecoControlador(this));
 			try
 			{
 				loader.load();
@@ -775,25 +744,22 @@ public class TabDocumentoControlador implements Initializable {
 
 			p1.getChildren().add(pTelaEndereco);
 
-			ttEsquerda = new TranslateTransition(new Duration(350.0), pTelaEndereco);
-			ttEsquerda.setToX(15.0);
+			ttEndEsquerda = new TranslateTransition(new Duration(350.0), pTelaEndereco);
+			ttEndEsquerda.setToX(15.0);
 
-			ttDireita = new TranslateTransition(new Duration(350.0), pTelaEndereco);
-			ttDireita.setToX(1300.0);
+			ttEndDireita = new TranslateTransition(new Duration(350.0), pTelaEndereco);
+			ttEndDireita.setToX(1300.0);
 
 			pTelaEndereco.setTranslateX(1300.0);
 		}
 		
-		//movimentarTelaEndereco(15.0);
-		ttEsquerda.play();
+		ttEndEsquerda.play();
 	}
 
 	public void movimentarTelaEndereco(){
 		
-		System.out.println("valor da table view chamada " + intTableView);
-
-		if (ttDireita != null)
-			ttDireita.play();
+		if (ttEndDireita != null)
+			ttEndDireita.play();
 		
 	}
 
@@ -815,6 +781,7 @@ public class TabDocumentoControlador implements Initializable {
 		btnNovo.setDisable(false);
 	}
 
+	
 	//-- selecionar demandas -- //
 	public void selecionarDocumento () {
 
@@ -941,26 +908,19 @@ public class TabDocumentoControlador implements Initializable {
 					}catch (Exception e) {lblDataAtualizacao.setText("Não há data de atualização!");
 					lblDataAtualizacao.setTextFill(Color.RED);}
 
-					//Levar a demanda para cadastrar o endereco //
-					//tabEndCon.setDemanda(demanda);
-					//enditarEnderecoControlador.setObjetoDeEdicao(demanda);
-
-					//System.out.println("valor do int controlador " + intControlador);
-
-					if (intTableView == 0) {
-						TabEnderecoControlador.controladorAtendimento.setDocumento(doc);
-
+					if (controladorOutorga != null) {
+						controladorOutorga.setDocumento(doc);
 					}
-
-					if (intTableView == 1) {
-						TabEnderecoControlador.controladorFiscalizacao.setDocumento(doc);
+					
+					if (controladorFiscalizacao != null) {
+						controladorFiscalizacao.setDocumento(doc);
 					}
-
-					if (intTableView == 2) {
-						TabEnderecoControlador.controladorOutorga.setDocumento(doc);
+					
+					if (controladorAtendimento != null) {
+						controladorAtendimento.setDocumento(doc);
 					}
-
-
+				
+				
 					// copiar número sei da demanda ao selecionar //
 					Clipboard clip = Clipboard.getSystemClipboard();
 					ClipboardContent conteudo = new ClipboardContent();

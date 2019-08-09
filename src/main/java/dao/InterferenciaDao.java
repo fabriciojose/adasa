@@ -12,7 +12,6 @@ import org.hibernate.sql.JoinType;
 
 import entidades.HibernateUtil;
 import entidades.Interferencia;
-import entidades.ModelosHTML;
 
 public class InterferenciaDao {
 	

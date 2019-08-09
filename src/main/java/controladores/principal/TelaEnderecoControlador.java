@@ -95,38 +95,6 @@ public class TelaEnderecoControlador implements Initializable {
 
 	}
 	
-	public static TelaEnderecoControlador telaEnderecoControladorDocumento;
-	public static TelaEnderecoControlador telaEnderecoControladorInterferencia;
-	public static TelaEnderecoControlador telaEnderecoControladorUsuario;
-	
-	int intTableView;
-	int intTab;
-	
-	public TelaEnderecoControlador (int intTab, int intTableView) {
-		
-		this.intTableView = intTableView;
-		
-		// 0 = Documento
-		if (intTab == 0) {
-			telaEnderecoControladorDocumento = this;
-			this.intTab = intTab;
-		}
-		
-		// 1 = Interferencia
-		if(intTab == 1) {
-			telaEnderecoControladorInterferencia = this;
-			this.intTab = intTab;
-		}
-		
-		// 2 = Usuario
-		if(intTab == 2) {
-			telaEnderecoControladorUsuario = this;
-			this.intTab = intTab;
-		}
-				
-		
-	}
-	
 	@FXML Pane pTelaEndereco;
 											 
 	//-- TableView endereco --//
@@ -212,7 +180,6 @@ public class TelaEnderecoControlador implements Initializable {
 	 */
 	
 	Pane pPrincipal = new Pane();
-	
 	
 	Pane pDocumento;
 	Label lblTipoObjeto;
@@ -361,24 +328,53 @@ public class TelaEnderecoControlador implements Initializable {
 
 	}
 	
+	TabDocumentoControlador tabDocCon;
+	TabUsuarioControlador tabUsCon;
+	TabInterferenciaControlador tabInterCon;
+	TabParecerControlador tabParCon;
+	TabAtosOutorgaControlador tabAtosOutCon;
+	
+	
+	/*
+	 * Construtor
+	 */
+	
+	public TelaEnderecoControlador (TabDocumentoControlador tabDocCon) {
+		this.tabDocCon = tabDocCon;
+	}
+	
+	public TelaEnderecoControlador (TabUsuarioControlador tabUsCon) {
+		this.tabUsCon = tabUsCon;
+	}
+	
+	public TelaEnderecoControlador (TabInterferenciaControlador tabInterCon) {
+		this.tabInterCon = tabInterCon;
+	}
+	
+	public TelaEnderecoControlador (TabParecerControlador tabParCon) {
+		this.tabParCon = tabParCon;
+	}
+	
+	public TelaEnderecoControlador (TabAtosOutorgaControlador tabAtosOutCon) {
+		this.tabAtosOutCon = tabAtosOutCon;
+	}
+	
+	
 	public void acionarBotoes () {
 		  
 	    btnDocumento.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override public void handle(ActionEvent e) {
-	        
-	        	if (intTableView == 0) {
-	        		TabInterferenciaControlador.controladorAtendimento.movimentarTelaEndereco();
-	        	}
-	        	if(intTableView == 1) {
-	        		TabInterferenciaControlador.controladorFiscalizacao.movimentarTelaEndereco();
-	        	}
-	        	if (intTableView == 2) {
-	        		
-	        			TabInterferenciaControlador.controladorOutorga.movimentarTelaEndereco();
-	        			TabDocumentoControlador.controladorOutorga.movimentarTelaEndereco();
-	        			TabUsuarioControlador.controladorOutorga.movimentarTelaEndereco();
-	        		
-	        	}
+	        	
+	        	if (tabDocCon != null)
+	        	tabDocCon.movimentarTelaEndereco();
+	        	if (tabUsCon != null)
+	        		tabUsCon.movimentarTelaEndereco();
+	        	if (tabInterCon != null)
+	        		tabInterCon.movimentarTelaEndereco();
+	        	if (tabParCon != null)
+	        		tabParCon.movimentarTelaEndereco();
+	        	if (tabAtosOutCon != null)
+	        		tabAtosOutCon.movimentarTelaEndereco();
 	        	
 	        }
 	    });
@@ -884,6 +880,7 @@ public class TelaEnderecoControlador implements Initializable {
 				
 				// levar o endereco salvo para a tabinterferencia //	
 				
+				/*
 				 if (intTableView == 0) {
 					 TabInterferenciaControlador.controladorAtendimento.setEndereco(end);
 					 TabUsuarioControlador.controladorAtendimento.setEndereco(end);
@@ -900,6 +897,11 @@ public class TelaEnderecoControlador implements Initializable {
 				    	TabUsuarioControlador.controladorOutorga.setEndereco(end);
 				    	TabParecerControlador.controladorOutorga.setEndereco(end);
 				    }
+				    */
+					tabInterCon.setEndereco(end);
+					tabUsCon.setEndereco(end);
+					tabParCon.setEndereco(end);
+					
 				
 				
 				// -- habilitar e desabilitar botoes -- //
