@@ -1240,6 +1240,7 @@ public class TabEnderecoControlador implements Initializable {
 					googleMaps.setZoom (15);
 					googleMaps.setMapCenter(end.getEndDDLatitude(), end.getEndDDLongitude());
 					
+					/*
 					PoligonoCroqui pol = new PoligonoCroqui();
 					
 					try {
@@ -1249,6 +1250,7 @@ public class TabEnderecoControlador implements Initializable {
 					} catch (Exception e) {
 						
 					}
+					*/
 					
 				}
 				
