@@ -27,6 +27,11 @@ public class PoligonoCroqui {
 	    String [] strPoligonoUltimoPonto;
 
 	 		strPoligonoUltimoPonto = arrayLatLon[1].split(",");
+	 		
+	 		System.out.println(arrayLatLon[0]);
+	 		
+	 		System.out.println(arrayLatLon[1]);
+	 		
 
 	 	// o loop comeca 1 pois a arrayLatLon tem o indice zero nulo por causa do split
 		for (int i = 1; i<arrayLatLon.length; i++) {
@@ -52,22 +57,28 @@ public class PoligonoCroqui {
 		return polygon;
 	}
 	
-	public void setarPoligono (Endereco endereco) {
-		
+
+	public String setarPoligono (Endereco endereco) {
+
 		Polygon pol = (Polygon) endereco.getEndCroqui();
-		
+
 		Coordinate[] l = pol.getCoordinates();
-		
-		String strCroqui;
-    	 
-    	 for (Coordinate c : l) {
-    		 
-    		 System.out.println("lon " + c.x);
-    		 System.out.println(" lat " + c.y);
-    	 }
-		
-		
+
+		StringBuilder strShapeEndereco = new StringBuilder();
+
+		for (Coordinate c : l) {
+
+			//System.out.println("lon " + c.x);
+			//System.out.println(" lat " + c.y);
+
+			strShapeEndereco.append("|" + c.y + "," + c.x);
+
+
+		}
+
+		return strShapeEndereco.toString();
+
 	}
-	
+
 
 }

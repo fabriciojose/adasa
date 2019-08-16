@@ -597,9 +597,12 @@ public class TabAtosOutorgaControlador implements Initializable {
 		
 		
 		btnGeradorAtoOutorga.setOnAction(new EventHandler<ActionEvent>() {
+			
 			@Override public void handle(ActionEvent e) {
 
 				// capturar o modelo html que será usado pelo combobox
+				
+				// e preciso para o futuro ver de buscar apenas os modelos necessários ao invés de trazer todos
 				String modeloHTML = cbModelosHTML.getSelectionModel().getSelectedItem().getModConteudo();
 				
 				// capturar a tabela que sera colocada dentro do modelo html selecionado, pode ser varias interferencias em um modelo, entao varias tabelas
@@ -610,13 +613,14 @@ public class TabAtosOutorgaControlador implements Initializable {
 				String strHTML = mlDoc.criarAtoOutorga();
 				
 				try { ControladorNavegacao.conNav.setHTML(strHTML); } 
-				catch (Exception ee) {
+				
+					catch (Exception ee) {
 
 					Alerta a = new Alerta ();
 					a.alertar(new Alert(Alert.AlertType.ERROR, "Inicialize o navegador SEI !!!", ButtonType.OK));
-				}
+					} // fim catch
 				
-			}
+			} // fim metodo handle
 		
 		});
 
@@ -625,7 +629,7 @@ public class TabAtosOutorgaControlador implements Initializable {
 			@Override public void handle(ActionEvent e) {
 
 				inicializarTelaEndereco();
-			
+				telaEnderecoControlador.setObjetoDeEdicao(documento);
 			}
 		});
 		
@@ -948,7 +952,8 @@ public class TabAtosOutorgaControlador implements Initializable {
 	Pane pTelaEndereco;
 	Double dblTransicaoEndereco = 0.0;
 
-
+	TelaEnderecoControlador telaEnderecoControlador;
+	
 	public void inicializarTelaEndereco() {
 
 		if (pTelaEndereco == null) {
@@ -961,7 +966,7 @@ public class TabAtosOutorgaControlador implements Initializable {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/principal/TelaEndereco.fxml"));
 			loader.setRoot(p);
 
-			loader.setController(new TelaEnderecoControlador(this));
+			loader.setController(telaEnderecoControlador = new TelaEnderecoControlador(this));
 
 			try {
 				loader.load();

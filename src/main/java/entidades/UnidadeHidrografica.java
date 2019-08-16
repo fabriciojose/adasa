@@ -49,6 +49,8 @@ public class UnidadeHidrografica implements Serializable{
 	@Fetch(FetchMode.SUBSELECT) 
 	private List<Interferencia> interferencias = new ArrayList<Interferencia>();
 	
+
+	
 	public Geometry getShape() {
 		return Shape;
 	}
@@ -61,6 +63,14 @@ public class UnidadeHidrografica implements Serializable{
 	public UnidadeHidrografica () {
 		
 	}
+	
+	
+	public UnidadeHidrografica (int uhID, int uhCodigo) {
+		this.uhID = uhID;
+		this.uhCodigo = uhCodigo;
+	}
+	
+	
 
 	public int getUhID() {
 		return uhID;

@@ -62,6 +62,13 @@ public class BaciasHidrograficas implements Serializable {
 	public BaciasHidrograficas () {
 		
 	}
+	
+		// CONSTRUTOR PADRÃO //
+	public BaciasHidrograficas (int baciaID, String baciaNome) {
+		this.baciaID = baciaID;
+		this.baciaNome = baciaNome;
+	}
+
 
 	public int getBaciaID() {
 		return baciaID;

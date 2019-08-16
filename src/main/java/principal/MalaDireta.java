@@ -263,17 +263,17 @@ public class MalaDireta {
 					"inter_lat_tag", 
 					"inter_lon_tag",
 
-					"caesb_tag", 
-					"local_cap_tag", 
-					"cor_hid_tag", 
+					"inter_caesb_tag", 
+					"inter_local_cap_tag", 
+					"inter_cor_hid_tag", 
 
-					"for_capt_tag", 
-					"marca_bomba_tag",
-					"pot_bomba_tag",
+					"inter_forma_capt_tag", 
+					"inter_marca_bomba_tag",
+					"inter_potencia_bomba_tag",
 
-					"tempo_cap_tag",
-					"vazao_bomba_tag",
-					"data_oper_tag",
+					"inter_tempo_cap_tag",
+					"inter_vazao_bomba_tag",
+					"inter_data_oper_tag",
 
 
 			};

@@ -204,20 +204,18 @@ public class TabEnderecoControlador implements Initializable {
 			
 			// adicionar o poligono do croqui endereco
 			
-			
-			end.setEndCroqui(new PoligonoCroqui().obterPoligonoCroqui (strCroquiEndereco));
-			
+			System.out.println("btn salvar strCroquiEndereco " + strCroquiEndereco);
+			if (strCroquiEndereco != null) {
+				end.setEndCroqui(new PoligonoCroqui().obterPoligonoCroqui(strCroquiEndereco));
+			}
+		
 			end.setEndAtualizacao(
 					Timestamp.valueOf((LocalDateTime.now())));
 			
 				Documento doc = new Documento();
 				
 				doc = documento;
-				
-				
-				System.out.println("id do documento salvo tab endereco " + doc.getDocID());
-				
-				
+			
 				doc.setDocEnderecoFK(end);
 			
 				// adicionar o documento editada //
@@ -230,29 +228,23 @@ public class TabEnderecoControlador implements Initializable {
 					
 					endDao.salvarEndereco(end); //solução para recuperar o id do endereço
 					endDao.mergeEndereco(end); // assim adiciona o id end na demanda dem
-				
-					/*
-					// levar o endereco salvo para a tabinterferencia //	
-					if (intControlador == 0) {
-					 TabInterferenciaControlador.controladorAtendimento.setEndereco(end);
-					 TabUsuarioControlador.controladorAtendimento.setEndereco(end);
-					 TabParecerControlador.controladorAtendimento.setEndereco(end);
 			
-				 	}
-				     
-					    if (intControlador == 1) {
-					    	TabInterferenciaControlador.controladorFiscalizacao.setEndereco(end);
-					    	TabUsuarioControlador.controladorFiscalizacao.setEndereco(end);
-					    	TabParecerControlador.controladorFiscalizacao.setEndereco(end);
-					    }
-				    
-						    if (intControlador == 2) {
-						    	TabInterferenciaControlador.controladorOutorga.setEndereco(end);
-						    	TabUsuarioControlador.controladorOutorga.setEndereco(end);
-						    	TabParecerControlador.controladorOutorga.setEndereco(end);
-						    }
-						    */
-							    
+				strCroquiEndereco = null;
+				
+				
+				// levar o endereco salvo para a tabinterferencia //	
+				
+				if (controladorOutorga != null) {
+					controladorOutorga.setEndereco(end);
+				}
+				
+				if (controladorFiscalizacao != null) {
+					controladorOutorga.setEndereco(end);
+				}
+				
+				if (controladorAtendimento != null) {
+					controladorOutorga.setEndereco(end);
+				}
 							
 				//-- modular botoes--//
 				modularBotoesInicial ();
@@ -264,7 +256,6 @@ public class TabEnderecoControlador implements Initializable {
 				
 				Alerta a = new Alerta ();
 				a.alertar(new Alert(Alert.AlertType.INFORMATION, "Cadastro salvo com sucesso!!!", ButtonType.OK));
-							
 					
 			}
 		}
@@ -326,8 +317,12 @@ public class TabEnderecoControlador implements Initializable {
 						
 					end.setEndGeom(p);
 					
-					end.setEndCroqui(new PoligonoCroqui().obterPoligonoCroqui (strCroquiEndereco));
+					System.out.println("btn editar strCroquiEndereco " + strCroquiEndereco);
 					
+					if (strCroquiEndereco != null) {
+						end.setEndCroqui(new PoligonoCroqui().obterPoligonoCroqui (strCroquiEndereco));
+					}
+		
 					end.setEndAtualizacao(Timestamp.valueOf((LocalDateTime.now())));
 					
 					Documento doc = new Documento();
@@ -356,33 +351,23 @@ public class TabEnderecoControlador implements Initializable {
 					EnderecoDao enderecoDao = new EnderecoDao();
 				
 						enderecoDao.mergeEndereco(end);
-					
-					// levar o endereco salvo para a tabinterferencia //	
-
-					// levar o endereco salvo para a tabinterferencia //	
 						
-						/*
-					if (intControlador == 0) {
-					 TabInterferenciaControlador.controladorAtendimento.setEndereco(end);
-					 TabUsuarioControlador.controladorAtendimento.setEndereco(end);
-					 TabParecerControlador.controladorAtendimento.setEndereco(end);
-			
-				 	}
-					     
-				    if (intControlador == 1) {
-				    	TabInterferenciaControlador.controladorFiscalizacao.setEndereco(end);
-				    	TabUsuarioControlador.controladorFiscalizacao.setEndereco(end);
-				    	TabParecerControlador.controladorFiscalizacao.setEndereco(end);
-				    }
-					    
-				    if (intControlador == 2) {
-				    	TabInterferenciaControlador.controladorOutorga.setEndereco(end);
-				    	TabUsuarioControlador.controladorOutorga.setEndereco(end);
-				    	TabParecerControlador.controladorOutorga.setEndereco(end);
-				    }
-				    */
-		
-						    
+					strCroquiEndereco = null;
+						
+					// levar o endereco salvo para a tabinterferencia //	
+					
+					if (controladorOutorga != null) {
+						controladorOutorga.setEndereco(end);
+					}
+					
+					if (controladorFiscalizacao != null) {
+						controladorOutorga.setEndereco(end);
+					}
+					
+					if (controladorAtendimento != null) {
+						controladorOutorga.setEndereco(end);
+					}
+		    
 					// atualizar a tableview //
 					obsList.remove(end);
 					obsList.add(end);
@@ -409,42 +394,37 @@ public class TabEnderecoControlador implements Initializable {
 			try {
 				
 				endDao.removerEndereco(id);
-				
-				/*
-				 if (intControlador == 0) {
-					 TabInterferenciaControlador.controladorAtendimento.setEndereco(null);
-					 TabUsuarioControlador.controladorAtendimento.setEndereco(null);
 			
-				 	}
-				     
-				    if (intControlador == 1) {
-				    	TabInterferenciaControlador.controladorFiscalizacao.setEndereco(null);
-				    	TabUsuarioControlador.controladorFiscalizacao.setEndereco(null);
-				    }
-				    
-				    if (intControlador == 2) {
-				    	TabInterferenciaControlador.controladorOutorga.setEndereco(null);
-				    	TabUsuarioControlador.controladorOutorga.setEndereco(null);
-				    	TabParecerControlador.controladorOutorga.setEndereco(null);
-				    }
-				    */
-				
 				obsList.remove(end);
+				
+				
+				// levar o endereco salvo para a tabinterferencia //	
+				
+				if (controladorOutorga != null) {
+					controladorOutorga.setEndereco(null);
+				}
+				
+				if (controladorFiscalizacao != null) {
+					controladorOutorga.setEndereco(null);
+				}
+				
+				if (controladorAtendimento != null) {
+					controladorOutorga.setEndereco(null);
+				}
 				
 				modularBotoesInicial();
 				
 				Alerta a = new Alerta ();
 				a.alertar(new Alert(Alert.AlertType.INFORMATION, "Cadastro deletado com sucesso!!!", ButtonType.OK));
 				
-		
-					}
-		
-					catch (Exception e) {
+				}
+			
+				catch (Exception e) {
+				
+					Alerta a = new Alerta ();
+					a.alertar(new Alert(Alert.AlertType.ERROR, "Há denúncia associada a este endereço!", ButtonType.OK));
 						
-						Alerta a = new Alerta ();
-						a.alertar(new Alert(Alert.AlertType.ERROR, "Há denúncia associada a este endereço!", ButtonType.OK));
-						
-					}
+				}
 		
 }
 
@@ -561,8 +541,8 @@ public class TabEnderecoControlador implements Initializable {
 		    
 		    pEndereco.getChildren().add(bp1);
 		    
-		    p1.setMaxSize(980.0, 1000.0);
-		    p1.setMinSize(980.0, 1000.0);
+		    p1.setMaxSize(980.0, 1400.0);
+		    p1.setMinSize(980.0, 1400.0);
 		    
 		    bp2.setTop(p1);
 		    BorderPane.setAlignment(p1, Pos.CENTER);
@@ -873,8 +853,9 @@ public class TabEnderecoControlador implements Initializable {
 
 	}
 	
-	
+	Button btnShape;
 	Button btnLimparShape;
+
 	Button fecharShapeEndereco;
 	
 	TranslateTransition transShapeEnderecoDireita;
@@ -905,26 +886,35 @@ public class TabEnderecoControlador implements Initializable {
 	
 			GoogleMap googleMapsShape = new GoogleMap();
 	
-			googleMapsShape.setWidth(830);
+			googleMapsShape.setWidth(810);
 			googleMapsShape.setHeight(365);
-			googleMapsShape.setLayoutX(12);
-			googleMapsShape.setLayoutY(8);
+			googleMapsShape.setLayoutX(5);
+			googleMapsShape.setLayoutY(5);
 	
 			googleMapsShape.switchHybrid();
 			googleMapsShape.setZoom(17);
 	
 			VBox vBoxShape = new VBox();
-			vBoxShape.setPrefSize(65, 365);
-			vBoxShape.setLayoutX(852);
-			vBoxShape.setLayoutY(8);
+			vBoxShape.setPrefSize(100, 365);
+			vBoxShape.setLayoutX(819);
+			vBoxShape.setLayoutY(5);
 	
-			btnLimparShape = new Button("limpar");
-			btnLimparShape.setPrefSize(65, 25);
+			Button btnShape = new Button("ativar");
+			btnShape.setPrefSize(100, 25);
+			
+			Button btnLimparMapa = new Button("limpar");
+			btnLimparMapa.setPrefSize(100, 25);
+			
+			Button btnLinha = new Button("linha");
+			btnLinha.setPrefSize(100, 25);
+			
+			Button btnPoligono = new Button("shape");
+			btnPoligono.setPrefSize(100, 25);
 	
-			vBoxShape.getChildren().addAll(btnLimparShape);
+			vBoxShape.getChildren().addAll(btnShape, btnLimparMapa, btnLinha, btnPoligono);
 	
 			Pane p = new Pane();
-			p.setPrefSize(925, 324);
+			p.setPrefSize(925, 325);
 		
 			p.getChildren().addAll(googleMapsShape, vBoxShape);
 	
@@ -934,8 +924,8 @@ public class TabEnderecoControlador implements Initializable {
 				if (newValue) {
 					ttDescerAccordion.play();
 					try {
-						googleMapsShape.setMarkerPosition(Double.parseDouble(tfLatitude.getText()), Double.parseDouble(tfLongitude.getText()));
-						googleMapsShape.setMapCenter(Double.parseDouble(tfLatitude.getText()), Double.parseDouble(tfLongitude.getText()));
+						googleMapsShape.setMarkerPosition(tfLatitude.getText(), tfLongitude.getText());
+						googleMapsShape.setMapCenter(tfLatitude.getText(), tfLongitude.getText());
 						googleMapsShape.setZoom(17);
 					} catch (Exception e) {
 						Alerta a = new Alerta ();
@@ -952,13 +942,48 @@ public class TabEnderecoControlador implements Initializable {
 	
 			p1.getChildren().add(accordion);
 	
-			btnLimparShape.setOnAction(new EventHandler<ActionEvent>() {
+			btnShape.setOnAction(new EventHandler<ActionEvent>() {
 	
 				@Override
 				public void handle(ActionEvent event) {
 	
-					googleMapsShape.limparMapa();
+					googleMapsShape.criarShapeEndereco();
 	
+				}
+			});
+			
+			btnLimparMapa.setOnAction(new EventHandler<ActionEvent>() {
+				
+				@Override
+				public void handle(ActionEvent event) {
+	
+					// limpar o mapa
+					googleMapsShape.limparMapa();
+					
+					// limpar a string com as coordenadas da shape
+					strCroquiEndereco = null;
+	
+				}
+			});
+			
+			btnLinha.setOnAction(new EventHandler<ActionEvent>() {
+							
+							@Override
+							public void handle(ActionEvent event) {
+				
+								googleMapsShape.setarLinhaOuShape(true);
+				
+							}
+						});
+
+
+			btnPoligono.setOnAction(new EventHandler<ActionEvent>() {
+				
+				@Override
+				public void handle(ActionEvent event) {
+			
+					googleMapsShape.setarLinhaOuShape(false);
+			
 				}
 			});
 
@@ -1238,19 +1263,30 @@ public class TabEnderecoControlador implements Initializable {
 					googleMaps.setEnderecoInterferencias(strEndereco, strInterferencias, strDetalhes);
 					
 					googleMaps.setZoom (15);
-					googleMaps.setMapCenter(end.getEndDDLatitude(), end.getEndDDLongitude());
+					googleMaps.setMapCenter(end.getEndDDLatitude().toString(), end.getEndDDLongitude().toString());
 					
-					/*
-					PoligonoCroqui pol = new PoligonoCroqui();
+					// mostrar o poligono do endereco se houver
 					
-					try {
+					if (end.getEndCroqui() != null) {
 						
-						pol.setarPoligono (end);
+						System.out.println("setar poligono");
 						
-					} catch (Exception e) {
+						PoligonoCroqui pol = new PoligonoCroqui();
+						
+						try {
+							
+							//pol.setarPoligono (end, googleMapsShape);
+							
+							 
+					    	 googleMaps.setarPoligono(pol.setarPoligono(end));
+							
+						} catch (Exception e) {
+							
+						}
 						
 					}
-					*/
+					
+					
 					
 				}
 				

@@ -36,6 +36,20 @@ public class SubtipoOutorga implements Serializable {
 				fetch = FetchType.LAZY, targetEntity = Interferencia.class)
 		@Fetch(FetchMode.SUBSELECT) 
 		private List<Interferencia> interferencias = new ArrayList<Interferencia>();
+	    
+	    
+	    
+	    public SubtipoOutorga () {
+	    	
+	    }
+	    
+	    /**
+	     * construtor para na hora de salvar ou editar a interferencia não dar id = 0, visto que o subTipoOutorga pode não ser escolhido nada
+	     */
+	    public SubtipoOutorga (int subtipoOutorgaID) {
+	    	this.subtipoOutorgaID = subtipoOutorgaID;
+	    }
+
 
 		public int getSubtipoOutorgaID() {
 			return subtipoOutorgaID;

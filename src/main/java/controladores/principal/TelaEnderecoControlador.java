@@ -898,9 +898,9 @@ public class TelaEnderecoControlador implements Initializable {
 				    	TabParecerControlador.controladorOutorga.setEndereco(end);
 				    }
 				    */
-					tabInterCon.setEndereco(end);
-					tabUsCon.setEndereco(end);
-					tabParCon.setEndereco(end);
+					//tabInterCon.setEndereco(end);
+					//tabUsCon.setEndereco(end);
+					//tabParCon.setEndereco(end);
 					
 				
 				

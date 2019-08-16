@@ -888,7 +888,7 @@ public class TabDemandaControlador implements Initializable {
 						*/
 					googleMaps.mostrarDemandas(strEndereco, strInfoDemandas);
 					googleMaps.setZoom (11);
-					googleMaps.setMapCenter(end.getEndDDLatitude(), end.getEndDDLongitude());
+					googleMaps.setMapCenter(end.getEndDDLatitude().toString(), end.getEndDDLongitude().toString());
 				
 				
 			} else {

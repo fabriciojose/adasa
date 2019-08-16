@@ -1,6 +1,8 @@
 package mapas;
 
 
+import com.sun.javafx.webkit.WebConsoleListener;
+
 import controladores.principal.ControladorPrincipal;
 import controladores.principal.TabEnderecoControlador;
 import javafx.beans.property.ReadOnlyDoubleProperty;
@@ -64,6 +66,7 @@ public class GoogleMap extends Parent {
 	       
 		}
 		
+		@SuppressWarnings("restriction")
 		// inicializacao do webview e mapa html javascript //
 	    void initMap()
 	    {
@@ -72,6 +75,10 @@ public class GoogleMap extends Parent {
 	        webView.setPrefWidth(1900);
 	        webView.setPrefHeight(710);
 	        webEngine.load(getClass().getResource("/html/mapas/Principal/index.html").toExternalForm()); // originalMap
+	        
+	        WebConsoleListener.setDefaultListener((webView, message, lineNumber, sourceId) -> {
+	            System.out.println(message + "[at " + lineNumber + "]");
+	        });
 	        
 	        ready = false;
 	        
@@ -171,13 +178,30 @@ public class GoogleMap extends Parent {
 	    }
 	    
 	    // capturar evendo de manipulacao do mapa em javascritp, adiquirir o poligono  (croqui) do endereco
-	    public void handleShapeEndereco(String strCroquiEndereco) {
+	    public void handleShapeEndereco(String strShapeEndereco) {
 	    	
 	    	//TabEnderecoControlador.controladorOutorga.capturarCroquiEndereco(strCroquiEndereco);
 	    	
-	    	TabEnderecoControlador.tabEnderecoControlador.capturarCroquiEndereco(strCroquiEndereco);
+	    	TabEnderecoControlador.tabEnderecoControlador.capturarCroquiEndereco(strShapeEndereco);
 	    	
-	    	System.out.println(strCroquiEndereco);
+	    	
+	    	String [] arrayLatLon = strShapeEndereco.split(";");
+	    	
+	    	
+	    	for (String s : arrayLatLon) {
+	    		System.out.println("s " + s);
+	    	}
+	    	
+	    	
+	    	// capturar o primeiro ponto do poligono e repetir no final
+		    String [] strPoligonoUltimoPonto;
+
+		 		strPoligonoUltimoPonto = arrayLatLon[1].split(",");
+		 		
+		 	for (String ss : strPoligonoUltimoPonto) {
+		 		System.out.println(" ss " + ss);
+		 	}
+	    	
 	    	
 	    }
  
@@ -232,6 +256,10 @@ public class GoogleMap extends Parent {
 	    	
 	    }
 	    
+	    
+	    
+	    
+	    
 	    public void setZoomIn() {
 	    	invokeJS("setZoomIn();");
 	    }
@@ -244,20 +272,15 @@ public class GoogleMap extends Parent {
 	    	invokeJS("openShape(" + shape + ");");
 	    }
 	    
-	    public void setMarkerPosition(double lat, double lng) {
+	    public void setMarkerPosition(String lat, String lng) {
 	    	
-	        String sLat = Double.toString(lat);
-	        String sLng = Double.toString(lng);
-	  
-	        invokeJS("setMarkerPosition(" + sLat + ", " + sLng + ")");
+	        invokeJS("setMarkerPosition('" + lat + "','" + lng + "')");
 	       
 	    }
 
-	    public void setMapCenter(double lat, double lng) {
-	        String sLat = Double.toString(lat);
-	        String sLng = Double.toString(lng);
-	        
-	        invokeJS("setMapCenter(" + sLat + ", " + sLng + ")");
+	    public void setMapCenter(String lat, String lng) {
+
+	        invokeJS("setMapCenter('" + lat + "','" + lng + "')");
 	    }
 	    
 	    public void mudarEstiloMapa (int i) {
@@ -300,11 +323,41 @@ public class GoogleMap extends Parent {
 	    public void setWidth(double w) {
 	        webView.setPrefWidth(w);
 	    }
-	  
+	    // limpar o mapa dos marcadores e shapes
 	    public void limparMapa () {
 	    	invokeJS("limparMapa()");
 	    	
 	    }
+	   
+	    /**
+	     * ativar a possibilidade de criacao de shape
+	     */
+	    public void criarShapeEndereco () {
+	    	invokeJS("criarShapeEndereco()");
+	    	
+	    }
+	    
+	    /**
+	     * setar poligono no mapa
+	     * @param strShapeEndereco  - string com as coordenadas separadas: |-16.0351296510659,-48.10928962532557|-16.034510965864463,-48.108710268178356|...
+	     */
+	    public void setarPoligono(String strShapeEndereco) {
+	    	
+	    	invokeJS("setarPoligono('" + strShapeEndereco + "')");
+	    	
+	    }
+	    
+	    /**
+	     * escolher criar utilizar um polyline ou polygon para a criacao da shape 
+	     * @param b 
+	     * 		b == true - polyline	b == false - polygon
+	     */
+	    public void setarLinhaOuShape(Boolean b) {
+	    	
+	    	invokeJS("setarLinhaOuShape(" + b + ")");
+	    	
+	    }
+	    
 	    public ReadOnlyDoubleProperty widthProperty() {
 	        return webView.widthProperty();
 	    }

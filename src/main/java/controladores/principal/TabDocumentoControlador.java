@@ -871,7 +871,7 @@ public class TabDocumentoControlador implements Initializable {
 						 */
 						googleMaps.mostrarDemandas(strEndereco, strInfoDocumentos);
 						googleMaps.setZoom (11);
-						googleMaps.setMapCenter(end.getEndDDLatitude(), end.getEndDDLongitude());
+						googleMaps.setMapCenter(end.getEndDDLatitude().toString(), end.getEndDDLongitude().toString());
 
 
 					} else {

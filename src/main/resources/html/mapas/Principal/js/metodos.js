@@ -77,93 +77,7 @@ function openShape(i) {
 	
  }
 
-var quadrado = [];
-var arrayQuadrados = [];
-var booPolyline = true;
 
-function getCoordClick(event){
-	
-	var location = event.latLng;
-	var lat = location.lat();
-	var lng = location.lng();
-	
-	setMarkerPosition(lat, lng);
-	
-	obterUTMDMSMapClick (lat,lng);
-	
-	if (booPolyline == true) {
-		
-		// Defina uma posicao do poligono
-		var quadradoCoords = {lat: lat, lng: lng};
-		// adiciona essa posicao em uma array de posicoes
-		quadrado.push(quadradoCoords);
-		
-		// quando houver 4 posicoes criara o poligono
-		if (quadrado.length == 4)  {
-			
-			// Construcao do poligono
-			var quadradoPoly = new google.maps.Polygon({
-				paths: quadrado,
-				strokeColor:  '#2E2EFE',
-				strokeOpacity: 0.8,
-				strokeWeight: 1,
-				fillColor:  '#2E2EFE',
-				fillOpacity: 0.35
-			});
-			// setar poligono no mapa		
-			quadradoPoly.setMap(map);
-			// adicionar todos os  poligonos aqui para depois conseguir deleta-los
-			arrayQuadrados.push(quadradoPoly);
-			// adicionar um ouvinte (listener) para abrir as infomacoes do poligono (infoWindow)
-			quadradoPoly.addListener('click', showArrays);
-	
-			infoWindow = new google.maps.InfoWindow;
-			// limpa a array de pontos para poder criar outro poligono
-			
-			// levar as coordenadas do poligono para o controlador endereco (java)
-			var strShapeEndereco = '';
-			
-			for (i = 0; i < quadrado.length; i++) {
-				
-				strShapeEndereco += ';' + quadrado[i].lat + ',' + quadrado[i].lng;
-			}	
-			
-			appShapeEndereco.handleShapeEndereco(strShapeEndereco);
-			
-			//app.handle (typeCoordinate, lat + "," + lon, latLon, toUTM);
-			
-			quadrado = [];
-	 
-		}
-	  
-	}
-	
-}
-
-/** @this {google.maps.Polygon} */
-function showArrays(event) {
-  // Since this polygon has only one path, we can call getPath() to return the
-  // MVCArray of LatLngs.
-  var vertices = this.getPath();
-
-  var contentString = '<b>Bermuda quadrado polygon</b><br>' +
-      'Clicked location: <br>' 
-      	+ event.latLng.lat() + ',' + event.latLng.lng() +
-      '<br>';
-
-  // Iterate over the vertices.
-  for (var i =0; i < vertices.getLength(); i++) {
-    var xy = vertices.getAt(i);
-    contentString += '<br>' + 'Coordinate ' + i + ':<br>' + xy.lat() + ',' +
-        xy.lng();
-  }
-
-  // Replace the info window's content and position.
-  infoWindow.setContent(contentString);
-  infoWindow.setPosition(event.latLng);
-
-  infoWindow.open(map);
-}
 
 function setMarkerPosition (lat, lng) {
 
@@ -1483,7 +1397,104 @@ function inicializarBuscaPorEndereco (){
   
 }
 
-//retirar as linhas e marcadores do mapa
+//criacao de uma shape
+var shape = [];
+//captura de todas a shapes para depois, se preciso, limpar mapa
+var arrayDeShapes = [];
+//decidir se quer ou nao criar o poligono
+var booPolyline = false;
+// mostar o poligono no mapa
+var poligono;
+
+var tipoPolyLinePolygon = true;
+
+// obter a coordenada clicado  pelo usuario e criar o polygon se booPolyline = true
+function getCoordClick(event){
+	
+	var location = event.latLng;
+	var lat = location.lat();
+	var lng = location.lng();
+	
+	setMarkerPosition(lat, lng);
+	
+	obterUTMDMSMapClick (lat,lng);
+
+	if (booPolyline == true) {
+		
+		// Defina uma posicao do poligono
+		var ponto = {lat: lat, lng: lng};
+		
+		console.log(ponto);
+		
+		// adiciona essa posicao em uma array de posicoes
+		shape.push(ponto);
+		
+		console.log('shape length ' + shape.length);
+		
+		// caso a shape esteja preechida com mais de uma posicao, limpe o mapa e crie outro poligono com o ponto novo
+		if(shape.length>1) {
+			poligono.setMap(null);
+		}
+				
+		if (tipoPolyLinePolygon == true ){
+			
+			console.log('if ' + tipoPolyLinePolygon);
+			
+			
+			// Construcao do poligono
+			poligono = new google.maps.Polyline({
+				path: shape,
+				strokeColor:  '#FF0000',
+				strokeOpacity: 0.8,
+				strokeWeight: 1,
+				fillColor:  '#FF0000',
+				fillOpacity: 0.35
+			});
+		
+			// setar poligono no mapa		
+			poligono.setMap(map);
+		
+		} else {
+			
+			console.log('else ' + tipoPolyLinePolygon);
+			
+			
+			// Construcao do poligono
+			poligono = new google.maps.Polygon({
+				paths: shape,
+				strokeColor:  '#FF0000',
+				strokeOpacity: 0.8,
+				strokeWeight: 1,
+				fillColor:  '#FF0000',
+				fillOpacity: 0.35
+			});
+				
+			// setar poligono no mapa		
+			poligono.setMap(map);
+
+		}		
+		
+		// adicionar todos os  poligonos aqui para depois conseguir deletalos
+		arrayDeShapes.push(poligono);
+		
+		// adicionar um ouvinte (listener) para abrir as infomacoes do poligono (infoWindow)
+		//poligono.addListener('click', showArrays);
+
+		infoWindow = new google.maps.InfoWindow;
+		
+		var strShapeEndereco = '';
+		
+		for (i = 0; i < shape.length; i++) {
+			strShapeEndereco += ';' + shape[i].lat + ',' + shape[i].lng;
+			
+		}	
+		appShapeEndereco.handleShapeEndereco(strShapeEndereco);
+		
+	}	   
+}
+
+
+//retirar as shapes e marcadores do mapa
 function limparMapa() {
 
 	for (var i = 0; i < markers.length; i++) {
@@ -1494,7 +1505,63 @@ function limparMapa() {
 		linhas[i].setMap(null);
 	}
 	
-	for (var i = 0; i < arrayQuadrados.length; i++) {
-		arrayQuadrados[i].setMap(null);
+	for (var i = 0; i < arrayDeShapes.length; i++) {
+		arrayDeShapes[i].setMap(null);
 	}
+	shape = [];
+}
+
+// habilitar a criacao de shapes (croquis do endereco)
+function criarShapeEndereco ()	{
+	
+	if (booPolyline == false) {
+		booPolyline = true;
+	} else {
+		booPolyline = false;
+	}
+	
+}
+
+// trazer para o mapa o poligono salvo no endereco
+function setarPoligono(strCroquiEndereco) {
+	
+	console.log(strCroquiEndereco);
+	
+	shape = [];
+	
+	var resultado = strCroquiEndereco.split("|");
+	var i;
+	
+	var d = [];
+
+	for (i=0;i<resultado.length;i++){
+		d[i] = resultado[i].split(',');
+	}
+	
+	for (i=1;i<d.length;i++){
+		var ponto = {lat: parseFloat(d[i][0]), lng: parseFloat(d[i][1])};
+		shape.push(ponto);
+	}
+
+	// Construcao do poligono
+	poligono = new google.maps.Polygon({
+		paths: shape,
+		strokeColor:  '#FF0000',
+		strokeOpacity: 0.8,
+		strokeWeight: 1,
+		fillColor:  '#FF0000',
+		fillOpacity: 0.35
+	});
+		
+	// setar poligono no mapa		
+	poligono.setMap(map);
+		
+	// adicionar todos os  poligonos aqui para depois conseguir deletalos
+	arrayDeShapes.push(poligono);
+	
+}
+
+// escolher entre criar a shape usando true para polyline e false para  polygon
+function setarLinhaOuShape (tipoPolyLinePolygon){
+	this.tipoPolyLinePolygon = tipoPolyLinePolygon;
 }

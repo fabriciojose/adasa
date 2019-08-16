@@ -171,13 +171,6 @@ public class MalaDiretaAtosOutorga {
 	}
 	
 	
-	public String getHtmlRel() {
-		return modeloHTML;
-	}
-
-	public void setHtmlRel(String modeloHTML) {
-		this.modeloHTML = modeloHTML;
-	}
 	
 	public String criarAtoOutorga () {
 		
@@ -186,6 +179,8 @@ public class MalaDiretaAtosOutorga {
 		Document docHtml = null;
 
 		docHtml = Jsoup.parse(modeloHTML, "UTF-8").clone();
+		
+		
 
 		String strPosicoesUsuario [] = {
 
@@ -303,70 +298,146 @@ public class MalaDiretaAtosOutorga {
 		}
 		
 		strTabelaPontoCaptacaoCompleta.append(strTabelaPontoCaptacaoFim);
-		
-		
+
 		// 	<inter_dados_basicos_tag></inter_dados_basicos_tag>
 		docHtml.select("inter_dados_basicos_tag").append(String.valueOf(strTabelaPontoCaptacaoCompleta));
-		
-		
+
+
 		for (Interferencia inter : listInterferencia) {
-			
+		
 			Document docHTMLModeloTabelaLimitesOutorgados = null;
 
 			docHTMLModeloTabelaLimitesOutorgados = Jsoup.parse(modeloTabelaLimitesOutorgados, "UTF-8").clone();
-			
+		
+			if (inter.getClass().getName().equals("entidades.Subterranea")) {
 
-			for (Finalidade f : listInterferencia.get(0).getFinalidades() ) {
-				
-				if (f.getClass().getName() == "entidades.FinalidadeAutorizada") {
-				
+
+			for (Finalidade f : inter.getFinalidades() ) {
+
+
+				if (f.getClass().getName().equals("entidades.FinalidadeAutorizada")) {
+					
+					double dbl_q_metros_hora;
+					int int_t_horas_dia;
+					int int_t_dias_mes;
+
 					for (int i = 0; i<12; i++) {
-						
-						double dbl_q_metros_hora = Double.parseDouble(((Subterranea) inter).getSubVazao())/1000;
-						int int_t_horas_dia =  Integer.parseInt(gs.callGetter(f, listVariaveisVazaoHoraAutorizadas.get(i)));
-						int int_t_dias_mes = Integer.parseInt((gs.callGetter(f,listVariaveisTempoAutorizadas.get(i))));
-					
+
+						try {dbl_q_metros_hora = Double.parseDouble(((Subterranea) inter).getSubVazao())/1000;} catch (Exception e ) {
+							dbl_q_metros_hora = 0.0;
+							System.out.println("dbl_q_metros_hora zero ");
+						}
+						try {int_t_horas_dia =  Integer.parseInt(gs.callGetter(f, listVariaveisVazaoHoraAutorizadas.get(i)));} catch (Exception e ) {
+							int_t_horas_dia = 0;
+							System.out.println("int_t_horas_dia zero ");
+						}
+						try {int_t_dias_mes = Integer.parseInt((gs.callGetter(f,listVariaveisTempoAutorizadas.get(i))));} catch (Exception e ) {
+							int_t_dias_mes = 0;
+							System.out.println("int_t_dias_mes zero ");
+
+						}
+
+						//sub
 						try { docHTMLModeloTabelaLimitesOutorgados.select(q_litros_hora_tag [i]).prepend((((Subterranea) inter).getSubVazao()));} 
-							
-							catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(q_litros_hora_tag[i]).prepend("");};
-						
-						
-						try { docHTMLModeloTabelaLimitesOutorgados.select(q_metros_hora_tag [i]).prepend(  String.valueOf(dbl_q_metros_hora) );} 
-						
-							catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(q_metros_hora_tag[i]).prepend("");};
-						
+
+						catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(q_litros_hora_tag[i]).prepend("");};
+
+						//sub
+						try { docHTMLModeloTabelaLimitesOutorgados.select(q_metros_hora_tag [i]).prepend(  String.format("%.2f", dbl_q_metros_hora) );} 
+
+						catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(q_metros_hora_tag[i]).prepend("");};
+
 						try { docHTMLModeloTabelaLimitesOutorgados.select(t_horas_dia_tag [i]).prepend( String.valueOf(int_t_horas_dia) );} 
-						
-							catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(t_horas_dia_tag[i]).prepend("");};
-							
-							
+
+						catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(t_horas_dia_tag[i]).prepend("");};
+
+						// fin aut	
 						try { docHTMLModeloTabelaLimitesOutorgados.select(t_dias_mes_tag [i]).prepend( String.valueOf(int_t_dias_mes) );} 
-							
-							catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(t_dias_mes_tag[i]).prepend("");};
-							
-							
-						try { docHTMLModeloTabelaLimitesOutorgados.select(q_metros_mes_tag [i]).prepend( String.valueOf(dbl_q_metros_hora*int_t_horas_dia*int_t_dias_mes) );} 
-							
-							catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(q_metros_mes_tag[i]).prepend("");};
-							
-							
-						
-					}
-						
-					}
-					
+
+						catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(t_dias_mes_tag[i]).prepend("");};
+
+						//fin aut	
+						try { docHTMLModeloTabelaLimitesOutorgados.select(q_metros_mes_tag [i]).prepend( String.format("%.0f", dbl_q_metros_hora*int_t_horas_dia*int_t_dias_mes) );} 
+
+						catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(q_metros_mes_tag[i]).prepend("");};
+
+					} // fim loop 12 preenchimento
+
+				} // fim if finalidade autorizaa
+				
+			} // for finalidade
+
+			docHtml.select("tabela_limites_outorgados_tag").append(String.valueOf(docHTMLModeloTabelaLimitesOutorgados));
+			
+			
 			}
 			
 			
+			if (inter.getClass().getName().equals("entidades.Superficial")) {
+
+
+				for (Finalidade f : inter.getFinalidades() ) {
+
+
+					if (f.getClass().getName().equals("entidades.FinalidadeAutorizada")) {
+						
+						double dbl_vazao_autorizada;
+						int int_tempo_autorizado;
+						int int_periodo_autorizado;
+
+						for (int i = 0; i<12; i++) {
+
+							try {dbl_vazao_autorizada = Double.parseDouble((gs.callGetter(f, listVariaveisVazaoMesAutorizadas.get(i))));} catch (Exception e ) {
+								dbl_vazao_autorizada = 0.0;
+								System.out.println("dbl_q_metros_hora zero ");
+							}
+							try {int_tempo_autorizado =  Integer.parseInt(gs.callGetter(f, listVariaveisVazaoHoraAutorizadas.get(i)));} catch (Exception e ) {
+								int_tempo_autorizado = 0;
+								System.out.println("int_t_horas_dia zero ");
+							}
+							try {int_periodo_autorizado = Integer.parseInt((gs.callGetter(f,listVariaveisTempoAutorizadas.get(i))));} catch (Exception e ) {
+								int_periodo_autorizado = 0;
+								System.out.println("int_t_dias_mes zero ");
+
+							}
+
+							// String format - formatar um numero double em string e regular as casas decimais
+							try { docHTMLModeloTabelaLimitesOutorgados.select(q_litros_hora_tag [i]).prepend((String.format("%.2f", dbl_vazao_autorizada/int_tempo_autorizado/3600)));} 
+								catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(q_litros_hora_tag[i]).prepend("");};
+
+							try { docHTMLModeloTabelaLimitesOutorgados.select(q_metros_hora_tag [i]).prepend( String.format("%.2f", dbl_vazao_autorizada/int_tempo_autorizado/1000) );} 
+								catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(q_metros_hora_tag[i]).prepend("");};
+
+							try { docHTMLModeloTabelaLimitesOutorgados.select(t_horas_dia_tag [i]).prepend( String.valueOf(int_tempo_autorizado) );} 
+
+							catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(t_horas_dia_tag[i]).prepend("");};
+
+							// fin aut	
+							try { docHTMLModeloTabelaLimitesOutorgados.select(t_dias_mes_tag [i]).prepend( String.valueOf(int_periodo_autorizado) );} 
+
+							catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(t_dias_mes_tag[i]).prepend("");};
+
+							//fin aut	String.format("%.0f", dbl_vazao_autorizada*int_periodo_autorizado/1000)
+							try { docHTMLModeloTabelaLimitesOutorgados.select(q_metros_mes_tag [i]).prepend( String.format("%.0f", dbl_vazao_autorizada*int_periodo_autorizado/1000) );} 
+
+							catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(q_metros_mes_tag[i]).prepend("");};
+
+						} // fim loop 12 preenchimento
+
+					} // fim if finalidade autorizaa
+					
+				} // for finalidade
+
+				docHtml.select("tabela_limites_outorgados_tag").append(String.valueOf(docHTMLModeloTabelaLimitesOutorgados));
+				
+				
+				}
 			
-			// <tabela_limites_outorgados_tag></tabela_limites_outorgados_tag>
 			
-			docHtml.select("tabela_limites_outorgados_tag").append(String.valueOf(docHTMLModeloTabelaLimitesOutorgados));
-			
-		} // fim loop for tabela limites outorgados
-		
-		
-		
+		} // fim loop for interferencia
+
+
+
 		
 		String html = new String ();
 

@@ -94,7 +94,8 @@ public class TabInterferenciaControlador  implements Initializable{
 
 	TipoInterferencia tipoInterferencia = new TipoInterferencia();
 	TipoOutorga tipoOutorga = new TipoOutorga();
-	SubtipoOutorga subtipoOutorga = new SubtipoOutorga();
+	// inicializa com o id 5 caso o suptipo de  outorga nao seja escolhido
+	SubtipoOutorga subtipoOutorga = new SubtipoOutorga(5);
 	TipoAto tipoAto = new TipoAto();
 	SituacaoProcesso situacaoProcesso = new  SituacaoProcesso();
 	
@@ -157,7 +158,13 @@ public class TabInterferenciaControlador  implements Initializable{
 					sub.setInterTipoInterferenciaFK(tipoInterferencia);
 
 					sub.setInterTipoOutorgaFK(tipoOutorga);
+					
+					System.out.println("subtipo outorga - bnt salvar " + subtipoOutorga.getSubtipoOutorgaID() + " e desc " + subtipoOutorga.getSubtipoOutorgaDescricao());
+					
 					sub.setInterSubtipoOutorgaFK(subtipoOutorga);
+					
+					
+					
 					sub.setInterTipoAtoFK(tipoAto);
 					sub.setInterSituacaoProcessoFK(situacaoProcesso);
 
@@ -747,6 +754,7 @@ public class TabInterferenciaControlador  implements Initializable{
     	.addListener( 
     	(ObservableValue<? extends String> observable, String old_value, String new_value) ->
     		// setar nome (descricao) da Subtipo_Outorga selecinada de acordo com a selecao no ComboBox
+    	
     		subtipoOutorga.setSubtipoOutorgaDescricao(new_value)
     	);
 
@@ -845,8 +853,8 @@ public class TabInterferenciaControlador  implements Initializable{
 			public void handle(ActionEvent event) {
 
 				if (endereco.getEndDDLatitude() != null) {
-					ControladorPrincipal.capturarGoogleMaps().setMarkerPosition(endereco.getEndDDLatitude(), endereco.getEndDDLongitude());
-					ControladorPrincipal.capturarGoogleMaps().setMapCenter(endereco.getEndDDLatitude(), endereco.getEndDDLongitude());
+					ControladorPrincipal.capturarGoogleMaps().setMarkerPosition(endereco.getEndDDLatitude().toString(), endereco.getEndDDLongitude().toString());
+					ControladorPrincipal.capturarGoogleMaps().setMapCenter(endereco.getEndDDLatitude().toString(), endereco.getEndDDLongitude().toString());
 				}
 
 				//System.out.println("ir para as coordenadas");

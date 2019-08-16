@@ -57,6 +57,14 @@ public class RA implements Serializable {
 		public RA () {
 			
 		}
+
+		public RA (int raID, String raNome) {
+			this.raID = raID;
+			this.raNome = raNome;
+		}
+		
+		
+		
 		public int getRaID() {
 			return raID;
 		}
