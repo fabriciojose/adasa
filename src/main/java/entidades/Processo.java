@@ -41,22 +41,12 @@ public class Processo
   @Column(name="pro_Atualizacao")
   private Timestamp proAtualizacao;
   
-  @OneToMany(mappedBy="demProcessoFK", cascade= CascadeType.MERGE, fetch=FetchType.EAGER, targetEntity=Demanda.class)
-  @Fetch(FetchMode.SUBSELECT)
-  private Set<Demanda> demandas = new HashSet<>();
-  
-  @OneToMany(mappedBy="docProcessoFK", cascade= CascadeType.MERGE, fetch=FetchType.EAGER, targetEntity=Documento.class)
+ 
+  @OneToMany(mappedBy="docProcessoFK", cascade= CascadeType.MERGE, fetch=FetchType.LAZY, targetEntity=Documento.class)
   @Fetch(FetchMode.SUBSELECT)
   private Set<Documento> documentos  = new HashSet<>();
   
   public Processo() {}
-  
-  public Processo(String proSEI, Timestamp proAtualizacao, Set<Demanda> demandas)
-  {
-    this.proSEI = proSEI;
-    this.proAtualizacao = proAtualizacao;
-    this.demandas = demandas;
-  }
   
   public int getProID()
   {
@@ -88,6 +78,7 @@ public class Processo
     this.proAtualizacao = proAtualizacao;
   }
   
+  /*
   public Set<Demanda> getDemandas()
   {
     return this.demandas;
@@ -97,7 +88,7 @@ public class Processo
   {
     this.demandas = demandas;
   }
-  
+  */
   public String getProInteressado()
   {
     return this.proInteressado;

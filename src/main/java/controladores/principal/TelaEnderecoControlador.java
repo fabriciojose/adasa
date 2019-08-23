@@ -56,15 +56,28 @@ public class TelaEnderecoControlador implements Initializable {
 		
 		if (objetoDeEdicao != null) {
 		
-			if (objetoDeEdicao.getClass().getName() == "entidades.Documento") {
+			if (objetoDeEdicao.getClass().getName().equals("entidades.Documento") || objetoDeEdicao.getClass().getName().equals("entidades.Parecer")) {
 				
 				lblTipoObjeto.setText("DOCUMENTO:");
 				
-				lblDescricaoObjeto.setText(
-						((Documento) objetoDeEdicao).getDocTipo()
-						+ ", Sei n° " + ((Documento) objetoDeEdicao).getDocSEI()
-						+ ", Processo n° " + ((Documento) objetoDeEdicao).getDocProcesso()
-						);
+				if (((Documento) objetoDeEdicao).getDocTipo() != null) {
+					
+					lblDescricaoObjeto.setText(
+							((Documento) objetoDeEdicao).getDocTipo()
+							+ ", Sei n° " + ((Documento) objetoDeEdicao).getDocSEI()
+							+ ", Processo n° " + ((Documento) objetoDeEdicao).getDocProcesso()
+							);
+					
+					lblDescricaoObjeto.setStyle("-fx-text-fill: #4A4A4A;"); 
+			
+					
+				} else {
+					
+					lblDescricaoObjeto.setText(
+							"não há documento relacionado! "
+							);
+					lblDescricaoObjeto.setStyle("-fx-text-fill: #FF0000;");
+				}
 				
 			}
 			
@@ -72,10 +85,25 @@ public class TelaEnderecoControlador implements Initializable {
 				
 				lblTipoObjeto.setText("INTERFERÊNCIA:");
 				
-				lblDescricaoObjeto.setText(
-						((Interferencia) objetoDeEdicao).getInterTipoInterferenciaFK().getTipoInterDescricao()
-						+ ", Latitude: " + ((Interferencia) objetoDeEdicao).getInterDDLatitude() + ", Longitude: " + ((Interferencia) objetoDeEdicao).getInterDDLongitude()
-						);
+				if (((Interferencia) objetoDeEdicao).getInterDDLatitude() != null) {
+					
+					lblDescricaoObjeto.setText(
+							((Interferencia) objetoDeEdicao).getInterTipoInterferenciaFK().getTipoInterDescricao()
+							+ ", Latitude: " + ((Interferencia) objetoDeEdicao).getInterDDLatitude() + ", Longitude: " + ((Interferencia) objetoDeEdicao).getInterDDLongitude()
+							);
+					
+					lblDescricaoObjeto.setStyle("-fx-text-fill: #4A4A4A;"); 
+			
+					
+				} else {
+					
+					lblDescricaoObjeto.setText(
+							"não há endereco relacionado! "
+							);
+					lblDescricaoObjeto.setStyle("-fx-text-fill: #FF0000;");
+				}
+				
+			
 				
 			}
 			
@@ -83,10 +111,41 @@ public class TelaEnderecoControlador implements Initializable {
 				
 				lblTipoObjeto.setText("USUÁRIO:");
 				
+				
+				if (((Usuario) objetoDeEdicao).getUsNome() != null) {
+					
+
+					lblDescricaoObjeto.setText(
+							((Usuario) objetoDeEdicao).getUsNome() + "| CPF/CNPJ: " + ((Usuario) objetoDeEdicao).getUsCPFCNPJ());
+					
+					lblDescricaoObjeto.setStyle("-fx-text-fill: #4A4A4A;"); 
+			
+					
+				} else {
+					
+					lblDescricaoObjeto.setText(
+							"não há usuário relacionado! "
+							);
+					lblDescricaoObjeto.setStyle("-fx-text-fill: #FF0000;");
+				}
+
+				
+				
+			}
+			
+			
+			else {
+				
+				/*
+				 * esse else só acontece quando nao e identificada a interferencia subterranea ou superficial, por isso colocarei o lbltipo especifico para a interferencia
+				 */
+				
+				lblTipoObjeto.setText("INTERFERÊNCIA:");
+				
 				lblDescricaoObjeto.setText(
-						((Usuario) objetoDeEdicao).getUsNome()
-						
+						"não há interferência relacionada! "
 						);
+				lblDescricaoObjeto.setStyle("-fx-text-fill: #FF0000;");
 				
 			}
 		
@@ -509,7 +568,7 @@ public class TelaEnderecoControlador implements Initializable {
 							end.setEndAtualizacao(Timestamp.valueOf((LocalDateTime.now())));
 							
 
-							if (objetoDeEdicao.getClass().getName().equals("entidades.Documento")) {
+							if (objetoDeEdicao.getClass().getName().equals("entidades.Documento") || objetoDeEdicao.getClass().getName().equals("entidades.Parecer")) {
 								
 								Documento doc = (Documento) objetoDeEdicao;
 									doc.setDocEnderecoFK(end);
@@ -660,7 +719,7 @@ public class TelaEnderecoControlador implements Initializable {
 				Usuario us = new Usuario();
 
 
-				if (objetoDeEdicao.getClass().getName().equals("entidades.Documento")) {
+				if (objetoDeEdicao.getClass().getName().equals("entidades.Documento") || objetoDeEdicao.getClass().getName().equals("entidades.Parecer")) {
 
 					doc = (Documento) objetoDeEdicao;
 					doc.setDocEnderecoFK(end);

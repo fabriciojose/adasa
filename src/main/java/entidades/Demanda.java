@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,11 +24,12 @@ public class Demanda
   @Column(name="dem_ID")
   private int demID;
   
-  @ManyToOne
+  
+  @ManyToOne (fetch = FetchType.LAZY) 
   @JoinColumn(name="dem_Endereco_FK")
   private Endereco demEnderecoFK;
   
-  @ManyToOne
+  @ManyToOne (fetch = FetchType.LAZY) 
   @JoinColumn(name="dem_Processo_FK")
   private Processo demProcessoFK;
   
@@ -40,7 +42,7 @@ public class Demanda
   @Column(name="dem_Numero_SEI", columnDefinition="varchar(25)")
   private String demNumeroSEI;
   
-  @Column(name="dem_Processo", columnDefinition="varchar(25)")
+  @Column(name="dem_Processo", columnDefinition="varchar(25)" )
   private String demProcesso;
  
   @Basic

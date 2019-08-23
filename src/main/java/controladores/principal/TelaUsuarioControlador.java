@@ -64,7 +64,7 @@ public class TelaUsuarioControlador implements Initializable {
 		
 		this.documento = documento;
 		
-		if (documento != null) {
+		if (documento.getDocNumeracao() != null) {
 		
 			lblDocumento.setText(
 					documento.getDocTipo() + " Nº "
@@ -77,7 +77,7 @@ public class TelaUsuarioControlador implements Initializable {
 		
 		} else {
 			
-			lblDocumento.setText("Não há endereco de empreendimento cadastrado!");
+			lblDocumento.setText("Não há documento relacionado!");
 			lblDocumento.setStyle("-fx-text-fill: #FF0000;");
 		}
 		

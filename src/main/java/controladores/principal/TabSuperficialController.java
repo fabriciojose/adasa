@@ -1093,7 +1093,7 @@ public class TabSuperficialController implements Initializable{
 
 
 	} // fim inicializarFinalidades
-
+	
 	public void capturarCoordenadas () {
 
 		String lat = ControladorPrincipal.capturarGoogleMaps().getLat();
@@ -1101,8 +1101,6 @@ public class TabSuperficialController implements Initializable{
 
 		tfLatitude.setText(lat);
 		tfLongitude.setText(lon);
-
-		//System.out.println(lat + "," + lon);
 
 		GeometryFactory geoFac;
 		Point p;
@@ -1121,8 +1119,6 @@ public class TabSuperficialController implements Initializable{
 
 		UnidadeHidrograficaDao uhs = new UnidadeHidrograficaDao();
 		List<UnidadeHidrografica> listUnidades = uhs.listarUnidadesHidrograficas("");
-
-		//System.out.println(listUnidades.size());
 
 		for (BaciasHidrograficas b : listBacias) {
 
@@ -1148,10 +1144,8 @@ public class TabSuperficialController implements Initializable{
 		} // fim loop unidades hidrograficas
 
 	} // fim metodo capturar coordenadas
+
 }
-
-
-
 
 //ImageView	iVewSuper = new ImageView();
 //Image imgSuper = new Image(TabSuperficialController.class.getResourceAsStream("/images/superficial.png"));

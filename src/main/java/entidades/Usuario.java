@@ -37,11 +37,7 @@ public class Usuario implements Serializable {
 		@ManyToOne
 		@JoinColumn(name="us_Documento_FK")
 		private Documento usDocumentoFK;
-		
-		//List<Endereco> enderecos = new ArrayList<Endereco>();
-		//private Set parts = new HashSet();
-	
-	
+
 	@Column (name = "us_Tipo", columnDefinition="varchar(8)")
 	private String usTipo;
 	
@@ -74,6 +70,14 @@ public class Usuario implements Serializable {
 	
 	@Column (name = "us_Email", columnDefinition="varchar (70)")
 	private String usEmail;
+	
+	@Column (name = "us_Representante", columnDefinition="varchar (90)")
+	private String usRepresentante;
+	
+	@Column (name = "us_Representante_Telefone", columnDefinition="varchar (20)")
+	private String usRepresentanteTelefone;
+	
+	
 	
 	@Basic
 	@Column (name="us_Data_Atualizacao")
@@ -207,6 +211,22 @@ public class Usuario implements Serializable {
 
 	public void setUsDocumentoFK(Documento usDocumentoFK) {
 		this.usDocumentoFK = usDocumentoFK;
+	}
+
+	public String getUsRepresentante() {
+		return usRepresentante;
+	}
+
+	public void setUsRepresentante(String usRepresentante) {
+		this.usRepresentante = usRepresentante;
+	}
+
+	public String getUsRepresentanteTelefone() {
+		return usRepresentanteTelefone;
+	}
+
+	public void setUsRepresentanteTelefone(String usRepresentanteTelefone) {
+		this.usRepresentanteTelefone = usRepresentanteTelefone;
 	}
 	
 	

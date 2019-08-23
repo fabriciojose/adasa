@@ -35,8 +35,8 @@ public class ProcessoDao {
     
     Criteria crit = s.createCriteria(Processo.class, "processo");
     
-    crit.createAlias("processo.demandas", "demandas", JoinType.LEFT_OUTER_JOIN);
-    crit.createAlias("demandas.demEnderecoFK", "endereco", JoinType.LEFT_OUTER_JOIN);
+    crit.createAlias("processo.documentos", "documentos", JoinType.LEFT_OUTER_JOIN);
+    crit.createAlias("documentos.docEnderecoFK", "endereco", JoinType.LEFT_OUTER_JOIN);
     crit.createAlias("endereco.endRAFK", "ra", JoinType.LEFT_OUTER_JOIN);
     
     Criterion proNumeroSEI = Restrictions.like("processo.proSEI", '%' + strPesquisaProcesso + '%');

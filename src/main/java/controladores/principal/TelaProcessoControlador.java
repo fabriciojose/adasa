@@ -65,12 +65,30 @@ public class TelaProcessoControlador implements Initializable {
 	public void setDocumento (Documento documento)  {
 		
 		this.documento = documento;
-		// preencher o label com a demanda selecionada //
-		lblDocumento.setText(
-				documento.getDocTipo()
-				+ ", Sei n° " + documento.getDocSEI()
-				+ ", Processo n° " + documento.getDocProcesso()
-				);
+		
+		
+		if (documento.getDocTipo() != null) {
+			
+			// preencher o label com a demanda selecionada //
+			lblDocumento.setText(
+					documento.getDocTipo()
+					+ ", Sei n° " + documento.getDocSEI()
+					+ ", Processo n° " + documento.getDocProcesso()
+					);
+			
+			
+			lblDocumento.setStyle("-fx-text-fill: #4A4A4A;"); 
+	
+			
+		} else {
+			
+			lblDocumento.setText(
+					"não há documento relacionado! "
+					);
+			lblDocumento.setStyle("-fx-text-fill: #FF0000;");
+		}
+		
+		
 	}
 
   /* para movimentar dados entre as telas */

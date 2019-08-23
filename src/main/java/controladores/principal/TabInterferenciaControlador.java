@@ -43,6 +43,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -69,15 +70,23 @@ public class TabInterferenciaControlador  implements Initializable{
 
 		this.endereco = endereco;
 		
-		// preenchimento o label com a demanda selecionada //
-		lblEndereco.setText(
+		// preencher o label com a demanda selecionada //
 
-				endereco.getEndLogradouro()
-				+ ", CEP n°: " + endereco.getEndCEP()
-				+ ", Cidade: " + endereco.getEndCidade()
+				if (endereco != null) {
 
-				);
-		lblEndereco.setStyle("-fx-text-fill: #FF0000;");
+					lblEndereco.setText(
+							endereco.getEndLogradouro() 
+							+ ", CEP: " + endereco.getEndCEP()
+							+ ", Cidade: " + endereco.getEndCidade()
+							);
+
+					lblEndereco.setStyle("-fx-text-fill: #4A4A4A;"); 
+
+				} else {
+
+					lblEndereco.setText("Não há endereco de empreendimento cadastrado!");
+					lblEndereco.setStyle("-fx-text-fill: #FF0000;");
+				}
 
 	}
 
@@ -876,69 +885,14 @@ public class TabInterferenciaControlador  implements Initializable{
 			public void handle(ActionEvent event) {
 
 	            inicializarTelaEndereco();
-	           // TelaEnderecoControlador.telaEnderecoControladorInterferencia.setObjetoDeEdicao(interferencia);
-	            //telaend.setObjetoDeEdicao(interferencia);
+	            telaEnderecoControlador.setObjetoDeEdicao(interferencia);
 			}
 		});
 		
 
 	}
 
-	ObservableList<String> olTipoInterferencia = FXCollections.observableArrayList(
-
-			"Superficial",
-			"Subterrânea" ,
-			"Canal",
-			"Caminhão Pipa",
-			"Lançamento de Águas Pluviais",
-			"Lançamento de Efluentes",
-			"Barragem"
-
-			);
-
-	ObservableList<String> olTipoOutorga = FXCollections
-			.observableArrayList(
-
-					"Outorga de Direito de Uso",
-					"Outorga Prévia",
-					"Registro"
-					); 
-
-	ObservableList<String> olSubtipoOutorga = FXCollections
-			.observableArrayList(
-
-					"Renovação",
-					"Modificação",
-					"Transferência",
-					"Supensão/Revogação"
-
-					); 
-
-	ObservableList<String> olTipoAto = FXCollections
-			.observableArrayList(
-
-					"Despacho"	,
-					"Portaria"	,
-					"Registro"	,
-					"Resolução",
-					"Resolução ANA",
-					"Portaria DNAEE"
-
-					); 
-
-	ObservableList<String> olSituacao = FXCollections
-			.observableArrayList(
-
-					"Arquivado",
-					"Em Análise",
-					"Outorgado",
-					"Vencida",
-					"Arquivado (CNRH 16)",
-					"Pendência"	,
-					"Indeferido",
-					"Revogado"
-					); 
-
+	
 	Pane pEndereco;
 
 	Label lblEndereco;
@@ -1096,6 +1050,17 @@ public class TabInterferenciaControlador  implements Initializable{
 
 		com = new Componentes();
 		com.popularTela(listComponentesPersistencia, prefSizeWHeLayXY, p1);    
+		
+
+		/*
+		 * Buscar apenas clicando no enter do teclado
+		 */
+		tfPesquisar.setOnKeyReleased(event -> {
+			if (event.getCode() == KeyCode.ENTER){
+				btnPesquisar.fire();
+			}
+		});
+		
 
 		pTipoInterferencia = new Pane();
 
@@ -1352,6 +1317,8 @@ public class TabInterferenciaControlador  implements Initializable{
 	Pane pTelaEndereco;
 	Double dblTransicaoEndereco = 0.0;
 	
+	TelaEnderecoControlador telaEnderecoControlador;
+	
 	public void inicializarTelaEndereco() {
 		  
 	    if (pTelaEndereco == null) {
@@ -1366,7 +1333,7 @@ public class TabInterferenciaControlador  implements Initializable{
 				
 				//System.out.println(" tela interferencia intTablView"  + intTableView);
 					// TabDocumento = 0 TabInterferencia = 1
-					loader.setController(new TelaEnderecoControlador(this));
+					loader.setController(telaEnderecoControlador = new TelaEnderecoControlador(this));
 		
 			try {
 				loader.load();

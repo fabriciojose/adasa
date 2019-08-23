@@ -74,6 +74,7 @@
 			
 			<mapping class="entidades.Documento"/> 
 				<mapping class="entidades.Parecer"/> 
+				<mapping class="entidades.NotaTecnica"/> 
 		
 		<mapping class="entidades.Endereco"/>
 			<mapping class="entidades.RA"/>

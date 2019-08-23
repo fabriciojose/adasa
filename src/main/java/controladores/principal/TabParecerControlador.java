@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -21,6 +22,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 
 import dao.DocumentoDao;
+import dao.EnderecoDao;
 import dao.ModelosDao;
 import entidades.Documento;
 import entidades.Endereco;
@@ -30,6 +32,7 @@ import entidades.FinalidadeRequerida;
 import entidades.GetterAndSetter;
 import entidades.Interferencia;
 import entidades.ModelosHTML;
+import entidades.NotaTecnica;
 import entidades.Parecer;
 import entidades.Subterranea;
 import entidades.Superficial;
@@ -91,21 +94,22 @@ public class TabParecerControlador implements Initializable {
 		if (endereco != null ) {
 			
 			lblEndereco.setText(
-					
-					endereco.getEndLogradouro()
-					+ ", CEP n°: " + endereco.getEndCEP()
-					+ ", Cidade: " + endereco.getEndCidade()
-					
-					);
-			lblEndereco.setStyle("-fx-text-fill: #4A4A4A;"); 
-	}
-	else {
-		
-		lblEndereco.setText(
-				"Não há endereco relacionado! "
+				endereco.getEndLogradouro()
+				+ ", CEP n°: " + endereco.getEndCEP()
+				+ ", Cidade: " + endereco.getEndCidade()
+				
 				);
-		lblEndereco.setStyle("-fx-text-fill: #FF0000;");
-	}
+			
+			lblEndereco.setStyle("-fx-text-fill: #4A4A4A;"); 
+		}
+		
+		else {
+		
+			lblEndereco.setText(
+					"Não há endereco relacionado! "
+					);
+			lblEndereco.setStyle("-fx-text-fill: #FF0000;");
+		}
 	
 	}
 
@@ -166,7 +170,7 @@ public class TabParecerControlador implements Initializable {
     
 	    lblDataAtualizacao.setPrefSize(247.0, 22.0);
 	    lblDataAtualizacao.setLayoutX(705.0);
-	    lblDataAtualizacao.setLayoutY(450.0);
+	    lblDataAtualizacao.setLayoutY(485.0);
 	    
 	    tcTipoDocumento.setCellValueFactory(new PropertyValueFactory<Documento, String>("docTipo"));
 	    tcSEI.setCellValueFactory(new PropertyValueFactory<Documento, String>("docNumeracao"));
@@ -184,7 +188,7 @@ public class TabParecerControlador implements Initializable {
     
 		tvDocumento.setPrefSize(930.0, 185.0);
 		tvDocumento.setLayoutX(25.0);
-		tvDocumento.setLayoutY(255.0);
+		tvDocumento.setLayoutY(290.0);
 
 		tvDocumento.getColumns().add(tcTipoDocumento); //, tcDocsSEI, tcProcsSEI });
 		tvDocumento.getColumns().add(tcSEI);
@@ -215,6 +219,12 @@ public class TabParecerControlador implements Initializable {
 	
 	// inicializacao dos dados basicos de cadastro
 	Pane pDadosParecer;
+	
+		ComboBox<String> cbTipoDocumento;		
+		ObservableList<String> obsListTipoDocumento = FXCollections
+				.observableArrayList("Parecer" , "Nota Técnica");
+	
+	
 		TextField tfDocumento;
   		TextField tfSEI;
   		TextField tfProcessoSEI;
@@ -292,6 +302,10 @@ public class TabParecerControlador implements Initializable {
 		com.popularTela(componentesEndereco, prefSizeWHeLayXY, p1);
 	
 		componentesParecer.add(pDadosParecer = new Pane());
+		
+		componentesParecer.add(new Label("TIPO:"));
+		componentesParecer.add(cbTipoDocumento = new ComboBox<String>(obsListTipoDocumento));
+		
 		componentesParecer.add(new Label("NUMERAÇÃO:"));
 		componentesParecer.add(tfDocumento = new TextField());
 		componentesParecer.add(new Label("SEI:"));
@@ -306,20 +320,22 @@ public class TabParecerControlador implements Initializable {
 		componentesParecer.add(dpDataDistribuicao = new DatePicker());
 	
 		prefSizeWHeLayXY = new Double [][] { 
-	
-			{950.0,90.0,15.0,80.0},
-			{130.0,30.0,16.0,15.0},
-			{130.0,30.0,15.0,45.0},
-			{130.0,30.0,156.0,15.0},
-			{130.0,30.0,156.0,45.0},
-			{160.0,30.0,296.0,15.0},
-			{160.0,30.0,296.0,45.0},
-			{150.0,30.0,466.0,15.0},
-			{150.0,30.0,466.0,45.0},
-			{150.0,30.0,626.0,15.0},
-			{150.0,30.0,626.0,45.0},
-			{150.0,30.0,786.0,15.0},
-			{150.0,30.0,786.0,45.0},
+			
+			{950.0,134.0,15.0,70.0},
+			{170.0,30.0,16.0,0.0},
+			{170.0,30.0,15.0,32.0},
+			{130.0,30.0,16.0,64.0},
+			{130.0,30.0,15.0,94.0},
+			{130.0,30.0,156.0,64.0},
+			{130.0,30.0,156.0,94.0},
+			{160.0,30.0,296.0,64.0},
+			{160.0,30.0,296.0,94.0},
+			{150.0,30.0,466.0,64.0},
+			{150.0,30.0,466.0,94.0},
+			{150.0,30.0,626.0,64.0},
+			{150.0,30.0,626.0,94.0},
+			{150.0,30.0,786.0,64.0},
+			{150.0,30.0,786.0,94.0},
 	
 		};
 	
@@ -338,7 +354,7 @@ public class TabParecerControlador implements Initializable {
 
 			prefSizeWHeLayXY = new Double[][] { 
 
-				{930.0,60.0,25.0,180.0},
+				{930.0,60.0,25.0,215.0},
 				{95.0,25.0,18.0,18.0},
 				{95.0,25.0,123.0,18.0},
 				{95.0,25.0,228.0,18.0},
@@ -379,7 +395,7 @@ public class TabParecerControlador implements Initializable {
 
 		prefSizeWHeLayXY = new Double [][] { 
 
-			{930.0,431.0,25.0,480.0},
+			{930.0,431.0,25.0,515.0},
 			{70.0,25.0,850.0,10.0},
 			{420.0,30.0,14.0,41.0},
 			//--- TableView --
@@ -397,6 +413,8 @@ public class TabParecerControlador implements Initializable {
 			{70.0,25.0,850.0,255.0},
 			{833.0,30.0,14.0,386.0},
 			{70.0,25.0,850.0,389.0},
+			
+			
 
 		};
 
@@ -458,14 +476,16 @@ public class TabParecerControlador implements Initializable {
 
 				obsListInterferencia.clear();
 				obsListDocumentos.clear();
-
+				
 				if (newValue != null) {
-					obsListInterferencia.addAll(newValue.getInterferencias());
+					
+					// para nao repetir valores
+					obsListInterferencia.addAll(newValue.getInterferencias().stream().distinct().collect(Collectors.toList()));
 					endereco = newValue;
 				}
 				
 				if (cbEndereco.getSelectionModel().getSelectedItem() != null) {
-					obsListDocumentos.addAll(newValue.getDocumentos());
+					obsListDocumentos.addAll(newValue.getDocumentos().stream().distinct().collect(Collectors.toList()));
 				}
 				
 						
@@ -522,7 +542,7 @@ public class TabParecerControlador implements Initializable {
 	  
 	    DocumentoDao docDao = new DocumentoDao();
 	    
-	    List<Documento> docList = docDao.listarParecer(strPesquisa);
+	    List<Documento> docList = docDao.listarParecerNotaTecnica(strPesquisa);
 	    
 	    if (!obsList.isEmpty()) {
 	      obsList.clear();
@@ -549,6 +569,7 @@ public class TabParecerControlador implements Initializable {
 			
 			if (doc == null) {
 				
+				cbTipoDocumento.setValue(null);
 				tfDocumento.setText("");
 				tfSEI.setText("");
 				tfProcessoSEI.setText("");
@@ -570,6 +591,9 @@ public class TabParecerControlador implements Initializable {
 				documento = doc;
 				
 				setEndereco(doc.getDocEnderecoFK());
+				
+				cbTipoDocumento.setDisable(true);
+				cbTipoDocumento.setValue(doc.getDocTipo());
 				
 				// preencher os campos //
 				tfDocumento.setText(doc.getDocNumeracao());
@@ -669,9 +693,9 @@ public class TabParecerControlador implements Initializable {
 				} else {
 
 					obsListEnderecos.clear();
-					
+				
 					Set<Endereco> setEnderecos = us.getEnderecos();
-					
+			
 					if (! us.getEnderecos().isEmpty()) {
 						
 						for(Endereco e: setEnderecos) {
@@ -806,7 +830,8 @@ public class TabParecerControlador implements Initializable {
 			}
 	
 	public void modularBotoes () {
-		  
+		
+		cbTipoDocumento.setDisable(true);
 		tfDocumento.setDisable(true);
 	    tfSEI.setDisable(true);
 	    tfProcessoSEI.setDisable(true);
@@ -884,6 +909,9 @@ public class TabParecerControlador implements Initializable {
 			}
 		});
 
+		/*
+		 * Buscar apenas clicando no enter do teclado
+		 */
 		tfPesquisar.setOnKeyReleased(event -> {
 			if (event.getCode() == KeyCode.ENTER){
 				btnPesquisar.fire();
@@ -1124,6 +1152,7 @@ public class TabParecerControlador implements Initializable {
 			@Override public void handle(ActionEvent e) {
 
 				inicializarTelaEndereco();
+				telaEnderecoControlador.setObjetoDeEdicao(documento);
 			
 			}
 		});
@@ -1132,6 +1161,8 @@ public class TabParecerControlador implements Initializable {
 	}
 	
 	public void habilitarDocumento () {
+		
+	  cbTipoDocumento.setValue(null);
 		  
 	  tfDocumento.setText("");
 	  tfSEI.setText("");
@@ -1140,6 +1171,8 @@ public class TabParecerControlador implements Initializable {
 	  dpDataCriacao.getEditor().clear();
 	  dpDataDistribuicao.getEditor().clear();
 	  dpDataRecebimento.getEditor().clear();
+	  
+	  cbTipoDocumento.setDisable(false);
     
 	  dpDataCriacao.setDisable(false);
 	  dpDataDistribuicao.setDisable(false);
@@ -1175,41 +1208,50 @@ public class TabParecerControlador implements Initializable {
 		  }
 	      else
 	      {
-		       Parecer par = new Parecer();
+	    	  
+	    	  Documento doc;
+	    	  
+	    	  if (cbTipoDocumento.getValue().equals("Parecer")) {
+	    		  
+	    		  doc = new Parecer();
+	    	  } else {
+	    		  doc = new NotaTecnica();
+	    	  }
+		      
 		        
-		      	par.setDocTipo("Parecer");
-		       	par.setDocNumeracao(tfDocumento.getText());
-		       	par.setDocSEI(tfSEI.getText());
-		       	par.setDocProcesso(tfProcessoSEI.getText());
+	    	  	doc.setDocTipo(cbTipoDocumento.getValue());
+	    	  	doc.setDocNumeracao(tfDocumento.getText());
+	    	  	doc.setDocSEI(tfSEI.getText());
+	    	  	doc.setDocProcesso(tfProcessoSEI.getText());
 			        
 		        if (dpDataCriacao.getValue() == null) {
-		        		par.setDocDataCriacao(null);
+		        		doc.setDocDataCriacao(null);
 			        } else {
-			        	par.setDocDataCriacao(Date.valueOf((LocalDate)dpDataCriacao.getValue()));
+			        	doc.setDocDataCriacao(Date.valueOf((LocalDate)dpDataCriacao.getValue()));
 			        }
 			      
 		        if (dpDataDistribuicao.getValue() == null) {
-		        	par.setDocDataDistribuicao(null);
+		        	doc.setDocDataDistribuicao(null);
 		        } else {
-		        	par.setDocDataDistribuicao(Date.valueOf((LocalDate)dpDataDistribuicao.getValue()));
+		        	doc.setDocDataDistribuicao(Date.valueOf((LocalDate)dpDataDistribuicao.getValue()));
 		        }
 			        
 		        if (dpDataRecebimento.getValue() == null) {
-		        	par.setDocDataRecebimento(null);
+		        	doc.setDocDataRecebimento(null);
 		        } else {
-		        	par.setDocDataRecebimento(Date.valueOf((LocalDate)dpDataRecebimento.getValue()));
+		        	doc.setDocDataRecebimento(Date.valueOf((LocalDate)dpDataRecebimento.getValue()));
 		        }
 				        
-		        par.setDocDataAtualizacao(Timestamp.valueOf(LocalDateTime.now()));
+		        doc.setDocDataAtualizacao(Timestamp.valueOf(LocalDateTime.now()));
 			    
 			    // relacionar a um endereco //
-		        par.setDocEnderecoFK(endereco);
+		        doc.setDocEnderecoFK(endereco);
 			        
 		        DocumentoDao docDao = new DocumentoDao();
 		        
-		        docDao.salvarDocumento(par);
+		        docDao.salvarDocumento(doc);
 		      
-		        obsList.add(par);
+		        obsList.add(doc);
 		        
 		        modularBotoes();
 		        
@@ -1235,6 +1277,8 @@ public class TabParecerControlador implements Initializable {
 		  
 		    if (tfDocumento.isDisable()) {
 		
+		    // Não desabilitar o tipo de documento, não é possível editar o tipo de documento
+			// cbTipoDocumento.setDisable(false);
 		    tfDocumento.setDisable(false);
 		     tfSEI.setDisable(false);
 		     tfProcessoSEI.setDisable(false);
@@ -1254,43 +1298,43 @@ public class TabParecerControlador implements Initializable {
 		    
 				    else
 				    {
-				      Parecer par = (Parecer) tvDocumento.getSelectionModel().getSelectedItem();
+				      Documento doc = (Documento) tvDocumento.getSelectionModel().getSelectedItem();
 				      
 				      
-				      par.setDocNumeracao(tfDocumento.getText());
-				      par.setDocSEI(tfSEI.getText());
-				      par.setDocProcesso(tfProcessoSEI.getText());
+				      doc.setDocNumeracao(tfDocumento.getText());
+				      doc.setDocSEI(tfSEI.getText());
+				      doc.setDocProcesso(tfProcessoSEI.getText());
 				      
 				      
 				      if (dpDataCriacao.getValue() == null) {
-				    	  par.setDocDataCriacao(null);
+				    	  doc.setDocDataCriacao(null);
 				      } else {
-				    	  par.setDocDataCriacao(Date.valueOf((LocalDate)dpDataCriacao.getValue()));
+				    	  doc.setDocDataCriacao(Date.valueOf((LocalDate)dpDataCriacao.getValue()));
 				      }
 				        
 				      if (dpDataDistribuicao.getValue() == null) {
-				    	  par.setDocDataDistribuicao(null);
+				    	  doc.setDocDataDistribuicao(null);
 				      } else {
-				    	  par.setDocDataDistribuicao(Date.valueOf((LocalDate)dpDataDistribuicao.getValue()));
+				    	  doc.setDocDataDistribuicao(Date.valueOf((LocalDate)dpDataDistribuicao.getValue()));
 				      }
 				      if (dpDataRecebimento.getValue() == null) {
-				    	  par.setDocDataRecebimento(null);
+				    	  doc.setDocDataRecebimento(null);
 				      } else {
-				    	  par.setDocDataRecebimento(Date.valueOf((LocalDate)dpDataRecebimento.getValue()));
+				    	  doc.setDocDataRecebimento(Date.valueOf((LocalDate)dpDataRecebimento.getValue()));
 				      }
 				      
-				      par.setDocDataAtualizacao(Timestamp.valueOf(LocalDateTime.now()));
+				      doc.setDocDataAtualizacao(Timestamp.valueOf(LocalDateTime.now()));
 					  
 					    
 					  // relacionar a um endereco //
-				      par.setDocEnderecoFK(endereco);
+				      doc.setDocEnderecoFK(endereco);
 				      
 				      DocumentoDao docDao = new DocumentoDao();
 				      
-				      docDao.mergeDocumento(par);
+				      docDao.mergeDocumento(doc);
 				      
-				      obsList.remove(par);
-				      obsList.add(par);
+				      obsList.remove(doc);
+				      obsList.add(doc);
 				     
 				  
 				      modularBotoes();
@@ -1306,15 +1350,15 @@ public class TabParecerControlador implements Initializable {
 		   
 		  try
 			    {
-			  	  Parecer par = (Parecer) tvDocumento.getSelectionModel().getSelectedItem();
+			  	  Documento doc = (Documento) tvDocumento.getSelectionModel().getSelectedItem();
 			      
-			      int id = par.getDocID();
+			      int id = doc.getDocID();
 			      
 			      DocumentoDao dDao = new DocumentoDao();
 			      
 			      dDao.removerDocumento(Integer.valueOf(id));
 			      
-			      obsList.remove(par);
+			      obsList.remove(doc);
 			      
 			      modularBotoes();
 			      
@@ -1404,6 +1448,7 @@ public class TabParecerControlador implements Initializable {
 	Pane pTelaEndereco;
 	Double dblTransicaoEndereco = 0.0;
 	
+	TelaEnderecoControlador telaEnderecoControlador;
 
 	public void inicializarTelaEndereco() {
 		  
@@ -1417,7 +1462,7 @@ public class TabParecerControlador implements Initializable {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/principal/TelaEndereco.fxml"));
 				loader.setRoot(p);
 			
-					loader.setController(new TelaEnderecoControlador(this));
+				loader.setController(telaEnderecoControlador = new TelaEnderecoControlador(this));
 		
 			try {
 				loader.load();

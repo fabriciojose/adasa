@@ -867,7 +867,7 @@ public class TabDemandaControlador implements Initializable {
 					
 				
 					// listar as interferencias
-					Set<Demanda> setDem = dem.getDemEnderecoFK().getDemandas();
+					//Set<Demanda> setDem = dem.getDemEnderecoFK().getDemandas();
 					Endereco end = dem.getDemEnderecoFK();
 						
 					// preparar strings para transmitir para o javascript pelo metodo 'setEnderecoInterferencias()'
@@ -876,13 +876,7 @@ public class TabDemandaControlador implements Initializable {
 					
 							String strEndereco = end.getEndDDLatitude() + "," + end.getEndDDLongitude();
 							
-						for(Demanda d : setDem) {
-							
-							strInfoDemandas += "|" + d.getDemTipo() + "," + d.getDemNumeroSEI() + "," + d.getDemProcesso();
-							
-							
-						} // fim loop for
-					
+						
 					/* chamar os metodo necessarios, primeiro as coordenadas e detalhes, 
 						zoom do mapa e deois centralizar o mapa de acordo com o endereco
 						*/

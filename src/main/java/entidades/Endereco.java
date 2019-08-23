@@ -68,15 +68,9 @@ public class Endereco implements Serializable{
 	@Column (name="end_Croqui", columnDefinition="org.hibernate.spatial.GeometryType")
 	private  Geometry endCroqui;
 	
-	//-- Lista de enderecos vinculados --//
-	@OneToMany (mappedBy = "demEnderecoFK", cascade = CascadeType.MERGE,
-			 fetch = FetchType.LAZY, targetEntity = Demanda.class)
-	@Fetch(FetchMode.SUBSELECT) 
-	private Set<Demanda> demandas = new HashSet<>();
-	
 		//-- Lista de documentos vinculados --//
 		@OneToMany (mappedBy = "docEnderecoFK", cascade = CascadeType.MERGE,
-				 fetch = FetchType.EAGER, targetEntity = Documento.class)
+				 fetch = FetchType.LAZY, targetEntity = Documento.class)
 		@Fetch(FetchMode.SUBSELECT) 
 		private Set<Documento> documentos = new HashSet<>();
 	
@@ -262,13 +256,7 @@ public class Endereco implements Serializable{
 		this.endUsuarioFK = endUsuarioFK;
 	}
 
-	public Set<Demanda> getDemandas() {
-		return demandas;
-	}
-
-	public void setDemandas(Set<Demanda> demandas) {
-		this.demandas = demandas;
-	}
+	
 
 	public Set<Documento> getDocumentos() {
 		return documentos;

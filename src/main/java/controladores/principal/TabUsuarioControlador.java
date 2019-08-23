@@ -9,15 +9,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import dao.ModelosDao;
 import dao.UsuarioDao;
 import entidades.BancoAccess;
-import entidades.Documento;
 import entidades.Endereco;
 import entidades.Interferencia;
 import entidades.ModelosHTML;
-import entidades.Subterranea;
 import entidades.Usuario;
 import javafx.animation.TranslateTransition;
 import javafx.beans.value.ChangeListener;
@@ -52,6 +51,7 @@ import javafx.scene.control.ToolBar;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -145,6 +145,9 @@ public class TabUsuarioControlador implements Initializable {
 		tfTelefone.setText(null);
 		tfCelular.setText(null);
 		tfEmail.setText(null);
+		
+		tfRepresentante.setText(null);
+		tfRepreTelefone.setText(null);
 
 		cbTipoPessoa.setDisable(false);
 
@@ -161,6 +164,9 @@ public class TabUsuarioControlador implements Initializable {
 		tfTelefone.setDisable(false);
 		tfCelular.setDisable(false);
 		tfEmail.setDisable(false);
+		
+		tfRepresentante.setDisable(false);
+		tfRepreTelefone.setDisable(false);
 
 		btnSalvar.setDisable(false);
 		btnEditar.setDisable(true);
@@ -203,6 +209,10 @@ public class TabUsuarioControlador implements Initializable {
 				us.setUsTelefone(tfTelefone.getText());
 				us.setUsCelular(tfCelular.getText());
 				us.setUsEmail(tfEmail.getText());
+				
+				us.setUsRepresentante(tfRepresentante.getText());
+				us.setUsRepresentanteTelefone(tfRepreTelefone.getText());
+
 
 				us.setUsDataAtualizacao(Timestamp.valueOf((LocalDateTime.now())));
 
@@ -259,6 +269,9 @@ public class TabUsuarioControlador implements Initializable {
 			tfTelefone.setDisable(false);
 			tfCelular.setDisable(false);
 			tfEmail.setDisable(false);
+			
+			tfRepresentante.setDisable(false);
+			tfRepreTelefone.setDisable(false);
 
 			btnSalvar.setDisable(true);
 			btnEditar.setDisable(false);
@@ -297,6 +310,11 @@ public class TabUsuarioControlador implements Initializable {
 				us.setUsTelefone(tfTelefone.getText());
 				us.setUsCelular(tfCelular.getText());
 				us.setUsEmail(tfEmail.getText());
+				
+				us.setUsRepresentante(tfRepresentante.getText());
+				us.setUsRepresentanteTelefone(tfRepreTelefone.getText());
+				
+				
 				us.setUsDataAtualizacao(Timestamp.valueOf((LocalDateTime.now())));
 
 				System.out.println("bnt editar - tabUsuario" + endereco.getEndDDLatitude());
@@ -473,7 +491,7 @@ public class TabUsuarioControlador implements Initializable {
 
 		lblDataAtualizacao.setPrefSize(247, 22);
 		lblDataAtualizacao.setLayoutX(705);
-		lblDataAtualizacao.setLayoutY(600);
+		lblDataAtualizacao.setLayoutY(670);
 
 		cbTipoPessoa.setValue("Física");
 		cbTipoPessoa.setItems(olTipoPessoa);
@@ -494,7 +512,7 @@ public class TabUsuarioControlador implements Initializable {
 
 		tvLista.setPrefSize(930, 185);
 		tvLista.setLayoutX(25);
-		tvLista.setLayoutY(405);
+		tvLista.setLayoutY(475);
 
 
 		tvLista.getColumns().add(tcNome);
@@ -545,6 +563,9 @@ public class TabUsuarioControlador implements Initializable {
 	TextField tfTelefone;
 	TextField tfCelular;
 	TextField tfEmail;
+	
+	TextField tfRepresentante;
+	TextField tfRepreTelefone;
 
 	ArrayList<Node> listaComponentesUsuario = new ArrayList<Node>();												
 
@@ -577,24 +598,29 @@ public class TabUsuarioControlador implements Initializable {
 		prefSizeWHeLayXY = new Double [][]  { 
 
 			{950.0,60.0,15.0,14.0},
-			{85.0,30.0,25.0,15.0},
-			{740.0,30.0,110.0,15.0},
-			{65.0,25.0,860.0,17.0},
+			{95.0,30.0,27.0,15.0},
+			{728.0,30.0,121.0,15.0},
+			{65.0,25.0,859.0,17.0},
 
 		}; 
 
 		com = new Componentes();
 		com.popularTela(listaComonentesEndereco, prefSizeWHeLayXY, p1);
 
-
+		
 		listaComponentesUsuario.add(pDadosUsuario = new Pane());
+		
 		listaComponentesUsuario.add(new Label("TIPO:"));
 		listaComponentesUsuario.add(cbTipoPessoa = new ComboBox<String>());
+		
 		listaComponentesUsuario.add(new Label("NOME/RAZÃO SOCIAL:"));
 		listaComponentesUsuario.add(tfNome = new TextField());
+		
 		listaComponentesUsuario.add(new Label("CPF/CNPJ: "));
 		listaComponentesUsuario.add(tfCPFCNPJ = new TextField());
+		
 		listaComponentesUsuario.add(checkEnderecoEmpreendimento = new CheckBox("importar endereço do empreendimento. "));
+		
 		listaComponentesUsuario.add(new Label("ENDERECO:"));
 		listaComponentesUsuario.add(tfLogradouro = new TextField());
 		listaComponentesUsuario.add(new Label("RA: "));
@@ -611,100 +637,48 @@ public class TabUsuarioControlador implements Initializable {
 		listaComponentesUsuario.add(tfCelular = new TextField());
 		listaComponentesUsuario.add(new Label("EMAIL:"));
 		listaComponentesUsuario.add(tfEmail = new TextField());
+		
+		listaComponentesUsuario.add(new Label("REPRESENTANTE:"));
+		listaComponentesUsuario.add(tfRepresentante = new TextField());
+		
+		listaComponentesUsuario.add(new Label("TELEFONE:"));
+		listaComponentesUsuario.add(tfRepreTelefone = new TextField());
 
 		prefSizeWHeLayXY = new Double [][]  { 
 
-			{930.0,231.0,25.0,85.0},
-			{110.0,30.0,46.0,5.0},
-			{110.0,30.0,46.0,35.0},
-			{510.0,30.0,166.0,5.0},
-			{510.0,30.0,165.0,35.0},
-			{200.0,30.0,687.0,5.0},
-			{200.0,30.0,685.0,35.0},
-			{370.0,30.0,45.0,66.0},
-			{390.0,30.0,45.0,95.0},
-			{390.0,30.0,45.0,125.0},
-			{150.0,30.0,445.0,95.0},
-			{150.0,30.0,445.0,125.0},
-			{85.0,30.0,605.0,95.0},
-			{85.0,30.0,605.0,125.0},
-			{110.0,30.0,700.0,95.0},
-			{110.0,30.0,700.0,125.0},
-			{60.0,30.0,820.0,95.0},
-			{60.0,30.0,820.0,125.0},
-			{140.0,30.0,45.0,155.0},
-			{140.0,30.0,44.0,185.0},
-			{140.0,30.0,195.0,155.0},
-			{140.0,30.0,195.0,185.0},
-			{535.0,30.0,345.0,155.0},
-			{535.0,30.0,345.0,185.0},
+			{930.0,304.0,25.0,85.0},
+			{110.0,30.0,10.0,5.0},
+			{110.0,30.0,10.0,35.0},
+			{563.0,30.0,132.0,5.0},
+			{563.0,30.0,130.0,35.0},
+			{216.0,30.0,705.0,6.0},
+			{216.0,30.0,705.0,35.0},
+			{370.0,30.0,10.0,66.0},
+			{370.0,30.0,10.0,95.0},
+			{447.0,30.0,10.0,125.0},
+			{150.0,30.0,466.0,95.0},
+			{150.0,30.0,466.0,125.0},
+			{85.0,30.0,626.0,95.0},
+			{85.0,30.0,626.0,125.0},
+			{110.0,30.0,721.0,95.0},
+			{110.0,30.0,721.0,125.0},
+			{75.0,30.0,841.0,95.0},
+			{75.0,30.0,845.0,125.0},
+			{170.0,30.0,10.0,155.0},
+			{170.0,30.0,10.0,185.0},
+			{170.0,30.0,190.0,155.0},
+			{170.0,30.0,190.0,185.0},
+			{548.0,30.0,370.0,155.0},
+			{548.0,30.0,371.0,185.0},
+			{728.0,30.0,10.0,215.0},
+			{728.0,30.0,10.0,245.0},
+			{170.0,30.0,747.0,215.0},
+			{170.0,30.0,749.0,245.0},
 
 		}; 
 
 		com = new Componentes();
 		com.popularTela(listaComponentesUsuario, prefSizeWHeLayXY, p1);
-		
-		
-		/*
-		 * buscar no banco da rosangela, que denominei Banco_Access
-		 */
-		
-		/*
-		BancoAccessDao bDao = new BancoAccessDao();
-		docList = bDao.listarBancoAccess(tfNome.getText());
-	
-		tfNome.textProperty().addListener((observable, oldValue, newValue) -> {
-			
-			
-			if (tfNome.getText() != null && tfNome.getText().length() > 2) {
-				
-				contextMenu.hide();
-
-				contextMenu = new ContextMenu();
-				contextMenu.setMaxWidth(300);
-				
-				tfNome.setContextMenu(contextMenu);
-			
-				for (BancoAccess b : docList) {
-					
-					if (
-							
-							(b.getBaInteressado() + "\n  | " + b.getBaNumeroProcesso() + "\n    | " + b.getBaEnderecoEmpreendimento()).toLowerCase()
-							
-							.indexOf(tfNome.getText().toLowerCase()) != -1) {
-						
-					Label lbl = new Label(b.getBaInteressado() + "\n  | " + b.getBaNumeroProcesso() + "\n    | " + b.getBaEnderecoEmpreendimento());
-					lbl.setPrefWidth(400);
-					lbl.setWrapText(true);
-					
-					MenuItem item = new MenuItem();
-					item.setGraphic(lbl);
-					
-					item.setOnAction(new EventHandler<ActionEvent>() {
-
-						@Override
-						public void handle(ActionEvent event) {
-
-							tfNome.setText(b.getBaInteressado());
-						}
-
-					});
-
-					// Add MenuItem to ContextMenu
-					contextMenu.getItems().add(item);
-					
-					}
-
-				} // fim loop for
-
-				contextMenu.show(tfNome, Side.RIGHT, 0, 0);
-		
-			
-			} // fim if (tf.getText().length() > 3
-
-		});
-		
-		*/
 		
 		BuscadorBancos bd = new BuscadorBancos(tfNome, contextMenu);
 		bd.buscar();
@@ -721,7 +695,7 @@ public class TabUsuarioControlador implements Initializable {
 
 		prefSizeWHeLayXY = new Double [][]  { 
 
-			{930.0,60.0,25.0,330.0},
+			{930.0,60.0,25.0,402.0},
 			{95.0,25.0,18.0,18.0},
 			{95.0,25.0,123.0,18.0},
 			{95.0,25.0,228.0,18.0},
@@ -734,6 +708,17 @@ public class TabUsuarioControlador implements Initializable {
 
 		com = new Componentes();
 		com.popularTela(listNodesPersistencia, prefSizeWHeLayXY, p1);
+		
+		
+		/*
+		 * Buscar apenas clicando no enter do teclado
+		 */
+		tfPesquisar.setOnKeyReleased(event -> {
+			if (event.getCode() == KeyCode.ENTER){
+				btnPesquisar.fire();
+			}
+		});
+
 
 		listaComonentesInterferencia.add(pInterferencia = new Pane());
 		listaComonentesInterferencia.add(new Label("Endereço:"));
@@ -744,12 +729,12 @@ public class TabUsuarioControlador implements Initializable {
 
 		prefSizeWHeLayXY = new Double [][]  { 
 
-			{930.0,81.0,25.0,630.0},
-			{350.0,30.0,21.0,9.0},
-			{350.0,30.0,21.0,42.0},
-			{350.0,30.0,381.0,9.0},
-			{350.0,30.0,381.0,42.0},
-			{175.0,25.0,741.0,45.0},
+			{930.0,72.0,25.0,700.0},
+			{350.0,30.0,18.0,0.0},
+			{350.0,30.0,18.0,31.0},
+			{350.0,30.0,378.0,0.0},
+			{350.0,30.0,378.0,31.0},
+			{175.0,25.0,738.0,34.0},
 
 		}; 
 
@@ -767,7 +752,6 @@ public class TabUsuarioControlador implements Initializable {
 
 	public void gerarRequerimento (Usuario us, Interferencia inter) {
 
-
 		// buscar tipo de documento 
 		HTMLEditor htmlEditor = new HTMLEditor();
 
@@ -783,7 +767,7 @@ public class TabUsuarioControlador implements Initializable {
 
 		if (inter.getInterTipoInterferenciaFK().getTipoInterDescricao().equals("Superficial")) {
 
-			listRequerimento = modDao.listarModelo("Requerimento de Outorga Superficial");
+			listRequerimento = modDao.listarModelo("Requerimento de Outorga Superficial 2019");
 		} 
 
 
@@ -795,7 +779,8 @@ public class TabUsuarioControlador implements Initializable {
 		String strHTML = ml.criarDocumento();
 
 		try { ControladorNavegacao.conNav.setHTML(strHTML); } 
-		catch (Exception e) {
+		
+			catch (Exception e) {
 
 			Alerta a = new Alerta ();
 			a.alertar(new Alert(Alert.AlertType.ERROR, "Inicialize o navegador SEI !!!", ButtonType.OK));
@@ -980,8 +965,7 @@ public class TabUsuarioControlador implements Initializable {
 			public void handle(ActionEvent event) {
 
 	            inicializarTelaEndereco();
-	            System.out.println(usuario.getUsNome());
-	           // TelaEnderecoControlador.telaEnderecoControladorUsuario.setObjetoDeEdicao(usuario);
+	            telaEnderecoControlador.setObjetoDeEdicao(usuario);
 			}
 		});
 		
@@ -998,32 +982,21 @@ public class TabUsuarioControlador implements Initializable {
 		});
 
 		cbEndereco.valueProperty().addListener(new ChangeListener<Endereco>() {
+			
 			@Override 
 			public void changed(ObservableValue<? extends Endereco> ov, Endereco oldValue, Endereco newValue) {  
 
 				obsListInterferencia.clear();
+				
+				// para nao repetir valores
+				
+				if (newValue != null) {
+					obsListInterferencia.addAll(newValue.getInterferencias().stream().distinct().collect(Collectors.toList()));
+				}
+				
 
-				if (newValue != null)
-					for(Interferencia i: newValue.getInterferencias()) {
-						obsListInterferencia.add(i);
-
-					}
 				endereco = newValue;
 
-				if (endereco != null)
-					for (Documento doc : endereco.getDocumentos()) {
-						System.out.println(doc.getDocNumeracao());
-
-						for (Interferencia i : doc.getDocEnderecoFK().getInterferencias()) {
-
-							if (i.getClass().getName() == "entidades.Subterranea") {
-
-								//System.out.println(((Subterranea) i).getSubFinalidade1());
-
-								System.out.println(((Subterranea) i).getSubSubSistemaFK().getSubDescricao());
-							}
-						}
-					}
 			}    
 		});
 
@@ -1068,6 +1041,9 @@ public class TabUsuarioControlador implements Initializable {
 		tfTelefone.setDisable(true);
 		tfCelular.setDisable(true);
 		tfEmail.setDisable(true);
+		
+		tfRepresentante.setDisable(true);
+		tfRepreTelefone.setDisable(true);
 
 
 		btnSalvar.setDisable(true);
@@ -1141,6 +1117,9 @@ public class TabUsuarioControlador implements Initializable {
 					tfTelefone.setText(null);
 					tfCelular.setText(null);
 					tfEmail.setText(null);
+					
+					tfRepresentante.setText(null);
+					tfRepreTelefone.setText(null);
 
 					btnNovo.setDisable(true);
 					btnSalvar.setDisable(true);
@@ -1169,6 +1148,9 @@ public class TabUsuarioControlador implements Initializable {
 					tfTelefone.setText(us.getUsTelefone());
 					tfCelular.setText(us.getUsCelular());
 					tfEmail.setText(us.getUsEmail());
+					
+					tfRepresentante.setText(us.getUsRepresentante());
+					tfRepreTelefone.setText(us.getUsRepresentanteTelefone());
 
 
 					// mostrar data de atualizacao //
@@ -1232,6 +1214,8 @@ public class TabUsuarioControlador implements Initializable {
 	Pane pTelaEndereco;
 	Double dblTransicaoEndereco = 0.0;
 	
+	TelaEnderecoControlador telaEnderecoControlador;
+	
 
 	public void inicializarTelaEndereco() {
 		  
@@ -1245,7 +1229,7 @@ public class TabUsuarioControlador implements Initializable {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/principal/TelaEndereco.fxml"));
 				loader.setRoot(p);
 			
-					loader.setController(new TelaEnderecoControlador(this));
+				loader.setController(telaEnderecoControlador = new TelaEnderecoControlador(this));
 		
 			try {
 				loader.load();

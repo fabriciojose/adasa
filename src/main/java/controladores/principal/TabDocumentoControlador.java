@@ -177,8 +177,10 @@ public class TabDocumentoControlador implements Initializable {
 		else
 		{
 			Documento doc = (Documento)tvLista.getSelectionModel().getSelectedItem();
+			
+			System.out.println("doc num antes de editar " + doc.getDocNumeracao());
 
-			doc.setDocTipo(cbTipo.getValue());
+			//doc.setDocTipo(cbTipo.getValue());
 			doc.setDocNumeracao(tfNumeracao.getText());
 			doc.setDocSEI(tfSEI.getText());
 			doc.setDocProcesso(tfProcesso.getText());
@@ -201,7 +203,10 @@ public class TabDocumentoControlador implements Initializable {
 			dDao.mergeDocumento(doc);
 
 			obsList.remove(doc);
+			System.out.println("doc num antes de remover da obslist " + doc.getDocNumeracao());
+			
 			obsList.add(doc);
+			System.out.println("doc depois de remover da obslist " + doc.getDocNumeracao());
 
 			/* transmitir demanda para a tab endereco */
 			if (controladorOutorga != null) {
@@ -430,6 +435,8 @@ public class TabDocumentoControlador implements Initializable {
 
 						"Requerimento de Outorga"	,
 						"Solicitação",
+						"Parecer",
+						"Nota Técnica",
 						"Despacho"	,
 						"Registro",
 						"Ofício"	,
@@ -571,6 +578,9 @@ public class TabDocumentoControlador implements Initializable {
 		});
 
 
+		/*
+		 * Buscar apenas clicando no enter do teclado
+		 */
 		tfPesquisar.setOnKeyReleased(event -> {
 			if (event.getCode() == KeyCode.ENTER){
 				btnPesquisar.fire();
@@ -823,18 +833,22 @@ public class TabDocumentoControlador implements Initializable {
 
 					if (doc.getDocDataDistribuicao() == null) {
 						dpDataDistribuicao.setValue(null);
+						System.out.println("selecionar documento data dist set null " );
 
 					} else {
 						Date dataDis = doc.getDocDataDistribuicao();
 						dpDataDistribuicao.setValue(dataDis.toLocalDate());
+						System.out.println("selecionar data distribuicao " + dataDis.toLocalDate());
 					}
 
 					if (doc.getDocDataRecebimento() == null) {
 						dpDataRecebimento.setValue(null);
+						System.out.println("selecionar documento data recebi set null " );
 					} else {
 
 						Date dataRec = doc.getDocDataRecebimento();
 						dpDataRecebimento.setValue(dataRec.toLocalDate());
+						System.out.println("selecionar documento data recebi " + dataRec.toLocalDate());
 					}
 
 

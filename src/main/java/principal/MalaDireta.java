@@ -163,21 +163,27 @@ public class MalaDireta {
 					"us_cpfcnpj_tag",
 					"us_tel_tag",
 					"us_cel_tag",
+					"us_representante_tag",
+					"us_representante_telefone_tag",
 					"us_end_cor_tag",
 					"us_cep_tag",
 					"us_email_tag"
 			};
+			
+			// us_representante_tag us_representante_telefone_tag
 
 			String strUsuario [] = {
 					usuario.getUsNome(),
 					usuario.getUsCPFCNPJ(),						
 					usuario.getUsTelefone()	,
 					usuario.getUsCelular(),
+					usuario.getUsRepresentante(),
+					usuario.getUsRepresentanteTelefone(),
 					usuario.getUsLogadouro(),
 					usuario.getUsCEP(),
 					usuario.getUsEmail(),
 			};
-
+		
 			for (int i  = 0; i<strPosicoesUsuario.length; i++) {
 
 				try { docHtml.select(strPosicoesUsuario[i]).prepend(strUsuario[i]);} 
@@ -259,22 +265,22 @@ public class MalaDireta {
 
 			String strPosicoesRequerimentoSuperificial  [] = {
 
-					"inter_tipo_outorga_tag", 
+					"inter_tipo_outorga_tag", //1
 					"inter_lat_tag", 
 					"inter_lon_tag",
 
-					"inter_caesb_tag", 
+					"inter_caesb_tag", //4
 					"inter_local_cap_tag", 
 					"inter_cor_hid_tag", 
 
-					"inter_forma_capt_tag", 
+					"inter_forma_capt_tag", //7
 					"inter_marca_bomba_tag",
 					"inter_potencia_bomba_tag",
 
-					"inter_tempo_cap_tag",
+					"inter_tempo_cap_tag", // 10
 					"inter_vazao_bomba_tag",
 					"inter_data_oper_tag",
-
+					"inter_area_propriedade_tag"
 
 			};
 
@@ -287,22 +293,22 @@ public class MalaDireta {
 
 			String strInterferenciaSuperficial [] = {
 
-					interferencia.getInterTipoOutorgaFK().getTipoOutorgaDescricao(), 
+					interferencia.getInterTipoOutorgaFK().getTipoOutorgaDescricao(), //1
 					interferencia.getInterDDLatitude().toString() + ",",
 					interferencia.getInterDDLongitude().toString(),
 
-					((Superficial) interferencia).getSupCaesb(), //inter.getIntSupFK()
+					((Superficial) interferencia).getSupCaesb(), //4
 					((Superficial) interferencia).getSupLocalCaptacaoFK().getLocalCaptacaoDescricao(),
 					((Superficial) interferencia).getSupCorpoHidrico(),
 
-					((Superficial) interferencia).getSupFormaCaptacaoFK().getFormaCaptacaoDescricao(),
+					((Superficial) interferencia).getSupFormaCaptacaoFK().getFormaCaptacaoDescricao(), //7
 					((Superficial) interferencia).getSupMarcaBomba(),
 					((Superficial) interferencia).getSupPotenciaBomba(),
-
-					//String.valueOf(((Superficial) interferencia).getSupTempoCapJul()),
-					//"-- vazao da bomba-- ",
-					strDataOperação
-
+					"1", //10 tempo captacao
+					"1", // vazao da bomba
+					strDataOperação,
+					((Superficial) interferencia).getSupAreaPropriedade()
+				
 			};
 
 			for (int i  = 0; i<strPosicoesRequerimentoSuperificial.length; i++) {

@@ -43,6 +43,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -338,6 +339,16 @@ public class TabAtosOutorgaControlador implements Initializable {
 
 		com = new Componentes();
 		com.popularTela(componentesPersistencia, prefSizeWHeLayXY, p1);
+		
+		
+		/*
+		 * Buscar apenas clicando no enter do teclado
+		 */
+		tfPesquisar.setOnKeyReleased(event -> {
+			if (event.getCode() == KeyCode.ENTER){
+				btnPesquisar.fire();
+			}
+		});
 
 
 		componentesInterferencia.add(pInterferencias = new Pane());

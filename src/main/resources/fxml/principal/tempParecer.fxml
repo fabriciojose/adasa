@@ -18,31 +18,33 @@
             <Button layoutX="838.0" layoutY="19.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="70.0" text="&lt;&lt;&lt;" />
          </children>
       </Pane>
-      <Pane fx:id="pDadosDemanda" layoutX="15.0" layoutY="80.0" prefHeight="90.0" prefWidth="950.0" styleClass="panes">
+      <Pane fx:id="pDadosDemanda" layoutX="15.0" layoutY="70.0" prefHeight="134.0" prefWidth="950.0" styleClass="panes">
          <children>
-            <Label layoutX="16.0" layoutY="15.0" prefHeight="30.0" prefWidth="130.0" text="NÚMERO:" />
-            <TextField layoutX="15.0" layoutY="45.0" prefHeight="30.0" prefWidth="130.0" promptText="15/2015" />
-            <Label layoutX="156.0" layoutY="15.0" prefHeight="30.0" prefWidth="130.0" text="SEI:" />
-            <TextField layoutX="156.0" layoutY="45.0" prefHeight="30.0" prefWidth="130.0" promptText="123456789" />
-            <Label layoutX="296.0" layoutY="15.0" prefHeight="30.0" prefWidth="160.0" text="PROCESSO:" />
-            <TextField layoutX="296.0" layoutY="45.0" prefHeight="30.0" prefWidth="160.0" promptText="197.555.666/2015" />
-            <Label layoutX="466.0" layoutY="15.0" prefHeight="30.0" prefWidth="150.0" text="DATA DE CRIAÇÃO" />
-            <DatePicker layoutX="466.0" layoutY="45.0" prefHeight="30.0" prefWidth="150.0" promptText="13/05/2016" />
-            <Label layoutX="626.0" layoutY="15.0" prefHeight="30.0" prefWidth="150.0" text="DATA DE RECEBIMENTO:" />
-            <DatePicker layoutX="626.0" layoutY="45.0" prefHeight="30.0" prefWidth="150.0" promptText="12/08/2015" />
-            <Label layoutX="786.0" layoutY="15.0" prefHeight="30.0" prefWidth="150.0" text="DATA DE DISTRIBUIÇÃO:" />
-            <DatePicker layoutX="786.0" layoutY="45.0" prefHeight="30.0" prefWidth="150.0" promptText="13/05/2016" />
+            <Label layoutX="16.0" prefHeight="30.0" prefWidth="170.0" text="TIPO:" />
+            <ComboBox layoutX="15.0" layoutY="32.0" prefHeight="30.0" prefWidth="170.0" />
+            <Label layoutX="16.0" layoutY="64.0" prefHeight="30.0" prefWidth="130.0" text="NÚMERO:" />
+            <TextField layoutX="15.0" layoutY="94.0" prefHeight="30.0" prefWidth="130.0" promptText="15/2015" />
+            <Label layoutX="156.0" layoutY="64.0" prefHeight="30.0" prefWidth="130.0" text="SEI:" />
+            <TextField layoutX="156.0" layoutY="94.0" prefHeight="30.0" prefWidth="130.0" promptText="123456789" />
+            <Label layoutX="296.0" layoutY="64.0" prefHeight="30.0" prefWidth="160.0" text="PROCESSO:" />
+            <TextField layoutX="296.0" layoutY="94.0" prefHeight="30.0" prefWidth="160.0" promptText="197.555.666/2015" />
+            <Label layoutX="466.0" layoutY="64.0" prefHeight="30.0" prefWidth="150.0" text="DATA DE CRIAÇÃO" />
+            <DatePicker layoutX="466.0" layoutY="94.0" prefHeight="30.0" prefWidth="150.0" promptText="13/05/2016" />
+            <Label layoutX="626.0" layoutY="64.0" prefHeight="30.0" prefWidth="150.0" text="DATA DE RECEBIMENTO:" />
+            <DatePicker layoutX="626.0" layoutY="94.0" prefHeight="30.0" prefWidth="150.0" promptText="12/08/2015" />
+            <Label layoutX="786.0" layoutY="64.0" prefHeight="30.0" prefWidth="150.0" text="DATA DE DISTRIBUIÇÃO:" />
+            <DatePicker layoutX="786.0" layoutY="94.0" prefHeight="30.0" prefWidth="150.0" promptText="13/05/2016" />
          </children>
       </Pane>
-      <TableView fx:id="tvLista" layoutX="25.0" layoutY="255.0" prefHeight="185.0" prefWidth="930.0">
+      <TableView fx:id="tvLista" layoutX="25.0" layoutY="290.0" prefHeight="185.0" prefWidth="930.0">
          <columns>
             <TableColumn fx:id="tcDesEnd" prefWidth="250.0" text="Parecer" />
             <TableColumn fx:id="tcEndRA" minWidth="0.0" prefWidth="250.0" text="SEI" />
             <TableColumn fx:id="tcEndCid" prefWidth="410.0" text="Endereço" />
          </columns>
       </TableView>
-      <Label fx:id="lblDataAtualizacao1" layoutX="705.0" layoutY="450.0" prefHeight="22.0" prefWidth="247.0" />
-      <Pane fx:id="pPersistencia" layoutX="25.0" layoutY="180.0" prefHeight="60.0" prefWidth="930.0" styleClass="panes">
+      <Label fx:id="lblDataAtualizacao1" layoutX="705.0" layoutY="485.0" prefHeight="22.0" prefWidth="247.0" />
+      <Pane fx:id="pPersistencia" layoutX="25.0" layoutY="215.0" prefHeight="60.0" prefWidth="930.0" styleClass="panes">
          <children>
             <Button fx:id="btnNovo" layoutX="18.0" layoutY="18.0" mnemonicParsing="false" onAction="#btnNovoHab" prefHeight="25.0" prefWidth="95.0" text="Novo" />
             <Button fx:id="btnSalvar" layoutX="123.0" layoutY="18.0" mnemonicParsing="false" onAction="#btnSalvarHab" prefHeight="25.0" prefWidth="95.0" text="Salvar" />
@@ -53,7 +55,7 @@
             <Button fx:id="btnPesquisar" layoutX="818.0" layoutY="18.0" mnemonicParsing="false" onAction="#btnPesquisarHab" prefHeight="25.0" prefWidth="95.0" text="Pesquisar" />
          </children>
       </Pane>
-      <Pane layoutX="25.0" layoutY="480.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="431.0" prefWidth="930.0">
+      <Pane layoutX="25.0" layoutY="515.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="431.0" prefWidth="930.0">
          <children>
             <Button layoutX="850.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" text="&lt;&lt;&lt;" />
             <Label layoutX="14.0" layoutY="41.0" prefHeight="30.0" prefWidth="420.0" text="USUÁRIOS:" />

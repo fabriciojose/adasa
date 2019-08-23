@@ -12,6 +12,7 @@ import org.hibernate.sql.JoinType;
 
 import entidades.Documento;
 import entidades.HibernateUtil;
+import entidades.NotaTecnica;
 import entidades.Parecer;
 
 public class DocumentoDao {
@@ -38,8 +39,10 @@ public void salvarDocumento (Documento documento) {
 		
 		Criteria crit = s.createCriteria(Documento.class, "d");
 		
-		crit.createAlias("d.docEnderecoFK" , "e", JoinType.LEFT_OUTER_JOIN);
-		crit.createAlias("e.endRAFK", "ra", JoinType.LEFT_OUTER_JOIN);
+		crit.createAlias("d.docEnderecoFK" , "end", JoinType.LEFT_OUTER_JOIN);
+		crit.createAlias("end.endRAFK", "endRA", JoinType.LEFT_OUTER_JOIN);
+		crit.createAlias("end.documentos", "endDoc", JoinType.LEFT_OUTER_JOIN);
+		
 		crit.createAlias("d.docProcessoFK", "p", JoinType.LEFT_OUTER_JOIN);
 
 		
@@ -65,7 +68,7 @@ public void salvarDocumento (Documento documento) {
 	
 	
 	@SuppressWarnings("unchecked")
-	public List<Documento> listarParecer (String strPesquisa) {
+	public List<Documento> listarParecerNotaTecnica (String strPesquisa) {
 		
 		List<Documento> list = new ArrayList<Documento>();
 		
@@ -73,14 +76,24 @@ public void salvarDocumento (Documento documento) {
 		
 		s.beginTransaction();
 		
-		Criteria crit = s.createCriteria(Parecer.class, "d");
+		//Criteria crit = s.createCriteria(Parecer.class, "d");
+		
+		Criteria crit =  s.createCriteria(Documento.class, "d");//.add(Restrictions.eq("d.class", Parecer.class));
+		
+		crit.add(Restrictions.between("d.class",Parecer.class, NotaTecnica.class));
+	//	crit.add(Restrictions.in("d.class", NotaTecnica.class));
 
+		crit.createAlias("d.docProcessoFK" , "processos", JoinType.LEFT_OUTER_JOIN);
 		crit.createAlias("d.usuarios" , "usuarios", JoinType.LEFT_OUTER_JOIN);
+		
 		crit.createAlias("d.usuarios.enderecos" , "usEnderecos", JoinType.LEFT_OUTER_JOIN);
+		
+		
 		crit.createAlias("usEnderecos.interferencias" , "usInterferencias", JoinType.LEFT_OUTER_JOIN);
 			crit.createAlias("usEnderecos.endRAFK", "regiaoAdm", JoinType.LEFT_OUTER_JOIN);
 			
-			//crit.createAlias("usEnderecos.documentos", "endDocumentos", JoinType.LEFT_OUTER_JOIN);
+			crit.createAlias("usEnderecos.documentos", "endDocumentos", JoinType.LEFT_OUTER_JOIN);
+			crit.createAlias("endDocumentos.docProcessoFK", "endDocPro", JoinType.LEFT_OUTER_JOIN);
 			
 			// join relacionado com os usuários relacionados ao documento //
 				
@@ -101,14 +114,12 @@ public void salvarDocumento (Documento documento) {
 			crit.createAlias("usInterferencias.supLocalCaptacaoFK", "localCaptacao", JoinType.LEFT_OUTER_JOIN);
 			crit.createAlias("usInterferencias.supMetodoIrrigacaoFK", "metodoIrrigacao", JoinType.LEFT_OUTER_JOIN);
 		
-		//crit.createAlias("usEnderecos.endUsuarioFK", "endUsuarioFK", JoinType.LEFT_OUTER_JOIN);
-		
-		crit.createAlias("d.docProcessoFK", "p", JoinType.LEFT_OUTER_JOIN);
-		
+			
 		Criterion docTipo = Restrictions.like("docTipo", '%' + strPesquisa + '%');
 		Criterion docNumero = Restrictions.like("docNumeracao", '%' + strPesquisa + '%');
 		Criterion docSEI = Restrictions.like("docSEI", '%' + strPesquisa + '%');
 		Criterion docProcesso = Restrictions.like("docProcesso", '%' + strPesquisa + '%');
+		
 		
 		Disjunction orExp = Restrictions.or(docTipo, docNumero,docSEI, docProcesso);
 		
