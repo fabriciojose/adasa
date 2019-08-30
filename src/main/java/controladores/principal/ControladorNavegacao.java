@@ -38,6 +38,8 @@ public class ControladorNavegacao implements Initializable {
 	@FXML Pane pNavegador;
 	
 	String strHTML;
+	
+	
 	String strAnexoParecer;
 	
 	String strTabela1;
@@ -277,12 +279,12 @@ public class ControladorNavegacao implements Initializable {
             	
             	
             		MalaDiretaAnexoParecer anexo = new MalaDiretaAnexoParecer(listMalaDireta, strAnexoParecer, strTabela1, strTabela2);
-            		String strAneno = anexo.criarAnexoParecer(int_interferencia_selecionada);
+            		String strAnexo = anexo.criarAnexoParecer(int_interferencia_selecionada);
             		
             	
         			//-- imprimir o relatório ou tn no editor do SEI --//
             		webViewPopUp.getEngine().executeScript(
-            				"y.body.getElementsByTagName('anexo_parecer_tag')[0].innerHTML = " + strAneno + ";"
+            				"y.body.getElementsByTagName('anexo_parecer_tag')[0].innerHTML = " + strAnexo + ";"
 	            			);
 					
             }

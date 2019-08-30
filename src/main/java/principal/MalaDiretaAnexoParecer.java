@@ -191,6 +191,7 @@ public class MalaDiretaAnexoParecer {
 	 */
 	public String criarAnexoParecer (int in) {
 		
+		System.out.println("numero combo box "+ in);
 		
 		Document docHtml= null;
 		Document docHtmlTabelasLimitesOutorgados = null;
@@ -265,12 +266,32 @@ public class MalaDiretaAnexoParecer {
 		for (Finalidade f : ((Interferencia) listMalaDireta.get(in)[0][2]).getFinalidades() ) {
 			
 			if (f.getClass().getName() == "entidades.FinalidadeAutorizada") {
+				
+				double dbl_q_metros_hora;
+				int int_t_horas_dia;
+				int int_t_dias_mes;
 			
 				for (int i = 0; i<12; i++) {
 					
-					double dbl_q_metros_hora = Double.parseDouble(((Subterranea) listMalaDireta.get(in)[0][2]).getSubVazao())/1000;
-					int int_t_horas_dia =  Integer.parseInt(gs.callGetter(f, listVariaveisVazaoHoraAutorizadas.get(i)));
-					int int_t_dias_mes = Integer.parseInt((gs.callGetter(f,listVariaveisTempoAutorizadas.get(i))));
+			
+					//double dbl_q_metros_hora = Double.parseDouble(((Subterranea) listMalaDireta.get(in)[0][2]).getSubVazao())/1000;
+					//int int_t_horas_dia =  Integer.parseInt(gs.callGetter(f, listVariaveisVazaoHoraAutorizadas.get(i)));
+					//int int_t_dias_mes = Integer.parseInt((gs.callGetter(f,listVariaveisTempoAutorizadas.get(i))));
+					
+					try {dbl_q_metros_hora = Double.parseDouble(((Subterranea) listMalaDireta.get(in)[0][2]).getSubVazao())/1000;} catch (Exception e ) {
+						dbl_q_metros_hora = 0.0;
+						System.out.println("dbl_q_metros_hora zero ");
+					}
+					
+					try {int_t_horas_dia = Integer.parseInt(gs.callGetter(f, listVariaveisVazaoHoraAutorizadas.get(i)));} catch (Exception e ) {
+						int_t_horas_dia = 0;
+						System.out.println("dbl_q_metros_hora zero ");
+					}
+					
+					try {int_t_dias_mes = Integer.parseInt((gs.callGetter(f,listVariaveisTempoAutorizadas.get(i))));} catch (Exception e ) {
+						int_t_dias_mes = 0;
+						System.out.println("dbl_q_metros_hora zero ");
+					}
 				
 					try { docHtmlTabelasLimitesOutorgados.select(q_litros_hora_tag [i]).prepend((((Subterranea) listMalaDireta.get(in)[0][2])).getSubVazao());} 
 						
@@ -291,8 +312,8 @@ public class MalaDiretaAnexoParecer {
 						catch (Exception e) {docHtmlTabelasLimitesOutorgados.select(t_dias_mes_tag[i]).prepend("");};
 						
 						
-					try { docHtmlTabelasLimitesOutorgados.select(q_metros_mes_tag [i]).prepend( String.valueOf(dbl_q_metros_hora*int_t_horas_dia*int_t_dias_mes) );} 
-						
+					try { docHtmlTabelasLimitesOutorgados.select(q_metros_mes_tag [i]).prepend( String.format("%.0f", dbl_q_metros_hora*int_t_horas_dia*int_t_dias_mes) );} 
+			
 						catch (Exception e) {docHtmlTabelasLimitesOutorgados.select(q_metros_mes_tag[i]).prepend("");};
 						
 				}		

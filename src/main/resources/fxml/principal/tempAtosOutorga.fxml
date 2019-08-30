@@ -64,8 +64,10 @@
                 <TableColumn prefWidth="233.0" text="INTERFERÊNCIAS SELECIONADAS" />
               </columns>
             </TableView>
+            <Button layoutX="681.0" layoutY="80.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" text="limpar" />
             <Label layoutX="265.0" layoutY="180.0" prefHeight="30.0" prefWidth="400.0" text="MODELO" />
             <ComboBox layoutX="265.0" layoutY="210.0" prefHeight="30.0" prefWidth="400.0" />
+            <Button layoutX="681.0" layoutY="210.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" text="atualizar" />
             <Button layoutX="265.0" layoutY="250.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="400.0" text="GERAR ATO" />
          </children>
       </Pane>

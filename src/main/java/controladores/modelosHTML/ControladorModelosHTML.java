@@ -18,6 +18,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
@@ -52,20 +53,41 @@ public class ControladorModelosHTML implements Initializable {
 	@FXML TextField tfPesquisar;
 	
 	@FXML TextField tfIdentificacao;
+	
+	ObservableList<String> obsListTipoDocumento = FXCollections
+			.observableArrayList(
+					"Requerimento",
+					"Parecer",
+					"Registro",
+					"Despacho",
+					"Anexo"
+					
+					); 
+	
+	@FXML ComboBox<String> cbTipoDocumento = new ComboBox<String>();
+		
+	ObservableList<String> obsListTipoInterferencia = FXCollections
+			.observableArrayList(
+					"Superficial",
+					"Subterrânea",
+					"Outros"
+					
+					); 
 
+	@FXML ComboBox<String> cbTipoInterferencia = new ComboBox<String>();
+		
+	ObservableList<String> obsListUnidade = FXCollections
+			.observableArrayList(
+					"SRH",
+					"SDU",
+					"SEF",
+					"SAF",
+					"SRS",
+					"SAE",
+					"SPE"
+					); 
 	
-	@FXML ChoiceBox<String> cbUnidade = new ChoiceBox<String>();
-	
-	ObservableList<String> olcbUnidade = FXCollections
-	.observableArrayList(
-			"SRH",
-			"SDU",
-			"SEF",
-			"SAF",
-			"SRS",
-			"SAE",
-			"SPE"
-			); 
+	@FXML ComboBox<String> cbUnidade = new ComboBox<String>();
 	
 	
 	// -- Tabela --  //
@@ -90,9 +112,16 @@ public class ControladorModelosHTML implements Initializable {
 	public void btnNovoHabilitar (ActionEvent event) {
 		
 		tfIdentificacao.setText("");
+		
+		cbTipoDocumento.setValue(null);
+		cbTipoInterferencia.setValue(null);
+		
 		cbUnidade.setValue(null);
 		
 		tfIdentificacao.setDisable(false);
+		
+		cbTipoDocumento.setDisable(false);
+		cbTipoInterferencia.setDisable(false);
 		cbUnidade.setDisable(false);
 		
 		btnSalvar.setDisable(false);
@@ -105,11 +134,12 @@ public class ControladorModelosHTML implements Initializable {
 	// -- botão salvar -- //
 	public void btnSalvarHabilitar (ActionEvent event) {
 		
-		System.out.println("BNT SALVAR MODELOS CLICADO");
-		
 		ModelosHTML mod = new ModelosHTML();
 		
+		mod.setModTipoDocumento(cbTipoDocumento.getValue());
+		mod.setModTipoInterferencia(cbTipoInterferencia.getValue());
 		mod.setModUnidade(cbUnidade.getValue());
+		
 		mod.setModIdentificacao(tfIdentificacao.getText());
 		mod.setModConteudo(htmlEditor.getHtmlText());
 		
@@ -125,17 +155,20 @@ public class ControladorModelosHTML implements Initializable {
 		
 		if (tfIdentificacao.isDisable()) {
 			
-			tfIdentificacao.setDisable(false);
+			cbTipoDocumento.setDisable(false);
+			cbTipoInterferencia.setDisable(false);
 			cbUnidade.setDisable(false);
+			tfIdentificacao.setDisable(false);
 			htmlEditor.setDisable(false);
 			textAreaHTML.setDisable(false);
 			
-				
 		} else {
 		
 		
 			ModelosHTML mod = tvLista.getSelectionModel().getSelectedItem();
 			
+				mod.setModTipoDocumento(cbTipoDocumento.getValue());
+				mod.setModTipoInterferencia(cbTipoInterferencia.getValue());
 				mod.setModUnidade(cbUnidade.getValue());
 				mod.setModIdentificacao(tfIdentificacao.getText());
 				mod.setModConteudo(htmlEditor.getHtmlText());
@@ -185,6 +218,9 @@ public class ControladorModelosHTML implements Initializable {
 		htmlEditor.setHtmlText("");
 		textAreaHTML.setText("");
 		
+		cbTipoDocumento.setValue(null);
+		cbTipoInterferencia.setValue(null);
+		
 		cbUnidade.setValue(null);
 		
 	
@@ -207,8 +243,12 @@ public class ControladorModelosHTML implements Initializable {
 	ObservableList<ModelosHTML> obsList = FXCollections.observableArrayList();
 	
 	public void initialize(URL url, ResourceBundle rb) {
+		
+		System.out.println("inicializado");
 	
-		cbUnidade.setItems(olcbUnidade);
+		cbTipoDocumento.setItems(obsListTipoDocumento);
+		cbTipoInterferencia.setItems(obsListTipoInterferencia);
+		cbUnidade.setItems(obsListUnidade);
 		
 		tvLista.setItems(obsList);
 		
@@ -227,7 +267,6 @@ public class ControladorModelosHTML implements Initializable {
 		});
 		
 		modularBotoesInicial();
-	
 	
 	}
 	
@@ -275,7 +314,10 @@ public class ControladorModelosHTML implements Initializable {
 			
 			if (mod == null) {
 				
+				cbTipoDocumento.setValue(null);
+				cbTipoInterferencia.setValue(null);
 				cbUnidade.setValue(null);
+				
 				tfIdentificacao.setText("");
 				htmlEditor.setHtmlText("");
 				textAreaHTML.setText("");
@@ -289,6 +331,10 @@ public class ControladorModelosHTML implements Initializable {
 			} else {
 
 				// -- preencher os campos -- //
+				
+				cbTipoDocumento.setValue(mod.getModTipoDocumento());
+				cbTipoInterferencia.setValue(mod.getModTipoInterferencia());
+				
 				cbUnidade.setValue(mod.getModUnidade());
 				tfIdentificacao.setText(mod.getModIdentificacao());
 				htmlEditor.setHtmlText(mod.getModConteudo());
@@ -302,9 +348,6 @@ public class ControladorModelosHTML implements Initializable {
 				btnExcluir.setDisable(false);
 				btnCancelar.setDisable(false);
 				
-				
-				
-				
 			}
 			
 			}
@@ -317,9 +360,11 @@ public class ControladorModelosHTML implements Initializable {
 	private void modularBotoesInicial () {
 				
 		tfIdentificacao.setDisable(true);
+		
+		cbTipoDocumento.setDisable(true);
+		cbTipoInterferencia.setDisable(true);
+		
 		cbUnidade.setDisable(true);
-		//htmlEditor.setDisable(true);
-		//textAreaHTML.setDisable(true);
 		
 		btnSalvar.setDisable(true);
 		btnEditar.setDisable(true);

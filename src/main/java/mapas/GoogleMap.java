@@ -17,6 +17,7 @@ import netscape.javascript.JSException;
 import netscape.javascript.JSObject;
 
 
+@SuppressWarnings("restriction")
 public class GoogleMap extends Parent {
 	
 		// metodo  de chamada initMap com o mapa e webview //
@@ -76,6 +77,7 @@ public class GoogleMap extends Parent {
 	        webView.setPrefHeight(710);
 	        webEngine.load(getClass().getResource("/html/mapas/Principal/index.html").toExternalForm()); // originalMap
 	        
+	        // mostrar erros no console
 	        WebConsoleListener.setDefaultListener((webView, message, lineNumber, sourceId) -> {
 	            System.out.println(message + "[at " + lineNumber + "]");
 	        });

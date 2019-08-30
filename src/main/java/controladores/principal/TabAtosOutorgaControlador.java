@@ -185,8 +185,6 @@ public class TabAtosOutorgaControlador implements Initializable {
 
 		p1.getChildren().addAll(tvDocumento, lblDataAtualizacao);
 
-
-
 		inicializarComponentes ();
 
 		modularBotoes();
@@ -238,6 +236,8 @@ public class TabAtosOutorgaControlador implements Initializable {
 	ComboBox<Interferencia> cbInterferencia;
 	TableView<Interferencia> tvInterferencia;
 	ComboBox<ModelosHTML> cbModelosHTML;
+	Button btnLimparInterferencias;
+	Button btnAutalizarModelosHTML;
 	Button btnGeradorAtoOutorga;
 
 
@@ -355,24 +355,34 @@ public class TabAtosOutorgaControlador implements Initializable {
 		componentesInterferencia.add(new Label("INTERFERÊNCIAS"));
 		componentesInterferencia.add(cbInterferencia = new ComboBox<Interferencia>());
 		componentesInterferencia.add(tvInterferencia = new TableView<Interferencia>());
+		componentesInterferencia.add(btnLimparInterferencias = new Button("limpar"));
 		componentesInterferencia.add(new Label("MODELOS"));
 		componentesInterferencia.add(cbModelosHTML = new ComboBox<ModelosHTML>());
+		componentesInterferencia.add(btnAutalizarModelosHTML = new Button("atualizar"));
 
 		componentesInterferencia.add(btnGeradorAtoOutorga = new Button("GERAR ATO"));
+		
+		//Button btnLimparInterferencias;
+		//Button btnAutalizarModelosHTML;
 
 
 		prefSizeWHeLayXY = new Double[][] { 
 
 			{930.0,305.0,25.0,480.0},
-
+			
 			{400.0,30.0,265.0,10.0},
 			{400.0,30.0,265.0,40.0},
-
+			
 			{400.0,100.0,265.0,80.0},
-
+			
+			{100.0,30.0,681.0,80.0},
+			
 			{400.0,30.0,265.0,180.0},
 			{400.0,30.0,265.0,210.0},
+			
+			{100.0,30.0,681.0,210.0},
 			{400.0,30.0,265.0,250.0},
+			
 
 		}; 
 
@@ -401,6 +411,20 @@ public class TabAtosOutorgaControlador implements Initializable {
 
 				if (newValue != null) {
 					tvObsListInterferencia.addAll(newValue);
+					
+					obsListModelosHTML.clear();
+					
+					for (ModelosHTML m : listaModelosHTML) {
+						
+						System.out.println("aqui");
+						
+						if (m.getModTipoInterferencia().equals(newValue.getInterTipoInterferenciaFK().getTipoInterDescricao())) {
+							
+							System.out.println("tipo inter " + m.getModTipoInterferencia() == newValue.getInterTipoInterferenciaFK().getTipoInterDescricao());
+							
+							obsListModelosHTML.add(m);
+						}
+					}
 		
 				}
 				
@@ -461,7 +485,7 @@ public class TabAtosOutorgaControlador implements Initializable {
 
 
 	}
-
+	
 	public void listarAtosOutorga (String strPesquisa) {
 		
 		DocumentoDao docDao = new DocumentoDao();
@@ -490,13 +514,10 @@ public class TabAtosOutorgaControlador implements Initializable {
 
 			ModelosDao mDao = new  ModelosDao();
 
-			List<ModelosHTML> modelosHTMLList = mDao.listarModelo("");
+				listaModelosHTML = mDao.listarModelo("");
 
-			for (ModelosHTML d : modelosHTMLList) {
-				obsListModelosHTML.add(d);
-			}
-
-
+				obsListModelosHTML.addAll(listaModelosHTML);
+			
 		}
 
 	}
@@ -543,6 +564,8 @@ public class TabAtosOutorgaControlador implements Initializable {
 		btnNovo.setDisable(true);
 
 	}
+	
+	List<ModelosHTML> listaModelosHTML = new ArrayList<>();
 
 	public void acionarBotoes() {
 
@@ -585,27 +608,21 @@ public class TabAtosOutorgaControlador implements Initializable {
 
 		btnPesquisar.setOnAction(new EventHandler<ActionEvent>() {
 			@Override public void handle(ActionEvent e) {
-
+				
 				pesquisarDocumento();
 
-				
 				if (obsListModelosHTML.isEmpty()) {
-
+				
 					ModelosDao mDao = new  ModelosDao();
 
-					List<ModelosHTML> listaDocumentosHTML = mDao.listarModelo("");
+					listaModelosHTML = mDao.listarModelo("");
 
-					for (ModelosHTML d : listaDocumentosHTML) {
-						obsListModelosHTML.add(d);
-					}
-
-
-				} // fim if obsListModelos HTML
-
-
+						obsListModelosHTML.addAll(listaModelosHTML);
+					
+				}
+				
 			}
 		});
-		
 		
 		btnGeradorAtoOutorga.setOnAction(new EventHandler<ActionEvent>() {
 			
@@ -617,7 +634,12 @@ public class TabAtosOutorgaControlador implements Initializable {
 				String modeloHTML = cbModelosHTML.getSelectionModel().getSelectedItem().getModConteudo();
 				
 				// capturar a tabela que sera colocada dentro do modelo html selecionado, pode ser varias interferencias em um modelo, entao varias tabelas
-				String modeloTabelaLimitesOutorgados = obsListModelosHTML.get(3).getModConteudo();
+				String modeloTabelaLimitesOutorgados = listaModelosHTML.get(3).getModConteudo();
+				
+				if (documento.getDocProcessoFK() == null) {
+					Alerta a = new Alerta ();
+					a.alertar(new Alert(Alert.AlertType.ERROR, "Documento sem Processo Principal !!!", ButtonType.OK));
+				}
 				
 				MalaDiretaAtosOutorga mlDoc = new MalaDiretaAtosOutorga(modeloHTML, modeloTabelaLimitesOutorgados, documento, endereco, endereco.getEndUsuarioFK(), tvObsListInterferencia);
 				
@@ -641,6 +663,26 @@ public class TabAtosOutorgaControlador implements Initializable {
 
 				inicializarTelaEndereco();
 				telaEnderecoControlador.setObjetoDeEdicao(documento);
+			}
+		});
+		
+		
+		btnLimparInterferencias.setOnAction(new EventHandler<ActionEvent>() {
+			@Override public void handle(ActionEvent e) {
+				tvObsListInterferencia.clear();
+			}
+		});
+		
+		
+		btnAutalizarModelosHTML.setOnAction(new EventHandler<ActionEvent>() {
+			@Override public void handle(ActionEvent e) {
+				
+				obsListModelosHTML.clear();
+				
+				ModelosDao mDao = new  ModelosDao();
+
+					listaModelosHTML = mDao.listarModelo("");
+					obsListModelosHTML.addAll(listaModelosHTML);
 			}
 		});
 		
@@ -867,7 +909,7 @@ public class TabAtosOutorgaControlador implements Initializable {
 				} else {
 
 					documento = doc;
-
+					
 					setEndereco(doc.getDocEnderecoFK());
 
 					// preencher os campos //

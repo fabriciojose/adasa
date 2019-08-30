@@ -170,8 +170,6 @@ public class MalaDiretaAtosOutorga {
 		
 	}
 	
-	
-	
 	public String criarAtoOutorga () {
 		
 		//GetterAndSetter gs  = new GetterAndSetter();
@@ -179,11 +177,11 @@ public class MalaDiretaAtosOutorga {
 		Document docHtml = null;
 
 		docHtml = Jsoup.parse(modeloHTML, "UTF-8").clone();
-		
-		
+	
 
 		String strPosicoesUsuario [] = {
-
+				
+				"doc_proc_principal_tag",
 				"us_nome_tag", // <us_nome_tag></us_nome_tag>
 				"us_cpfcnpj_tag", //<us_cpfcnpj_tag></us_cpfcnpj_tag>
 				"us_tel_tag", // <us_tel_tag></us_tel_tag>
@@ -194,6 +192,8 @@ public class MalaDiretaAtosOutorga {
 		};
 
 		String strUsuario [] = {
+				
+				documento.getDocProcessoFK().getProSEI(),
 				usuario.getUsNome(),
 				usuario.getUsCPFCNPJ(),						
 				usuario.getUsTelefone()	,
@@ -238,7 +238,7 @@ public class MalaDiretaAtosOutorga {
 		
 		StringBuilder strFinalidades = new StringBuilder();
 		
-		StringBuilder strVazaoPeriodo = new StringBuilder();
+		//	StringBuilder strVazaoPeriodo = new StringBuilder();
 		
 		
 		for (Finalidade f : listInterferencia.get(0).getFinalidades() ) {
@@ -255,6 +255,8 @@ public class MalaDiretaAtosOutorga {
 		
 			
 		}
+		
+		System.out.println("Mala Direta Atos Outorga - finalidades " + strFinalidades);
 
 		docHtml.select("finalidades_tag").append(String.valueOf(strFinalidades));
 		
@@ -288,8 +290,8 @@ public class MalaDiretaAtosOutorga {
 					+ "</td>"
 					+ "<td> " + i.getInterBaciaFK().getBaciaNome() + "</td>"
 					+ "<td>" + 	i.getInterUHFK().getUhCodigo() + "</td>"
-					+ "<td>" + 	i.getInterDDLatitude() + "</td>"
-					+ "<td>" + 	i.getInterDDLongitude() + "</td>"
+					+ "<td><b>" + 	i.getInterDDLatitude() + "</b></td>"
+					+ "<td><b>" + 	i.getInterDDLongitude() + "</b></td>"
 					+ "</tr>"
 											
 					

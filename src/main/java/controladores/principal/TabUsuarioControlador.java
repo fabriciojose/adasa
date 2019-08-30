@@ -1,6 +1,8 @@
 package controladores.principal;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -10,6 +12,12 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 import dao.ModelosDao;
 import dao.UsuarioDao;
@@ -58,6 +66,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.web.HTMLEditor;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
@@ -68,6 +77,8 @@ import principal.FormatoData;
 import principal.ListasComboBox;
 import principal.MalaDireta;
 import util.BuscadorBancos;
+import util.NavegadorExterno;
+import util.Registro;
 
 public class TabUsuarioControlador implements Initializable {
 
@@ -580,6 +591,19 @@ public class TabUsuarioControlador implements Initializable {
 	Componentes com;
 	Double prefSizeWHeLayXY [][];
 	
+	Pane pNavegadorExterno;
+	Button btnBrowser;
+	Button btnBrowserEditor;
+	ObservableList<Integer> obsListIframe = FXCollections
+			.observableArrayList(0,1,2);
+	ComboBox<Integer> cbIframe; 
+	Button btnInserirHTML;
+	Button btnWebDriver;
+	
+	ArrayList<Node> listaDeComponentes;
+	
+	NavegadorExterno navExt;
+	
 	
 	/* 
 	 * para pesquisar no banco de dados access
@@ -743,9 +767,51 @@ public class TabUsuarioControlador implements Initializable {
 
 		cbEndereco.setItems(obsListEnderecoEmpreendimento);
 		cbInterferencia.setItems(obsListInterferencia);
+		
+		/*
+		listaDeComponentes = new ArrayList<Node>();
+		
+		listaDeComponentes.add(pNavegadorExterno = new Pane());
+		
+		listaDeComponentes.add(btnBrowser = new Button("Chrome"));
+		listaDeComponentes.add(btnBrowserEditor = new Button("Atualizar"));
+		listaDeComponentes.add(cbIframe = new ComboBox<Integer>(obsListIframe));
+		listaDeComponentes.add(btnInserirHTML = new Button("Inserir"));
+		listaDeComponentes.add(btnWebDriver = new Button("Driver"));
+		
+		prefSizeWHeLayXY = new Double [][]  { 
 
+			{930.0,70.0,25.0,772.0},
+			{100.0,30.0,213.0,20.0},
+			{100.0,30.0,348.0,20.0},
+			{100.0,30.0,483.0,20.0},
+			{100.0,30.0,618.0,20.0},
+			{100.0,30.0,830.0,0.0},
+		}; 
+		
+		//posicao do pane 25.0,772.0},
+		// string html
+		
+		
+		com = new Componentes();
+		com.popularTela(listaDeComponentes, prefSizeWHeLayXY, p1);
 
+		cbIframe.setValue(2);
+*/
+		
+		navExt = new NavegadorExterno(p1);
+		
+		navExt.inicializarNavegadorExterno(25.0, 772.0);
+		
 	}
+	
+	// Navegador Externo
+	WebDriver driver;
+	// String com o link do webdriver
+	String strWebDriver;
+	// Classe de salvamento das preferencias do usuario,como a strWebDriver
+    Registro r;
+    
 
 	WebView webTermo;
 	WebEngine engTermo;
@@ -767,7 +833,7 @@ public class TabUsuarioControlador implements Initializable {
 
 		if (inter.getInterTipoInterferenciaFK().getTipoInterDescricao().equals("Superficial")) {
 
-			listRequerimento = modDao.listarModelo("Requerimento de Outorga Superficial 2019");
+			listRequerimento = modDao.listarModelo("Requerimento de Outorga Superficial");
 		} 
 
 
@@ -776,7 +842,12 @@ public class TabUsuarioControlador implements Initializable {
 
 		ml.setHtmlRel(listRequerimento.get(0).getModConteudo());
 
-		String strHTML = ml.criarDocumento();
+		strHTML = ml.criarDocumento();
+		
+		if (!(navExt == null)) {
+			navExt.setarStringHTML(strHTML);
+		}
+		
 
 		try { ControladorNavegacao.conNav.setHTML(strHTML); } 
 		
@@ -1018,8 +1089,145 @@ public class TabUsuarioControlador implements Initializable {
 					interferencia = newValue;
 			}    
 		});
+		
+		/*
+		btnBrowser.setOnAction((event) -> {
+	        	
+	        	if (strWebDriver == null) {
+	        		
+	        	System.out.println(strWebDriver == null);
+	        		
+	        		r = new Registro();
+		    		List<String> strList = null;
+		    		
+		    		try {
+		    			
+						strList = r.lerRegistro();
+						
+						for (String s : strList) {
+							System.out.println("strings " + s);
+						}
+						
+					} catch (IOException e2) {
+					
+						e2.printStackTrace();
+					}
+		    		
+		    		if(strList.size() != 0) {
+		    			strWebDriver = strList.get(0);
+		    		}
+		    		
+		    		System.out.println(strWebDriver);
+	        		
+	        	} // fim if strWebDriver == null
+	        	
+	        	
+	        	
+	        	System.setProperty("webdriver.chrome.driver", strWebDriver);
+	        	
+	        	ChromeOptions options = new ChromeOptions();
+	        	
+	            options.addArguments("--disable-infobars");
+	            options.addArguments("start-maximized");
+
+	        	driver = new ChromeDriver(options);
+
+	            driver.navigate().to("https://sei.df.gov.br/sip/login.php?sigla_orgao_sistema=GDF&sigla_sistema=SEI");
+	           
+	            
+	            driver.findElement(By.id("selOrgao")).sendKeys("a");
+	            
+	            driver.findElement(By.id("txtUsuario")).sendKeys("fabricio.barrozo");;
+	            driver.findElement(By.id("pwdSenha")).sendKeys("polygonnewPolygon");
+	           
+	            driver.findElement(By.id("sbmLogin")).click();
+	            
+	        	
+		}); // btnBrowser
+		
+		
+		// ação do botão para receber o excel
+		btnWebDriver.setOnAction(new EventHandler<ActionEvent>() {
+
+			public void handle(ActionEvent e) {
+
+				r = new Registro();
+				List<String> strList = null;
+
+				try {
+					strList = r.lerRegistro();
+				} catch (IOException e2) {
+
+					e2.printStackTrace();
+				}
+
+				if(strList.size() != 0) {
+					strWebDriver = strList.get(1);
+				}
+
+				if (strWebDriver == null) {
+
+					// para escolher o arquivo  no computador
+					FileChooser fileChooser = new FileChooser();
+					fileChooser.setTitle("Selecione o Web Driver");
+					fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("EXE" , "*.exe"));        
+					File file = fileChooser.showOpenDialog(null);
+
+					strWebDriver = file.toString();
+
+					r = new Registro();
+
+					try {
+						r.salvarRegistro(strWebDriver);
+
+					} catch (URISyntaxException e1) {
+
+						e1.printStackTrace();
+					} catch (IOException e1) {
+
+						e1.printStackTrace();
+					}
+
+
+				}
+			}
+
+
+		}); // fim btnWebBrowser
+		
+	
+        btnInserirHTML.setOnAction((event) -> {
+        	
+        	Set<String> s1 = driver.getWindowHandles();
+
+        	List<String> strList = new ArrayList<>();
+
+        	for (String s : s1) {
+        		strList.add(s);
+        	}
+
+        	driver.switchTo().window(strList.get(1));
+
+        	JavascriptExecutor js = (JavascriptExecutor) driver;
+        	
+        	System.out.println("cbiframe value " + cbIframe.getValue());
+        	
+        	System.out.println(strHTML);
+        	
+        	// retirar os as haspas "
+        	strHTML = strHTML.replace("\"", "");
+        	// trocar a haspa simples ' por haspas duplas "
+        	strHTML = strHTML.replace("'", "\"");
+
+        	js.executeScript("document.getElementsByTagName('iframe')['"+cbIframe.getValue()+"'].contentDocument.body.innerHTML = '"+strHTML+"';");
+            
+            
+        });
+*/
 
 	}
+	
+	String strHTML;
 
 	private void modularBotoes () {
 

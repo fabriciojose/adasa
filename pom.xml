@@ -73,6 +73,25 @@
 			<artifactId>jsoup</artifactId>
 			<version>1.10.3</version>
 		</dependency>
+		 <!--  Selenium - Browser Externo -->
+		<dependency>
+		    <groupId>org.seleniumhq.selenium</groupId>
+		    <artifactId>selenium-chrome-driver</artifactId>
+		    <version>3.14.0</version>
+		</dependency>
+
+	    <dependency>
+		    <groupId>org.seleniumhq.selenium</groupId>
+		    <artifactId>selenium-htmlunit-driver</artifactId>
+		    <version>2.50.0</version>
+		</dependency>
+	
+	    <dependency>
+		    <groupId>org.seleniumhq.selenium</groupId>
+		    <artifactId>selenium-server</artifactId>
+		    <version>3.14.0</version>
+		</dependency>
+		
 	
 
 	</dependencies>

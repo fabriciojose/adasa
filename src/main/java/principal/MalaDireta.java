@@ -123,6 +123,8 @@ public class MalaDireta {
 
 		// dados documento
 		if (!(documento == null)) {
+			
+			System.out.println("Mala Direta Requerimento " + documento.getDocProcessoFK());
 
 			String strPosicoesDocumento [] = {
 					"doc_num_tag",
@@ -460,8 +462,6 @@ public class MalaDireta {
 
 		};
 
-
-
 		for (int i = 0; i<5; i++) {
 
 			switch (listFinalidadesCadastradas.get(i)) {
@@ -546,6 +546,33 @@ public class MalaDireta {
 				catch (Exception e) {docHtml.select("irrig_tag").prepend("erro");};
 
 				break;	
+				
+				
+			case "Uso Cormercial": 
+
+				/*
+				 * unir tags html e informacoes do banco para  preencher o formulario 'requerimento de outorga'
+				 */
+
+				StringBuilder strUsoComercial = new StringBuilder();
+
+				strUsoComercial
+				.append("<strong style='font-style: italic; font-size: 12px;'>- USO COMERCIAL</strong>" + 
+						"<table border='1' cellspacing='0' style='width: 800px;'>")
+				.append("<tbody><tr><td colspan='2'>Produto:&nbsp;") //  produto
+				.append(listSubfinalidadesCadastradas.get(i))
+				.append("</td><td rowspan='3' width='20%'><span style='text-align: justify;'>Total:&nbsp;") // total
+				.append(listVazoesCadastradas.get(i))
+				.append("</span></td></tr><tr><td colspan='1'>Produ&ccedil;&atilde;o:&nbsp;&nbsp;") // producao
+				.append(listQuantidadesCadastradas.get(i))
+				.append("</td><td colspan='1'>Consumo:&nbsp;") // consumo
+				.append(listConsumosCadastrados.get(i))
+				.append("</td></tr></tbody></table>");
+
+				try { docHtml.select("uso_ind_tag").prepend(String.valueOf(strUsoComercial));} 
+				catch (Exception e) {docHtml.select("uso_ind_tag").prepend("erro");};
+
+				break;	
 
 			case "Uso Industrial": 
 
@@ -573,16 +600,19 @@ public class MalaDireta {
 
 				break;	
 
-			case "Outras Finalidades": 
+			default: 
 
 				/*
 				 * unir tags html e informacoes do banco para  preencher o formulario 'requerimento de outorga'
 				 */
-
+				
+				// se não houver cadastro de finalidade não imprimir no  html
+				if (! listFinalidadesCadastradas.get(i).isEmpty()) {
+				
 				StringBuilder strOutrasFinalidades= new StringBuilder();
 
 				strOutrasFinalidades
-				.append("<strong style='font-style: italic; font-size: 12px;'>- OUTRAS FINALIDADES</strong>" + 
+				.append("<strong style='font-style: italic; font-size: 12px;'>- " + listFinalidadesCadastradas.get(i).toUpperCase() + "</strong>" + 
 						"<table border='1' cellspacing='0' style='width: 800px;'>")
 				.append("<tbody><tr><td colspan='2'>Produto:&nbsp;") //  produto
 				.append(listSubfinalidadesCadastradas.get(i))
@@ -597,11 +627,13 @@ public class MalaDireta {
 
 				try { docHtml.select("outras_fin_tag").prepend(String.valueOf(strOutrasFinalidades));} 
 				catch (Exception e) {docHtml.select("outras_fin_tag").prepend("erro");};
+				
+				}
+				
 				break;	
-
+			
 			}
 
-			// uso_comer_tag
 		}
 
 

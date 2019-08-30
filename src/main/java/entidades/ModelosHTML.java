@@ -25,8 +25,16 @@ public class ModelosHTML implements Serializable {
 	@Column (name="mod_Identificacao", columnDefinition="varchar(90)") // texto
 	private String modIdentificacao;
 	
+	@Column (name="mod_Tipo_Interferencia", columnDefinition="varchar(20)") // texto
+	private String modTipoInterferencia;
+	
+	@Column (name="mod_Tipo_Documento", columnDefinition="varchar(20)") // texto
+	private String modTipoDocumento;
+	
 	@Column (name="mod_Conteudo", columnDefinition="varchar(max)") // texto
 	private String modConteudo;
+	
+	
 	
 	// construtor padrao //
 	public ModelosHTML () {
@@ -65,6 +73,23 @@ public class ModelosHTML implements Serializable {
 		this.modConteudo = modConteudo;
 	}
 
+	public String getModTipoInterferencia() {
+		return modTipoInterferencia;
+	}
+
+	public void setModTipoInterferencia(String modTipoInterferencia) {
+		this.modTipoInterferencia = modTipoInterferencia;
+	}
+
+	public String getModTipoDocumento() {
+		return modTipoDocumento;
+	}
+
+	public void setModTipoDocumento(String modTipoDocumento) {
+		this.modTipoDocumento = modTipoDocumento;
+	}
+
+	
 	
 	
 	

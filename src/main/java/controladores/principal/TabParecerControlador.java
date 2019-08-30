@@ -74,6 +74,7 @@ import principal.Alerta;
 import principal.Componentes;
 import principal.FormatoData;
 import principal.MalaDiretaDocumentos;
+import util.NavegadorExterno;
 
 public class TabParecerControlador implements Initializable {
 
@@ -161,8 +162,8 @@ public class TabParecerControlador implements Initializable {
 	    
 	    pParecer.getChildren().add(bp1);
 	    
-	    p1.setMaxSize(980.0, 1000.0);
-	    p1.setMinSize(980.0, 1000.0);
+	    p1.setMaxSize(980.0, 1100.0);
+	    p1.setMinSize(980.0, 1100.0);
 	    
 	    bp2.setTop(p1);
 	    BorderPane.setAlignment(p1, Pos.CENTER);
@@ -281,6 +282,9 @@ public class TabParecerControlador implements Initializable {
 			ObservableList<ModelosHTML> obsListModelosHTML = FXCollections.observableArrayList();
 		
 		ArrayList<Node> componentesDocumento = new ArrayList<Node>();
+		
+
+		NavegadorExterno navExt;
 		
 	
 	public void inicializarComponentes (){
@@ -534,8 +538,11 @@ public class TabParecerControlador implements Initializable {
 				//System.out.println("modelos escolhido " + newValue.getModIdentificacao());
 			}    
 		});
-
-
+		
+		navExt = new NavegadorExterno(p1);
+		
+		navExt.inicializarNavegadorExterno(25.0, 950.0);
+		
 	}
 
 	public void listarDocumentos (String strPesquisa) {
@@ -757,72 +764,16 @@ public class TabParecerControlador implements Initializable {
 				
 						listMalaDireta.add(dados);
 						
-						System.out.println("||||||||||||||||| INÍCIO ||||||||||||||||||||||||");
+						obsListModelosHTML.clear();
 						
-						for (int i = 0; i<listMalaDireta.size(); i++) {
-
-							for (int ii=0; ii < listMalaDireta.get(i)[0].length; ii++) {
-								
-								switch (listMalaDireta.get(i)[0][ii].getClass().getName()) {
-								
-								case "entidades.Subterranea":
-
-									for (Finalidade f : ((Subterranea)listMalaDireta.get(i)[0][ii]).getFinalidades() ) {
-
-										System.out.println("subterranea");
-										
-										if (f.getClass().getName() == "entidades.FinalidadeRequerida") {
-											System.out.println(" +++++ Requerida: " + ((FinalidadeRequerida) f).getFrFinalidade1());
-										}
-										
-										if (f.getClass().getName() == "entidades.FinalidadeAutorizada") {
-											System.out.println(" +++++ Autorizada: " + ((FinalidadeAutorizada) f).getFaFinalidade1());
-										}
-
-									}
-									
-									/*
-									for (int a = 0; a<5; a++) {
-										
-										if (f.getClass().getName() == "entidades.FinalidadeRequerida") {
-											fr = (FinalidadeRequerida) f;
-											System.out.println("sub - finalidade requerida ID " + fr.getFinID());
-										}
-
-									}*/
-
-									break;
-								case "entidades.Superficial":
-
-									for (Finalidade f : ((Superficial)listMalaDireta.get(i)[0][ii]).getFinalidades() ) {
-
-										System.out.println("superficial");
-										
-										if (f.getClass().getName() == "entidades.FinalidadeRequerida") {
-											System.out.println(" +++++ Requerida: " + ((FinalidadeRequerida) f).getFrFinalidade1());
-										}
-										
-										if (f.getClass().getName() == "entidades.FinalidadeAutorizada") {
-											System.out.println(" +++++ Autorizada: " + ((FinalidadeAutorizada) f).getFaFinalidade1());
-										}
-
-									}
-
-									break;
-
-								default:
-									break;
-									
-								} // fim while
-
+						for (ModelosHTML m : listaModelosHTML) {
+							
+							if (m.getModTipoDocumento().equals("Parecer")) {
+		
+								obsListModelosHTML.add(m);
 							}
-
-
-						} // fim loop for
-						
-						
-						System.out.println("----------------------- FIM -------------------------");
-						
+						}
+					
 					}
 					
 					}
@@ -847,8 +798,7 @@ public class TabParecerControlador implements Initializable {
 	    btnNovo.setDisable(false);
 	}
 
-	
-	List<ModelosHTML> docList;
+	List<ModelosHTML> listaModelosHTML;
 	
 	public void acionarBotoes() {
 
@@ -894,16 +844,13 @@ public class TabParecerControlador implements Initializable {
 				pesquisarDocumento();
 
 				if (obsListModelosHTML.isEmpty()) {
-
+					
 					ModelosDao mDao = new  ModelosDao();
 
-					docList = mDao.listarModelo("");
+					listaModelosHTML = mDao.listarModelo("");
 
-					for (ModelosHTML d : docList) {
-						obsListModelosHTML.add(d);
-					}
-
-
+						obsListModelosHTML.addAll(listaModelosHTML);
+					
 				}
 
 			}
@@ -935,27 +882,36 @@ public class TabParecerControlador implements Initializable {
 		btnParecer.setOnAction(new EventHandler<ActionEvent>() {
 			@Override public void handle(ActionEvent e) {
 
-
+				// selecionar o parecer desejado
 				String modeloHTML = cbModelosHTML.getSelectionModel().getSelectedItem().getModConteudo();
 				
+				// criar a mala direta
 				MalaDiretaDocumentos mlDoc = new MalaDiretaDocumentos(modeloHTML, documento, listMalaDireta);
 				String strHTML = mlDoc.criarDocumento();
 				
-				try { ControladorNavegacao.conNav.setHTML(strHTML);
+				System.out.println("html parecer");
+				System.out.println(strHTML);
+				
+				// setar o html do documento no navagador externo
+				navExt.setarStringHTML(strHTML);
+				
+				// setar no navegador o html desejado
+				try { 
+					
+				
+					ControladorNavegacao.conNav.setHTML(strHTML);
 				
 				
+					String strAnexoParecer = listaModelosHTML.get(6).getModConteudo();
 				
-				String strAnexoParecer = obsListModelosHTML.get(6).getModConteudo();
+					String strTabela1 = listaModelosHTML.get(7).getModConteudo();
+					String strTabela2 = listaModelosHTML.get(3).getModConteudo();
 				
-				
-				String strTabela1 = obsListModelosHTML.get(7).getModConteudo();
-				String strTabela2 = obsListModelosHTML.get(3).getModConteudo();
-				
-				strAnexoParecer = strAnexoParecer.replace("\"", "'");
-				strAnexoParecer = strAnexoParecer.replace("\n", "");
-				strAnexoParecer =  "\"" + strAnexoParecer + "\"";
+					strAnexoParecer = strAnexoParecer.replace("\"", "'");
+					strAnexoParecer = strAnexoParecer.replace("\n", "");
+					strAnexoParecer =  "\"" + strAnexoParecer + "\"";
 		
-				obsListUsuariosMalaDireta.clear();
+					obsListUsuariosMalaDireta.clear();
 				
 				for (int i=0; i<listMalaDireta.size();i++) {
 					
@@ -963,12 +919,18 @@ public class TabParecerControlador implements Initializable {
 							((Usuario)listMalaDireta.get(i)[0][1]).getUsNome()
 							+ ", " 
 							+ ((Endereco)listMalaDireta.get(i)[0][3]).getEndLogradouro()
+							+ ", " 
 							+ ((Interferencia)listMalaDireta.get(i)[0][2]).getInterSubtipoOutorgaFK().getSubtipoOutorgaDescricao()
 							);
+					
+					
+					System.out.println(((Usuario)listMalaDireta.get(i)[0][1]).getUsNome());
 					
 				}
 			
 				ControladorNavegacao.conNav.setObjetosAnexo(listMalaDireta, obsListUsuariosMalaDireta, strAnexoParecer, strTabela1, strTabela2);
+				
+				navExt.setObjetosAnexo(listMalaDireta, obsListUsuariosMalaDireta, strAnexoParecer, strTabela1, strTabela2);
 				
 				
 				} catch (Exception ee) {
@@ -987,6 +949,10 @@ public class TabParecerControlador implements Initializable {
 			@Override public void handle(ActionEvent e) {
 
 				listMalaDireta.clear();
+				
+				obsListDocumentos.clear();
+				obsListEnderecos.clear();
+				obsListInterferencia.clear();
 			
 			}
 		});
@@ -1499,3 +1465,72 @@ public class TabParecerControlador implements Initializable {
 }
 
 
+
+
+/*
+System.out.println("||||||||||||||||| INÍCIO ||||||||||||||||||||||||");
+
+for (int i = 0; i<listMalaDireta.size(); i++) {
+
+	for (int ii=0; ii < listMalaDireta.get(i)[0].length; ii++) {
+		
+		switch (listMalaDireta.get(i)[0][ii].getClass().getName()) {
+		
+		case "entidades.Subterranea":
+
+			for (Finalidade f : ((Subterranea)listMalaDireta.get(i)[0][ii]).getFinalidades() ) {
+
+				System.out.println("subterranea");
+				
+				if (f.getClass().getName() == "entidades.FinalidadeRequerida") {
+					System.out.println(" +++++ Requerida: " + ((FinalidadeRequerida) f).getFrFinalidade1());
+				}
+				
+				if (f.getClass().getName() == "entidades.FinalidadeAutorizada") {
+					System.out.println(" +++++ Autorizada: " + ((FinalidadeAutorizada) f).getFaFinalidade1());
+				}
+
+			}
+			*/
+			
+			/*
+			for (int a = 0; a<5; a++) {
+				
+				if (f.getClass().getName() == "entidades.FinalidadeRequerida") {
+					fr = (FinalidadeRequerida) f;
+					System.out.println("sub - finalidade requerida ID " + fr.getFinID());
+				}
+
+			}*/
+/*
+
+			break;
+		case "entidades.Superficial":
+
+			for (Finalidade f : ((Superficial)listMalaDireta.get(i)[0][ii]).getFinalidades() ) {
+
+				System.out.println("superficial");
+				
+				if (f.getClass().getName() == "entidades.FinalidadeRequerida") {
+					System.out.println(" +++++ Requerida: " + ((FinalidadeRequerida) f).getFrFinalidade1());
+				}
+				
+				if (f.getClass().getName() == "entidades.FinalidadeAutorizada") {
+					System.out.println(" +++++ Autorizada: " + ((FinalidadeAutorizada) f).getFaFinalidade1());
+				}
+
+			}
+
+			break;
+
+		default:
+			break;
+			
+		} // fim while
+
+	}
+
+
+} // fim loop for
+
+*/

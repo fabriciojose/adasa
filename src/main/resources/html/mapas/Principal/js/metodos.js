@@ -1,9 +1,14 @@
 
-
+/*
 function setMarkerPosition(lat, lng) {
             var clickLatLng = new google.maps.LatLng(lat, lng);
             marker.setPosition(clickLatLng);
+        
+            app.setCoords(lat, lon);
+            
+            console.log ('setMakerPosition app.setCoords');
         }
+        */
 
 function startJumping(){
     marker.setAnimation(google.maps.Animation.BOUNCE);
@@ -102,6 +107,8 @@ function setMarkerPosition (lat, lng) {
 	  });
 
 	console.log(lat + ',' + lng);
+	
+	app.setCoords(lat, lng);
 
 }
 
@@ -1418,18 +1425,20 @@ function getCoordClick(event){
 	setMarkerPosition(lat, lng);
 	
 	obterUTMDMSMapClick (lat,lng);
+	
+	console.log('getCoordClick ');
 
 	if (booPolyline == true) {
 		
 		// Defina uma posicao do poligono
 		var ponto = {lat: lat, lng: lng};
 		
-		console.log(ponto);
+		//console.log(ponto);
 		
 		// adiciona essa posicao em uma array de posicoes
 		shape.push(ponto);
 		
-		console.log('shape length ' + shape.length);
+		//console.log('shape length ' + shape.length);
 		
 		// caso a shape esteja preechida com mais de uma posicao, limpe o mapa e crie outro poligono com o ponto novo
 		if(shape.length>1) {
@@ -1438,7 +1447,7 @@ function getCoordClick(event){
 				
 		if (tipoPolyLinePolygon == true ){
 			
-			console.log('if ' + tipoPolyLinePolygon);
+			//console.log('if ' + tipoPolyLinePolygon);
 			
 			
 			// Construcao do poligono
@@ -1456,7 +1465,7 @@ function getCoordClick(event){
 		
 		} else {
 			
-			console.log('else ' + tipoPolyLinePolygon);
+			//console.log('else ' + tipoPolyLinePolygon);
 			
 			
 			// Construcao do poligono
