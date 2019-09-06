@@ -8,6 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.exception.ConstraintViolationException;
 import org.hibernate.sql.JoinType;
 
 import entidades.HibernateUtil;
@@ -19,7 +20,14 @@ public class UsuarioDao {
 		
 		Session s = HibernateUtil.getSessionFactory().openSession();
 		s.beginTransaction();
+		
+		try {
 		s.save(usuario);
+		}
+		catch (ConstraintViolationException e ) {
+			System.out.println("salvar usuario " + e);
+		}
+		
 		s.getTransaction().commit();
 		s.close();
 		
@@ -37,6 +45,7 @@ public class UsuarioDao {
 		crit.createAlias("usuario.enderecos", "end", JoinType.LEFT_OUTER_JOIN);
 		crit.createAlias("end.endRAFK", "endRA", JoinType.LEFT_OUTER_JOIN);
 		crit.createAlias("end.documentos", "endDoc", JoinType.LEFT_OUTER_JOIN);
+		crit.createAlias("endDoc.docProcessoFK", "docProcessos", JoinType.LEFT_OUTER_JOIN);
 		
 		crit.createAlias("end.interferencias", "i", JoinType.LEFT_OUTER_JOIN);
 		
@@ -54,12 +63,16 @@ public class UsuarioDao {
 		crit.createAlias("i.interUHFK", "unidaHidInter", JoinType.LEFT_OUTER_JOIN);
 		
 		crit.createAlias("i.interTipoOutorgaFK", "tipoOutorga", JoinType.LEFT_OUTER_JOIN);
+		crit.createAlias("i.interSubtipoOutorgaFK", "subTipoOutorga", JoinType.LEFT_OUTER_JOIN);
 		
 		Criterion usNome = Restrictions.like("usNome", '%' + strPesquisa + '%');
 		Criterion usCPF = Restrictions.like("usCPFCNPJ", '%' + strPesquisa + '%');
 		Criterion usLogradouro = Restrictions.like("usLogadouro", '%' + strPesquisa + '%');
 		
-		Disjunction d = Restrictions.or(usNome, usCPF,usLogradouro);
+		Criterion usEndereco = Restrictions.like("end.endLogradouro", '%' + strPesquisa + '%');
+		
+		
+		Disjunction d = Restrictions.or(usNome, usCPF,usLogradouro, usEndereco);
 		
 		crit.add(d).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 

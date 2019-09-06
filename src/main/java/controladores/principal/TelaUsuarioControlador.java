@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.hibernate.exception.ConstraintViolationException;
+
 import dao.BancoAccessDao;
 import dao.UsuarioDao;
 import entidades.BancoAccess;
@@ -552,6 +554,8 @@ public class TelaUsuarioControlador implements Initializable {
 						
 					} else {
 			
+							try {
+							
 							Usuario us = new  Usuario ();
 							
 								us.setUsTipo(cbTipoPessoa.getValue());
@@ -600,7 +604,21 @@ public class TelaUsuarioControlador implements Initializable {
 							Alerta a = new Alerta ();
 							a.alertar(new Alert(Alert.AlertType.INFORMATION, "Informe: Cadastro salvo com sucesso!!!", ButtonType.OK));
 							
-							System.out.println("btn salvar " + usuario.getUsNome());
+							}
+
+							catch (ConstraintViolationException e ) {
+							
+								Alerta a = new Alerta();
+								a.alertar(new Alert(Alert.AlertType.INFORMATION, "Número CPF ou CNPJ duplicado!!!", new ButtonType[] { ButtonType.OK }));
+							}
+							
+							catch (Exception e ) {
+								
+								Alerta a = new Alerta();
+								a.alertar(new Alert(Alert.AlertType.INFORMATION, "Erro desconhecido!!!", new ButtonType[] { ButtonType.OK }));
+								
+								System.out.println(e);
+							}
 						
 					}
 			}
@@ -647,70 +665,82 @@ public class TelaUsuarioControlador implements Initializable {
 		
 				Usuario us = tvLista.getSelectionModel().getSelectedItem(); 
 				
+					try {
 				
-				System.out.println("lista enderecos size " + us.getEnderecos().size());
+						// -- preencher os campos -- //
+						us.setUsTipo(cbTipoPessoa.getValue()); 
+						us.setUsNome(tfNome.getText());
+						us.setUsCPFCNPJ(tfCPFCNPJ.getText());
+						us.setUsLogadouro(tfLogradouro.getText()); 
+						
+						us.setUsRA(cbRA.getValue()); 
+						
+						us.setUsCEP(tfCEP.getText()); 
+						us.setUsCidade(tfCidade.getText()); 
+						
+						us.setUsEstado(cbUF.getValue()); 
+						
+						us.setUsTelefone(tfTelefone.getText());
+						us.setUsCelular(tfCelular.getText());
+						us.setUsEmail(tfEmail.getText());
+						us.setUsDataAtualizacao(Timestamp.valueOf((LocalDateTime.now())));
+						
+					
+						/*
+						Endereco end = new Endereco();
+						// captura um endereco relacionado
+						end = endereco;
+						// adiciona neste endereco o id usuario selecionado
+						end.setEndUsuarioFK(us);
+						// adiciona este endereco no setEnderecos do usuario
+						us.getEnderecos().add(end);
+						*/
+						
+						if (!(documento.getDocID() == 0)) {
+							usuario.setUsDocumentoFK(documento);
+						}
+					
+						
+						/*
+						// para não dar repeticao de objetos //
+						for (int i = 0 ; i < us.getEnderecos().size(); i++) {
+							if (us.getEnderecos().hashCode(i) == (end.getEndID())) {
+								us.getEnderecos().remove(us.getEnderecos().hashCode(i));
+							}
+						}
+						*/
+						
+						UsuarioDao usDao = new UsuarioDao();
+						
+						usDao.mergeUsuario(us);
+						
+						obsList.remove(us);
+						obsList.add(us);
+						
+						modularBotoes();
+						
+						Alerta a = new Alerta ();
+						a.alertar(new Alert(Alert.AlertType.INFORMATION, "Cadastro editado com sucesso!!!", ButtonType.OK));
 				
-					// -- preencher os campos -- //
-					us.setUsTipo(cbTipoPessoa.getValue()); 
-					us.setUsNome(tfNome.getText());
-					us.setUsCPFCNPJ(tfCPFCNPJ.getText());
-					us.setUsLogadouro(tfLogradouro.getText()); 
-					
-					us.setUsRA(cbRA.getValue()); 
-					
-					us.setUsCEP(tfCEP.getText()); 
-					us.setUsCidade(tfCidade.getText()); 
-					
-					us.setUsEstado(cbUF.getValue()); 
-					
-					us.setUsTelefone(tfTelefone.getText());
-					us.setUsCelular(tfCelular.getText());
-					us.setUsEmail(tfEmail.getText());
-					us.setUsDataAtualizacao(Timestamp.valueOf((LocalDateTime.now())));
-					
-				
-					/*
-				Endereco end = new Endereco();
-					// captura um endereco relacionado
-					end = endereco;
-					// adiciona neste endereco o id usuario selecionado
-					end.setEndUsuarioFK(us);
-					// adiciona este endereco no setEnderecos do usuario
-					us.getEnderecos().add(end);
-					*/
-					
-					System.out.println("id documento " + documento.getDocID());
-					
-					
-					if (!(documento.getDocID() == 0)) {
-						usuario.setUsDocumentoFK(documento);
 					}
+					
+					catch (ConstraintViolationException e ) {
 				
-				
-				/*
-				// para não dar repeticao de objetos //
-				for (int i = 0 ; i < us.getEnderecos().size(); i++) {
-					if (us.getEnderecos().hashCode(i) == (end.getEndID())) {
-						us.getEnderecos().remove(us.getEnderecos().hashCode(i));
+						Alerta a = new Alerta();
+						a.alertar(new Alert(Alert.AlertType.INFORMATION, "Número CPF ou CNPJ duplicado!!!", new ButtonType[] { ButtonType.OK }));
 					}
-				}
-				*/
-				
-				UsuarioDao usDao = new UsuarioDao();
-				
-				usDao.mergeUsuario(us);
-				
-				obsList.remove(us);
-				obsList.add(us);
-				
-				modularBotoes();
-				
-				Alerta a = new Alerta ();
-				a.alertar(new Alert(Alert.AlertType.INFORMATION, "Cadastro editado com sucesso!!!", ButtonType.OK));
-				
+					
+					catch (Exception e ) {
+						
+						Alerta a = new Alerta();
+						a.alertar(new Alert(Alert.AlertType.INFORMATION, "Erro desconhecido!!!", new ButtonType[] { ButtonType.OK }));
+						
+						System.out.println(e);
+					}
 				}
 				
 			}
+			
 			
 		}
 		

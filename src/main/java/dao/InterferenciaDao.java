@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Disjunction;
@@ -75,6 +76,7 @@ public class InterferenciaDao {
 		Criterion c2 = Restrictions.like("interProcRenovacao", '%' + strPesquisa + '%');
 		Criterion c3 = Restrictions.like("interDespachoRenovacao", '%' + strPesquisa + '%');
 		Criterion c4 = Restrictions.like("endereco.endLogradouro", '%' + strPesquisa + '%');
+		
 		
 		Disjunction orExp = Restrictions.or(c1,c2, c3, c4);
 		

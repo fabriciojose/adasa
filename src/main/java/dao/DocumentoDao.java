@@ -8,6 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.exception.ConstraintViolationException;
 import org.hibernate.sql.JoinType;
 
 import entidades.Documento;
@@ -21,7 +22,15 @@ public void salvarDocumento (Documento documento) {
 		
 		Session s = HibernateUtil.getSessionFactory().openSession();
 		s.beginTransaction();
-		s.save(documento);
+		
+		try {
+			s.save(documento);
+		}
+		
+		catch (ConstraintViolationException e ) {
+			System.out.println("salvar documento " + e);
+		}
+	
 		s.getTransaction().commit();
 		s.flush();
 		s.close();
@@ -51,8 +60,13 @@ public void salvarDocumento (Documento documento) {
 		Criterion docSEI = Restrictions.like("docSEI", '%' + strPesquisa + '%');
 		Criterion docProcesso = Restrictions.like("docProcesso", '%' + strPesquisa + '%');
 		
+		Criterion docEndereco = Restrictions.like("end.endLogradouro", '%' + strPesquisa + '%');
 		
-		Disjunction orExp = Restrictions.or(docTipo, docNumero,docSEI, docProcesso);
+		
+		Disjunction orExp = Restrictions.or(docTipo, docNumero,docSEI, docProcesso, docEndereco);
+		
+		//? pode buscar documento pelo usuario ?
+		//Criterion usNome = Restrictions.like("usuarios.usNome", '%' + strPesquisa + '%');
 		
 		// adicionar os critérios e garantir resultados não  repetidos
 		crit.add(orExp).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -120,8 +134,10 @@ public void salvarDocumento (Documento documento) {
 		Criterion docSEI = Restrictions.like("docSEI", '%' + strPesquisa + '%');
 		Criterion docProcesso = Restrictions.like("docProcesso", '%' + strPesquisa + '%');
 		
+		Criterion usNome = Restrictions.like("usuarios.usNome", '%' + strPesquisa + '%');
 		
-		Disjunction orExp = Restrictions.or(docTipo, docNumero,docSEI, docProcesso);
+		
+		Disjunction orExp = Restrictions.or(docTipo, docNumero,docSEI, docProcesso, usNome);
 		
 		// adicionar os critérios e garantir resultados não  repetidos
 		crit.add(orExp).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);

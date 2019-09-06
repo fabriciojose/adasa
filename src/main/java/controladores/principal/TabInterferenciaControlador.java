@@ -132,6 +132,19 @@ public class TabInterferenciaControlador  implements Initializable{
 		tfPesquisar.setDisable(false);
 
 		btnPesquisar.setDisable(false);
+		
+		
+		// limpar campos
+		cbTipoOutorga.getSelectionModel().clearSelection();
+		cbSubtipoOutorga.getSelectionModel().clearSelection();
+		cbTipoAto.getSelectionModel().clearSelection();
+		cbSituacao.getSelectionModel().clearSelection();
+		
+		dpDataPublicacao.setValue(null);
+		dpDataVencimento.setValue(null);
+		tfNumeroAto.setText("");
+		tfProcesoOutorga.setText("");
+		tfDespachoOutorga.setText("");
 
 		//cbTipoInterferencia.setItems(olTipoInterferencia);
 
@@ -152,7 +165,7 @@ public class TabInterferenciaControlador  implements Initializable{
 			if (tipoInterferencia.getTipoInterID() == 2) {
 
 				Subterranea sub = new Subterranea ();
-					sub = TabSubterraneaController.tabSubCon.getSubterranea();
+					sub = TabSubterraneaController.tabSubCon.capturarSubterranea();
 
 				if (sub.getSubTipoPocoFK() == null ||
 						sub.getSubCaesb() == null ||
@@ -220,7 +233,7 @@ public class TabInterferenciaControlador  implements Initializable{
 
 			else if (tipoInterferencia.getTipoInterID() == 1) {
 
-				Superficial sup = TabSuperficialController.tabSupCon.getSuperficial();
+				Superficial sup = TabSuperficialController.tabSupCon.capturarSuperficial();
 
 				if (
 						sup == null
@@ -357,7 +370,7 @@ public class TabInterferenciaControlador  implements Initializable{
 			if (tipoInterferencia.getTipoInterID() == 2) {
 				
 				Subterranea sub = new Subterranea ();
-				sub = TabSubterraneaController.tabSubCon.getSubterranea();
+				sub = TabSubterraneaController.tabSubCon.capturarSubterranea();
 
 				if (sub.getSubTipoPocoFK() == null ||
 						sub== null ||
@@ -428,7 +441,7 @@ public class TabInterferenciaControlador  implements Initializable{
 
 			else if (tipoInterferencia.getTipoInterID() == 1) {
 				
-				Superficial sup = TabSuperficialController.tabSupCon.getSuperficial();
+				Superficial sup = TabSuperficialController.tabSupCon.capturarSuperficial();
 
 				if (sup.getSupLocalCaptacaoFK() == null // || 
 						//	tabSupCon.obterSuperficial().getSupArea() == null
@@ -1008,7 +1021,6 @@ public class TabInterferenciaControlador  implements Initializable{
 		com = new Componentes();
 		com.popularTela(listComponentesInterferenciaInterno1, prefSizeWHeLayXY, pDadosInterferencia);
 
-
 		listComponentesInterferenciaInterno2.add(pDI1 = new Pane());	
 		listComponentesInterferenciaInterno2.add(new Label ("Processo de Outorga:"));
 		listComponentesInterferenciaInterno2.add(tfProcesoOutorga = new TextField());
@@ -1025,8 +1037,6 @@ public class TabInterferenciaControlador  implements Initializable{
 
 		com = new Componentes();
 		com.popularTela(listComponentesInterferenciaInterno2, prefSizeWHeLayXY, pDadosInterferencia);
-
-
 
 		listComponentesPersistencia.add(pPersistencia = new Pane());
 		listComponentesPersistencia.add(btnNovo = new Button("NOVO"));
@@ -1061,7 +1071,6 @@ public class TabInterferenciaControlador  implements Initializable{
 			}
 		});
 		
-
 		pTipoInterferencia = new Pane();
 
 		pTipoInterferencia.setPrefSize(950, 500);
@@ -1077,10 +1086,19 @@ public class TabInterferenciaControlador  implements Initializable{
 		modularBotoes ();
 
 		cbTipoInterferencia.getSelectionModel().clearSelection();
-
 		pTipoInterferencia.getChildren().clear();
-
-
+		
+		cbTipoOutorga.getSelectionModel().clearSelection();
+		cbSubtipoOutorga.getSelectionModel().clearSelection();
+		cbTipoAto.getSelectionModel().clearSelection();
+		cbSituacao.getSelectionModel().clearSelection();
+		
+		dpDataPublicacao.setValue(null);
+		dpDataVencimento.setValue(null);
+		tfNumeroAto.setText("");
+		tfProcesoOutorga.setText("");
+		tfDespachoOutorga.setText("");
+		
 	}
 
 	public void abrirTabs (int ti) throws IOException {
@@ -1260,7 +1278,7 @@ public class TabInterferenciaControlador  implements Initializable{
 							e.printStackTrace();
 						}
 
-						TabSubterraneaController.tabSubCon.setSubterranea(((Subterranea) inter));
+						TabSubterraneaController.tabSubCon.imprimirSubterranea(((Subterranea) inter));
 
 
 					}
@@ -1274,7 +1292,7 @@ public class TabInterferenciaControlador  implements Initializable{
 							e.printStackTrace();
 						}
 
-						TabSuperficialController.tabSupCon.setSuperficial(((Superficial) inter));
+						TabSuperficialController.tabSupCon.imprimirSuperficial(((Superficial) inter));
 
 					}
 

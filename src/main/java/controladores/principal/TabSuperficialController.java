@@ -2,6 +2,8 @@ package controladores.principal;
 
 import java.net.URL;
 import java.sql.Date;
+import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -72,7 +74,7 @@ public class TabSuperficialController implements Initializable{
 	MetodoIrrigacao metodo_irrigacao = new MetodoIrrigacao();
 
 
-	public Superficial getSuperficial () {
+	public Superficial capturarSuperficial () {
 
 		Superficial sup = superficial;
 
@@ -149,7 +151,7 @@ public class TabSuperficialController implements Initializable{
 		
 		gsRequerida.inicializarVariaveisFinalidadesRequeridas();
 		
-		gsRequerida.setFinalidade(
+		gsRequerida.capturarFinalidade(
 				fr, 
 				tfListFinReq, tfListSubfinReq, tfListQuanReq, tfListConReq, tfListVazoesReq, 
 				lblCalTotalReq, 
@@ -174,7 +176,7 @@ public class TabSuperficialController implements Initializable{
 		
 		gsAutorizada.inicializarVariaveisFinalidadesAutorizadas();
 		
-		gsAutorizada.setFinalidade(
+		gsAutorizada.capturarFinalidade(
 				fa, 
 				tfListFinAut, tfListSubfinAut, tfListQuanAut, tfListConAut, tfListVazoesAut, 
 				lblCalTotalAut, 
@@ -187,7 +189,7 @@ public class TabSuperficialController implements Initializable{
 
 	};
 
-	public void setSuperficial (Superficial sup) {
+	public void imprimirSuperficial (Superficial sup) {
 
 		tfLatitude.setText(String.valueOf(sup.getInterDDLatitude()));
 		tfLongitude.setText(String.valueOf(sup.getInterDDLongitude()));
@@ -233,7 +235,7 @@ public class TabSuperficialController implements Initializable{
 				
 				gsFinalidades.inicializarVariaveisFinalidadesRequeridas();
 				
-				gsFinalidades.getFinalidade(
+				gsFinalidades.imprimirFinalidade(
 						fr, 
 						tfListFinReq, tfListSubfinReq, tfListQuanReq, tfListConReq, tfListVazoesReq, 
 						lblCalTotalReq, 
@@ -273,7 +275,7 @@ public class TabSuperficialController implements Initializable{
 				
 				gsAutorizada.inicializarVariaveisFinalidadesAutorizadas();
 				
-				gsAutorizada.getFinalidade(
+				gsAutorizada.imprimirFinalidade(
 						fa, 
 						tfListFinAut, tfListSubfinAut, tfListQuanAut, tfListConAut, tfListVazoesAut, 
 						lblCalTotalAut, 
@@ -431,46 +433,6 @@ public class TabSuperficialController implements Initializable{
 			}
 		});
 
-		/*
-		tf.lengthProperty().addListener(new ChangeListener<Number>() {
-
-            @Override
-            public void changed(ObservableValue<? extends Number> observable,
-                    Number oldValue, Number newValue) {
-                if (newValue.intValue() > oldValue.intValue()) {
-                    // Check if the new character is greater than LIMIT
-                    if (tfTempoBomba.getText().length() >= 5) {
-
-                        // if it's 11th character then just setText to previous
-                        // one
-                    	tfTempoBomba.setText(tfTempoBomba.getText().substring(0, 5));
-                    }
-                }
-            }
-        });
-		 */
-
-
-		/*
-		tfAreaContribuicao.lengthProperty().addListener(new ChangeListener<Number>() {
-
-            @Override
-            public void changed(ObservableValue<? extends Number> observable,
-                    Number oldValue, Number newValue) {
-                if (newValue.intValue() > oldValue.intValue()) {
-                    // Check if the new character is greater than LIMIT
-                    if (tfAreaContribuicao.getText().length() >= 5) {
-
-                        // if it's 11th character then just setText to previous
-                        // one
-                    	tfAreaContribuicao.setText(tfAreaContribuicao.getText().substring(0, 5));
-                    }
-                }
-            }
-        });
-
-		 */
-
 
 	} // fim initialize
 
@@ -616,6 +578,8 @@ public class TabSuperficialController implements Initializable{
 
 	GridPane gpFinalidades;
 	GridPane gpVazoes;
+	
+	Button btnCapturaFinalidadeRequerida;
 
 	public void inicializarComponentes () {
 
@@ -790,10 +754,52 @@ public class TabSuperficialController implements Initializable{
 
 			
 		pSuperficial.getChildren().add(tp);
+		
+		
+		
+		btnCapturaFinalidadeRequerida = new Button("Fin Req");
+		btnCapturaFinalidadeRequerida.setPrefSize(70, 20);
+		btnCapturaFinalidadeRequerida.setLayoutX(860);
+		btnCapturaFinalidadeRequerida.setLayoutY(5);
+		
+		pFinAut.getChildren().add(btnCapturaFinalidadeRequerida);
+		 /*
+		  * capturar os valores da tab finalidade requerida
+		  */
+		btnCapturaFinalidadeRequerida.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				System.out.println("btn finalidade requerida clicado");
+				
+				for (int i=0;i<5;i++) {
+					tfListFinAut[i].setText(tfListFinReq[i].getText());
+					tfListSubfinAut[i].setText(tfListSubfinReq[i].getText());
+					tfListQuanAut[i].setText(tfListQuanReq[i].getText());
+					tfListConAut[i].setText(tfListConReq[i].getText());
+					tfListVazoesAut[i].setText(tfListVazoesReq[i].getText());
+				}
+				
+				for (int i=0;i<12;i++) {
+					tfVazoesLDAut[i].setText(tfVazoesLDReq[i].getText());
+					tfVazoesHDAut[i].setText(tfVazoesHDReq[i].getText());
+					tfPeriodoDMAut[i].setText(tfPeriodoDMReq[i].getText());
+				}
+				
+				lblCalTotalAut.setText(lblCalTotalReq.getText());
+			
+				
+			}
+		});
+		
 
 
 
 	}
+	
+	DecimalFormat df = new DecimalFormat("#,##0.00");  
+	// contador de cliques no botao btnListCalMeses[0]
+	int c, d, e = 0;
 	
 	public void inicializarFinalidades (
 			GridPane gpFinalidades, GridPane gpVazoes,
@@ -924,8 +930,25 @@ public class TabSuperficialController implements Initializable{
 
 				@Override
 				public void handle(ActionEvent event) {
-					Double result = Double.parseDouble(tfQuant.getText().replace(",", ".")) * Double.parseDouble(tfCon.getText().replace(",", "."));
-					tfVaz.setText(String.valueOf(result));
+
+
+					// formatar 15.000,56 para double 15000.56
+					Double resultado = 0.0;
+			
+					
+					try {
+						resultado = (Double.parseDouble(df.parseObject(tfQuant.getText()).toString())) * (Double.parseDouble(df.parseObject(tfCon.getText()).toString()));
+					} catch (NumberFormatException e) {
+				
+						e.printStackTrace();
+					} catch (ParseException e) {
+					
+						e.printStackTrace();
+					}
+					
+					// formatar 15000.5 para string 15.000,56
+					tfVaz.setText(df.format(resultado));
+					
 				}
 			});
 
@@ -1051,33 +1074,140 @@ public class TabSuperficialController implements Initializable{
 
 			@Override
 			public void handle(ActionEvent event) {
-				Double result = 0.0;
+				
+				
+				// formatar 15.000,56 para double 15000.56
+				Double resultado = 0.0;
 
 				for (int i = 0; i<5;i++) {
+					// capturar os resultados e, caso o usuario digite com virgula, ex: 13,34, mudar para double 13.34
 					if (! tfVazoes[i].getText().isEmpty())
-						result += Double.parseDouble(
-								tfVazoes[i].getText());
-
-
+						
+						try {
+							resultado += Double.parseDouble(df.parseObject(tfVazoes[i].getText()).toString());
+						} catch (NumberFormatException e) {
+							
+							e.printStackTrace();
+						} catch (ParseException e) {
+							
+							e.printStackTrace();
+						}
+		
 				}
-				lblCalculoTotal.setText(String.valueOf(result));
+				// formatar double 15000.56 para 15.000,56
+				lblCalculoTotal.setText(df.format(resultado));
+
+			}
+		});
+		
+		
+
+		// facilitar o cadastro dos meses 
+		btnListCalMeses[0].setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+
+				for (int i = 0; i<12;i++) {
+
+					// preencher todos os meses com valores iguais
+					if (c%2==0) {
+						tfVazoesLD [i].setText(lblCalculoTotal.getText());
+					}
+
+					// preencher retirando vazao dos meses de jan fev mar nov dez
+					else {
+
+						if (i == 0 || i == 1 || i == 2 || i == 10 || i == 11) {
+							tfVazoesLD [i].setText("0");
+
+						} else {
+							tfVazoesLD [i].setText(lblCalculoTotal.getText());
+						}
+					}
+
+				} // fim for 12
+
+				c++; // contador btnListCalMeses
+
 
 			}
 		});
 
+
+		// facilitar o cadastro dos meses 
+		btnListCalMeses[1].setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+
+				for (int i = 0; i<12;i++) {
+
+					// preencher todos os meses com valores iguais
+					if (d%2==0) {
+						tfVazoesHD [i].setText(tfVazoesHD[3].getText());
+					}
+
+					// preencher retirando vazao dos meses de jan fev mar nov dez
+					else {
+
+						if (i == 0 || i == 1 || i == 2 || i == 10 || i == 11) {
+							tfVazoesHD [i].setText("0");
+
+						} else {
+							tfVazoesHD [i].setText(tfVazoesHD[3].getText());
+						}
+					}
+
+				} // fim for 12
+
+				d++; // contador btnListCalMeses
+
+			}
+		});
 		// facilitar o cadastro dos meses 
 		btnListCalMeses[2].setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
+				
 				int meses [] =  {31,28,31,30,31,30,31,31,30,31,30,31};
+				
 				for (int i = 0; i<12;i++) {
-					tfPeriodoDM [i].setText(String.valueOf(meses[i]));
+					
+					if (e == 0) {
+						tfPeriodoDM [i].setText(String.valueOf(meses[i]));
+					}
+					
+					if (e == 1) {
+						
+						tfPeriodoDM [i].setText(tfPeriodoDM[3].getText());
+						
+						
+					}
+					
+					if (e == 3) {
+						
+						if (i == 0 || i == 1 || i == 2 || i == 10 || i == 11) {
+							tfPeriodoDM [i].setText("0");
+
+						} else {
+							tfPeriodoDM [i].setText(tfPeriodoDM[3].getText());
+						}
+						
+					}
+					
+				} // fim for 12
+				
+				e++;
+				
+				if (e==4) {
+					e=0;
 				}
+		
 
-			}
+				}
 		});
-
 
 		// facilitar o cadastro dos meses 
 		btnLatLon.setOnAction(new EventHandler<ActionEvent>() {

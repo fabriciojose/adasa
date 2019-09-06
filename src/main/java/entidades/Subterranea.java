@@ -18,16 +18,17 @@ public class Subterranea extends Interferencia {
 	@Column (name="sub_Caesb", columnDefinition="varchar(3)")
 	private String subCaesb;  // tem caesb () sim () não
 
-	@Column (name="sub_Estatico", columnDefinition="varchar(5)")
+	@Column (name="sub_Estatico", columnDefinition="varchar(20)")
 	private String subEstatico;  // em metros
 
-	@Column (name="sub_Dinamico", columnDefinition="varchar(5)")
+	@Column (name="sub_Dinamico", columnDefinition="varchar(20)")
 	private String subDinamico;  // em metros
 
-	@Column (name="sub_Vazao",columnDefinition="varchar(5)")
-	private String subVazao;  // em l/h - litros por hora
+	
+	@Column (name="sub_Vazao_Poco")
+	private Double subVazaoPoco;  // em l/h - litros por hora
 
-	@Column (name="sub_Profundidade",columnDefinition="varchar(5)")
+	@Column (name="sub_Profundidade",columnDefinition="varchar(20)")
 	private String subProfundidade;  // em metros
 
 	@Basic
@@ -89,14 +90,7 @@ public class Subterranea extends Interferencia {
 		this.subDinamico = subDinamico;
 	}
 
-	public String getSubVazao() {
-		return subVazao;
-	}
-
-	public void setSubVazao(String subVazao) {
-		this.subVazao = subVazao;
-	}
-
+	
 	public String getSubProfundidade() {
 		return subProfundidade;
 	}
@@ -112,6 +106,16 @@ public class Subterranea extends Interferencia {
 	public void setSubTipoPocoFK(TipoPoco subTipoPocoFK) {
 		this.subTipoPocoFK = subTipoPocoFK;
 	}
+
+	public Double getSubVazaoPoco() {
+		return subVazaoPoco;
+	}
+
+	public void setSubVazaoPoco(Double subVazaoPoco) {
+		this.subVazaoPoco = subVazaoPoco;
+	}
+	
+	
 
 
 

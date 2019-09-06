@@ -1,6 +1,7 @@
 package principal;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -109,13 +110,15 @@ public class MalaDireta {
 	}
 
 
-
+	// formatar 1000.50 para 1.000,50 e retirar zeros irrelevantes como ,00 - 15.00 fica 15
+	DecimalFormat df = new DecimalFormat("#,##0.00"); 
+	
 
 	public String criarDocumento () {
 
 		GetterAndSetter gs  = new GetterAndSetter();
 
-		Document docHtml = null;
+		Document docHtml = null;DecimalFormat df = new DecimalFormat("#,##0.00"); 
 
 		docHtml = Jsoup.parse(htmlRel, "UTF-8").clone();
 
@@ -230,6 +233,21 @@ public class MalaDireta {
 		/*
 		 * dados da interferencia
 		 */
+		
+
+		String strTipoSubOutorga = "";
+		
+		// imprimir Outorga, ou se o subtipo outorga for modificacao, renovacao, imprimir Modificacao de Outorga
+		if (interferencia.getInterSubtipoOutorgaFK().getSubtipoOutorgaDescricao().equals("")) {
+			
+			strTipoSubOutorga = interferencia.getInterTipoOutorgaFK().getTipoOutorgaDescricao();
+			
+		} else {
+			
+			strTipoSubOutorga = interferencia.getInterSubtipoOutorgaFK().getSubtipoOutorgaDescricao()  + " de " + interferencia.getInterTipoOutorgaFK().getTipoOutorgaDescricao(); 
+			
+		}
+		
 
 		// SUPERFICIAL //
 		if ( interferencia.getInterTipoInterferenciaFK().getTipoInterID() == 1) {
@@ -250,15 +268,21 @@ public class MalaDireta {
 
 				listFinalidadesCadastradas.add(gs.callGetter(fr, listVariaveisFinalidades.get(i)));
 				listSubfinalidadesCadastradas.add(gs.callGetter(fr, listVariaveisSubfinaldades.get(i)));
-				listQuantidadesCadastradas.add(gs.callGetter(fr, listVariaveisQuantidades.get(i)));
-				listConsumosCadastrados.add(gs.callGetter(fr, listVariaveisConsumo.get(i)));
-				listVazoesCadastradas.add(gs.callGetter(fr, listVariaveisVazao.get(i)));
+				
+				// formatar 1000.50 para 1.000,50 e retirar zeros irrelevantes como ,00 - 15.00 fica 15
+				try{	listQuantidadesCadastradas.add(	df.format(	Double.parseDouble((gs.callGetter(fr, listVariaveisQuantidades.get(i))))).replaceAll(",00", "")		);} 
+					catch (Exception e) {listQuantidadesCadastradas.add(null);};
+				try{	listConsumosCadastrados.add(	df.format(	Double.parseDouble((gs.callGetter(fr, listVariaveisConsumo.get(i))))).replaceAll(",00", "")		);} 
+					catch (Exception e) {listConsumosCadastrados.add(null);};
+				try{	listVazoesCadastradas.add(		df.format(	Double.parseDouble((gs.callGetter(fr, listVariaveisVazao.get(i))))).replaceAll(",00", "")		);} 
+					catch (Exception e) {listVazoesCadastradas.add(null);};
 
 			}
 
 			for (int i = 0; i<12; i++) {
 
-				listVazoesDia.add(gs.callGetter(fr, listVariaveisVazaoMes.get(i))); //.getIntSupFK()
+				// formatar 1000.50 para 1.000,50 e retirar zeros irrelevantes como ,00 - 15.00 fica 15
+				try{	listVazoesDia.add( 	df.format(	Double.parseDouble((gs.callGetter(fr, listVariaveisVazaoMes.get(i))))).replaceAll(",00", "")				); } catch (Exception e) {listVazoesDia.add(null);};
 				listVazoesHora.add(gs.callGetter(fr, listVariaveisVazaoHora.get(i)));
 				listPeriodos.add(gs.callGetter(fr, listVariaveisTempo.get(i)));
 
@@ -292,10 +316,11 @@ public class MalaDireta {
 			}
 			catch (Exception e) {strDataOperação = null;
 			};
-
+			
+			
 			String strInterferenciaSuperficial [] = {
 
-					interferencia.getInterTipoOutorgaFK().getTipoOutorgaDescricao(), //1
+					strTipoSubOutorga ,  //1
 					interferencia.getInterDDLatitude().toString() + ",",
 					interferencia.getInterDDLongitude().toString(),
 
@@ -319,7 +344,11 @@ public class MalaDireta {
 				catch (Exception e) {docHtml.select(strPosicoesRequerimentoSuperificial[i]).prepend("");};
 			}
 
-			try { docHtml.select("vazaototaltag").prepend(String.valueOf(fr.getFrVazaoTotal()));} catch (Exception e) {docHtml.select("vazaototaltag").prepend("");};	
+			try{ df.format(	((fr.getFrVazaoTotal()))).replaceAll(",00", "");} catch (Exception e) { e.printStackTrace();};
+					
+			// formatar 1000.50 para 1.000,50 e retirar zeros irrelevantes como ,00 - 15.00 fica 15		
+			try { docHtml.select("vazaototaltag").prepend( df.format(	((fr.getFrVazaoTotal()))).replaceAll(",00", "") );} 
+				catch (Exception e) {docHtml.select("vazaototaltag").prepend("");};	
 		
 		} // FIM IF SUPERFICIAL
 
@@ -334,7 +363,7 @@ public class MalaDireta {
 
 				if (f.getClass().getName() == "entidades.FinalidadeRequerida") {
 					fr = (FinalidadeRequerida) f;
-					System.out.println("MALA DIRETA - sub - finalidade requerida ID " + fr.getFinID());
+					//System.out.println("MALA DIRETA - sub - finalidade requerida ID " + fr.getFinID());
 				}
 
 			}
@@ -343,20 +372,26 @@ public class MalaDireta {
 
 				listFinalidadesCadastradas.add(gs.callGetter(fr, listVariaveisFinalidades.get(i))); 
 				listSubfinalidadesCadastradas.add(gs.callGetter(fr, listVariaveisSubfinaldades.get(i)));
-				listQuantidadesCadastradas.add(gs.callGetter(fr, listVariaveisQuantidades.get(i)));
-				listConsumosCadastrados.add(gs.callGetter(fr, listVariaveisConsumo.get(i)));
-				listVazoesCadastradas.add(gs.callGetter(fr, listVariaveisVazao.get(i)));
+				// formatar 1000.50 para 1.000,50 e retirar zeros irrelevantes como ,00 - 15.00 fica 15
+			
+				try{	listQuantidadesCadastradas.add(df.format(		Double.parseDouble(		(gs.callGetter(fr, listVariaveisQuantidades.get(i))))).replaceAll(",00", "")	);} 
+					catch (Exception e) {listQuantidadesCadastradas.add(null);};
+				try{	listConsumosCadastrados.add(df.format(			Double.parseDouble(		(gs.callGetter(fr, listVariaveisConsumo.get(i))))).replaceAll(",00", "")	);} 
+					catch (Exception e) {listConsumosCadastrados.add(null);};
+				try{ 	listVazoesCadastradas.add(df.format(			Double.parseDouble(		(gs.callGetter(fr, listVariaveisVazao.get(i))))).replaceAll(",00", "")	);} 
+					catch (Exception e) {listVazoesCadastradas.add(null);};
 
 			}
 
 
 			for (int i = 0; i<12; i++) {
 
-				listVazoesDia.add(gs.callGetter(fr, listVariaveisVazaoMes.get(i)));
+				// formatar 1000.50 para 1.000,50 e retirar zeros irrelevantes como ,00 - 15.00 fica 15
+				listVazoesDia.add(df.format(	Double.parseDouble(		(gs.callGetter(fr, listVariaveisVazaoMes.get(i))))).replaceAll(",00", ""));
 
-				listVazoesHora.add(gs.callGetter(fr, listVariaveisVazaoHora.get(i)));
+				listVazoesHora.add(df.format(	Double.parseDouble(		(gs.callGetter(fr, listVariaveisVazaoHora.get(i))))).replaceAll(",00", ""));
 
-				listPeriodos.add(gs.callGetter(fr, listVariaveisTempo.get(i)));
+				listPeriodos.add(df.format(		Double.parseDouble(		(gs.callGetter(fr, listVariaveisTempo.get(i))))).replaceAll(",00", ""));
 
 			}
 
@@ -379,12 +414,18 @@ public class MalaDireta {
 			try {
 				strDataOperação = new SimpleDateFormat("dd/MM/yyyy").format(((Subterranea) interferencia).getSubDataOperacao());}
 			catch (Exception e) {strDataOperação = null;};
+			
+			String vazaoPoco = "";
+			// tentar imprimir o valor
+			try { vazaoPoco = 	df.format(	((Subterranea) interferencia).getSubVazaoPoco()	).replaceAll(",00", "")  ;} 
+			// ou imprime vazio
+			catch (Exception e) {vazaoPoco = "0";};
 
 			String strInterferenciaSubterranea [] = {
-					interferencia.getInterTipoOutorgaFK().getTipoOutorgaDescricao(), 
+					strTipoSubOutorga , 
 					((Subterranea) interferencia).getSubTipoPocoFK().getTipoPocoDescricao(), 
 					((Subterranea) interferencia).getSubCaesb(),
-					((Subterranea) interferencia).getSubVazao(),
+					vazaoPoco,
 					((Subterranea) interferencia).getSubEstatico(),
 					((Subterranea) interferencia).getSubDinamico(),
 					((Subterranea) interferencia).getSubProfundidade(),
@@ -401,7 +442,8 @@ public class MalaDireta {
 				catch (Exception e) {docHtml.select(strPosicoesRequerimentoSubterranea[i]).prepend("");};
 			}
 
-			try { docHtml.select("vazaototaltag").prepend(String.valueOf(fr.getFrVazaoTotal()));} catch (Exception e) {docHtml.select("vazaototaltag").prepend("");};
+			try { docHtml.select("vazaototaltag").prepend( df.format(	((fr.getFrVazaoTotal()))).replaceAll(",00", "") );} 
+				catch (Exception e) {docHtml.select("vazaototaltag").prepend("");};
 
 		} // FIM IF SUBTERRANEA
 

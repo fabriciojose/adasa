@@ -2,6 +2,8 @@ package controladores.principal;
 
 import java.net.URL;
 import java.sql.Date;
+import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -56,8 +58,12 @@ public class TabSubterraneaController implements Initializable {
 	UnidadeHidrografica unidade_hidrografica = new UnidadeHidrografica();
 	TipoPoco tipo_poco = new TipoPoco();
 	SubSistema subsistema = new SubSistema();
+	
 
-	public Subterranea getSubterranea () {
+	// formatar 1000.50 para 1.000,50 e retirar zeros irrelevantes como ,00 - 15.00 fica 15
+	DecimalFormat df = new DecimalFormat("#,##0.00"); 
+
+	public Subterranea capturarSubterranea () {
 
 		Subterranea sub = subterranea;
 
@@ -96,7 +102,18 @@ public class TabSubterraneaController implements Initializable {
 		
 		sub.setSubCaesb(cbSubCaesb.getValue());
 		
-		sub.setSubVazao(tfVazaoPoco.getText());
+		// se o textfield estiver vazaio, seta 0.0
+		if ( tfVazaoPoco.getText().isEmpty() ) { 
+			sub.setSubVazaoPoco(0.0);
+		// se nao, tente formatar			
+		} else {
+			try {sub.setSubVazaoPoco(Double.parseDouble(df.parseObject(tfVazaoPoco.getText()).toString()));
+			} catch (Exception e) {
+				sub.setSubVazaoPoco(0.0);
+			}
+			
+		}
+		
 		sub.setSubEstatico(tfEstatico.getText());
 		sub.setSubDinamico(tfDinamico.getText());
 		sub.setSubProfundidade(tfProfundidade.getText());
@@ -125,7 +142,7 @@ public class TabSubterraneaController implements Initializable {
 		
 		gsRequerida.inicializarVariaveisFinalidadesRequeridas();
 		
-		gsRequerida.setFinalidade(
+		gsRequerida.capturarFinalidade(
 				fr, 
 				tfListFinReq, tfListSubfinReq, tfListQuanReq, tfListConReq, tfListVazoesReq, 
 				lblCalTotalReq, 
@@ -150,7 +167,7 @@ public class TabSubterraneaController implements Initializable {
 		
 		gsAutorizada.inicializarVariaveisFinalidadesAutorizadas();
 		
-		gsAutorizada.setFinalidade(
+		gsAutorizada.capturarFinalidade(
 				fa, 
 				tfListFinAut, tfListSubfinAut, tfListQuanAut, tfListConAut, tfListVazoesAut, 
 				lblCalTotalAut, 
@@ -163,7 +180,7 @@ public class TabSubterraneaController implements Initializable {
 
 	}
 
-	public void setSubterranea (Subterranea sub) {
+	public void imprimirSubterranea (Subterranea sub) {
 
 		tfLatitude.setText(String.valueOf(sub.getInterDDLatitude()));
 		tfLongitude.setText(String.valueOf(sub.getInterDDLongitude()));
@@ -175,8 +192,12 @@ public class TabSubterraneaController implements Initializable {
 		cbSubsistema.setValue(sub.getSubSubSistemaFK().getSubDescricao());
 
 		cbSubCaesb.setValue(sub.getSubCaesb());
-
-		tfVazaoPoco.setText(sub.getSubVazao());
+	
+		// tentar imprimir o valor
+		try {tfVazaoPoco.setText( df.format(	 sub.getSubVazaoPoco()	) .replaceAll(",00", "")		 );} 
+		// ou imprime vazio
+		catch (Exception e) {tfVazaoPoco.setText(""); };
+		
 		tfEstatico.setText(sub.getSubEstatico());
 		tfDinamico.setText(sub.getSubDinamico());
 		tfProfundidade.setText(sub.getSubProfundidade());
@@ -204,7 +225,7 @@ public class TabSubterraneaController implements Initializable {
 		
 		gsFinalidades.inicializarVariaveisFinalidadesRequeridas();
 		
-		gsFinalidades.getFinalidade(
+		gsFinalidades.imprimirFinalidade(
 				fr, 
 				tfListFinReq, tfListSubfinReq, tfListQuanReq, tfListConReq, tfListVazoesReq, 
 				lblCalTotalReq, 
@@ -247,7 +268,7 @@ public class TabSubterraneaController implements Initializable {
 		
 		gsAutorizada.inicializarVariaveisFinalidadesAutorizadas();
 		
-		gsAutorizada.getFinalidade(
+		gsAutorizada.imprimirFinalidade(
 				fa, 
 				tfListFinAut, tfListSubfinAut, tfListQuanAut, tfListConAut, tfListVazoesAut, 
 				lblCalTotalAut, 
@@ -276,7 +297,6 @@ public class TabSubterraneaController implements Initializable {
 		this.subterranea = sub;	
 
 	}
-
 
 	ObservableList<String> olFinalidades = FXCollections.observableArrayList(
 
@@ -357,7 +377,6 @@ public class TabSubterraneaController implements Initializable {
 					"Não"
 					); 
 
-	
 	@FXML Pane pSubterranea;
 
 	public static TabSubterraneaController tabSubCon;
@@ -459,25 +478,6 @@ public class TabSubterraneaController implements Initializable {
     	//System.out.println("sub = subisistema descricao " + new_value)
     	);
 		
-
-		// listeners para envitar valor maior que cinco caracteres
-		tfVazaoPoco.lengthProperty().addListener(new ChangeListener<Number>() {
-
-			@Override
-			public void changed(ObservableValue<? extends Number> observable,
-					Number oldValue, Number newValue) {
-				if (newValue.intValue() > oldValue.intValue()) {
-					// Check if the new character is greater than LIMIT
-					if (tfVazaoPoco.getText().length() >= 5) {
-
-						// if it's 11th character then just setText to previous
-						// one
-						tfVazaoPoco.setText(tfVazaoPoco.getText().substring(0, 5));
-					}
-				}
-			}
-		});
-
 		tfEstatico.lengthProperty().addListener(new ChangeListener<Number>() {
 
 			@Override
@@ -485,11 +485,11 @@ public class TabSubterraneaController implements Initializable {
 					Number oldValue, Number newValue) {
 				if (newValue.intValue() > oldValue.intValue()) {
 					// Check if the new character is greater than LIMIT
-					if (tfEstatico.getText().length() >= 5) {
+					if (tfEstatico.getText().length() >= 15) {
 
 						// if it's 11th character then just setText to previous
 						// one
-						tfEstatico.setText(tfEstatico.getText().substring(0, 5));
+						tfEstatico.setText(tfEstatico.getText().substring(0, 15));
 					}
 				}
 			}
@@ -502,11 +502,11 @@ public class TabSubterraneaController implements Initializable {
 					Number oldValue, Number newValue) {
 				if (newValue.intValue() > oldValue.intValue()) {
 					// Check if the new character is greater than LIMIT
-					if (tfDinamico.getText().length() >= 5) {
+					if (tfDinamico.getText().length() >= 15) {
 
 						// if it's 11th character then just setText to previous
 						// one
-						tfDinamico.setText(tfDinamico.getText().substring(0, 5));
+						tfDinamico.setText(tfDinamico.getText().substring(0, 15));
 					}
 				}
 			}
@@ -519,11 +519,11 @@ public class TabSubterraneaController implements Initializable {
 					Number oldValue, Number newValue) {
 				if (newValue.intValue() > oldValue.intValue()) {
 					// Check if the new character is greater than LIMIT
-					if (tfProfundidade.getText().length() >= 5) {
+					if (tfProfundidade.getText().length() >= 15) {
 
 						// if it's 11th character then just setText to previous
 						// one
-						tfProfundidade.setText(tfProfundidade.getText().substring(0, 5));
+						tfProfundidade.setText(tfProfundidade.getText().substring(0, 15));
 
 					}
 
@@ -597,6 +597,10 @@ public class TabSubterraneaController implements Initializable {
 	TextField[] tfVazoesHDAut = new TextField[12]; //  
 	TextField[] tfPeriodoDMAut = new TextField[12];
 	Button [] btnListCalMesesAut = new Button[3];
+	
+	Button btnCapturaFinalidadeRequerida;
+	
+	int intContadorBtnCapFin = 0;
 
 	public void inicializarComponentes () {
 
@@ -660,6 +664,35 @@ public class TabSubterraneaController implements Initializable {
 
 		com = new Componentes();
 		com.popularTela(listaComponentes, prefSizeWHeLayXY, pSubterranea);
+		
+		
+		tfVazaoPoco.lengthProperty().addListener(new ChangeListener<Number>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Number> observable,
+					Number oldValue, Number newValue) {
+
+				if (newValue.intValue() > oldValue.intValue()) {
+					// Check if the new character is greater than LIMIT
+					if (tfVazaoPoco.getText().length() >= 0) {
+
+						/*  Nao permitir letras - variavel double, somente numeros com ponto ou virgula
+						 */
+						if ( tfVazaoPoco.getText().matches("(.*)[a-zA-Z](.*)") == true ) {
+							// buscar letras entre os numeros
+							Alerta a = new Alerta ();
+							a.alertar(new Alert(Alert.AlertType.ERROR, "Somente números!!!", ButtonType.OK));
+
+							// retirar caracter errado, como letra, virgula etc
+							tfVazaoPoco.setText(tfVazaoPoco.getText().substring(0, tfVazaoPoco.getText().length() - 1));
+
+						}
+
+					}
+
+				} // fim if length
+			}
+		});
 
 		TabPane tp = new TabPane();
 		
@@ -723,7 +756,6 @@ public class TabSubterraneaController implements Initializable {
 		pVazoes.setPrefSize(910, 120);
 		pVazoes.setLayoutX(15);
 		pVazoes.setLayoutY(180);
-		//pVazoesAutorizadas.setStyle("-fx-background-color: blue");
 	
 		Pane pFinAut = new  Pane();
 		pFinAut.setPrefSize(940, 300);
@@ -754,9 +786,74 @@ public class TabSubterraneaController implements Initializable {
 
 		
 		pSubterranea.getChildren().add(tp);
+		
+		
+		btnCapturaFinalidadeRequerida = new Button("Fin Req");
+		btnCapturaFinalidadeRequerida.setPrefSize(70, 20);
+		btnCapturaFinalidadeRequerida.setLayoutX(860);
+		btnCapturaFinalidadeRequerida.setLayoutY(5);
+		
+		pFinAut.getChildren().add(btnCapturaFinalidadeRequerida);
+		 /*
+		  * capturar os valores da tab finalidade requerida
+		  */
+		btnCapturaFinalidadeRequerida.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				System.out.println("btn finalidade requerida clicado");
+			
+				if (intContadorBtnCapFin%2==0) {
+					
+					for (int i=0;i<5;i++) {
+						tfListFinAut[i].setText(tfListFinReq[i].getText());
+						tfListSubfinAut[i].setText(tfListSubfinReq[i].getText());
+						tfListQuanAut[i].setText(tfListQuanReq[i].getText());
+						tfListConAut[i].setText(tfListConReq[i].getText());
+						tfListVazoesAut[i].setText(tfListVazoesReq[i].getText());
+					}
+					
+					for (int i=0;i<12;i++) {
+						tfVazoesLDAut[i].setText(tfVazoesLDReq[i].getText());
+						tfVazoesHDAut[i].setText(tfVazoesHDReq[i].getText());
+						tfPeriodoDMAut[i].setText(tfPeriodoDMReq[i].getText());
+					}
+					
+					lblCalTotalAut.setText(lblCalTotalReq.getText());
+					
+				} else {
+					
+					for (int i=0;i<5;i++) {
+						tfListFinAut[i].setText("");
+						tfListSubfinAut[i].setText("");
+						tfListQuanAut[i].setText("");
+						tfListConAut[i].setText("");
+						tfListVazoesAut[i].setText("");
+					}
+					
+					for (int i=0;i<12;i++) {
+						tfVazoesLDAut[i].setText("");
+						tfVazoesHDAut[i].setText("");
+						tfPeriodoDMAut[i].setText("");
+					}
+					
+					lblCalTotalAut.setText("");
+					
+				} // fim else
+				
+				
+				intContadorBtnCapFin++;
+			
+				
+			}
+		});
+		
 
 	}
-
+	
+	// contador de cliques no botao btnListCalMeses[0]
+	int c, d, e = 0;
+	
 	public void inicializarFinalidades (
 			GridPane gpFinalidades, GridPane gpVazoes,
 			TextField[] tfFinalidade,TextField[] tfSubfinalidade,TextField[] tfQuantidade,TextField[] tfConsumo,TextField[] tfVazoes,
@@ -881,13 +978,30 @@ public class TabSubterraneaController implements Initializable {
 
 					tfSub.setText(newValue)
 					);
+			
+			DecimalFormat df = new DecimalFormat("#,##0.00"); 
 
 			btnCal.setOnAction(new EventHandler<ActionEvent>() {
 
 				@Override
 				public void handle(ActionEvent event) {
-					Double result = Double.parseDouble(tfQuant.getText().replace(",", ".")) * Double.parseDouble(tfCon.getText().replace(",", "."));
-					tfVaz.setText(String.valueOf(result));
+					
+					// formatar 15.000,56 para double 15000.56
+					Double resultado = 0.0;
+			
+					
+					try {
+						resultado = (Double.parseDouble(df.parseObject(tfQuant.getText()).toString())) * (Double.parseDouble(df.parseObject(tfCon.getText()).toString()));
+					} catch (NumberFormatException e) {
+				
+						e.printStackTrace();
+					} catch (ParseException e) {
+					
+						e.printStackTrace();
+					}
+					
+					// formatar 15000.5 para string 15.000,56
+					tfVaz.setText(df.format(resultado));
 				}
 			});
 
@@ -907,6 +1021,32 @@ public class TabSubterraneaController implements Initializable {
 
 			TextField tfVazLD = tfVazoesLD [i] = new TextField();
 			gpVazoes.add(tfVazLD, i+1, 1); // child, columnIndex, rowIndex
+			
+			tfVazLD.lengthProperty().addListener(new ChangeListener<Number>() {
+
+				@Override
+				public void changed(ObservableValue<? extends Number> observable,
+						Number oldValue, Number newValue) {
+
+					if (newValue.intValue() > oldValue.intValue()) {
+					
+							/*  Nao permitir letras, permitir ponto e virgula [^.,] 
+							 */
+						
+							if ( tfVazLD.getText().matches("(.*)[a-zA-Z](.*)") == true ) {
+								// "(.*)\\D(.*)" buscar qualquer digito diferente de numero, ponto e virgula pode 
+								Alerta a = new Alerta ();
+								a.alertar(new Alert(Alert.AlertType.ERROR, "Somente números!!!", ButtonType.OK));
+
+								// retirar caracter errado, como letra, virgula etc
+								tfVazLD.setText(tfVazLD.getText().substring(0, tfVazLD.getText().length() - 1));
+
+							}
+
+
+					} // fim if length
+				}
+			});
 
 		}
 
@@ -1013,29 +1153,140 @@ public class TabSubterraneaController implements Initializable {
 
 			@Override
 			public void handle(ActionEvent event) {
-				Double result = 0.0;
+				
+				DecimalFormat df = new DecimalFormat("#,##0.00");  
+				// formatar 15.000,56 para double 15000.56
+				Double resultado = 0.0;
 
 				for (int i = 0; i<5;i++) {
+					// capturar os resultados e, caso o usuario digite com virgula, ex: 13,34, mudar para double 13.34
 					if (! tfVazoes[i].getText().isEmpty())
-						result += Double.parseDouble(
-								tfVazoes[i].getText());
-
-
+						
+						try {
+							resultado += Double.parseDouble(df.parseObject(tfVazoes[i].getText()).toString());
+						} catch (NumberFormatException e) {
+							
+							e.printStackTrace();
+						} catch (ParseException e) {
+							
+							e.printStackTrace();
+						}
+		
 				}
-				lblCalculoTotal.setText(String.valueOf(result));
+				// formatar double 15000.56 para 15.000,56
+				lblCalculoTotal.setText(df.format(resultado));
 
 			}
 		});
+		
+		// facilitar o cadastro dos meses 
+		btnListCalMeses[0].setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				
+				for (int i = 0; i<12;i++) {
+					
+					// preencher todos os meses com valores iguais
+					if (c%2==0) {
+						tfVazoesLD [i].setText(lblCalculoTotal.getText());
+					}
+					
+					// preencher retirando vazao dos meses de jan fev mar nov dez
+					else {
+						
+						if (i == 0 || i == 1 || i == 2 || i == 10 || i == 11) {
+							tfVazoesLD [i].setText("0");
+				
+						} else {
+							tfVazoesLD [i].setText(lblCalculoTotal.getText());
+						}
+					}
+			
+				} // fim for 12
+				
+				c++; //contador btnListCalMeses
+				
+			}
+		});
+		
+		
+
+		// facilitar o cadastro dos meses 
+		btnListCalMeses[1].setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+
+				for (int i = 0; i<12;i++) {
+
+					// preencher todos os meses com valores iguais
+					if (d%2==0) {
+						tfVazoesHD [i].setText(tfVazoesHD[3].getText());
+					}
+
+					// preencher retirando vazao dos meses de jan fev mar nov dez
+					else {
+
+						if (i == 0 || i == 1 || i == 2 || i == 10 || i == 11) {
+							tfVazoesHD [i].setText("0");
+
+						} else {
+							tfVazoesHD [i].setText(tfVazoesHD[3].getText());
+						}
+					}
+
+				} // fim for 12
+
+				d++; // contador btnListCalMeses
+
+			}
+		});
+		
+		
 
 		// facilitar o cadastro dos meses 
 		btnListCalMeses[2].setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
+				
 				int meses [] =  {31,28,31,30,31,30,31,31,30,31,30,31};
+				
 				for (int i = 0; i<12;i++) {
-					tfPeriodoDM [i].setText(String.valueOf(meses[i]));
+					
+					if (e == 0) {
+						tfPeriodoDM [i].setText(String.valueOf(meses[i]));
+					}
+					
+					if (e == 1) {
+						
+						tfPeriodoDM [i].setText(tfPeriodoDM[3].getText());
+						
+						
+					}
+					
+					if (e == 3) {
+						
+						if (i == 0 || i == 1 || i == 2 || i == 10 || i == 11) {
+							tfPeriodoDM [i].setText("0");
+
+						} else {
+							tfPeriodoDM [i].setText(tfPeriodoDM[3].getText());
+						}
+						
+					}
+					
+				} // fim for 12
+				
+				e++;
+				
+				if (e==4) {
+					e=0;
 				}
+					
+				
+				
 
 			}
 		});
@@ -1052,7 +1303,7 @@ public class TabSubterraneaController implements Initializable {
 
 			}
 		});
-
+		
 
 	} // fim inicializarFinalidades
 

@@ -22,6 +22,8 @@ public class GetterAndSetter {
 		try {
 		pd = new PropertyDescriptor(fieldName, obj.getClass());
 		pd.getWriteMethod().invoke(obj, value);
+	
+		//System.out.println("valor: " + value + " " + pd.getWriteMethod());
 		
 		} catch (IntrospectionException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			e.printStackTrace();

@@ -593,7 +593,11 @@ public class TabParecerControlador implements Initializable {
 				
 				System.out.println("documento nulo");
 				
+				listMalaDireta.clear();
+				
 			} else {
+				
+				listMalaDireta.clear();
 			
 				documento = doc;
 				
@@ -1068,7 +1072,7 @@ public class TabParecerControlador implements Initializable {
 				    					for (int ii = 41; ii<53; ii++) {
 				    						
 				    						Cell c = row.createCell(ii);
-				    						 	c.setCellValue( (((Subterranea)listMalaDireta.get(i)[0][2]).getSubVazao() ));
+				    						 	c.setCellValue( (((Subterranea)listMalaDireta.get(i)[0][2]).getSubVazaoPoco() ));
 				    						
 				    					}
 				    					

@@ -1,5 +1,7 @@
 package principal;
 
+import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -170,6 +172,9 @@ public class MalaDiretaAtosOutorga {
 		
 	}
 	
+	// formatar 1000.50 para 1.000,50 e retirar zeros irrelevantes como ,00 - 15.00 fica 15
+	DecimalFormat df = new DecimalFormat("#,##0.00"); 
+	
 	public String criarAtoOutorga () {
 		
 		//GetterAndSetter gs  = new GetterAndSetter();
@@ -178,6 +183,7 @@ public class MalaDiretaAtosOutorga {
 
 		docHtml = Jsoup.parse(modeloHTML, "UTF-8").clone();
 	
+		 //nao coloquei inter_tipo_poco_tag
 
 		String strPosicoesUsuario [] = {
 				
@@ -325,7 +331,7 @@ public class MalaDiretaAtosOutorga {
 
 					for (int i = 0; i<12; i++) {
 
-						try {dbl_q_metros_hora = Double.parseDouble(((Subterranea) inter).getSubVazao())/1000;} catch (Exception e ) {
+						try {dbl_q_metros_hora = ((Subterranea) inter).getSubVazaoPoco()/1000;} catch (Exception e ) {
 							dbl_q_metros_hora = 0.0;
 							System.out.println("dbl_q_metros_hora zero ");
 						}
@@ -340,26 +346,51 @@ public class MalaDiretaAtosOutorga {
 						}
 
 						//sub
-						try { docHTMLModeloTabelaLimitesOutorgados.select(q_litros_hora_tag [i]).prepend((((Subterranea) inter).getSubVazao()));} 
+						
+						try { docHTMLModeloTabelaLimitesOutorgados.select(q_litros_hora_tag [i]).prepend(
+								
+								// formatar 1000.50 para 1.000,50 e retirar zeros irrelevantes como ,00 - 15.00 fica 15
+								
+								 df.format(	((Subterranea) inter).getSubVazaoPoco()	).replaceAll(",00", "")	
+								 
+								);} 
 
 						catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(q_litros_hora_tag[i]).prepend("");};
 
 						//sub
-						try { docHTMLModeloTabelaLimitesOutorgados.select(q_metros_hora_tag [i]).prepend(  String.format("%.2f", dbl_q_metros_hora) );} 
+						try { docHTMLModeloTabelaLimitesOutorgados.select(q_metros_hora_tag [i]).prepend( 
+
+								df.format(		 dbl_q_metros_hora) .replaceAll(",00", "") .replaceAll(",00", "")
+								
+								);} 
 
 						catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(q_metros_hora_tag[i]).prepend("");};
+						
 
-						try { docHTMLModeloTabelaLimitesOutorgados.select(t_horas_dia_tag [i]).prepend( String.valueOf(int_t_horas_dia) );} 
+						try { docHTMLModeloTabelaLimitesOutorgados.select(t_horas_dia_tag [i]).prepend( 
+								
+								df.format(		 int_t_horas_dia) .replaceAll(",00", "")
+								
+								);} 
 
 						catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(t_horas_dia_tag[i]).prepend("");};
 
 						// fin aut	
-						try { docHTMLModeloTabelaLimitesOutorgados.select(t_dias_mes_tag [i]).prepend( String.valueOf(int_t_dias_mes) );} 
+						try { docHTMLModeloTabelaLimitesOutorgados.select(t_dias_mes_tag [i]).prepend( 
+								
+								String.valueOf(int_t_dias_mes) 
+								
+								);} 
 
 						catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(t_dias_mes_tag[i]).prepend("");};
 
 						//fin aut	
-						try { docHTMLModeloTabelaLimitesOutorgados.select(q_metros_mes_tag [i]).prepend( String.format("%.0f", dbl_q_metros_hora*int_t_horas_dia*int_t_dias_mes) );} 
+						try { docHTMLModeloTabelaLimitesOutorgados.select(q_metros_mes_tag [i]).prepend( 
+								
+								df.format(		  dbl_q_metros_hora*int_t_horas_dia*int_t_dias_mes) .replaceAll(",00", "")
+								
+								
+								);} 
 
 						catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(q_metros_mes_tag[i]).prepend("");};
 
@@ -404,23 +435,48 @@ public class MalaDiretaAtosOutorga {
 							}
 
 							// String format - formatar um numero double em string e regular as casas decimais
-							try { docHTMLModeloTabelaLimitesOutorgados.select(q_litros_hora_tag [i]).prepend((String.format("%.2f", dbl_vazao_autorizada/int_tempo_autorizado/3600)));} 
+							try { docHTMLModeloTabelaLimitesOutorgados.select(q_litros_hora_tag [i]).prepend(
+									
+									df.format(		 dbl_vazao_autorizada/int_tempo_autorizado/3600) .replaceAll(",00", "")	
+									
+									
+									);} 
 								catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(q_litros_hora_tag[i]).prepend("");};
 
-							try { docHTMLModeloTabelaLimitesOutorgados.select(q_metros_hora_tag [i]).prepend( String.format("%.2f", dbl_vazao_autorizada/int_tempo_autorizado/1000) );} 
+							try { docHTMLModeloTabelaLimitesOutorgados.select(q_metros_hora_tag [i]).prepend( 
+									
+									
+									df.format(	dbl_vazao_autorizada/int_tempo_autorizado/1000) .replaceAll(",00", "")
+									
+									
+									);} 
 								catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(q_metros_hora_tag[i]).prepend("");};
 
-							try { docHTMLModeloTabelaLimitesOutorgados.select(t_horas_dia_tag [i]).prepend( String.valueOf(int_tempo_autorizado) );} 
+							try { docHTMLModeloTabelaLimitesOutorgados.select(t_horas_dia_tag [i]).prepend( 
+									
+									String.valueOf(int_tempo_autorizado) 
+									
+									);} 
 
 							catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(t_horas_dia_tag[i]).prepend("");};
 
 							// fin aut	
-							try { docHTMLModeloTabelaLimitesOutorgados.select(t_dias_mes_tag [i]).prepend( String.valueOf(int_periodo_autorizado) );} 
+							try { docHTMLModeloTabelaLimitesOutorgados.select(t_dias_mes_tag [i]).prepend( 
+									
+									String.valueOf(int_periodo_autorizado) 
+									
+									);} 
 
 							catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(t_dias_mes_tag[i]).prepend("");};
 
 							//fin aut	String.format("%.0f", dbl_vazao_autorizada*int_periodo_autorizado/1000)
-							try { docHTMLModeloTabelaLimitesOutorgados.select(q_metros_mes_tag [i]).prepend( String.format("%.0f", dbl_vazao_autorizada*int_periodo_autorizado/1000) );} 
+							try { docHTMLModeloTabelaLimitesOutorgados.select(q_metros_mes_tag [i]).prepend( 
+									
+									
+									df.format(	 dbl_vazao_autorizada*int_periodo_autorizado/1000) .replaceAll(",00", "")	
+									
+									
+									);} 
 
 							catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(q_metros_mes_tag[i]).prepend("");};
 

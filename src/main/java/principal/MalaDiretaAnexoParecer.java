@@ -1,5 +1,6 @@
 package principal;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -179,6 +180,8 @@ public class MalaDiretaAnexoParecer {
 		this.strTabela2 = strTabela2;
 	}
 	
+	// formatar 1000.50 para 1.000,50 e retirar zeros irrelevantes como ,00 - 15.00 fica 15
+	DecimalFormat df = new DecimalFormat("#,##0.00"); 
 	
 	// trazer um numero que informe qual é o usuario que será anexado pela interferencia
 	
@@ -235,11 +238,11 @@ public class MalaDiretaAnexoParecer {
 		
 		} catch (Exception e) {docHtml.select("us_cpfcnpj_tag").prepend("");};
 		
-		try { docHtml.select("inter_tipo_poco_tag").prepend(((Subterranea)listMalaDireta.get(in)[0][2]).getSubTipoPocoFK().getTipoPocoDescricao());} catch (Exception e) {docHtml.select("us_cpfcnpj_tag").prepend("");};
-		try { docHtml.select("inter_prof_tag").prepend(((Subterranea)listMalaDireta.get(in)[0][2]).getSubProfundidade());} catch (Exception e) {docHtml.select("us_cpfcnpj_tag").prepend("");};
-		try { docHtml.select("inter_nivel_est_tag").prepend(((Subterranea)listMalaDireta.get(in)[0][2]).getSubEstatico());} catch (Exception e) {docHtml.select("us_cpfcnpj_tag").prepend("");};
-		try { docHtml.select("inter_niv_din_tag").prepend(((Subterranea)listMalaDireta.get(in)[0][2]).getSubDinamico());} catch (Exception e) {docHtml.select("us_cpfcnpj_tag").prepend("");};
-		try { docHtml.select("inter_vazao_tag").prepend(((Subterranea)listMalaDireta.get(in)[0][2]).getSubVazao());} catch (Exception e) {docHtml.select("us_cpfcnpj_tag").prepend("");};
+		try { docHtml.select("inter_tipo_poco_tag").prepend(((Subterranea)listMalaDireta.get(in)[0][2]).getSubTipoPocoFK().getTipoPocoDescricao());} catch (Exception e) {docHtml.select("inter_tipo_poco_tag").prepend("");};
+		try { docHtml.select("inter_prof_tag").prepend(((Subterranea)listMalaDireta.get(in)[0][2]).getSubProfundidade());} catch (Exception e) {docHtml.select("inter_prof_tag").prepend("");};
+		try { docHtml.select("inter_nivel_est_tag").prepend(((Subterranea)listMalaDireta.get(in)[0][2]).getSubEstatico());} catch (Exception e) {docHtml.select("inter_nivel_est_tag").prepend("");};
+		try { docHtml.select("inter_niv_din_tag").prepend(((Subterranea)listMalaDireta.get(in)[0][2]).getSubDinamico());} catch (Exception e) {docHtml.select("inter_niv_din_tag").prepend("");};
+		try { docHtml.select("inter_vazao_tag").prepend(df.format(((Subterranea)listMalaDireta.get(in)[0][2]).getSubVazaoPoco()).replaceAll(",00", ""));} catch (Exception e) {docHtml.select("inter_vazao_tag").prepend("");};
 		
 		/*
 		 * <li>Coordenadas SIRGAS 2000: <inter_lat_tag></inter_lat_tag>,<inter_lon_tag></inter_lon_tag></li>
@@ -255,10 +258,14 @@ public class MalaDiretaAnexoParecer {
 		docHTMLTabelaPontoCaptacao = Jsoup.parse(strTabela1, "UTF-8").clone();
 		
 		
-		try { docHTMLTabelaPontoCaptacao.select("inter_bacia_tag").prepend(((Subterranea)listMalaDireta.get(in)[0][2]).getInterBaciaFK().getBaciaNome());} catch (Exception e) {docHtml.select("inter_bacia_tag").prepend("");};
-		try { docHTMLTabelaPontoCaptacao.select("inter_uh_tag").prepend(String.valueOf(((Subterranea)listMalaDireta.get(in)[0][2]).getInterUHFK().getUhCodigo()));} catch (Exception e) {docHtml.select("inter_uh_tag").prepend("");};
-		try { docHTMLTabelaPontoCaptacao.select("inter_lat_tag").prepend(String.valueOf(((Subterranea)listMalaDireta.get(in)[0][2]).getInterDDLatitude()));} catch (Exception e) {docHtml.select("inter_lat_tag").prepend("");};
-		try { docHTMLTabelaPontoCaptacao.select("inter_lon_tag").prepend(String.valueOf(((Subterranea)listMalaDireta.get(in)[0][2]).getInterDDLongitude()));} catch (Exception e) {docHtml.select("inter_lon_tag").prepend("");};
+		try { docHTMLTabelaPontoCaptacao.select("inter_bacia_tag").prepend(((Subterranea)listMalaDireta.get(in)[0][2]).getInterBaciaFK().getBaciaNome());} 
+			catch (Exception e) {docHtml.select("inter_bacia_tag").prepend("");};
+		try { docHTMLTabelaPontoCaptacao.select("inter_uh_tag").prepend(String.valueOf(((Subterranea)listMalaDireta.get(in)[0][2]).getInterUHFK().getUhCodigo()));} 
+			catch (Exception e) {docHtml.select("inter_uh_tag").prepend("");};
+		try { docHTMLTabelaPontoCaptacao.select("inter_lat_tag").prepend(String.valueOf(((Subterranea)listMalaDireta.get(in)[0][2]).getInterDDLatitude()));} 
+			catch (Exception e) {docHtml.select("inter_lat_tag").prepend("");};
+		try { docHTMLTabelaPontoCaptacao.select("inter_lon_tag").prepend(String.valueOf(((Subterranea)listMalaDireta.get(in)[0][2]).getInterDDLongitude()));} 
+			catch (Exception e) {docHtml.select("inter_lon_tag").prepend("");};
 		
 		
 		docHtmlTabelasLimitesOutorgados = Jsoup.parse(strTabela2, "UTF-8").clone();
@@ -278,22 +285,25 @@ public class MalaDiretaAnexoParecer {
 					//int int_t_horas_dia =  Integer.parseInt(gs.callGetter(f, listVariaveisVazaoHoraAutorizadas.get(i)));
 					//int int_t_dias_mes = Integer.parseInt((gs.callGetter(f,listVariaveisTempoAutorizadas.get(i))));
 					
-					try {dbl_q_metros_hora = Double.parseDouble(((Subterranea) listMalaDireta.get(in)[0][2]).getSubVazao())/1000;} catch (Exception e ) {
+					try {dbl_q_metros_hora = (((Subterranea) listMalaDireta.get(in)[0][2]).getSubVazaoPoco())/1000;} 
+						catch (Exception e ) {
 						dbl_q_metros_hora = 0.0;
-						System.out.println("dbl_q_metros_hora zero ");
+					
 					}
 					
-					try {int_t_horas_dia = Integer.parseInt(gs.callGetter(f, listVariaveisVazaoHoraAutorizadas.get(i)));} catch (Exception e ) {
+					try {int_t_horas_dia = Integer.parseInt(gs.callGetter(f, listVariaveisVazaoHoraAutorizadas.get(i)));} 
+						catch (Exception e ) {
 						int_t_horas_dia = 0;
-						System.out.println("dbl_q_metros_hora zero ");
+						
 					}
 					
-					try {int_t_dias_mes = Integer.parseInt((gs.callGetter(f,listVariaveisTempoAutorizadas.get(i))));} catch (Exception e ) {
+					try {int_t_dias_mes = Integer.parseInt((gs.callGetter(f,listVariaveisTempoAutorizadas.get(i))));} 
+						catch (Exception e ) {
 						int_t_dias_mes = 0;
-						System.out.println("dbl_q_metros_hora zero ");
+						//System.out.println("dbl_q_metros_hora zero ");
 					}
 				
-					try { docHtmlTabelasLimitesOutorgados.select(q_litros_hora_tag [i]).prepend((((Subterranea) listMalaDireta.get(in)[0][2])).getSubVazao());} 
+					try { docHtmlTabelasLimitesOutorgados.select(q_litros_hora_tag [i]).prepend(df.format((((Subterranea) listMalaDireta.get(in)[0][2])).getSubVazaoPoco()) .replaceAll(",00", ""));} 
 						
 						catch (Exception e) {docHtmlTabelasLimitesOutorgados.select(q_litros_hora_tag[i]).prepend("");};
 					

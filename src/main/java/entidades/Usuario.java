@@ -47,6 +47,10 @@ public class Usuario implements Serializable {
 	@Column (name = "us_CPF_CNPJ", columnDefinition="varchar(20)")
 	private String usCPFCNPJ;
 	
+	@Column (name = "us_CPF_CNPJ_Un", columnDefinition="varchar(20)", unique=true)
+	private String usCPFCNPJUn;
+	
+	
 	@Column (name = "us_Logadouro", columnDefinition="varchar (80)")
 	private String usLogadouro;
 	
@@ -88,6 +92,15 @@ public class Usuario implements Serializable {
 	
 
 	public Usuario () {
+		
+	}
+	
+	
+	public Usuario (String usNome, String usCPFCNPJUn) {
+		
+		this.usNome = usNome;
+		
+		this.usCPFCNPJUn = usCPFCNPJUn;
 		
 	}
 
@@ -228,7 +241,17 @@ public class Usuario implements Serializable {
 	public void setUsRepresentanteTelefone(String usRepresentanteTelefone) {
 		this.usRepresentanteTelefone = usRepresentanteTelefone;
 	}
-	
-	
+
+
+	public String getUsCPFCNPJUn() {
+		return usCPFCNPJUn;
+	}
+
+
+	public void setUsCPFCNPJUn(String usCPFCNPJUn) {
+		this.usCPFCNPJUn = usCPFCNPJUn;
+	}
+
+
 	
 }

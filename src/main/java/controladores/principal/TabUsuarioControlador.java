@@ -1,10 +1,9 @@
 package controladores.principal;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,11 +12,8 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
+import org.hibernate.exception.ConstraintViolationException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 
 import dao.ModelosDao;
 import dao.UsuarioDao;
@@ -66,7 +62,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.web.HTMLEditor;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
@@ -77,6 +72,7 @@ import principal.FormatoData;
 import principal.ListasComboBox;
 import principal.MalaDireta;
 import util.BuscadorBancos;
+import util.FormatadorCPFCNPJ;
 import util.NavegadorExterno;
 import util.Registro;
 
@@ -140,7 +136,7 @@ public class TabUsuarioControlador implements Initializable {
 
 	public void habilitarEndereco () {
 
-		cbTipoPessoa.setValue(null);
+		cbTipoPessoa.setValue("física");
 
 		tfNome.setText(null);
 		tfCPFCNPJ.setText(null);
@@ -190,7 +186,7 @@ public class TabUsuarioControlador implements Initializable {
 	public void salvarEndereco () {
 
 
-		if (endereco.getEndLogradouro() == null) {
+		if (endereco.getEndLogradouro() == null || endereco == null) {
 
 			Alerta a = new Alerta ();
 			a.alertar(new Alert(Alert.AlertType.ERROR, "Endereço relacionado ao usuário não selecionado!!!", ButtonType.OK));
@@ -206,12 +202,15 @@ public class TabUsuarioControlador implements Initializable {
 				a.alertar(new Alert(Alert.AlertType.ERROR, "Informe: Tipo e Nome do Usuário!!!", ButtonType.OK));
 
 			} else {
+				
+				try {
 
 				Usuario us = new  Usuario ();
 
 				us.setUsTipo(cbTipoPessoa.getValue());
 				us.setUsNome(tfNome.getText());
-				us.setUsCPFCNPJ(tfCPFCNPJ.getText()); 
+				// retirar os caracteres especiais do cpf ou cnpj
+				us.setUsCPFCNPJ(tfCPFCNPJ.getText().replaceAll("\\D","")); 
 				us.setUsLogadouro(tfLogradouro.getText());
 				us.setUsRA(cbRA.getValue());
 				us.setUsCidade(tfCidade.getText());
@@ -255,7 +254,21 @@ public class TabUsuarioControlador implements Initializable {
 				Alerta a = new Alerta ();
 				a.alertar(new Alert(Alert.AlertType.INFORMATION, "Informe: Cadastro salvo com sucesso!!!", ButtonType.OK));
 
-				System.out.println("btn salvar " + usuario.getUsNome());
+				}
+				
+				catch (ConstraintViolationException e ) {
+			
+					Alerta a = new Alerta();
+					a.alertar(new Alert(Alert.AlertType.INFORMATION, "Número CPF ou CNPJ duplicado!!!", new ButtonType[] { ButtonType.OK }));
+				}
+				
+				catch (Exception e ) {
+					
+					Alerta a = new Alerta();
+					a.alertar(new Alert(Alert.AlertType.INFORMATION, "Erro ao salvar ou editar!!!", new ButtonType[] { ButtonType.OK }));
+					
+					System.out.println(e);
+				}
 
 			}
 		}
@@ -302,66 +315,85 @@ public class TabUsuarioControlador implements Initializable {
 				a.alertar(new Alert(Alert.AlertType.ERROR, "Informe: Tipo e Nome do Usuário!!!", ButtonType.OK));
 
 			} else {
-
-				Usuario us = tvLista.getSelectionModel().getSelectedItem(); 
-
-				// -- preencher os campos -- //
-				us.setUsTipo(cbTipoPessoa.getValue()); 
-				us.setUsNome(tfNome.getText());
-				us.setUsCPFCNPJ(tfCPFCNPJ.getText());
-				us.setUsLogadouro(tfLogradouro.getText()); 
-
-				us.setUsRA(cbRA.getValue()); 
-
-				us.setUsCEP(tfCEP.getText()); 
-				us.setUsCidade(tfCidade.getText()); 
-
-				us.setUsEstado(cbUF.getValue()); 
-
-				us.setUsTelefone(tfTelefone.getText());
-				us.setUsCelular(tfCelular.getText());
-				us.setUsEmail(tfEmail.getText());
 				
-				us.setUsRepresentante(tfRepresentante.getText());
-				us.setUsRepresentanteTelefone(tfRepreTelefone.getText());
-				
-				
-				us.setUsDataAtualizacao(Timestamp.valueOf((LocalDateTime.now())));
+				try {
 
-				System.out.println("bnt editar - tabUsuario" + endereco.getEndDDLatitude());
-				Endereco end = new Endereco();
-				// captura um endereco relacionado
-				end = endereco;
-				// adiciona neste endereco o id usuario selecionado
-				end.setEndUsuarioFK(us);
-				// adiciona este endereco no setEnderecos do usuario
-				us.getEnderecos().add(end);
-
-
-				for(Endereco e : us.getEnderecos()) {
-					System.out.println("enderecos do usuario depois de editar: "  + e.getEndLogradouro());
+					Usuario us = tvLista.getSelectionModel().getSelectedItem(); 
+	
+					// -- preencher os campos -- //
+					us.setUsTipo(cbTipoPessoa.getValue()); 
+					us.setUsNome(tfNome.getText());
+					// retirar os caracteres especiais do cpf ou cnpj
+					us.setUsCPFCNPJ(tfCPFCNPJ.getText().replaceAll("\\D","")); 
+					us.setUsLogadouro(tfLogradouro.getText()); 
+	
+					us.setUsRA(cbRA.getValue()); 
+	
+					us.setUsCEP(tfCEP.getText()); 
+					us.setUsCidade(tfCidade.getText()); 
+	
+					us.setUsEstado(cbUF.getValue()); 
+	
+					us.setUsTelefone(tfTelefone.getText());
+					us.setUsCelular(tfCelular.getText());
+					us.setUsEmail(tfEmail.getText());
+					
+					us.setUsRepresentante(tfRepresentante.getText());
+					us.setUsRepresentanteTelefone(tfRepreTelefone.getText());
+					
+					
+					us.setUsDataAtualizacao(Timestamp.valueOf((LocalDateTime.now())));
+	
+					System.out.println("bnt editar - tabUsuario" + endereco.getEndDDLatitude());
+					Endereco end = new Endereco();
+					// captura um endereco relacionado
+					end = endereco;
+					// adiciona neste endereco o id usuario selecionado
+					end.setEndUsuarioFK(us);
+					// adiciona este endereco no setEnderecos do usuario
+					us.getEnderecos().add(end);
+	
+	
+					for(Endereco e : us.getEnderecos()) {
+						System.out.println("enderecos do usuario depois de editar: "  + e.getEndLogradouro());
+					}
+	
+					/*
+				// para não dar repeticao de objetos //
+				for (int i = 0 ; i < us.getEnderecos().size(); i++) {
+					if (us.getEnderecos().hashCode(i) == (end.getEndID())) {
+						us.getEnderecos().remove(us.getEnderecos().hashCode(i));
+					}
 				}
-
-				/*
-			// para não dar repeticao de objetos //
-			for (int i = 0 ; i < us.getEnderecos().size(); i++) {
-				if (us.getEnderecos().hashCode(i) == (end.getEndID())) {
-					us.getEnderecos().remove(us.getEnderecos().hashCode(i));
+					 */
+	
+					UsuarioDao usDao = new UsuarioDao();
+	
+					usDao.mergeUsuario(us);
+	
+					obsList.remove(us);
+					obsList.add(us);
+	
+					modularBotoes();
+	
+					Alerta a = new Alerta ();
+					a.alertar(new Alert(Alert.AlertType.INFORMATION, "Cadastro editado com sucesso!!!", ButtonType.OK));
+					
 				}
-			}
-				 */
-
-				UsuarioDao usDao = new UsuarioDao();
-
-				usDao.mergeUsuario(us);
-
-				obsList.remove(us);
-				obsList.add(us);
-
-				modularBotoes();
-
-				Alerta a = new Alerta ();
-				a.alertar(new Alert(Alert.AlertType.INFORMATION, "Cadastro editado com sucesso!!!", ButtonType.OK));
+				
+				catch (ConstraintViolationException e ) {
+			
+					Alerta a = new Alerta();
+					a.alertar(new Alert(Alert.AlertType.INFORMATION, "Número CPF ou CNPJ duplicado!!!", new ButtonType[] { ButtonType.OK }));
+				}
+				
+				catch (Exception e ) {
+					
+					Alerta a = new Alerta();
+					a.alertar(new Alert(Alert.AlertType.INFORMATION, "Erro ao salvar ou editar!!!", new ButtonType[] { ButtonType.OK }));
+					
+					System.out.println(e);
+				}
 
 			}
 
@@ -610,6 +642,11 @@ public class TabUsuarioControlador implements Initializable {
 	 */
 	List<BancoAccess> docList = new ArrayList<>();
 	ContextMenu contextMenu  = new ContextMenu();
+	
+	// formatador para cpf e cnpj
+	FormatadorCPFCNPJ ccFormato = new FormatadorCPFCNPJ();
+	// string auxiliar na formatacao de cpf e cnpj
+	String strCPFCNPJ = null;
 
 	public void inicializarComponentes () {
 
@@ -703,6 +740,80 @@ public class TabUsuarioControlador implements Initializable {
 
 		com = new Componentes();
 		com.popularTela(listaComponentesUsuario, prefSizeWHeLayXY, p1);
+		
+
+		 tfCPFCNPJ.lengthProperty().addListener(new ChangeListener<Number>() {
+
+				@Override
+				public void changed(ObservableValue<? extends Number> observable,
+						Number oldValue, Number newValue) {
+					
+					if (newValue.intValue() > oldValue.intValue()) {
+						
+						strCPFCNPJ = tfCPFCNPJ.getText().replaceAll("\\D","");
+			
+						if (cbTipoPessoa.getValue().equals("Física")) {
+						
+						//  MASCARA CPF
+						
+						if ( strCPFCNPJ.length() == 11 ) {
+						
+							try {
+								
+								System.out.println("tf valor formatado " + ccFormato.formatCnpj(cbTipoPessoa.getValue(), tfCPFCNPJ.getText()));
+								
+								tfCPFCNPJ.setText(ccFormato.formatCnpj(cbTipoPessoa.getValue(), tfCPFCNPJ.getText())
+												
+							);
+								
+							} catch (ParseException e) {
+							
+								e.printStackTrace();
+							}
+							
+							
+						} // fim if ( (Integer )newValue == 11 ) 
+						
+						// LIMITE CPF
+						if ( (Integer ) newValue > 14 ) {
+							
+							tfCPFCNPJ.setText(tfCPFCNPJ.getText().substring(0, 14));
+							
+						}
+						
+						} // fim if pessoa física
+						
+						if (cbTipoPessoa.getValue().equals("Jurídica")) {
+							
+							//  MASCARA CPF
+							if ( strCPFCNPJ.length() == 14 ) {
+							
+								try {
+									tfCPFCNPJ.setText(ccFormato.formatCnpj(cbTipoPessoa.getValue(), tfCPFCNPJ.getText())
+													
+								);
+									
+								} catch (ParseException e) {
+								
+									e.printStackTrace();
+								}
+								
+								
+							} // fim if ( (Integer )newValue == 11 ) 
+							
+							// LIMITE CPF
+							if ( (Integer ) newValue > 18 ) {
+								
+								tfCPFCNPJ.setText(tfCPFCNPJ.getText().substring(0, 18));
+								
+							}
+							
+							} // fim if pessoa física
+				
+						
+					} // fim if newValue > 
+				}
+			}); //fim listerner textfield
 		
 		BuscadorBancos bd = new BuscadorBancos(tfNome, contextMenu);
 		bd.buscar();

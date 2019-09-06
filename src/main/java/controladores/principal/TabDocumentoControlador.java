@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 
+import org.hibernate.exception.ConstraintViolationException;
+
 import dao.DocumentoDao;
 import entidades.Documento;
 import entidades.Endereco;
@@ -92,8 +94,8 @@ public class TabDocumentoControlador implements Initializable {
 	}
 
 	public void salvarDocumento ()	{
-
-		try {
+		
+		System.out.println("comeco bnt salvar documento ");
 
 			if ((tfSEI.getText().isEmpty()) || 
 					(tfProcesso.getText().isEmpty()))
@@ -103,52 +105,64 @@ public class TabDocumentoControlador implements Initializable {
 			}
 			else
 			{
-				Documento doc = new Documento();
-
-				doc.setDocTipo(cbTipo.getValue());
-				doc.setDocNumeracao(tfNumeracao.getText());
-				doc.setDocSEI(tfSEI.getText());
-				doc.setDocProcesso(tfProcesso.getText());
-
-				if (dpDataDistribuicao.getValue() == null) {
-					doc.setDocDataDistribuicao(null);
-				} else {
-					doc.setDocDataDistribuicao(Date.valueOf((LocalDate)dpDataDistribuicao.getValue()));
-				}
-				if (dpDataRecebimento.getValue() == null) {
-					doc.setDocDataRecebimento(null);
-				} else {
-					doc.setDocDataRecebimento(Date.valueOf((LocalDate)dpDataRecebimento.getValue()));
-				}
-
-				doc.setDocDataAtualizacao(Timestamp.valueOf(LocalDateTime.now()));
-
-				DocumentoDao docDao = new DocumentoDao();
-
-				docDao.salvarDocumento(doc);
-
-				if (controladorOutorga != null) {
-					controladorOutorga.setDocumento(doc);
-				}
 				
-				obsList.add(doc);
+				try {
+					
+					Documento doc = new Documento();
+	
+					doc.setDocTipo(cbTipo.getValue());
+					doc.setDocNumeracao(tfNumeracao.getText());
+					doc.setDocSEI(tfSEI.getText());
+					doc.setDocProcesso(tfProcesso.getText());
+	
+					if (dpDataDistribuicao.getValue() == null) {
+						doc.setDocDataDistribuicao(null);
+					} else {
+						doc.setDocDataDistribuicao(Date.valueOf((LocalDate)dpDataDistribuicao.getValue()));
+					}
+					if (dpDataRecebimento.getValue() == null) {
+						doc.setDocDataRecebimento(null);
+					} else {
+						doc.setDocDataRecebimento(Date.valueOf((LocalDate)dpDataRecebimento.getValue()));
+					}
+	
+					doc.setDocDataAtualizacao(Timestamp.valueOf(LocalDateTime.now()));
+	
+					DocumentoDao docDao = new DocumentoDao();
+				
+					docDao.salvarDocumento(doc);
+					
+					if (controladorOutorga != null) {
+						controladorOutorga.setDocumento(doc);
+					}
+				
+					obsList.add(doc);
 
-				modularBotoes ();
+					modularBotoes ();
+	
+					Alerta a = new Alerta();
+					a.alertar(new Alert(Alert.AlertType.INFORMATION, "Cadastro salvo com sucesso!!!", new ButtonType[] { ButtonType.OK }));
+					
+				
+					}
 
-				Alerta a = new Alerta();
-				a.alertar(new Alert(Alert.AlertType.INFORMATION, "Cadastro salvo com sucesso!!!", new ButtonType[] { ButtonType.OK }));
-			}
+					catch (ConstraintViolationException e ) {
+						
+						Alerta a = new Alerta();
+						a.alertar(new Alert(Alert.AlertType.INFORMATION, "Número SEI duplicado!!!", new ButtonType[] { ButtonType.OK }));
+					}
+				
+					catch (Exception e ) {
+						
+						Alerta a = new Alerta();
+						a.alertar(new Alert(Alert.AlertType.INFORMATION, "Erro ao salvar ou editar!!!", new ButtonType[] { ButtonType.OK }));
+						
+						System.out.println(e);
+					}
 
-		}
-
-		catch (Exception ex)	{
-			System.out.println("Erro: " + ex);
-			ex.printStackTrace();
-
-			Alerta a = new Alerta();
-			a.alertar(new Alert(Alert.AlertType.ERROR, "erro na conexão, tente novamente!", new ButtonType[] { ButtonType.OK }));
-
-		}
+			} // fim else
+			
+			System.out.println("fim bnt salvar");
 
 	}
 
@@ -199,28 +213,48 @@ public class TabDocumentoControlador implements Initializable {
 			doc.setDocDataAtualizacao(Timestamp.valueOf(LocalDateTime.now()));
 
 			DocumentoDao dDao = new DocumentoDao();
-
-			dDao.mergeDocumento(doc);
-
-			obsList.remove(doc);
-			System.out.println("doc num antes de remover da obslist " + doc.getDocNumeracao());
 			
-			obsList.add(doc);
-			System.out.println("doc depois de remover da obslist " + doc.getDocNumeracao());
-
-			/* transmitir demanda para a tab endereco */
-			if (controladorOutorga != null) {
-				controladorOutorga.setDocumento(doc);
-			}
-
-
-			modularBotoes();
-
-			Alerta a = new Alerta();
-			a.alertar(new Alert(Alert.AlertType.ERROR, "Cadastro editado com sucesso!!!", new ButtonType[] { ButtonType.OK }));
+			try {
+				
+				dDao.mergeDocumento(doc);
+		
+				obsList.remove(doc);
+				System.out.println("doc num antes de remover da obslist " + doc.getDocNumeracao());
+				
+				obsList.add(doc);
+				System.out.println("doc depois de remover da obslist " + doc.getDocNumeracao());
+	
+				/* transmitir demanda para a tab endereco */
+				if (controladorOutorga != null) {
+					controladorOutorga.setDocumento(doc);
+				}
+	
+	
+				modularBotoes();
+	
+				Alerta a = new Alerta();
+				a.alertar(new Alert(Alert.AlertType.ERROR, "Cadastro editado com sucesso!!!", new ButtonType[] { ButtonType.OK }));
+				
+				}
+			
+				catch (ConstraintViolationException e ) {
+				
+					Alerta a = new Alerta();
+					a.alertar(new Alert(Alert.AlertType.INFORMATION, "Número SEI duplicado!!!", new ButtonType[] { ButtonType.OK }));
+				}
+			
+				catch (Exception e ) {
+					
+					Alerta a = new Alerta();
+					a.alertar(new Alert(Alert.AlertType.INFORMATION, "Erro ao salvar ou editar!!!", new ButtonType[] { ButtonType.OK }));
+					
+					System.out.println(e);
+				}
+			System.out.println(" fim else");
 
 		} // fim else
 
+		System.out.println("fim editar");
 	}
 
 	public void excluirDocumento ()	{

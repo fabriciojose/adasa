@@ -656,7 +656,6 @@ public class TabEnderecoControlador implements Initializable {
 	TextField tfLatitude;
 	TextField tfLongitude;
 	Button btnLatLon;
-	Button btnShapeMap;
 
 	ArrayList<Node> listNodeDadosEndereco = new ArrayList<Node>();
 
@@ -708,7 +707,6 @@ public class TabEnderecoControlador implements Initializable {
 		listNodeDadosEndereco.add(new Label("LONGITUDE(X):"));
 		listNodeDadosEndereco.add(tfLongitude = new TextField());
 		listNodeDadosEndereco.add(btnLatLon = new Button());
-		listNodeDadosEndereco.add(btnShapeMap = new Button());
 
 		prefSizeWHeLayXY = new Double [][] { 
 			{930.0,140.0,25.0,85.0},
@@ -727,7 +725,7 @@ public class TabEnderecoControlador implements Initializable {
 			{110.0,30.0,450.0,80.0},
 			{140.0,30.0,570.0,80.0},
 			{25.0,25.0,725.0,83.0},
-			{25.0,25.0,758.0,83.0},
+
 		};
 
 		com = new Componentes();
@@ -848,19 +846,6 @@ public class TabEnderecoControlador implements Initializable {
 
 			}
 		});
-
-
-		btnShapeMap.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-
-				inicializarTelaShapeEndereco ();
-
-			}
-		});
-		
-		
 
 	}
 	
@@ -1000,6 +985,7 @@ public class TabEnderecoControlador implements Initializable {
 
 	}
 	
+	/*
 	public void inicializarTelaShapeEndereco () {
 		
 		if (pTelaShapeEndereco == null) {
@@ -1069,6 +1055,7 @@ public class TabEnderecoControlador implements Initializable {
 		transShapeEnderecoEsquerda.play();
 		
 	}
+	*/
 	 
 	TranslateTransition ttDocDireita;
 	TranslateTransition ttDocEsquerda;

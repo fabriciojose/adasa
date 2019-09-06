@@ -1,5 +1,6 @@
 package principal;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,11 +31,11 @@ public class MalaDiretaDocumentos {
 
 	String modeloHTML;
 
-	List<String> listVariaveisFinalidadesRequeridas = Arrays.asList("frFinalidade1", "frFinalidade2", "frFinalidade3", "frFinalidade4", "frFinalidade5");
-	List<String> listVariaveisSubfinaldadesRequeridas = Arrays.asList("frSubfinalidade1", "frSubfinalidade2", "frSubfinalidade3", "frSubfinalidade4", "frSubfinalidade5");
-	List<String> listVariaveisQuantidadesRequeridas = Arrays.asList("frQuantidade1", "frQuantidade2", "frQuantidade3", "frQuantidade4", "frQuantidade5");
-	List<String> listVariaveisConsumoRequeridas = Arrays.asList("frConsumo1", "frConsumo2", "frConsumo3", "frConsumo4", "frConsumo5");
-	List<String> listVariaveisVazaoRequeridas = Arrays.asList("frVazao1", "frVazao2", "frVazao3", "frVazao4", "frVazao5");
+	List<String> listVariaveisFinalidadesRequeridas = Arrays.asList("frFinalidade1", "frFinalidade2", "frFinalidade3", "frFinalidade4", "frFinalidade5"); // abastecimento humano
+	List<String> listVariaveisSubfinaldadesRequeridas = Arrays.asList("frSubfinalidade1", "frSubfinalidade2", "frSubfinalidade3", "frSubfinalidade4", "frSubfinalidade5"); // rural
+	List<String> listVariaveisQuantidadesRequeridas = Arrays.asList("frQuantidade1", "frQuantidade2", "frQuantidade3", "frQuantidade4", "frQuantidade5"); // 10 pessoas
+	List<String> listVariaveisConsumoRequeridas = Arrays.asList("frConsumo1", "frConsumo2", "frConsumo3", "frConsumo4", "frConsumo5"); // 1.000,00 listros dia por pessoa
+	List<String> listVariaveisVazaoRequeridas = Arrays.asList("frVazao1", "frVazao2", "frVazao3", "frVazao4", "frVazao5"); // total 10.000,00  listros dia
 
 	// variaveis de vazao mensal e reflexao //
 	List<String> listVariaveisVazaoMesRequeridas = Arrays.asList(
@@ -90,6 +91,8 @@ public class MalaDiretaDocumentos {
 	List<Object[][]> listMalaDireta = new ArrayList<>();
 
 	Documento documento = new Documento();
+	
+	DecimalFormat df = new DecimalFormat("#,##0.00"); 
 
 	/**
 	 * Construtor
@@ -142,7 +145,8 @@ public class MalaDiretaDocumentos {
 			finSubAut = new FinalidadeAutorizada();
 			finSupAut = new FinalidadeAutorizada();
 
-			inserirFinalidade (docHtml, 
+			
+			inserirFinalidadeAutorizada (docHtml, 
 					finSubAut, finSupAut, 
 					"entidades.FinalidadeAutorizada", "tfa_tag", "faVazaoTotal",
 					listVariaveisFinalidadesAutorizadas,listVariaveisSubfinaldadesAutorizadas,listVariaveisQuantidadesAutorizadas,listVariaveisConsumoAutorizadas,
@@ -235,6 +239,7 @@ public class MalaDiretaDocumentos {
 				case "entidades.Usuario":
 					strTable.append("<td>" + ((Usuario)listMalaDireta.get(i)[0][ii]).getUsNome() + "</td>");
 					break;
+					
 				case "entidades.Subterranea":
 
 					for (Finalidade fSub : ((Subterranea)listMalaDireta.get(i)[0][ii]).getFinalidades() ) {
@@ -245,46 +250,270 @@ public class MalaDiretaDocumentos {
 						}
 
 					}
-
+					
+					// TIPO E SUBTIPO
 					strTable.append("<td>" + 
-							((Subterranea)listMalaDireta.get(i)[0][ii]).getInterTipoOutorgaFK().getTipoOutorgaDescricao()  
-							+ 	"<p>" +  ((Subterranea)listMalaDireta.get(i)[0][ii]).getInterSubtipoOutorgaFK().getSubtipoOutorgaDescricao()
+							((Subterranea)listMalaDireta.get(i)[0][ii]).getInterTipoOutorgaFK().getTipoOutorgaDescricao()  // tipo outorga: Outorga, Previa Registro
+							+ 	"<p>" +  ((Subterranea)listMalaDireta.get(i)[0][ii]).getInterSubtipoOutorgaFK().getSubtipoOutorgaDescricao() // sub tipo outorga: renovacao, modificacao
 							+ 	"</td>");
 
 					strTable.append("<td width='200'>");
 
+					
 					for (int a = 0; a<5; a++) {
 
-						strTable.append("<p>" + (gs.callGetter(finSub, 
-								listVariaveisFinalidades.get(a)))	+ "</p>");
+						strTable.append(
+								"<p>" 
+								+ (gs.callGetter(finSub,listVariaveisFinalidades.get(a)))
+								+ " - "
+								+ (gs.callGetter(finSub,listVariaveisSubfinaldades.get(a)))
+								+ "</p>"
+								); // abastecimento humano, irrigacao, uso industrial...
+					}
+
+					strTable.append("</td>");
+
+					strTable.append("<td>");
+					// QUANTIDADES
+					for (int a = 0; a<5; a++) {
+						// formatar 1000.50 para 1.000,50 e retirar zeros irrelevantes como ,00 - 15.00 fica 15
+						try { strTable.append("<p>" + df.format(	Double.parseDouble((gs.callGetter(finSub, listVariaveisQuantidades.get(a))))).replaceAll(",00", "")		+ "</p>");
+					} catch (Exception e) {strTable.append("<p>" + "" + "</p>");};
 					}
 
 					strTable.append("</td>");
 
 					strTable.append("<td>");
 
+					// CONSUMO
 					for (int a = 0; a<5; a++) {
-
-						strTable.append("<p>" + (gs.callGetter(finSub, 
-								listVariaveisQuantidades.get(a)))	+ "</p>");
-					}
+						// formatar 1000.50 para 1.000,50 e retirar zeros irrelevantes como ,00 - 15.00 fica 15
+						try{strTable.append("<p>" + df.format(	Double.parseDouble(		(gs.callGetter(finSub, listVariaveisVazaoRequeridas.get(a))))).replaceAll(",00", "")	+ "</p>");
+						} catch (Exception e) {strTable.append("<p>" + "" + "</p>");};
+						}
 
 					strTable.append("</td>");
 
-					strTable.append("<td>");
-
-					for (int a = 0; a<5; a++) {
-
-						strTable.append("<p>" + (gs.callGetter(finSub, 
-								listVariaveisConsumo.get(a)))	+ "</p>");
-					}
-
-					strTable.append("</td>");
-
-					strTable.append("<td>" + String.valueOf(gs.callGetter(finSub, vazaoTotal))	+ "</td>");
-
+					try{strTable.append("<td>" + df.format(		Double.parseDouble(		(gs.callGetter(finSub, vazaoTotal)))).replaceAll(",00", "")	+ "</td>");
+					} catch (Exception e) {strTable.append("<td>" + "" + "</td>");};
 
 					break;
+				case "entidades.Superficial":
+
+					for (Finalidade fSup : ((Superficial)listMalaDireta.get(i)[0][ii]).getFinalidades() ) {
+
+						if (fSup.getClass().getName() == strFinalidade) {
+							finSup = fSup;
+
+						}
+
+					}
+					// TIPO
+					strTable.append("<td>" + 
+							((Superficial)listMalaDireta.get(i)[0][ii]).getInterTipoOutorgaFK().getTipoOutorgaDescricao()  
+							+ 	"<p>" +  ((Superficial)listMalaDireta.get(i)[0][ii]).getInterSubtipoOutorgaFK().getSubtipoOutorgaDescricao()
+							+ 	"</td>");
+
+					strTable.append("<td width='200'>");
+
+					// FINALIDADES E SUBFINALIDADES
+					for (int a = 0; a<5; a++) {
+
+						strTable.append(
+								"<p>" 
+								+ (gs.callGetter(finSub,listVariaveisFinalidades.get(a)))
+								+ " - "
+								+ (gs.callGetter(finSub,listVariaveisSubfinaldades.get(a)))
+								+ "</p>"
+								); // abastecimento humano, irrigacao, uso industrial...
+						
+					}
+
+					strTable.append("</td>");
+
+					strTable.append("<td>");
+
+					// QUANTIDADE
+					for (int a = 0; a<5; a++) {
+
+						System.out.println("quantidade md documentos " + gs.callGetter(finSup,listVariaveisQuantidades.get(a)));
+						try{	strTable.append("<p>" + df.format(		Double.parseDouble(		(gs.callGetter(finSup,listVariaveisQuantidades.get(a))))).replaceAll(",00", "") + "</p>");
+						} catch (Exception e) {strTable.append("<p>" + "" + "</p>");};
+						}
+
+					strTable.append("</td>");
+
+					strTable.append("<td>");
+
+					// VAZOES REQUERIDAS
+					for (int a = 0; a<5; a++) {
+
+						try{	strTable.append("<p>" + df.format(		Double.parseDouble(		(gs.callGetter(finSup,listVariaveisVazaoRequeridas.get(a))))).replaceAll(",00", "")	+ "</p>");
+						} catch (Exception e) {strTable.append("<p>" + "" + "</p>");};
+						}
+
+					strTable.append("</td>");
+
+					try{ strTable.append("<td>" + df.format(		Double.parseDouble(		(gs.callGetter(finSup, vazaoTotal)))).replaceAll(",00", "")	+ "</td>");
+					} catch (Exception e) {strTable.append("<td>" + "" + "</td>");};
+					break;
+
+				default:
+					break;
+				} // fim while
+
+				//System.out.println(listMalaDireta.get(i)[0][ii].getClass().getName());
+
+			}
+
+			strTable.append("</tr>");
+
+		} // fim loop for
+
+		strTable.append("</tbody></table>");
+
+		docHtml.select(strTag).append(String.valueOf(strTable));
+
+	} // fim metodo inserirfinalidade
+	
+	
+	public void inserirFinalidadeAutorizada (
+			Document docHtml, 
+			Finalidade finSub, 
+			Finalidade finSup, 
+			String strFinalidade, String strTag, String vazaoTotal,
+			List<String> listVariaveisFinalidades,List<String> listVariaveisSubfinaldades,List<String> listVariaveisQuantidades,List<String> listVariaveisConsumo,
+			List<String> listVariaveisVazao,
+			List<String> listVariaveisVazaoMes,List<String> listVariaveisVazaoHora,List<String> listVariaveisTempo
+
+			) {
+		
+		StringBuilder strTable = new StringBuilder();
+
+		GetterAndSetter gs  = new GetterAndSetter();
+
+		strTable.append(
+				
+				"<table border='1' cellspacing='0' style='width: 800px;'>"
+						+	"<tbody>"
+						+	"<tr>"
+						+	"<td style='text-align: center;'>Processo</td>"
+						+	"<td style='text-align: center;'>Requerente</td>"
+						+	"<td style='text-align: center;'>Solicita&ccedil;&atilde;o</td>"
+						+	"<td style='text-align: center;'>Finalidade</td>"
+						+	"<td style='text-align: center;'>Quantidade</td>"
+						+	"<td style='text-align: center;'>Demanda Solicitada (L/dia)</td>"
+						+	"<td style='text-align: center;'>Valor de refer&ecirc;ncia IN 02 (L/dia)</td>"
+						+	"<td style='text-align: center;'>Demanda IN 02 (L/dia)</td>"
+						+	"<td style='text-align: center;'>Demanda Total ajustada IN 02 (L/dia)</td></tr>"
+					
+				);
+
+		for (int i = 0; i<listMalaDireta.size(); i++) {
+
+			strTable.append("<tr>");
+
+			for (int ii=0; ii < listMalaDireta.get(i)[0].length; ii++) {
+
+				switch (listMalaDireta.get(i)[0][ii].getClass().getName()) {
+				
+				//PROCESSO
+				case "entidades.Documento":
+					strTable.append("<td>" + ((Documento)listMalaDireta.get(i)[0][ii]).getDocProcessoFK().getProSEI()  + "</td>");
+					break;
+					
+				// INTERESSADO
+				case "entidades.Usuario":
+					strTable.append("<td>" + ((Usuario)listMalaDireta.get(i)[0][ii]).getUsNome() + "</td>");
+					break;
+					
+				// SUBTERRANEA	
+				case "entidades.Subterranea":
+					
+					FinalidadeRequerida f = new FinalidadeRequerida();
+
+					for (Finalidade fSub : ((Subterranea)listMalaDireta.get(i)[0][ii]).getFinalidades() ) {
+
+						if (fSub.getClass().getName() == "entidades.FinalidadeAutorizada") {
+							finSub = fSub;
+
+						} else {
+							 f = (FinalidadeRequerida) fSub;
+						}
+
+					}
+					// TIPO E SUBTIPO
+					strTable.append("<td>" + 
+							((Subterranea)listMalaDireta.get(i)[0][ii]).getInterTipoOutorgaFK().getTipoOutorgaDescricao()  // tipo outorga: Outorga, Previa Registro
+							+ 	"<p>" +  ((Subterranea)listMalaDireta.get(i)[0][ii]).getInterSubtipoOutorgaFK().getSubtipoOutorgaDescricao() // sub tipo outorga: renovacao, modificacao
+							+ 	"</td>");
+
+					strTable.append("<td width='200'>");
+					
+					// SOLICITACAO - FINALIDADES
+					for (int a = 0; a<5; a++) {
+
+						strTable.append(
+								"<p>" 
+								+ (gs.callGetter(finSub,listVariaveisFinalidades.get(a)))
+								+ " - "
+								+ (gs.callGetter(finSub,listVariaveisSubfinaldades.get(a)))
+								+ "</p>"
+								); // abastecimento humano, irrigacao, uso industrial...
+					}
+
+					strTable.append("</td>");
+
+					strTable.append("<td>");
+
+					// QUANTIDADES
+					for (int a = 0; a<5; a++) {
+
+						try{strTable.append("<p>" + df.format(		Double.parseDouble(		(gs.callGetter(finSub, listVariaveisQuantidades.get(a))))).replaceAll(",00", "")	+ "</p>");  
+						} catch (Exception e) {strTable.append("<p>" + "" + "</p>");}; // 16 pessoas, 10 cavalos
+					}
+
+					strTable.append("</td>");
+
+					strTable.append("<td>");
+					
+					// FINALIDADE REQUERIDA
+					for (int a = 0; a<5; a++) {
+
+						try{strTable.append("<p>" + df.format(		Double.parseDouble(		(gs.callGetter(f,listVariaveisVazaoRequeridas.get(a))))).replaceAll(",00", "") + "</p>"); 
+						} catch (Exception e) {strTable.append("<p>" + "" + "</p>");}; //10.000,50 litros dia para 10 pessoas
+						}
+
+					strTable.append("</td>");
+
+					strTable.append("<td>");
+					
+					// VALOR REFERÊNCIA IN
+					for (int a = 0; a<5; a++) {
+
+						try{strTable.append("<p>" + df.format(		Double.parseDouble(		(gs.callGetter(finSub,listVariaveisConsumo.get(a))))).replaceAll(",00", "") + "</p>");
+						} catch (Exception e) {strTable.append("<p>" + "" + "</p>");};
+						}
+
+					strTable.append("</td>");
+
+					strTable.append("<td>");
+					
+					
+					// VAZAO AUTORIZADA
+					for (int a = 0; a<5; a++) {
+
+						try {strTable.append("<p>" + df.format(		Double.parseDouble(		(gs.callGetter(finSub,listVariaveisVazaoAutorizadas.get(a))))).replaceAll(",00", "") + "</p>");
+						} catch (Exception e) {strTable.append("<p>" + "" + "</p>");};
+						}
+
+					strTable.append("</td>");
+
+					try{strTable.append("<td>" + df.format(		Double.parseDouble(		(gs.callGetter(finSub, vazaoTotal)))).replaceAll(",00", "") + "</td>");
+					} catch (Exception e) {strTable.append("<td>" + "" + "</td>");};
+
+					break;
+					
 				case "entidades.Superficial":
 
 					for (Finalidade fSup : ((Superficial)listMalaDireta.get(i)[0][ii]).getFinalidades() ) {
@@ -305,8 +534,13 @@ public class MalaDiretaDocumentos {
 
 					for (int a = 0; a<5; a++) {
 
-						strTable.append("<p>" + (gs.callGetter(finSup, 
-								listVariaveisFinalidades.get(a)))	+ "</p>");
+						strTable.append(
+								"<p>" 
+								+ (gs.callGetter(finSub,listVariaveisFinalidades.get(a)))
+								+ " - "
+								+ (gs.callGetter(finSub,listVariaveisSubfinaldades.get(a)))
+								+ "</p>"
+								); // abastecimento humano, irrigacao, uso industrial...
 					}
 
 					strTable.append("</td>");
@@ -315,9 +549,9 @@ public class MalaDiretaDocumentos {
 
 					for (int a = 0; a<5; a++) {
 
-						strTable.append("<p>" + (gs.callGetter(finSup, 
-								listVariaveisQuantidades.get(a)))	+ "</p>");
-					}
+						try{strTable.append("<p>" + df.format(		Double.parseDouble(		(gs.callGetter(finSup,listVariaveisQuantidades.get(a))))).replaceAll(",00", "")	+ "</p>");
+						} catch (Exception e) {strTable.append("<p>" + "" + "</p>");};
+						}
 
 					strTable.append("</td>");
 
@@ -325,14 +559,14 @@ public class MalaDiretaDocumentos {
 
 					for (int a = 0; a<5; a++) {
 
-						strTable.append("<p>" + (gs.callGetter(finSup, 
-								listVariaveisConsumo.get(a)))	+ "</p>");
-					}
+						try{strTable.append("<p>" + df.format(		Double.parseDouble(		(gs.callGetter(finSup,listVariaveisConsumo.get(a))))) .replaceAll(",00", "") + "</p>");
+						} catch (Exception e) {strTable.append("<p>" + "" + "</p>");};
+						}
 
 					strTable.append("</td>");
 
-					strTable.append("<td>" + String.valueOf(gs.callGetter(finSup, vazaoTotal))	+ "</td>");
-
+					try{strTable.append("<td>" + df.format(		Double.parseDouble(		(gs.callGetter(finSup, vazaoTotal)))).replaceAll(",00", "")	+ "</td>");
+					} catch (Exception e) {strTable.append("<td>" + "" + "</td>");};
 					break;
 
 				default:
@@ -351,7 +585,12 @@ public class MalaDiretaDocumentos {
 
 		docHtml.select(strTag).append(String.valueOf(strTable));
 
-	}
+	} // fim metodo inserirfinalidade
+	
+	
+	
+	
+	
 
 }
 
@@ -404,3 +643,37 @@ public class MalaDiretaDocumentos {
 
  */
 
+
+
+/*
+ 
+ MODELO DEMANDA AUTORIZADA
+ 
+<!doctype html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<table border="1" cellspacing="0" style="width: 800px;">
+	<tbody>
+		<tr>
+			<td style="text-align: center;">Processo</td>
+			<td style="text-align: center;">Requerente</td>
+			<td style="text-align: center;">Solicita&ccedil;&atilde;o</td>
+			<td style="text-align: center;">Finalidade</td>
+			<td style="text-align: center;">Quantidade</td>
+			<td style="text-align: center;">Demanda Solicitada (L/dia)</td>
+			<td style="text-align: center;">Valor de refer&ecirc;ncia IN 02 (L/dia)</td>
+			<td style="text-align: center;">Demanda IN 02 (L/dia)</td>
+			<td style="text-align: center;">Demanda Total ajustada IN 02 (L/dia)/td&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</body>
+</html>
+ 
+ 
+ 
+ 
+ */
