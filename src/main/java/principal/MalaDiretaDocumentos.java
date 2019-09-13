@@ -1,6 +1,8 @@
 package principal;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -9,6 +11,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import entidades.Documento;
+import entidades.Endereco;
 import entidades.Finalidade;
 import entidades.FinalidadeAutorizada;
 import entidades.FinalidadeRequerida;
@@ -21,6 +24,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import util.FormatadorCPFCNPJ;
 
 /** Classe de preechimento de html 
  * 
@@ -88,23 +92,28 @@ public class MalaDiretaDocumentos {
 			);
 
 
-	List<Object[][]> listMalaDireta = new ArrayList<>();
+	List<Object[][]> listaMalaDireta = new ArrayList<>();
 
 	Documento documento = new Documento();
 	
 	DecimalFormat df = new DecimalFormat("#,##0.00"); 
+	
+	// formatador de cpf e cnpj
+	FormatadorCPFCNPJ ccFormato = new FormatadorCPFCNPJ();
 
 	/**
 	 * Construtor
 	 * @param modeloHTML
 	 * @param documento
-	 * @param listMalaDireta
+	 * @param listaMalaDireta
 	 */
-	public MalaDiretaDocumentos (String modeloHTML, Documento documento, List<Object[][]> listMalaDireta) {
+	public MalaDiretaDocumentos (String modeloHTML, Documento documento, List<Object[][]> listaMalaDireta) {
 
 		this.modeloHTML = modeloHTML;
 		this.documento = documento;
-		this.listMalaDireta = listMalaDireta;
+		this.listaMalaDireta = listaMalaDireta;
+		
+		System.out.println(documento.getDocSEI() + " e " + documento.getDocNumeracao());
 
 	}
 
@@ -124,10 +133,201 @@ public class MalaDiretaDocumentos {
 		Document docHtml = null;
 
 		docHtml = Jsoup.parse(modeloHTML, "UTF-8").clone();
+		
+		String strTagsDocumento [] = {
+				
+				"doc_tipo_tag",
+				"doc_numeracao_tag",
+				"doc_numeracao_sei_tag",
+				"doc_processo_tag",
+				"doc_data_recebimento_tag", // <doc_data_recebimento_tag></doc_data_recebimento_tag>
+				"doc_data_distribuicao_tag",
+				"doc_processo_principal_tag",
+		};
+		
+		String strTagsInterferencia [] = {
+				
+				"inter_tipo_outorga_tag",
+				"inter_tipo_poco_tag",
+				"inter_subsistema_tag",
+				"inter_uh_tag",
+				"inter_bacia_tag",
+				"inter_lat_tag",
+				"inter_lon_tag",
+				"inter_prof_tag",
+				"inter_nivel_est_tag",
+				"inter_niv_din_tag",
+				"inter_vazao_tag"
+				
+		};
+		
+		String strTagsUsuario [] = {
+				
+				"us_nome_tag", // <us_nome_tag></us_nome_tag>
+				"us_cpfcnpj_tag", //<us_cpfcnpj_tag></us_cpfcnpj_tag>
+				"us_end_cor_tag",  // <us_end_cor_tag></us_end_cor_tag>
+				"us_ra_tag",
+				"us_cep_tag", // <us_cep_tag></us_cep_tag> 
+				"us_cidade_tag", // <us_cep_tag></us_cep_tag> 
+				"us_uf_tag", // <us_cep_tag></us_cep_tag> 
+				"us_tel_tag", // <us_tel_tag></us_tel_tag>
+				"us_cel_tag", // <us_cel_tag></us_cel_tag>
+				"us_email_tag", // <us_email_tag></us_email_tag>
+				"us_representante_tag", // <us_email_tag></us_email_tag>
+				"us_representante_telefone_tag", // <us_email_tag></us_email_tag>
+		};
+		
+				
+		String strTagsEnderecoEmpreendimento [] = {
+				
+				"end_empreendimento_logradouro_tag", // <end_empreendimento_logradouro_tag></end_empreendimento_logradouro_tag>
+				"end_empreendimento_ra_tag", // <end_empreendimento_ra_tag></end_empreendimento_ra_tag>
+				"end_empreendimento_cep_tag",
+				"end_empreendimento_cidade_tag",
+				"end_empreendimento_uf_tag",
+				
+				"end_empreendimento_lat_tag",
+				"end_empreendimento_lon_tag",
+		};
+		
+
+		// formatar data 2018-05-12 para 12/05/2018
+		SimpleDateFormat formatadorData = new SimpleDateFormat("dd/MM/yyyy");
+
+		String strDataRecebimento, strDataDistribuicao, strProcessoPrincipal, strTipoSubOutorga, strCPFCNPJ = "";
+
+		// data de recebimento do documento
+		try {strDataRecebimento = formatadorData.format(((Documento)listaMalaDireta.get(0)[0][0]).getDocDataRecebimento());} 
+		catch (Exception e) {strDataRecebimento = "";}
+		// data de distribuicao
+		try {strDataDistribuicao = formatadorData.format(((Documento)listaMalaDireta.get(0)[0][0]).getDocDataDistribuicao());} 
+		catch (Exception e) {strDataDistribuicao = "";}
+		// processo principal
+		try {strProcessoPrincipal = ((Documento)listaMalaDireta.get(0)[0][0]).getDocProcessoFK().getProSEI();} 
+		catch (Exception e) {strProcessoPrincipal = "";}
+
+		// imprimir Outorga, ou se o subtipo outorga for modificacao, renovacao, imprimir Modificacao de Outorga
+		if (((Subterranea)listaMalaDireta.get(0)[0][2]).getInterSubtipoOutorgaFK().getSubtipoOutorgaDescricao().equals("")) {
+			strTipoSubOutorga = ((Subterranea)listaMalaDireta.get(0)[0][2]).getInterTipoOutorgaFK().getTipoOutorgaDescricao().toLowerCase();
+		} else {
+			strTipoSubOutorga = ((Subterranea)listaMalaDireta.get(0)[0][2]).getInterSubtipoOutorgaFK().getSubtipoOutorgaDescricao().toLowerCase()  + " de " 
+					+ ((Subterranea)listaMalaDireta.get(0)[0][2]).getInterTipoOutorgaFK().getTipoOutorgaDescricao().toLowerCase(); 
+		}
+			
+		String strDocumento [] = {
+
+				((Documento)listaMalaDireta.get(0)[0][0]).getDocTipo(),
+				((Documento)listaMalaDireta.get(0)[0][0]).getDocNumeracao(),
+				((Documento)listaMalaDireta.get(0)[0][0]).getDocSEI(),
+				((Documento)listaMalaDireta.get(0)[0][0]).getDocProcesso(),
+				strDataRecebimento,
+				strDataDistribuicao,
+				strProcessoPrincipal,
+
+		};
+
+		// 2 - Interferencia no listaMalaDireta
+		String strInterferencia [] = {
+
+				strTipoSubOutorga,
+				((Subterranea)listaMalaDireta.get(0)[0][2]).getSubTipoPocoFK().getTipoPocoDescricao().toLowerCase(),
+				((Subterranea)listaMalaDireta.get(0)[0][2]).getSubSubSistemaFK().getSubDescricao(),
+				((Subterranea)listaMalaDireta.get(0)[0][2]).getInterUHFK().getUhNome(),
+				((Subterranea)listaMalaDireta.get(0)[0][2]).getInterBaciaFK().getBaciaNome(),
+				((Subterranea)listaMalaDireta.get(0)[0][2]).getInterDDLatitude().toString(),
+				((Subterranea)listaMalaDireta.get(0)[0][2]).getInterDDLongitude().toString(),
+				((Subterranea)listaMalaDireta.get(0)[0][2]).getSubProfundidade(),
+				((Subterranea)listaMalaDireta.get(0)[0][2]).getSubEstatico(),
+				((Subterranea)listaMalaDireta.get(0)[0][2]).getSubDinamico(),
+				df.format((((Subterranea) listaMalaDireta.get(0)[0][2])).getSubVazaoPoco()) .replaceAll(",00", ""),
+				
+
+		};
+
+		 
+		// formatacao do cpf e cnpj
+		try {
+			strCPFCNPJ = ccFormato.formatCnpj(((Usuario)listaMalaDireta.get(0)[0][1]).getUsTipo(),((Usuario)listaMalaDireta.get(0)[0][1]).getUsCPFCNPJ());
+		} catch (ParseException e1) {
+	
+			e1.printStackTrace();
+		}
+
+		// 1 - Usuario no listaMalaDireta
+		String strUsuario [] = {
+				
+				
+				((Usuario)listaMalaDireta.get(0)[0][1]).getUsNome(),
+				strCPFCNPJ,
+				((Usuario)listaMalaDireta.get(0)[0][1]).getUsLogadouro(),
+				((Usuario)listaMalaDireta.get(0)[0][1]).getUsRA(),
+				((Usuario)listaMalaDireta.get(0)[0][1]).getUsCEP(),
+				((Usuario)listaMalaDireta.get(0)[0][1]).getUsCidade(),
+				((Usuario)listaMalaDireta.get(0)[0][1]).getUsEstado(),
+				((Usuario)listaMalaDireta.get(0)[0][1]).getUsTelefone(),
+				((Usuario)listaMalaDireta.get(0)[0][1]).getUsCelular(),
+				((Usuario)listaMalaDireta.get(0)[0][1]).getUsEmail(),
+
+				((Usuario)listaMalaDireta.get(0)[0][1]).getUsRepresentante(),
+				((Usuario)listaMalaDireta.get(0)[0][1]).getUsRepresentanteTelefone(),
 
 
+		};
+
+		// 3 - Endereco do Empreendimento no listaMalaDireta
+		String strEnderecoEmpreendimento [] = {
+				
+			((Endereco)listaMalaDireta.get(0)[0][3]).getEndLogradouro(),
+			((Endereco)listaMalaDireta.get(0)[0][3]).getEndRAFK().getRaNome(),
+			((Endereco)listaMalaDireta.get(0)[0][3]).getEndCEP(),
+			((Endereco)listaMalaDireta.get(0)[0][3]).getEndCidade(),
+			((Endereco)listaMalaDireta.get(0)[0][3]).getEndUF(),
+			((Endereco)listaMalaDireta.get(0)[0][3]).getEndDDLatitude().toString(),
+			((Endereco)listaMalaDireta.get(0)[0][3]).getEndDDLongitude().toString(),
+
+		};
+		
+		
+		for (int i  = 0; i<strTagsDocumento.length; i++) {
+			try { docHtml.select(strTagsDocumento[i]).prepend(strDocumento[i]);} 
+				catch (Exception e) {docHtml.select(strTagsDocumento[i]).prepend("");};
+		}
+		
+		for (int i  = 0; i<strTagsInterferencia.length; i++) {
+			try { docHtml.select(strTagsInterferencia[i]).prepend(strInterferencia[i]);} 
+				catch (Exception e) {docHtml.select(strTagsInterferencia[i]).prepend("");};
+		}
+		
+		for (int i  = 0; i<strTagsUsuario.length; i++) {
+			try { docHtml.select(strTagsUsuario[i]).prepend(strUsuario[i]);} 
+				catch (Exception e) {docHtml.select(strTagsUsuario[i]).prepend("");};
+		}
+		
+		for (int i  = 0; i<strTagsEnderecoEmpreendimento.length; i++) {
+			try { docHtml.select(strTagsEnderecoEmpreendimento[i]).prepend(strEnderecoEmpreendimento[i]);} 
+				catch (Exception e) {docHtml.select(strTagsEnderecoEmpreendimento[i]).prepend("");};
+		}
+		
+		GetterAndSetter gs  = new GetterAndSetter();
+		
+		// imprimir finalidades autorizadas
+		for (Finalidade f : ((Subterranea)listaMalaDireta.get(0)[0][2]).getFinalidades()) {
+        	
+        	if ( f.getClass().getName() == "entidades.FinalidadeAutorizada") {
+				
+        		for (int i = 0; i<5; i++) {
+				
+        			
+        			try { docHtml.select("finalidades_tag").prepend(gs.callGetter(f, listVariaveisFinalidadesAutorizadas.get(i)).toLowerCase() + ", ");} 
+        			catch (Exception e) {docHtml.select("finalidades_tag").prepend("");};
+					
+				}
+        	}
+		} // fim for finalidade
+		
+		
 		// dados documento
-		if (!(documento == null)) {
+		if (!(((Documento)listaMalaDireta.get(0)[0][0]) == null)) {
 
 			finSubReq = new FinalidadeRequerida();
 			finSupReq = new FinalidadeRequerida();
@@ -226,23 +426,23 @@ public class MalaDiretaDocumentos {
 				+ "<td>Solicita&ccedil;&atilde;o</td><td>Finalidade</td><td>Quantidade</td>"
 				+ "<td>Demanda (L/dia)</td><td>Demanda Total (L/dia)</td></tr>");
 
-		for (int i = 0; i<listMalaDireta.size(); i++) {
+		for (int i = 0; i<listaMalaDireta.size(); i++) {
 
 			strTable.append("<tr>");
 
-			for (int ii=0; ii < listMalaDireta.get(i)[0].length; ii++) {
+			for (int ii=0; ii < listaMalaDireta.get(i)[0].length; ii++) {
 
-				switch (listMalaDireta.get(i)[0][ii].getClass().getName()) {
+				switch (listaMalaDireta.get(i)[0][ii].getClass().getName()) {
 				case "entidades.Documento":
-					strTable.append("<td>" + ((Documento)listMalaDireta.get(i)[0][ii]).getDocProcessoFK().getProSEI()  + "</td>");
+					strTable.append("<td>" + ((Documento)listaMalaDireta.get(i)[0][ii]).getDocProcessoFK().getProSEI()  + "</td>");
 					break;
 				case "entidades.Usuario":
-					strTable.append("<td>" + ((Usuario)listMalaDireta.get(i)[0][ii]).getUsNome() + "</td>");
+					strTable.append("<td>" + ((Usuario)listaMalaDireta.get(i)[0][ii]).getUsNome() + "</td>");
 					break;
 					
 				case "entidades.Subterranea":
 
-					for (Finalidade fSub : ((Subterranea)listMalaDireta.get(i)[0][ii]).getFinalidades() ) {
+					for (Finalidade fSub : ((Subterranea)listaMalaDireta.get(i)[0][ii]).getFinalidades() ) {
 
 						if (fSub.getClass().getName() == strFinalidade) {
 							finSub = fSub;
@@ -253,8 +453,8 @@ public class MalaDiretaDocumentos {
 					
 					// TIPO E SUBTIPO
 					strTable.append("<td>" + 
-							((Subterranea)listMalaDireta.get(i)[0][ii]).getInterTipoOutorgaFK().getTipoOutorgaDescricao()  // tipo outorga: Outorga, Previa Registro
-							+ 	"<p>" +  ((Subterranea)listMalaDireta.get(i)[0][ii]).getInterSubtipoOutorgaFK().getSubtipoOutorgaDescricao() // sub tipo outorga: renovacao, modificacao
+							((Subterranea)listaMalaDireta.get(i)[0][ii]).getInterTipoOutorgaFK().getTipoOutorgaDescricao()  // tipo outorga: Outorga, Previa Registro
+							+ 	"<p>" +  ((Subterranea)listaMalaDireta.get(i)[0][ii]).getInterSubtipoOutorgaFK().getSubtipoOutorgaDescricao() // sub tipo outorga: renovacao, modificacao
 							+ 	"</td>");
 
 					strTable.append("<td width='200'>");
@@ -300,7 +500,7 @@ public class MalaDiretaDocumentos {
 					break;
 				case "entidades.Superficial":
 
-					for (Finalidade fSup : ((Superficial)listMalaDireta.get(i)[0][ii]).getFinalidades() ) {
+					for (Finalidade fSup : ((Superficial)listaMalaDireta.get(i)[0][ii]).getFinalidades() ) {
 
 						if (fSup.getClass().getName() == strFinalidade) {
 							finSup = fSup;
@@ -310,8 +510,8 @@ public class MalaDiretaDocumentos {
 					}
 					// TIPO
 					strTable.append("<td>" + 
-							((Superficial)listMalaDireta.get(i)[0][ii]).getInterTipoOutorgaFK().getTipoOutorgaDescricao()  
-							+ 	"<p>" +  ((Superficial)listMalaDireta.get(i)[0][ii]).getInterSubtipoOutorgaFK().getSubtipoOutorgaDescricao()
+							((Superficial)listaMalaDireta.get(i)[0][ii]).getInterTipoOutorgaFK().getTipoOutorgaDescricao()  
+							+ 	"<p>" +  ((Superficial)listaMalaDireta.get(i)[0][ii]).getInterSubtipoOutorgaFK().getSubtipoOutorgaDescricao()
 							+ 	"</td>");
 
 					strTable.append("<td width='200'>");
@@ -362,7 +562,7 @@ public class MalaDiretaDocumentos {
 					break;
 				} // fim while
 
-				//System.out.println(listMalaDireta.get(i)[0][ii].getClass().getName());
+				//System.out.println(listaMalaDireta.get(i)[0][ii].getClass().getName());
 
 			}
 
@@ -409,22 +609,22 @@ public class MalaDiretaDocumentos {
 					
 				);
 
-		for (int i = 0; i<listMalaDireta.size(); i++) {
+		for (int i = 0; i<listaMalaDireta.size(); i++) {
 
 			strTable.append("<tr>");
 
-			for (int ii=0; ii < listMalaDireta.get(i)[0].length; ii++) {
+			for (int ii=0; ii < listaMalaDireta.get(i)[0].length; ii++) {
 
-				switch (listMalaDireta.get(i)[0][ii].getClass().getName()) {
+				switch (listaMalaDireta.get(i)[0][ii].getClass().getName()) {
 				
 				//PROCESSO
 				case "entidades.Documento":
-					strTable.append("<td>" + ((Documento)listMalaDireta.get(i)[0][ii]).getDocProcessoFK().getProSEI()  + "</td>");
+					strTable.append("<td>" + ((Documento)listaMalaDireta.get(i)[0][ii]).getDocProcessoFK().getProSEI()  + "</td>");
 					break;
 					
 				// INTERESSADO
 				case "entidades.Usuario":
-					strTable.append("<td>" + ((Usuario)listMalaDireta.get(i)[0][ii]).getUsNome() + "</td>");
+					strTable.append("<td>" + ((Usuario)listaMalaDireta.get(i)[0][ii]).getUsNome() + "</td>");
 					break;
 					
 				// SUBTERRANEA	
@@ -432,7 +632,7 @@ public class MalaDiretaDocumentos {
 					
 					FinalidadeRequerida f = new FinalidadeRequerida();
 
-					for (Finalidade fSub : ((Subterranea)listMalaDireta.get(i)[0][ii]).getFinalidades() ) {
+					for (Finalidade fSub : ((Subterranea)listaMalaDireta.get(i)[0][ii]).getFinalidades() ) {
 
 						if (fSub.getClass().getName() == "entidades.FinalidadeAutorizada") {
 							finSub = fSub;
@@ -444,8 +644,8 @@ public class MalaDiretaDocumentos {
 					}
 					// TIPO E SUBTIPO
 					strTable.append("<td>" + 
-							((Subterranea)listMalaDireta.get(i)[0][ii]).getInterTipoOutorgaFK().getTipoOutorgaDescricao()  // tipo outorga: Outorga, Previa Registro
-							+ 	"<p>" +  ((Subterranea)listMalaDireta.get(i)[0][ii]).getInterSubtipoOutorgaFK().getSubtipoOutorgaDescricao() // sub tipo outorga: renovacao, modificacao
+							((Subterranea)listaMalaDireta.get(i)[0][ii]).getInterTipoOutorgaFK().getTipoOutorgaDescricao()  // tipo outorga: Outorga, Previa Registro
+							+ 	"<p>" +  ((Subterranea)listaMalaDireta.get(i)[0][ii]).getInterSubtipoOutorgaFK().getSubtipoOutorgaDescricao() // sub tipo outorga: renovacao, modificacao
 							+ 	"</td>");
 
 					strTable.append("<td width='200'>");
@@ -516,7 +716,7 @@ public class MalaDiretaDocumentos {
 					
 				case "entidades.Superficial":
 
-					for (Finalidade fSup : ((Superficial)listMalaDireta.get(i)[0][ii]).getFinalidades() ) {
+					for (Finalidade fSup : ((Superficial)listaMalaDireta.get(i)[0][ii]).getFinalidades() ) {
 
 						if (fSup.getClass().getName() == strFinalidade) {
 							finSup = fSup;
@@ -526,8 +726,8 @@ public class MalaDiretaDocumentos {
 					}
 
 					strTable.append("<td>" + 
-							((Superficial)listMalaDireta.get(i)[0][ii]).getInterTipoOutorgaFK().getTipoOutorgaDescricao()  
-							+ 	"<p>" +  ((Superficial)listMalaDireta.get(i)[0][ii]).getInterSubtipoOutorgaFK().getSubtipoOutorgaDescricao()
+							((Superficial)listaMalaDireta.get(i)[0][ii]).getInterTipoOutorgaFK().getTipoOutorgaDescricao()  
+							+ 	"<p>" +  ((Superficial)listaMalaDireta.get(i)[0][ii]).getInterSubtipoOutorgaFK().getSubtipoOutorgaDescricao()
 							+ 	"</td>");
 
 					strTable.append("<td width='200'>");
@@ -573,7 +773,7 @@ public class MalaDiretaDocumentos {
 					break;
 				} // fim while
 
-				//System.out.println(listMalaDireta.get(i)[0][ii].getClass().getName());
+				//System.out.println(listaMalaDireta.get(i)[0][ii].getClass().getName());
 
 			}
 
@@ -588,10 +788,6 @@ public class MalaDiretaDocumentos {
 	} // fim metodo inserirfinalidade
 	
 	
-	
-	
-	
-
 }
 
 

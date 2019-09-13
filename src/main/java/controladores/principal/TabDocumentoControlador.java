@@ -105,8 +105,7 @@ public class TabDocumentoControlador implements Initializable {
 			}
 			else
 			{
-				
-				try {
+		
 					
 					Documento doc = new Documento();
 	
@@ -128,30 +127,29 @@ public class TabDocumentoControlador implements Initializable {
 	
 					doc.setDocDataAtualizacao(Timestamp.valueOf(LocalDateTime.now()));
 	
-					DocumentoDao docDao = new DocumentoDao();
-				
-					docDao.salvarDocumento(doc);
 					
-					if (controladorOutorga != null) {
-						controladorOutorga.setDocumento(doc);
-					}
-				
-					obsList.add(doc);
-
-					modularBotoes ();
-	
-					Alerta a = new Alerta();
-					a.alertar(new Alert(Alert.AlertType.INFORMATION, "Cadastro salvo com sucesso!!!", new ButtonType[] { ButtonType.OK }));
-					
-				
-					}
-
-					catch (ConstraintViolationException e ) {
+					try {
 						
+						DocumentoDao docDao = new DocumentoDao();
+					
+						docDao.salvarDocumento(doc);
+						
+						
+						
+						if (controladorOutorga != null) {
+							controladorOutorga.setDocumento(doc);
+						}
+					
+						obsList.add(doc);
+	
+						modularBotoes ();
+		
 						Alerta a = new Alerta();
-						a.alertar(new Alert(Alert.AlertType.INFORMATION, "Número SEI duplicado!!!", new ButtonType[] { ButtonType.OK }));
-					}
-				
+						a.alertar(new Alert(Alert.AlertType.INFORMATION, "Cadastro salvo com sucesso!!!", new ButtonType[] { ButtonType.OK }));
+						
+					
+						}
+
 					catch (Exception e ) {
 						
 						Alerta a = new Alerta();
@@ -191,9 +189,7 @@ public class TabDocumentoControlador implements Initializable {
 		else
 		{
 			Documento doc = (Documento)tvLista.getSelectionModel().getSelectedItem();
-			
-			System.out.println("doc num antes de editar " + doc.getDocNumeracao());
-
+	
 			//doc.setDocTipo(cbTipo.getValue());
 			doc.setDocNumeracao(tfNumeracao.getText());
 			doc.setDocSEI(tfSEI.getText());
@@ -219,28 +215,19 @@ public class TabDocumentoControlador implements Initializable {
 				dDao.mergeDocumento(doc);
 		
 				obsList.remove(doc);
-				System.out.println("doc num antes de remover da obslist " + doc.getDocNumeracao());
-				
+
 				obsList.add(doc);
-				System.out.println("doc depois de remover da obslist " + doc.getDocNumeracao());
-	
+
 				/* transmitir demanda para a tab endereco */
 				if (controladorOutorga != null) {
 					controladorOutorga.setDocumento(doc);
 				}
-	
 	
 				modularBotoes();
 	
 				Alerta a = new Alerta();
 				a.alertar(new Alert(Alert.AlertType.ERROR, "Cadastro editado com sucesso!!!", new ButtonType[] { ButtonType.OK }));
 				
-				}
-			
-				catch (ConstraintViolationException e ) {
-				
-					Alerta a = new Alerta();
-					a.alertar(new Alert(Alert.AlertType.INFORMATION, "Número SEI duplicado!!!", new ButtonType[] { ButtonType.OK }));
 				}
 			
 				catch (Exception e ) {
@@ -250,7 +237,7 @@ public class TabDocumentoControlador implements Initializable {
 					
 					System.out.println(e);
 				}
-			System.out.println(" fim else");
+	
 
 		} // fim else
 
@@ -937,7 +924,7 @@ public class TabDocumentoControlador implements Initializable {
 						lblProcessoPrincipal.setText(
 
 								doc.getDocProcessoFK().getProSEI()
-								+ ", Interessado n° " + doc.getDocProcessoFK().getProInteressado()
+								+ ", Interessado: " + doc.getDocProcessoFK().getProInteressado()
 
 								);
 						lblProcessoPrincipal.setStyle("-fx-text-fill: #4A4A4A;"); 

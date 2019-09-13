@@ -34,7 +34,7 @@ public class Endereco implements Serializable{
 	@Column (name="end_ID")
 	private int endID; 
 	
-	@Column (name="end_Logradouro", columnDefinition="varchar(95)")
+	@Column (name="end_Logradouro", columnDefinition="varchar(150)")
 	private String endLogradouro;
 	
 	@Column (name="end_CEP", columnDefinition="varchar(20)")

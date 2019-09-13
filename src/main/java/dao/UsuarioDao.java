@@ -13,6 +13,9 @@ import org.hibernate.sql.JoinType;
 
 import entidades.HibernateUtil;
 import entidades.Usuario;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import principal.Alerta;
 
 public class UsuarioDao {
 	
@@ -26,6 +29,10 @@ public class UsuarioDao {
 		}
 		catch (ConstraintViolationException e ) {
 			System.out.println("salvar usuario " + e);
+			
+			Alerta a = new Alerta();
+			a.alertar(new Alert(Alert.AlertType.INFORMATION, "Número SEI duplicado!!!", new ButtonType[] { ButtonType.OK }));
+			
 		}
 		
 		s.getTransaction().commit();

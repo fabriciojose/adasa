@@ -142,13 +142,6 @@ public class NavegadorExterno {
 			driver.navigate().to("https://sei.df.gov.br/sip/login.php?sigla_orgao_sistema=GDF&sigla_sistema=SEI");
 
 
-			driver.findElement(By.id("selOrgao")).sendKeys("a");
-
-			driver.findElement(By.id("txtUsuario")).sendKeys("fabricio.barrozo");;
-			driver.findElement(By.id("pwdSenha")).sendKeys("polygonnewPolygon");
-
-			driver.findElement(By.id("sbmLogin")).click();
-
 		}); // btnBrowser
 
 

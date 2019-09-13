@@ -109,6 +109,25 @@ public class MalaDiretaAtosOutorga {
 };
 	
 	
+
+	String q_metros_dia_tag [] = {
+			
+			"q_metros_dia_jan_tag",
+			"q_metros_dia_fev_tag",
+			"q_metros_dia_mar_tag",
+			"q_metros_dia_abr_tag",
+			"q_metros_dia_mai_tag",
+			"q_metros_dia_jun_tag",
+			"q_metros_dia_jul_tag",
+			"q_metros_dia_ago_tag",
+			"q_metros_dia_set_tag",
+			"q_metros_dia_out_tag",
+			"q_metros_dia_nov_tag",
+			"q_metros_dia_dez_tag",
+	
+};
+	
+	
 	String variaveis_litros_dia [] = {
 	
 				"faQDiaJan","faQDiaFev","faQDiaMar","faQDiaAbr","faQDiaMai","faQDiaJun",
@@ -331,68 +350,63 @@ public class MalaDiretaAtosOutorga {
 
 					for (int i = 0; i<12; i++) {
 
+						
 						try {dbl_q_metros_hora = ((Subterranea) inter).getSubVazaoPoco()/1000;} catch (Exception e ) {
 							dbl_q_metros_hora = 0.0;
-							System.out.println("dbl_q_metros_hora zero ");
+						
 						}
 						try {int_t_horas_dia =  Integer.parseInt(gs.callGetter(f, listVariaveisVazaoHoraAutorizadas.get(i)));} catch (Exception e ) {
 							int_t_horas_dia = 0;
-							System.out.println("int_t_horas_dia zero ");
+						
 						}
 						try {int_t_dias_mes = Integer.parseInt((gs.callGetter(f,listVariaveisTempoAutorizadas.get(i))));} catch (Exception e ) {
 							int_t_dias_mes = 0;
-							System.out.println("int_t_dias_mes zero ");
+						
 
 						}
 
 						//sub
 						
+						// litros hora L/H
 						try { docHTMLModeloTabelaLimitesOutorgados.select(q_litros_hora_tag [i]).prepend(
 								
 								// formatar 1000.50 para 1.000,50 e retirar zeros irrelevantes como ,00 - 15.00 fica 15
-								
-								 df.format(	((Subterranea) inter).getSubVazaoPoco()	).replaceAll(",00", "")	
-								 
-								);} 
+								df.format(	((Subterranea) inter).getSubVazaoPoco()	).replaceAll(",00", "")	);} 
 
-						catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(q_litros_hora_tag[i]).prepend("");};
+								catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(q_litros_hora_tag[i]).prepend("");};
 
-						//sub
+						// metros hora M/H
 						try { docHTMLModeloTabelaLimitesOutorgados.select(q_metros_hora_tag [i]).prepend( 
 
-								df.format(		 dbl_q_metros_hora) .replaceAll(",00", "") .replaceAll(",00", "")
-								
-								);} 
+								df.format(dbl_q_metros_hora) .replaceAll(",00", "") .replaceAll(",00", "") 	);} 
 
-						catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(q_metros_hora_tag[i]).prepend("");};
+								catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(q_metros_hora_tag[i]).prepend("");};
 						
-
+						// HORAS DIA H/D
 						try { docHTMLModeloTabelaLimitesOutorgados.select(t_horas_dia_tag [i]).prepend( 
 								
-								df.format(		 int_t_horas_dia) .replaceAll(",00", "")
+								df.format(		 int_t_horas_dia) .replaceAll(",00", ""));} 
+
+								catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(t_horas_dia_tag[i]).prepend("");};
 								
-								);} 
-
-						catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(t_horas_dia_tag[i]).prepend("");};
-
-						// fin aut	
+						// metros cubicos dia M/D
+						try { docHTMLModeloTabelaLimitesOutorgados.select(q_metros_dia_tag[i]).prepend( String.format("%.0f", dbl_q_metros_hora*int_t_horas_dia) );} 
+								
+								catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(q_metros_dia_tag[i]).prepend("");};
+						
+						// DIA MES D/M	
 						try { docHTMLModeloTabelaLimitesOutorgados.select(t_dias_mes_tag [i]).prepend( 
 								
-								String.valueOf(int_t_dias_mes) 
-								
-								);} 
+								String.valueOf(int_t_dias_mes) );} 
 
-						catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(t_dias_mes_tag[i]).prepend("");};
+								catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(t_dias_mes_tag[i]).prepend("");};
 
-						//fin aut	
+						// METROS MES M/M	
 						try { docHTMLModeloTabelaLimitesOutorgados.select(q_metros_mes_tag [i]).prepend( 
 								
-								df.format(		  dbl_q_metros_hora*int_t_horas_dia*int_t_dias_mes) .replaceAll(",00", "")
-								
-								
-								);} 
+								df.format(		  dbl_q_metros_hora*int_t_horas_dia*int_t_dias_mes	) .replaceAll(",00", ""));} 
 
-						catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(q_metros_mes_tag[i]).prepend("");};
+							catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(q_metros_mes_tag[i]).prepend("");};
 
 					} // fim loop 12 preenchimento
 

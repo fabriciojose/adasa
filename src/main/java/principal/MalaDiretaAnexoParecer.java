@@ -123,6 +123,26 @@ public class MalaDiretaAnexoParecer {
 };
 	
 	
+	
+	String q_metros_dia_tag [] = {
+			
+			"q_metros_dia_jan_tag",
+			"q_metros_dia_fev_tag",
+			"q_metros_dia_mar_tag",
+			"q_metros_dia_abr_tag",
+			"q_metros_dia_mai_tag",
+			"q_metros_dia_jun_tag",
+			"q_metros_dia_jul_tag",
+			"q_metros_dia_ago_tag",
+			"q_metros_dia_set_tag",
+			"q_metros_dia_out_tag",
+			"q_metros_dia_nov_tag",
+			"q_metros_dia_dez_tag",
+	
+};
+	
+	
+	
 	String variaveis_litros_dia [] = {
 	
 				"faQDiaJan","faQDiaFev","faQDiaMar","faQDiaAbr","faQDiaMai","faQDiaJun",
@@ -227,22 +247,26 @@ public class MalaDiretaAnexoParecer {
 					
 				}
         	}
-		}
+		} // fim for finalidade
 		
 		
-		try { docHtml.select("inter_lat_tag").prepend(
-				((Subterranea)listMalaDireta.get(in)[0][2]).getInterDDLatitude()
+		try { docHtml.select("inter_lat_tag").prepend(((Subterranea)listMalaDireta.get(in)[0][2]).getInterDDLatitude()
 				+ "," +
 				((Subterranea)listMalaDireta.get(in)[0][2]).getInterDDLongitude())
 			;
 		
 		} catch (Exception e) {docHtml.select("us_cpfcnpj_tag").prepend("");};
 		
-		try { docHtml.select("inter_tipo_poco_tag").prepend(((Subterranea)listMalaDireta.get(in)[0][2]).getSubTipoPocoFK().getTipoPocoDescricao());} catch (Exception e) {docHtml.select("inter_tipo_poco_tag").prepend("");};
-		try { docHtml.select("inter_prof_tag").prepend(((Subterranea)listMalaDireta.get(in)[0][2]).getSubProfundidade());} catch (Exception e) {docHtml.select("inter_prof_tag").prepend("");};
-		try { docHtml.select("inter_nivel_est_tag").prepend(((Subterranea)listMalaDireta.get(in)[0][2]).getSubEstatico());} catch (Exception e) {docHtml.select("inter_nivel_est_tag").prepend("");};
-		try { docHtml.select("inter_niv_din_tag").prepend(((Subterranea)listMalaDireta.get(in)[0][2]).getSubDinamico());} catch (Exception e) {docHtml.select("inter_niv_din_tag").prepend("");};
-		try { docHtml.select("inter_vazao_tag").prepend(df.format(((Subterranea)listMalaDireta.get(in)[0][2]).getSubVazaoPoco()).replaceAll(",00", ""));} catch (Exception e) {docHtml.select("inter_vazao_tag").prepend("");};
+		try { docHtml.select("inter_tipo_poco_tag").prepend(((Subterranea)listMalaDireta.get(in)[0][2]).getSubTipoPocoFK().getTipoPocoDescricao());} 
+			catch (Exception e) {docHtml.select("inter_tipo_poco_tag").prepend("");};
+		try { docHtml.select("inter_prof_tag").prepend(((Subterranea)listMalaDireta.get(in)[0][2]).getSubProfundidade());} 
+			catch (Exception e) {docHtml.select("inter_prof_tag").prepend("");};
+		try { docHtml.select("inter_nivel_est_tag").prepend(((Subterranea)listMalaDireta.get(in)[0][2]).getSubEstatico());} 
+			catch (Exception e) {docHtml.select("inter_nivel_est_tag").prepend("");};
+		try { docHtml.select("inter_niv_din_tag").prepend(((Subterranea)listMalaDireta.get(in)[0][2]).getSubDinamico());} 
+			catch (Exception e) {docHtml.select("inter_niv_din_tag").prepend("");};
+		try { docHtml.select("inter_vazao_tag").prepend(df.format(((Subterranea)listMalaDireta.get(in)[0][2]).getSubVazaoPoco()).replaceAll(",00", ""));} 
+			catch (Exception e) {docHtml.select("inter_vazao_tag").prepend("");};
 		
 		/*
 		 * <li>Coordenadas SIRGAS 2000: <inter_lat_tag></inter_lat_tag>,<inter_lon_tag></inter_lon_tag></li>
@@ -260,7 +284,8 @@ public class MalaDiretaAnexoParecer {
 		
 		try { docHTMLTabelaPontoCaptacao.select("inter_bacia_tag").prepend(((Subterranea)listMalaDireta.get(in)[0][2]).getInterBaciaFK().getBaciaNome());} 
 			catch (Exception e) {docHtml.select("inter_bacia_tag").prepend("");};
-		try { docHTMLTabelaPontoCaptacao.select("inter_uh_tag").prepend(String.valueOf(((Subterranea)listMalaDireta.get(in)[0][2]).getInterUHFK().getUhCodigo()));} 
+		//unidade hidrografica
+		try { docHTMLTabelaPontoCaptacao.select("inter_uh_tag").prepend(String.valueOf(((Subterranea)listMalaDireta.get(in)[0][2]).getInterUHFK().getUhNome()));} 
 			catch (Exception e) {docHtml.select("inter_uh_tag").prepend("");};
 		try { docHTMLTabelaPontoCaptacao.select("inter_lat_tag").prepend(String.valueOf(((Subterranea)listMalaDireta.get(in)[0][2]).getInterDDLatitude()));} 
 			catch (Exception e) {docHtml.select("inter_lat_tag").prepend("");};
@@ -279,50 +304,56 @@ public class MalaDiretaAnexoParecer {
 				int int_t_dias_mes;
 			
 				for (int i = 0; i<12; i++) {
+		
 					
-			
-					//double dbl_q_metros_hora = Double.parseDouble(((Subterranea) listMalaDireta.get(in)[0][2]).getSubVazao())/1000;
-					//int int_t_horas_dia =  Integer.parseInt(gs.callGetter(f, listVariaveisVazaoHoraAutorizadas.get(i)));
-					//int int_t_dias_mes = Integer.parseInt((gs.callGetter(f,listVariaveisTempoAutorizadas.get(i))));
-					
+					//metro cubicos hora
 					try {dbl_q_metros_hora = (((Subterranea) listMalaDireta.get(in)[0][2]).getSubVazaoPoco())/1000;} 
 						catch (Exception e ) {
 						dbl_q_metros_hora = 0.0;
 					
 					}
 					
+					// horas dia
 					try {int_t_horas_dia = Integer.parseInt(gs.callGetter(f, listVariaveisVazaoHoraAutorizadas.get(i)));} 
 						catch (Exception e ) {
 						int_t_horas_dia = 0;
 						
 					}
 					
+					// dias por mes
 					try {int_t_dias_mes = Integer.parseInt((gs.callGetter(f,listVariaveisTempoAutorizadas.get(i))));} 
 						catch (Exception e ) {
 						int_t_dias_mes = 0;
 						//System.out.println("dbl_q_metros_hora zero ");
 					}
 				
+					// litros hora l/h
 					try { docHtmlTabelasLimitesOutorgados.select(q_litros_hora_tag [i]).prepend(df.format((((Subterranea) listMalaDireta.get(in)[0][2])).getSubVazaoPoco()) .replaceAll(",00", ""));} 
 						
 						catch (Exception e) {docHtmlTabelasLimitesOutorgados.select(q_litros_hora_tag[i]).prepend("");};
 					
-					
-					try { docHtmlTabelasLimitesOutorgados.select(q_metros_hora_tag [i]).prepend(  String.valueOf(dbl_q_metros_hora) );} 
+					// metros hora m/h
+					try { docHtmlTabelasLimitesOutorgados.select(q_metros_hora_tag [i]).prepend(  String.valueOf(dbl_q_metros_hora) .replaceAll(",00", "") );} 
 					
 						catch (Exception e) {docHtmlTabelasLimitesOutorgados.select(q_metros_hora_tag[i]).prepend("");};
 					
+					// horas por dia h/h	
 					try { docHtmlTabelasLimitesOutorgados.select(t_horas_dia_tag [i]).prepend( String.valueOf(int_t_horas_dia) );} 
 					
 						catch (Exception e) {docHtmlTabelasLimitesOutorgados.select(t_horas_dia_tag[i]).prepend("");};
-						
+					
+					// metros cubicos dia m/d	
+					try { docHtmlTabelasLimitesOutorgados.select(q_metros_dia_tag[i]).prepend( String.format("%.0f", dbl_q_metros_hora*int_t_horas_dia).replaceAll(",00", "") );} 
+					
+						catch (Exception e) {docHtmlTabelasLimitesOutorgados.select(q_metros_dia_tag[i]).prepend("");};
+							
 						
 					try { docHtmlTabelasLimitesOutorgados.select(t_dias_mes_tag [i]).prepend( String.valueOf(int_t_dias_mes) );} 
 						
 						catch (Exception e) {docHtmlTabelasLimitesOutorgados.select(t_dias_mes_tag[i]).prepend("");};
 						
 						
-					try { docHtmlTabelasLimitesOutorgados.select(q_metros_mes_tag [i]).prepend( String.format("%.0f", dbl_q_metros_hora*int_t_horas_dia*int_t_dias_mes) );} 
+					try { docHtmlTabelasLimitesOutorgados.select(q_metros_mes_tag [i]).prepend( String.format("%.0f", dbl_q_metros_hora*int_t_horas_dia*int_t_dias_mes) .replaceAll(",00", ""));} 
 			
 						catch (Exception e) {docHtmlTabelasLimitesOutorgados.select(q_metros_mes_tag[i]).prepend("");};
 						

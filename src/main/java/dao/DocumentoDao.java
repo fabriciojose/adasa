@@ -15,6 +15,9 @@ import entidades.Documento;
 import entidades.HibernateUtil;
 import entidades.NotaTecnica;
 import entidades.Parecer;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import principal.Alerta;
 
 public class DocumentoDao {
 	
@@ -29,6 +32,9 @@ public void salvarDocumento (Documento documento) {
 		
 		catch (ConstraintViolationException e ) {
 			System.out.println("salvar documento " + e);
+			
+			Alerta a = new Alerta();
+			a.alertar(new Alert(Alert.AlertType.INFORMATION, "Número SEI duplicado!!!", new ButtonType[] { ButtonType.OK }));
 		}
 	
 		s.getTransaction().commit();

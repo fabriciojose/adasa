@@ -46,6 +46,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -1282,11 +1284,16 @@ public class TabEnderecoControlador implements Initializable {
 							
 						}
 						
-					}
+					} // fim if getEndCroqui
 					
+					// copiar número sei da demanda ao selecionar //
+					Clipboard clip = Clipboard.getSystemClipboard();
+					ClipboardContent conteudo = new ClipboardContent();
+					conteudo.putString(end.getEndLogradouro());
+					clip.setContent(conteudo);
+
 					
-					
-				}
+				}// fim else
 				
 				}
 				

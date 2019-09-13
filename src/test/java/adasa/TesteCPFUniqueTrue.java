@@ -14,13 +14,6 @@ public class TesteCPFUniqueTrue {
 			
 			end.setEndID(6);
 			
-			
-			Usuario us = new Usuario("Chevrolet", new String( "777555666"));
-			
-			
-			UsuarioDao usDao = new UsuarioDao();
-			
-		    usDao.salvarUsuario(us);
 		
 		/*
 		//UsuarioDao usDao = new UsuarioDao();

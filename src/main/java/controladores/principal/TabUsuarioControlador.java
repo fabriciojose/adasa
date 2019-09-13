@@ -21,6 +21,7 @@ import entidades.BancoAccess;
 import entidades.Endereco;
 import entidades.Interferencia;
 import entidades.ModelosHTML;
+import entidades.Subterranea;
 import entidades.Usuario;
 import javafx.animation.TranslateTransition;
 import javafx.beans.value.ChangeListener;
@@ -73,6 +74,7 @@ import principal.ListasComboBox;
 import principal.MalaDireta;
 import util.BuscadorBancos;
 import util.FormatadorCPFCNPJ;
+import util.MalaDiretaUnica;
 import util.NavegadorExterno;
 import util.Registro;
 
@@ -136,7 +138,7 @@ public class TabUsuarioControlador implements Initializable {
 
 	public void habilitarEndereco () {
 
-		cbTipoPessoa.setValue("física");
+		cbTipoPessoa.setValue("Física");
 
 		tfNome.setText(null);
 		tfCPFCNPJ.setText(null);
@@ -255,13 +257,7 @@ public class TabUsuarioControlador implements Initializable {
 				a.alertar(new Alert(Alert.AlertType.INFORMATION, "Informe: Cadastro salvo com sucesso!!!", ButtonType.OK));
 
 				}
-				
-				catch (ConstraintViolationException e ) {
 			
-					Alerta a = new Alerta();
-					a.alertar(new Alert(Alert.AlertType.INFORMATION, "Número CPF ou CNPJ duplicado!!!", new ButtonType[] { ButtonType.OK }));
-				}
-				
 				catch (Exception e ) {
 					
 					Alerta a = new Alerta();
@@ -379,12 +375,6 @@ public class TabUsuarioControlador implements Initializable {
 					Alerta a = new Alerta ();
 					a.alertar(new Alert(Alert.AlertType.INFORMATION, "Cadastro editado com sucesso!!!", ButtonType.OK));
 					
-				}
-				
-				catch (ConstraintViolationException e ) {
-			
-					Alerta a = new Alerta();
-					a.alertar(new Alert(Alert.AlertType.INFORMATION, "Número CPF ou CNPJ duplicado!!!", new ButtonType[] { ButtonType.OK }));
 				}
 				
 				catch (Exception e ) {
@@ -926,6 +916,115 @@ public class TabUsuarioControlador implements Initializable {
 
 	WebView webTermo;
 	WebEngine engTermo;
+	
+	List<Object[][]> listaMalaDireta = new ArrayList<>();
+	
+	public void gerarDocumento (List<Object[][]> listaMalaDireta) {
+		
+		
+		// buscar tipo de documento 
+		HTMLEditor htmlEditor = new HTMLEditor();
+
+		ModelosDao modDao = new ModelosDao();
+
+		List<ModelosHTML> listaModelosHTMLRequerimentos = null;
+
+		/*
+		 * Escolher o modelo html - se o modelo de requerimento superficial ou subterraneo, porem desta forma se eu mudar o medelo ou adicionar um diferente
+		 * nao vou conseguir encontrar
+		 */
+		if ( 	((Interferencia)listaMalaDireta.get(0)[0][2]).getInterTipoInterferenciaFK().getTipoInterDescricao().equals("Subterrânea")	) {
+
+			listaModelosHTMLRequerimentos = modDao.listarModelo("Requerimento de Outorga Subterrânea");
+		} 
+
+		if (	((Interferencia)listaMalaDireta.get(0)[0][2]).getInterTipoInterferenciaFK().getTipoInterDescricao().equals("Superficial")	) {
+
+			listaModelosHTMLRequerimentos = modDao.listarModelo("Requerimento de Outorga Superficial");
+		} 
+
+		MalaDiretaUnica mlu = new MalaDiretaUnica(listaMalaDireta, listaModelosHTMLRequerimentos.get(0).getModConteudo());
+		
+		strHTML = mlu.criarDocumento();
+		
+		/*
+		 * Enviar o html preenchido para o navegador externo (webdrive do chrome)
+		 */
+		if (!(navExt == null)) {
+			navExt.setarStringHTML(strHTML);
+		}
+		
+
+		try { ControladorNavegacao.conNav.setHTML(strHTML); } 
+		
+			catch (Exception e) {
+
+			Alerta a = new Alerta ();
+			a.alertar(new Alert(Alert.AlertType.ERROR, "Inicialize o navegador SEI !!!", ButtonType.OK));
+		}
+
+
+		htmlEditor.setHtmlText(strHTML);
+
+		// adicionar um novo botao ao htmlEditor //
+		final String TOP_TOOLBAR = ".top-toolbar";
+
+		ToolBar tooImprimir = new ToolBar();
+		Button btnImprimir = new Button("Imprimir");
+
+		Node nod;
+
+		nod = htmlEditor.lookup(TOP_TOOLBAR);
+		if (nod instanceof ToolBar) {
+			tooImprimir = (ToolBar) nod;
+		}
+
+		tooImprimir.getItems().add(btnImprimir);
+		tooImprimir.getItems().add(new Separator(Orientation.VERTICAL));
+
+		// imprimir o requerimento //
+		btnImprimir.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+
+				ChoiceDialog<Printer> dialog = new ChoiceDialog<Printer>(Printer.getDefaultPrinter(), Printer.getAllPrinters());
+				dialog.setHeaderText("Escolha a impressora!");
+				dialog.setContentText("Impressoras disponíveis...");
+				dialog.setTitle("Printer Choice");
+				Optional<Printer> opt = dialog.showAndWait();
+				if (opt.isPresent()) {
+					//Printer printer = opt.get();
+
+					PrinterJob job = PrinterJob.createPrinterJob();
+					if (job != null) {
+						boolean success = true;
+						if (success) {
+							htmlEditor.print(job);
+							job.endJob();
+						}
+					}
+				}
+
+
+
+			}
+		});
+
+		Scene scene = new Scene(htmlEditor);
+
+		Stage stage = new Stage(StageStyle.UTILITY);
+		stage.setWidth(1150);
+		stage.setHeight(750);
+		stage.setScene(scene);
+		stage.setMaximized(false);
+		stage.setResizable(false);
+
+		stage.show();
+		
+		
+		
+	}
 
 	public void gerarRequerimento (Usuario us, Interferencia inter) {
 
@@ -955,6 +1054,9 @@ public class TabUsuarioControlador implements Initializable {
 
 		strHTML = ml.criarDocumento();
 		
+		/*
+		 * Enviar o html preenchido para o navegador externo (webdrive do chrome)
+		 */
 		if (!(navExt == null)) {
 			navExt.setarStringHTML(strHTML);
 		}
@@ -1128,8 +1230,27 @@ public class TabUsuarioControlador implements Initializable {
 
 			@Override
 			public void handle(ActionEvent event) {
-				gerarRequerimento (usuario, interferencia);
-
+				
+				//gerarRequerimento (usuario, interferencia);
+				
+				
+				Object[][] dados = new Object [][] {
+					{
+					null,
+					cbEndereco.getSelectionModel().getSelectedItem(),
+					cbInterferencia.getSelectionModel().getSelectedItem(),
+					usuario,
+					
+					},
+				} ;
+		
+				listaMalaDireta.clear();
+				listaMalaDireta.add(dados);
+				
+				gerarDocumento (listaMalaDireta);
+			
+				//  ((Usuario)listaMalaDireta.get(0)[0][3]).getUsNome() 
+				
 			}
 		});
 
@@ -1198,6 +1319,9 @@ public class TabUsuarioControlador implements Initializable {
 			public void changed(ObservableValue<? extends Interferencia> ov, Interferencia oldValue, Interferencia newValue) {  
 				if (newValue != null)
 					interferencia = newValue;
+				
+				
+				
 			}    
 		});
 		
