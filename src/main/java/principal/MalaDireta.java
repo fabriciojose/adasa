@@ -2,6 +2,7 @@ package principal;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +21,9 @@ import entidades.Interferencia;
 import entidades.Subterranea;
 import entidades.Superficial;
 import entidades.Usuario;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import util.FormatadorCPFCNPJ;
 
 public class MalaDireta {
 
@@ -113,6 +117,9 @@ public class MalaDireta {
 	// formatar 1000.50 para 1.000,50 e retirar zeros irrelevantes como ,00 - 15.00 fica 15
 	DecimalFormat df = new DecimalFormat("#,##0.00"); 
 	
+	// formatador de cpf e cnpj
+	FormatadorCPFCNPJ ccFormato = new FormatadorCPFCNPJ();
+
 
 	public String criarDocumento () {
 
@@ -123,7 +130,7 @@ public class MalaDireta {
 		docHtml = Jsoup.parse(htmlRel, "UTF-8").clone();
 
 
-
+/*
 		// dados documento
 		if (!(documento == null)) {
 			
@@ -157,6 +164,8 @@ public class MalaDireta {
 
 
 		} // fim if documento null
+		
+		*/
 
 
 		// dados do usuario
@@ -176,10 +185,23 @@ public class MalaDireta {
 			};
 			
 			// us_representante_tag us_representante_telefone_tag
+			
+			String strCPFCNPJ = null;
+			// formatacao do cpf e cnpj
+			try {
+				strCPFCNPJ = ccFormato.formatCnpj(usuario.getUsTipo(),usuario.getUsCPFCNPJ());
+			} catch (ParseException e1) {
+				
+				Alerta a = new Alerta ();
+				a.alertar(new Alert(Alert.AlertType.ERROR, "erro na formatação - CPF ou CNPJ !!!", ButtonType.OK));
+		
+				e1.printStackTrace();
+			}
+
 
 			String strUsuario [] = {
 					usuario.getUsNome(),
-					usuario.getUsCPFCNPJ(),						
+					strCPFCNPJ,						
 					usuario.getUsTelefone()	,
 					usuario.getUsCelular(),
 					usuario.getUsRepresentante(),
@@ -205,7 +227,7 @@ public class MalaDireta {
 		 */
 
 		if (endereco.getEndLogradouro() != null) {
-
+			
 			String strPosicoesEndereco [] = {
 
 					"end_log_tag",
@@ -213,6 +235,7 @@ public class MalaDireta {
 					"end_cep_tag",
 
 			};
+		
 			String strEndereco [] = {
 
 					endereco.getEndLogradouro(),
@@ -220,7 +243,7 @@ public class MalaDireta {
 					endereco.getEndCEP(),
 
 			};
-
+	
 			for (int i  = 0; i<strPosicoesEndereco.length; i++) {
 				try { docHtml.select(strPosicoesEndereco[i]).prepend(strEndereco[i]);} 
 				catch (Exception e) {docHtml.select(strPosicoesEndereco[i]).prepend("");
@@ -259,7 +282,7 @@ public class MalaDireta {
 
 				if (f.getClass().getName() == "entidades.FinalidadeRequerida") {
 					fr = (FinalidadeRequerida) f;
-					System.out.println("MALA DIRETA superfi - finalidade requerida ID " + fr.getFinID());
+		
 				}
 
 			}
@@ -315,6 +338,7 @@ public class MalaDireta {
 				strDataOperação = new SimpleDateFormat("dd/MM/yyyy").format(((Superficial) interferencia).getSupDataOperacao());
 			}
 			catch (Exception e) {strDataOperação = null;
+				strDataOperação = "";
 			};
 			
 			
@@ -363,7 +387,7 @@ public class MalaDireta {
 
 				if (f.getClass().getName() == "entidades.FinalidadeRequerida") {
 					fr = (FinalidadeRequerida) f;
-					//System.out.println("MALA DIRETA - sub - finalidade requerida ID " + fr.getFinID());
+		
 				}
 
 			}
@@ -413,19 +437,19 @@ public class MalaDireta {
 			String strDataOperação;
 			try {
 				strDataOperação = new SimpleDateFormat("dd/MM/yyyy").format(((Subterranea) interferencia).getSubDataOperacao());}
-			catch (Exception e) {strDataOperação = null;};
+			catch (Exception e) {strDataOperação = "";;};
 			
-			String vazaoPoco = "";
+			String strVazaoPoco = "";
 			// tentar imprimir o valor
-			try { vazaoPoco = 	df.format(	((Subterranea) interferencia).getSubVazaoPoco()	).replaceAll(",00", "")  ;} 
+			try { strVazaoPoco = 	df.format(	((Subterranea) interferencia).getSubVazaoPoco()	).replaceAll(",00", "")  ;} 
 			// ou imprime vazio
-			catch (Exception e) {vazaoPoco = "0";};
+			catch (Exception e) {strVazaoPoco = "0";};
 
 			String strInterferenciaSubterranea [] = {
 					strTipoSubOutorga , 
 					((Subterranea) interferencia).getSubTipoPocoFK().getTipoPocoDescricao(), 
 					((Subterranea) interferencia).getSubCaesb(),
-					vazaoPoco,
+					strVazaoPoco,
 					((Subterranea) interferencia).getSubEstatico(),
 					((Subterranea) interferencia).getSubDinamico(),
 					((Subterranea) interferencia).getSubProfundidade(),
@@ -526,8 +550,6 @@ public class MalaDireta {
 				.append("</td><td colspan='1' width='20%'>Total:")              // total
 				.append(listVazoesCadastradas.get(i));
 
-				System.out.println(strAbasHum);
-
 				try { docHtml.select("abast_hum_tag").prepend(String.valueOf(strAbasHum));} 
 				catch (Exception e) {docHtml.select("abast_hum_tag").prepend("erro");};
 
@@ -554,7 +576,6 @@ public class MalaDireta {
 				.append("</td><td colspan='1'>Consumo:&nbsp;")                    // consumo
 				.append(listConsumosCadastrados.get(i));
 
-				System.out.println(strCriacaoAnimais);
 
 				try { docHtml.select("cria_anim_tag").prepend(String.valueOf(strCriacaoAnimais));} 
 				catch (Exception e) {docHtml.select("cria_anim_tag").prepend("erro");};
@@ -685,8 +706,8 @@ public class MalaDireta {
 		 */
 		for (int i = 0; i<12; i++) {
 
-			try { docHtml.select(strListrosDiaTag[i]).prepend(String.valueOf(listVazoesDia.get(i)));} catch (Exception e) {docHtml.select(strListrosDiaTag[i]).prepend("");};
-			try { docHtml.select(strListrosHoraTag[i]).prepend(String.valueOf(listVazoesHora.get(i)));} catch (Exception e) {docHtml.select(strListrosHoraTag [i]).prepend("");};
+			try { docHtml.select(strListrosDiaTag[i]).prepend(df.format(	listVazoesDia.get(i)) .replaceAll(",00", "")	);} catch (Exception e) {docHtml.select(strListrosDiaTag[i]).prepend("");};
+			try { docHtml.select(strListrosHoraTag[i]).prepend(String.valueOf(listVazoesHora.get(i))	);} catch (Exception e) {docHtml.select(strListrosHoraTag [i]).prepend("");};
 			try { docHtml.select(strPeriodoMesTag[i]).prepend(String.valueOf(listPeriodos.get(i)));} catch (Exception e) {docHtml.select(strPeriodoMesTag [i]).prepend("");};
 
 		}

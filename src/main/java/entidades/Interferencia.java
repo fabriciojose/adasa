@@ -40,34 +40,41 @@ public class Interferencia implements Serializable {
 	@JoinColumn (name = "inter_Endereco_FK")
 	private Endereco interEnderecoFK;
 
+	// -- tipo interferencia (superficial, subterranea ... )
 	@ManyToOne (fetch = FetchType.LAZY) 
 	@JoinColumn (name = "inter_Tipo_Interferencia_FK")
 	private TipoInterferencia interTipoInterferenciaFK;
 
+	// -- bacia hidrografica 
 	@ManyToOne (fetch = FetchType.LAZY) 
 	@JoinColumn (name = "inter_Bacia_FK")
 	private BaciasHidrograficas interBaciaFK;
 
+	// unidade hidrografica
 	@ManyToOne (fetch = FetchType.LAZY) 
 	@JoinColumn (name = "inter_UH_FK")
 	private UnidadeHidrografica interUHFK;
 
+	// situacao processo (arquivado, em analise ... )
 	@ManyToOne (fetch = FetchType.LAZY) 
 	@JoinColumn (name = "inter_Situacao_Processo_FK")
 	private SituacaoProcesso interSituacaoProcessoFK;
 
+	// tipo ato (despacho, portaria, resolucao ... )
 	@ManyToOne (fetch = FetchType.LAZY) 
 	@JoinColumn (name = "inter_Tipo_Ato_FK")
 	private TipoAto interTipoAtoFK;
 
+	// tipo outorga ( outorga , outorga previa ...)
 	@ManyToOne (fetch = FetchType.LAZY) 
 	@JoinColumn (name = "inter_Tipo_Outorga_FK")
 	private TipoOutorga interTipoOutorgaFK;
-
+	 // subtipo outorga ( renovacao, modificacao )
 	@ManyToOne (fetch = FetchType.LAZY) 
 	@JoinColumn (name = "inter_Subtipo_Outorga_FK")
 	private SubtipoOutorga interSubtipoOutorgaFK;
 
+	// finalidades
 	@OneToMany (mappedBy = "finInterferenciaFK", cascade = CascadeType.ALL,
 			fetch = FetchType.EAGER, targetEntity = Finalidade.class)
 	@Fetch(FetchMode.SUBSELECT) 

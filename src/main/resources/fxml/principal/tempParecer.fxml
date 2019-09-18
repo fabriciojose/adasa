@@ -9,7 +9,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="927.0" prefWidth="980.0" stylesheets="@../../css/principal_mapa_azul.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="990.0" prefWidth="980.0" stylesheets="@../../css/principal_mapa_azul.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Pane layoutX="15.0" layoutY="10.0" prefHeight="60.0" prefWidth="950.0" styleClass="panes">
          <children>
@@ -80,8 +80,9 @@
             <ComboBox layoutX="444.0" layoutY="341.0" prefHeight="30.0" prefWidth="400.0" />
             <Button layoutX="850.0" layoutY="220.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" text="limpar" />
             <Button layoutX="850.0" layoutY="255.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" text="remover" />
-            <Button layoutX="14.0" layoutY="386.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="833.0" text="GERAR PARECER" />
-            <Button layoutX="850.0" layoutY="389.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" text="excel" />
+            <Button layoutX="14.0" layoutY="386.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="790.0" text="GERAR PARECER" />
+            <Button layoutX="815.0" layoutY="389.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" text="excel" />
+            <Button layoutX="895.0" layoutY="389.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="..." />
          </children>
       </Pane>
    </children>

@@ -27,6 +27,7 @@ public class EnderecoDao {
 	}
 	
 
+	/*
 	public Endereco obterEnderecoPorID (Integer endID) {
 		
 		Session s = HibernateUtil.getSessionFactory().openSession();
@@ -34,6 +35,49 @@ public class EnderecoDao {
 		s.beginTransaction();
 		
 		Endereco endereco = s.get(Endereco.class, endID);
+		
+		return endereco;
+		
+	}
+	*/
+	
+	public Endereco obterEnderecoPorID (Integer endID) {
+		
+		Session s = HibernateUtil.getSessionFactory().openSession();
+		
+		s.beginTransaction();
+		
+		//Endereco endereco = s.get(Endereco.class, endID);
+		
+		Endereco endereco = null;
+		
+		Criteria crit = s.createCriteria(Endereco.class, "e");
+		crit.createAlias("e.documentos", "documentos", JoinType.LEFT_OUTER_JOIN);
+		crit.createAlias("documentos.docProcessoFK", "processos", JoinType.LEFT_OUTER_JOIN);
+		
+		crit.createAlias("e.endRAFK", "ra", JoinType.LEFT_OUTER_JOIN);
+		crit.createAlias("e.interferencias", "i", JoinType.LEFT_OUTER_JOIN);
+		
+		crit.createAlias("i.subTipoPocoFK", "tipoPoco", JoinType.LEFT_OUTER_JOIN);
+		crit.createAlias("i.subSubSistemaFK", "subSistema", JoinType.LEFT_OUTER_JOIN);
+		
+		crit.createAlias("i.supFormaCaptacaoFK", "formaCaptacao", JoinType.LEFT_OUTER_JOIN);
+		crit.createAlias("i.supLocalCaptacaoFK", "localCaptacao", JoinType.LEFT_OUTER_JOIN);
+		crit.createAlias("i.supMetodoIrrigacaoFK", "metodoIrrigacao", JoinType.LEFT_OUTER_JOIN);
+		crit.createAlias("i.interSituacaoProcessoFK", "situacaoProcesso", JoinType.LEFT_OUTER_JOIN);
+		crit.createAlias("i.interTipoAtoFK", "tipoAto", JoinType.LEFT_OUTER_JOIN);
+		
+		crit.createAlias("i.interTipoInterferenciaFK", "tipoInter", JoinType.LEFT_OUTER_JOIN);
+		crit.createAlias("i.interBaciaFK", "baciaInter", JoinType.LEFT_OUTER_JOIN);
+		crit.createAlias("i.interUHFK", "unidaHidInter", JoinType.LEFT_OUTER_JOIN);
+		
+		crit.createAlias("i.interTipoOutorgaFK", "tipoOutorga", JoinType.LEFT_OUTER_JOIN);
+		crit.createAlias("i.interSubtipoOutorgaFK", "subtipoOutorga", JoinType.LEFT_OUTER_JOIN);
+		
+		crit.add(Restrictions.idEq(endID));
+		
+		endereco = (Endereco) crit.list().get(0);
+		
 		
 		return endereco;
 		
@@ -70,6 +114,7 @@ public class EnderecoDao {
 		crit.createAlias("i.interUHFK", "unidaHidInter", JoinType.LEFT_OUTER_JOIN);
 		
 		crit.createAlias("i.interTipoOutorgaFK", "tipoOutorga", JoinType.LEFT_OUTER_JOIN);
+		crit.createAlias("i.interSubtipoOutorgaFK", "subtipoOutorga", JoinType.LEFT_OUTER_JOIN);
 		
 		crit.add(Restrictions.like("endLogradouro", '%' + strPesquisa + '%'))
 				.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);

@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -25,6 +26,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import dao.DocumentoDao;
@@ -82,6 +84,7 @@ import principal.Componentes;
 import principal.FormatoData;
 import principal.MalaDiretaDocumentos;
 import util.NavegadorExterno;
+import util.Registro;
 
 public class TabParecerControlador implements Initializable {
 
@@ -284,7 +287,7 @@ public class TabParecerControlador implements Initializable {
 		Button btnUsuario;
 		Button btnParecer;
 	
-		Button btnLimpaListaMalaDireta, btnRemoveInterferenciaMalaDireta, btnExcel;
+		Button btnLimpaListaMalaDireta, btnRemoveInterferenciaMalaDireta, btnExcel, btnLocalExcel;
 		ComboBox<ModelosHTML> cbModelosHTML;
 			ObservableList<ModelosHTML> obsListModelosHTML = FXCollections.observableArrayList();
 		
@@ -389,7 +392,7 @@ public class TabParecerControlador implements Initializable {
 		componentesDocumento.add(new Label("ENDEREÇOS:"));
 		componentesDocumento.add(cbEndereco = new ComboBox<>());
 		
-		componentesDocumento.add(new Label("DOCUMENTOS:"));
+		componentesDocumento.add(new Label("REQUERIMENTO:"));
 		componentesDocumento.add(cbDocumento = new ComboBox<>());
 		
 		componentesDocumento.add(new Label("INTERFERÊNCIAS:"));
@@ -403,6 +406,7 @@ public class TabParecerControlador implements Initializable {
 
 		componentesDocumento.add(btnParecer = new Button("GERAR PARECER"));
 		componentesDocumento.add(btnExcel = new Button("excel"));
+		componentesDocumento.add(btnLocalExcel = new Button("..."));
 
 		prefSizeWHeLayXY = new Double [][] { 
 
@@ -422,8 +426,9 @@ public class TabParecerControlador implements Initializable {
 			{400.0,30.0,444.0,341.0},
 			{70.0,25.0,850.0,220.0},
 			{70.0,25.0,850.0,255.0},
-			{833.0,30.0,14.0,386.0},
-			{70.0,25.0,850.0,389.0},
+			{790.0,30.0,14.0,386.0},
+			{70.0,25.0,815.0,389.0},
+			{25.0,25.0,895.0,389.0},
 			
 			
 
@@ -1000,158 +1005,186 @@ public class TabParecerControlador implements Initializable {
 				"faTempoCapJul","faTempoCapAgo","faTempoCapSet","faTempoCapOut","faTempoCapNov","faTempoCapDez"
 
 				);
+
 		
+	
 		// inicializar tela usuario
 		btnExcel.setOnAction(new EventHandler<ActionEvent>() {
 			@Override public void handle(ActionEvent e) {
 
 				/*
-				System.out.println("C:/Users/" + System.getProperty("user.name") + "/Documents/outorgasEmitidas.xls");
-
-				 String s = Timestamp.valueOf((LocalDateTime.now())).toString();
-
-				 	s = s.replace(":", "");
-					s = s.replace("-", "");
-					s = s.replace(".", "");
-					s = s.replace(" ", "");
-
-				final String fileName = "C:/Users/" + System.getProperty("user.name") + "/Documents/" 
-						+ "Parecer-"
-						+ documento.getDocSEI()
-						+ "-"
-						+ s 
-						+ ".xls";
-				 */
-
-				String strEnderecoExcel = null;
-
-				// para escolher o arquivo  no computador
-				FileChooser fileChooser = new FileChooser();
-				fileChooser.setTitle("Selecione o arquivo excel");
-				fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XLS", "*.xls", "*.xlsm","*.xlsx"));        
-				File file = fileChooser.showOpenDialog(null);
-
-				strEnderecoExcel = file.toString();
-
-				System.out.println(strEnderecoExcel);
-
-				FileInputStream fileInput = null;
+				Registro r = new Registro();
+				List<String> strList = null;
 
 				try {
-					
-				
-					fileInput = new FileInputStream(new File(strEnderecoExcel));
-				
 
-				//HSSFWorkbook workbook = new HSSFWorkbook();
-				
-				Workbook workbook = null;
-				
-				    try {
-						workbook = new XSSFWorkbook(
-						    OPCPackage.open(strEnderecoExcel)
-						);
-					} catch (InvalidFormatException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				
-				
-				
-				Sheet sheetOutorgas = workbook.createSheet("Outorgas");
-				//HSSFSheet sheetOutorgas = (HSSFSheet) workbook.getSheetAt(0);
+					strList = r.lerRegistro();
 
-				GetterAndSetter gs  = new GetterAndSetter();
-
-				for (int i = 0; i<listaMalaDireta.size(); i++) {
-					
-					//	ANÁLISE
-
-					Row row = sheetOutorgas.createRow(i);
-
-					// Subsistema - Interferencia  	
-					Cell cellSubsistema = row.createCell(5);
-
-					cellSubsistema.setCellValue(((Subterranea)listaMalaDireta.get(i)[0][2]).getSubSubSistemaFK().getSubDescricao());
-
-					// Usuario listaMalaDireta.get(i)[0][1]
-					Cell cellNome = row.createCell(6);
-
-					cellNome.setCellValue(((Usuario)listaMalaDireta.get(i)[0][1]).getUsNome());
-
-					Cell cellCPF = row.createCell(7);
-
-					cellCPF.setCellValue(((Usuario)listaMalaDireta.get(i)[0][1]).getUsCPFCNPJ());	
-
-
-
-					// Endereco do Empreendimento listaMalaDireta.get(i)[0][3] 	
-					Cell cellEnderecoEmpreendimento = row.createCell(8);
-
-					cellEnderecoEmpreendimento.setCellValue(((Endereco)listaMalaDireta.get(i)[0][3]).getEndLogradouro());	
-
-					// Interferencia listaMalaDireta.get(i)[0][2]	
-					Cell cellInterferenciaLatitude = row.createCell(10);
-
-					cellInterferenciaLatitude.setCellValue(((Interferencia)listaMalaDireta.get(i)[0][2]).getInterDDLatitude());	
-
-
-					Cell cellInterferenciaLongitude= row.createCell(11);
-
-					cellInterferenciaLongitude.setCellValue(((Interferencia)listaMalaDireta.get(i)[0][2]).getInterDDLongitude());
-
-					Cell cellInterferenciaTipoPoco = row.createCell(12);
-
-					cellInterferenciaTipoPoco.setCellValue(((Subterranea)listaMalaDireta.get(i)[0][2]).getSubTipoPocoFK().getTipoPocoDescricao());
-
-
-					Cell cellInterferenciaProcesso = row.createCell(18);
-
-					cellInterferenciaProcesso.setCellValue(((Documento)listaMalaDireta.get(i)[0][0]).getDocProcessoFK().getProSEI());
-
-					for (Finalidade f : ((Interferencia) listaMalaDireta.get(i)[0][2]).getFinalidades()) {
-
-						if ( f.getClass().getName() == "entidades.FinalidadeAutorizada") {
-
-							for (int ii = 41; ii<53; ii++) {
-
-								Cell c = row.createCell(ii);
-								c.setCellValue( (((Subterranea)listaMalaDireta.get(i)[0][2]).getSubVazaoPoco() ));
-
-							}
-
-
-							for (int ii = 65; ii<77; ii++) {
-
-								Cell c = row.createCell(ii);
-								c.setCellValue( (gs.callGetter(f, listVariaveisVazaoHoraAutorizadas.get(i))));
-
-							}
-
-							for (int ii = 77; ii<89; ii++) {
-
-								Cell c = row.createCell(ii);
-								c.setCellValue( (gs.callGetter(f, listVariaveisTempoAutorizadas.get(i))));
-
-							}
-
-
-						}
-
-
+					for (String s : strList) {
+						System.out.println("bnt excel - loop for String s \n" + s);
 					}
 
+				} catch (IOException e2) {
 
+					e2.printStackTrace();
+				}
+				*/
+				
+				// para escolher o arquivo no computador
+				FileChooser fileChooser = new FileChooser();
+				fileChooser.setTitle("Selecione o arquivo excel");
+				fileChooser.getExtensionFilters()
+						.add(new FileChooser.ExtensionFilter("XLS", "*.xls", "*.xlsm", "*.xlsx"));
+				File file = fileChooser.showOpenDialog(null);
+				
+
+				//  link do diretorio do web driver 0;  link com diretorio do arquivo excel 1;
+				//strList.set(1, file.toString());
+		
+				//strLocalArquivoExcel = strList.get(1);
+				
+				strLocalArquivoExcel = file.toString();
+				
+				System.out.println("btn  excel  - local arquivo excel \n" + strLocalArquivoExcel);
+				
+				// Uma string nao pode ficar c:local\excel.xlsm - tem que mudar para duas barras invertidas c:local\\excel.xlsm
+				//strLocalArquivoExcel = strLocalArquivoExcel.replaceAll("/[\"]/g", "\\");
+
+				// cortar o endereco completo do arquivo excel e capturar o endereco da pasta somente
+				String [] str = file.toString().split("\\\\");
+			
+				strLocalPastaArquivoExcel = "";
+				
+				// capturar o endereco da pasta do arquivo excel
+				for (int i=0;i<str.length-1;i++) {
+					strLocalPastaArquivoExcel = strLocalPastaArquivoExcel + str[i] + "\\\\";
 				}
 				
-					fileInput.close();
+				System.out.println("btn excel - local pasta \n" + strLocalPastaArquivoExcel);
 				
-					FileOutputStream out = new FileOutputStream(new File(strEnderecoExcel));
-					workbook.write(out);
-					out.close();
-					System.out.println("Arquivo Excel criado com sucesso!");
+				// data e hora da criacao do documento excel
+				String strTempoAtual = Timestamp.valueOf((LocalDateTime.now())).toString();
+				strTempoAtual = strTempoAtual.replaceAll("\\D",""); 
+				
 
-				} catch (FileNotFoundException ffe) {
+				FileOutputStream fileOutput = null;
+				XSSFWorkbook workbook;
+
+				try {
+					workbook = (XSSFWorkbook)WorkbookFactory.create(new FileInputStream(strLocalArquivoExcel));
+
+					Sheet sheetOutorgas = workbook.getSheetAt(0);
+
+					GetterAndSetter gs  = new GetterAndSetter();
+
+					for (int i = 0; i<listaMalaDireta.size(); i++) {
+
+						//	ANÁLISE
+						Row row = sheetOutorgas.getRow(i+1);
+
+						// Subsistema - Interferencia  	
+						Cell cellSubsistema = row.getCell(5);
+						cellSubsistema.setCellValue(((Subterranea)listaMalaDireta.get(i)[0][2]).getSubSubSistemaFK().getSubDescricao());
+
+						// Usuario listaMalaDireta.get(i)[0][1]
+						Cell cellNome = row.getCell(6);
+						cellNome.setCellValue(((Usuario)listaMalaDireta.get(i)[0][1]).getUsNome());
+
+						Cell cellCPF = row.getCell(7);
+						cellCPF.setCellValue(((Usuario)listaMalaDireta.get(i)[0][1]).getUsCPFCNPJ());	
+
+						// Endereco do Empreendimento listaMalaDireta.get(i)[0][3] 	
+						Cell cellEnderecoEmpreendimento = row.getCell(8);
+						cellEnderecoEmpreendimento.setCellValue(((Endereco)listaMalaDireta.get(i)[0][3]).getEndLogradouro());	
+
+						// Interferencia listaMalaDireta.get(i)[0][2]	
+						Cell cellInterferenciaLatitude = row.getCell(10);
+						cellInterferenciaLatitude.setCellValue(((Interferencia)listaMalaDireta.get(i)[0][2]).getInterDDLatitude());	
+
+						System.out.println("latitude " + ((Interferencia)listaMalaDireta.get(i)[0][2]).getInterDDLatitude());
+
+						Cell cellInterferenciaLongitude= row.getCell(11);
+						cellInterferenciaLongitude.setCellValue(((Interferencia)listaMalaDireta.get(i)[0][2]).getInterDDLongitude());
+
+						Cell cellInterferenciaTipoPoco = row.getCell(12);
+						cellInterferenciaTipoPoco.setCellValue(((Subterranea)listaMalaDireta.get(i)[0][2]).getSubTipoPocoFK().getTipoPocoDescricao());
+
+						Cell cellInterferenciaProcesso = row.getCell(18);
+						cellInterferenciaProcesso.setCellValue(((Documento)listaMalaDireta.get(i)[0][0]).getDocProcessoFK().getProSEI());
+
+						for (Finalidade f : ((Interferencia) listaMalaDireta.get(i)[0][2]).getFinalidades()) {
+
+							if ( f.getClass().getName().equals("entidades.FinalidadeAutorizada")) {
+
+								for (int ii = 41; ii<53; ii++) {
+
+									Cell c = row.getCell(ii);
+									c.setCellValue( 	(((Subterranea)listaMalaDireta.get(i)[0][2]).getSubVazaoPoco()	 ));
+
+
+								}
+
+								int iii = 0;
+
+								for (int ii = 65; ii<77; ii++) {
+
+
+									Cell c = row.getCell(ii);
+									c.setCellValue( 	gs.callGetter(f, listVariaveisVazaoHoraAutorizadas.get(iii))	);
+									
+									iii++;
+									
+								}
+
+								iii = 0;
+								
+								for (int ii = 89; ii<101; ii++) {
+
+									Cell c = row.getCell(ii);
+									c.setCellValue( 	gs.callGetter(f, listVariaveisTempoAutorizadas.get(iii))	);
+
+									iii++;
+
+								}
+
+
+							}
+
+
+						} //fim for finalidade
+
+						// Data de Recebimento do Requerimento
+						Cell cellDataRequerimento = row.getCell(121);
+						cellDataRequerimento.setCellValue(((Documento)listaMalaDireta.get(i)[0][0]).getDocDataRecebimento());
+						// Nome da Bacia Hidrografica
+						Cell cellBacia = row.getCell(123);
+						cellBacia.setCellValue(((Subterranea)listaMalaDireta.get(i)[0][2]).getInterBaciaFK().getBaciaNome());
+						// Nome da Unidade Hidrografica
+						Cell cellUnidadeHidrografica = row.getCell(124);
+						cellUnidadeHidrografica.setCellValue(((Subterranea)listaMalaDireta.get(i)[0][2]).getInterUHFK().getUhNome());
+
+
+					}
+
+
+					System.out.println("hora de salvar excel local pasta \n " + strLocalPastaArquivoExcel);
+					// Nomear o excel gerado como: Parecer Numero (123456) Data(20190512) .xslm
+					fileOutput = new FileOutputStream(
+							strLocalPastaArquivoExcel 
+							+ "Parecer-" 
+							+ documento.getDocSEI()
+							+ "-"
+							+ strTempoAtual
+							+ ".xlsm");
+
+					workbook.write(fileOutput);
+					fileOutput.close();
+
+
+				} catch (InvalidFormatException e1) {
+					e1.printStackTrace();
+				}
+				catch (FileNotFoundException ffe) {
 					ffe.printStackTrace();
 					System.out.println("Arquivo não encontrado!");
 				} catch (IOException ioe) {
@@ -1161,6 +1194,59 @@ public class TabParecerControlador implements Initializable {
 
 
 			}
+		});
+		
+		
+		// salvar o locar (link no computador) onde esta o excel
+		btnLocalExcel.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+
+				Registro rLer = new Registro();
+				List<String> strList = null;
+
+				try {
+
+					strList = rLer.lerRegistro();
+					
+					// para escolher o arquivo no computador
+					FileChooser fileChooser = new FileChooser();
+					fileChooser.setTitle("Selecione o arquivo excel");
+					fileChooser.getExtensionFilters()
+							.add(new FileChooser.ExtensionFilter("XLS", "*.xls", "*.xlsm", "*.xlsx"));
+					File file = fileChooser.showOpenDialog(null);
+					
+
+					//  link do diretorio do web driver 0;  link com diretorio do arquivo excel 1;
+					strList.set(1, file.toString());
+					
+					System.out.println("btnLocalExcel strLink " + strList.get(1));
+
+					for (String s : strList) {
+						System.out.println("btnLocalExcel - loop string mudada " + s);
+					}
+					
+					Registro rSalvar = new Registro();
+
+					try {
+						rSalvar.salvarRegistro(strList);
+					} catch (URISyntaxException e1) {
+
+						e1.printStackTrace();
+					} catch (IOException e1) {
+
+						e1.printStackTrace();
+					}
+					
+
+				} catch (IOException e2) {
+
+					e2.printStackTrace();
+				}
+
+
+			}
+
 		});
 		
 		btnEndereco.setOnAction(new EventHandler<ActionEvent>() {
@@ -1174,6 +1260,14 @@ public class TabParecerControlador implements Initializable {
 		
 	   
 	}
+	
+	
+	// endereco da pasta onde está o arquivo excel, nao pode ser null
+	String strLocalPastaArquivoExcel = "";
+	
+	// endereco completo do arquivo excel, precisa ser null para a condicional no comeco do btnExcel
+	String strLocalArquivoExcel = null;
+	
 	
 	public void habilitarDocumento () {
 		
@@ -1203,13 +1297,13 @@ public class TabParecerControlador implements Initializable {
 	  btnExcluir.setDisable(true);
 	  btnNovo.setDisable(true);
 		  
-	  }
+	}
 	 
 	public void salvarDocumento ()	{
 		    
 	  try {
 		  
-		  if (endereco.getEndLogradouro() == null) {
+		  if (endereco.getEndLogradouro().equals(null) || endereco.getEndLogradouro() == null) {
 				
 				Alerta a = new Alerta ();
 				a.alertar(new Alert(Alert.AlertType.ERROR, "Endereço não selecionado!!!", ButtonType.OK));
@@ -1221,6 +1315,7 @@ public class TabParecerControlador implements Initializable {
 		        Alerta a = new Alerta();
 		        a.alertar(new Alert(Alert.AlertType.ERROR, "Informe: Numero e Processo SEI!!!", new ButtonType[] { ButtonType.OK }));
 		  }
+		  
 	      else
 	      {
 	    	  

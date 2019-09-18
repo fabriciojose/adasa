@@ -17,10 +17,13 @@ import entidades.Interferencia;
 import entidades.Subterranea;
 import entidades.Usuario;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import util.FormatadorCPFCNPJ;
 
 public class MalaDiretaAtosOutorga {
 	
@@ -174,8 +177,10 @@ public class MalaDiretaAtosOutorga {
 			"faTempoCapJul","faTempoCapAgo","faTempoCapSet","faTempoCapOut","faTempoCapNov","faTempoCapDez"
 
 			);
-
 	
+	// formatador de cpf e cnpj
+		FormatadorCPFCNPJ ccFormato = new FormatadorCPFCNPJ();
+
 	
 	public MalaDiretaAtosOutorga (String modeloHTML, String modeloTabelaLimitesOutorgados, Documento documento,Endereco endereco, Usuario usuario, List<Interferencia> listInterferencia) {
 		
@@ -215,12 +220,25 @@ public class MalaDiretaAtosOutorga {
 				"us_cep_tag", // <us_cep_tag></us_cep_tag> 
 				"us_email_tag" // <us_email_tag></us_email_tag>
 		};
+		
+		
+		String strCPFCNPJ = null;
+		// formatacao do cpf e cnpj
+		try {
+			strCPFCNPJ = ccFormato.formatCnpj(usuario.getUsTipo(),usuario.getUsCPFCNPJ());
+		} catch (ParseException e1) {
+			
+			Alerta a = new Alerta ();
+			a.alertar(new Alert(Alert.AlertType.ERROR, "erro na formatação - CPF ou CNPJ !!!", ButtonType.OK));
+	
+			e1.printStackTrace();
+		}
 
 		String strUsuario [] = {
 				
 				documento.getDocProcessoFK().getProSEI(),
 				usuario.getUsNome(),
-				usuario.getUsCPFCNPJ(),						
+				strCPFCNPJ,						
 				usuario.getUsTelefone()	,
 				usuario.getUsCelular(),
 				usuario.getUsLogadouro(),
@@ -280,11 +298,8 @@ public class MalaDiretaAtosOutorga {
 		
 			
 		}
-		
-		System.out.println("Mala Direta Atos Outorga - finalidades " + strFinalidades);
 
 		docHtml.select("finalidades_tag").append(String.valueOf(strFinalidades));
-		
 		
 		String strTabelaPontoCaptacaoComeco = "<table border='1' cellspacing='0' style='width: 800px;'><tbody>"
 				+ "<tr>"
@@ -314,7 +329,7 @@ public class MalaDiretaAtosOutorga {
 					+ "<p>&nbsp;</p>"
 					+ "</td>"
 					+ "<td> " + i.getInterBaciaFK().getBaciaNome() + "</td>"
-					+ "<td>" + 	i.getInterUHFK().getUhCodigo() + "</td>"
+					+ "<td>" + 	i.getInterUHFK().getUhNome() + "</td>"
 					+ "<td><b>" + 	i.getInterDDLatitude() + "</b></td>"
 					+ "<td><b>" + 	i.getInterDDLongitude() + "</b></td>"
 					+ "</tr>"
@@ -354,15 +369,15 @@ public class MalaDiretaAtosOutorga {
 						try {dbl_q_metros_hora = ((Subterranea) inter).getSubVazaoPoco()/1000;} catch (Exception e ) {
 							dbl_q_metros_hora = 0.0;
 						
+						
 						}
 						try {int_t_horas_dia =  Integer.parseInt(gs.callGetter(f, listVariaveisVazaoHoraAutorizadas.get(i)));} catch (Exception e ) {
 							int_t_horas_dia = 0;
-						
+				
 						}
 						try {int_t_dias_mes = Integer.parseInt((gs.callGetter(f,listVariaveisTempoAutorizadas.get(i))));} catch (Exception e ) {
 							int_t_dias_mes = 0;
-						
-
+							
 						}
 
 						//sub
@@ -390,7 +405,7 @@ public class MalaDiretaAtosOutorga {
 								catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(t_horas_dia_tag[i]).prepend("");};
 								
 						// metros cubicos dia M/D
-						try { docHTMLModeloTabelaLimitesOutorgados.select(q_metros_dia_tag[i]).prepend( String.format("%.0f", dbl_q_metros_hora*int_t_horas_dia) );} 
+						try { docHTMLModeloTabelaLimitesOutorgados.select(q_metros_dia_tag[i]).prepend( df.format(		 dbl_q_metros_hora*int_t_horas_dia) .replaceAll(",00", "") );} 
 								
 								catch (Exception e) {docHTMLModeloTabelaLimitesOutorgados.select(q_metros_dia_tag[i]).prepend("");};
 						

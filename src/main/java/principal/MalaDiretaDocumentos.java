@@ -20,6 +20,8 @@ import entidades.Subterranea;
 import entidades.Superficial;
 import entidades.Usuario;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
@@ -161,6 +163,8 @@ public class MalaDiretaDocumentos {
 				
 		};
 		
+		// tempo litros dia litros_hora_abr_tag listros_dia_abr_tag inter_subsistema_tag 
+		
 		String strTagsUsuario [] = {
 				
 				"us_nome_tag", // <us_nome_tag></us_nome_tag>
@@ -241,6 +245,7 @@ public class MalaDiretaDocumentos {
 				((Subterranea)listaMalaDireta.get(0)[0][2]).getSubDinamico(),
 				df.format((((Subterranea) listaMalaDireta.get(0)[0][2])).getSubVazaoPoco()) .replaceAll(",00", ""),
 				
+				
 
 		};
 
@@ -249,6 +254,9 @@ public class MalaDiretaDocumentos {
 		try {
 			strCPFCNPJ = ccFormato.formatCnpj(((Usuario)listaMalaDireta.get(0)[0][1]).getUsTipo(),((Usuario)listaMalaDireta.get(0)[0][1]).getUsCPFCNPJ());
 		} catch (ParseException e1) {
+			
+			Alerta a = new Alerta ();
+			a.alertar(new Alert(Alert.AlertType.ERROR, "erro na formatação - CPF ou CNPJ !!!", ButtonType.OK));
 	
 			e1.printStackTrace();
 		}
@@ -318,7 +326,7 @@ public class MalaDiretaDocumentos {
         		for (int i = 0; i<5; i++) {
 				
         			
-        			try { docHtml.select("finalidades_tag").prepend(gs.callGetter(f, listVariaveisFinalidadesAutorizadas.get(i)).toLowerCase() + ", ");} 
+        			try { docHtml.select("finalidades_tag").prepend(gs.callGetter(f, listVariaveisFinalidadesAutorizadas.get(i)) + ", ");} 
         			catch (Exception e) {docHtml.select("finalidades_tag").prepend("");};
 					
 				}
@@ -631,11 +639,17 @@ public class MalaDiretaDocumentos {
 				case "entidades.Subterranea":
 					
 					FinalidadeRequerida f = new FinalidadeRequerida();
+				
 
 					for (Finalidade fSub : ((Subterranea)listaMalaDireta.get(i)[0][ii]).getFinalidades() ) {
 
 						if (fSub.getClass().getName() == "entidades.FinalidadeAutorizada") {
+							
 							finSub = fSub;
+						
+							// Trazer o a vazao em abril e horas de captacao em abril para o parecer individual
+							docHtml.select("litros_hora_abr_tag").append( df.format( ((FinalidadeAutorizada) fSub).getFaQHoraAbr() ).replaceAll(",00", "") );
+							docHtml.select("listros_dia_abr_tag").append( df.format( ((FinalidadeAutorizada) fSub).getFaQDiaAbr()).replaceAll(",00", "") );
 
 						} else {
 							 f = (FinalidadeRequerida) fSub;
@@ -784,6 +798,9 @@ public class MalaDiretaDocumentos {
 		strTable.append("</tbody></table>");
 
 		docHtml.select(strTag).append(String.valueOf(strTable));
+		
+		// tempo litros dia litros_hora_abr_tag listros_dia_abr_tag inter_subsistema_tag 
+		
 
 	} // fim metodo inserirfinalidade
 	

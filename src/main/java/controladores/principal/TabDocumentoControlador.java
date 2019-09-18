@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-import org.hibernate.exception.ConstraintViolationException;
-
 import dao.DocumentoDao;
 import entidades.Documento;
 import entidades.Endereco;
@@ -90,6 +88,11 @@ public class TabDocumentoControlador implements Initializable {
 		btnEditar.setDisable(true);
 		btnExcluir.setDisable(true);
 		btnNovo.setDisable(true);
+
+		// limpar dados do endereco nas labels de endereco
+		preencherEndereco(null);
+		// limpar dados do processo na label processo principal
+		preenchimentoProcesso(null);
 
 	}
 
@@ -810,9 +813,14 @@ public class TabDocumentoControlador implements Initializable {
 		btnExcluir.setDisable(true);
 
 		btnNovo.setDisable(false);
+		
+		// limpar dados do endereco nas labels de endereco
+		preencherEndereco(null);
+		// limpar dados do processo na label processo principal
+		preenchimentoProcesso(null);
+		
 	}
 
-	
 	//-- selecionar demandas -- //
 	public void selecionarDocumento () {
 
@@ -872,69 +880,10 @@ public class TabDocumentoControlador implements Initializable {
 						System.out.println("selecionar documento data recebi " + dataRec.toLocalDate());
 					}
 
-
-					// endereço relacionado //
-					if (doc.getDocEnderecoFK() != null) {
-
-						lblLogradouro.setText(doc.getDocEnderecoFK().getEndLogradouro());
-						lblRegiaoAdministrativa.setText(doc.getDocEnderecoFK().getEndRAFK().getRaNome());
-						lblLatitude.setText(doc.getDocEnderecoFK().getEndDDLatitude().toString());
-						lblLongitude.setText(doc.getDocEnderecoFK().getEndDDLongitude().toString());
-
-						lblLogradouro.setStyle("-fx-text-fill: #4A4A4A;"); 
-
-
-						// listar as interferencias
-						Set<Documento> setDoc = doc.getDocEnderecoFK().getDocumentos();
-						Endereco end = doc.getDocEnderecoFK();
-
-						// preparar strings para transmitir para o javascript pelo metodo 'setEnderecoInterferencias()'
-
-						String strInfoDocumentos = "";
-
-						String strEndereco = end.getEndDDLatitude() + "," + end.getEndDDLongitude();
-
-						for(Documento d : setDoc) {
-
-							strInfoDocumentos += "|" + d.getDocTipo() + "," + d.getDocSEI() + "," + d.getDocProcesso();
-
-
-						} // fim loop for
-
-						/* chamar os metodo necessarios, primeiro as coordenadas e detalhes, 
-							zoom do mapa e deois centralizar o mapa de acordo com o endereco
-						 */
-						googleMaps.mostrarDemandas(strEndereco, strInfoDocumentos);
-						googleMaps.setZoom (11);
-						googleMaps.setMapCenter(end.getEndDDLatitude().toString(), end.getEndDDLongitude().toString());
-
-
-					} else {
-
-						lblLogradouro.setText("Sem endereço cadastrado!");
-						lblRegiaoAdministrativa.setText("");
-						lblLatitude.setText("");
-						lblLongitude.setText("");
-
-						lblLogradouro.setStyle("-fx-text-fill: #FF0000;"); // fonte color: vermelho
-					}
-
-					if (doc.getDocProcessoFK() != null) {
-
-						lblProcessoPrincipal.setText(
-
-								doc.getDocProcessoFK().getProSEI()
-								+ ", Interessado: " + doc.getDocProcessoFK().getProInteressado()
-
-								);
-						lblProcessoPrincipal.setStyle("-fx-text-fill: #4A4A4A;"); 
-
-
-					} else {
-
-						lblProcessoPrincipal.setText("Não está relacionado a nenhum processo principal!");
-						lblProcessoPrincipal.setStyle("-fx-text-fill: #FF0000;");
-					}
+					// preencher dados do endereco
+					preencherEndereco (doc.getDocEnderecoFK());
+					// preencher dados processo principal
+					preenchimentoProcesso (doc.getDocProcessoFK());
 
 					// mostrar data de atualizacao //
 					FormatoData d = new FormatoData();
@@ -975,6 +924,79 @@ public class TabDocumentoControlador implements Initializable {
 
 		}); // fim do selection model
 
-	}
+	} // fim metodo selecionar documento
+	
+	public void preencherEndereco (Endereco end) {
 
+		if (end != null) {
+	
+			lblLogradouro.setText(end.getEndLogradouro());
+			lblRegiaoAdministrativa.setText(end.getEndRAFK().getRaNome());
+			lblLatitude.setText(end.getEndDDLatitude().toString());
+			lblLongitude.setText(end.getEndDDLongitude().toString());
+
+			lblLogradouro.setStyle("-fx-text-fill: #4A4A4A;"); 
+
+
+			// listar as interferencias
+			Set<Documento> setDoc = end.getDocumentos();
+			
+			// preparar strings para transmitir para o javascript pelo metodo 'setEnderecoInterferencias()'
+
+			String strInfoDocumentos = "";
+
+			String strEndereco = end.getEndDDLatitude() + "," + end.getEndDDLongitude();
+
+			for(Documento d : setDoc) {
+
+				strInfoDocumentos += "|" + d.getDocTipo() + "," + d.getDocSEI() + "," + d.getDocProcesso();
+
+
+			} // fim loop for
+
+			
+			
+			/* chamar os metodo necessarios, primeiro as coordenadas e detalhes, 
+				zoom do mapa e deois centralizar o mapa de acordo com o endereco
+			 */
+			googleMaps.mostrarDemandas(strEndereco, strInfoDocumentos);
+			googleMaps.setZoom (11);
+			googleMaps.setMapCenter(end.getEndDDLatitude().toString(), end.getEndDDLongitude().toString());
+
+
+		} else {
+
+			lblLogradouro.setText("Sem endereço cadastrado!");
+			lblRegiaoAdministrativa.setText("");
+			lblLatitude.setText("");
+			lblLongitude.setText("");
+
+			lblLogradouro.setStyle("-fx-text-fill: #FF0000;"); // fonte color: vermelho
+		}
+
+	}
+	
+	public void preenchimentoProcesso (Processo proc){
+		
+		if (proc != null) {
+
+			lblProcessoPrincipal.setText(
+
+					proc.getProSEI()
+					+ ", Interessado: " + proc.getProInteressado()
+
+					);
+			lblProcessoPrincipal.setStyle("-fx-text-fill: #4A4A4A;"); 
+
+
+		} else {
+
+			lblProcessoPrincipal.setText("Não está relacionado a nenhum processo principal!");
+			lblProcessoPrincipal.setStyle("-fx-text-fill: #FF0000;");
+		}
+		
+		
+		
+		
+	}
 }

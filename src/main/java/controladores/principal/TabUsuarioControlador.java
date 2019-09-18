@@ -1233,7 +1233,6 @@ public class TabUsuarioControlador implements Initializable {
 				
 				//gerarRequerimento (usuario, interferencia);
 				
-				
 				Object[][] dados = new Object [][] {
 					{
 					null,

@@ -407,8 +407,6 @@ public class TabAtosOutorgaControlador implements Initializable {
 			@Override 
 			public void changed(ObservableValue<? extends Interferencia> ov, Interferencia oldValue, Interferencia newValue) {  
 
-				//tvObsListInterferencia.clear();
-
 				if (newValue != null) {
 					tvObsListInterferencia.addAll(newValue);
 					
@@ -426,7 +424,7 @@ public class TabAtosOutorgaControlador implements Initializable {
 						}
 					}
 		
-				}
+				} // fim if
 				
 					
 			}    
@@ -524,6 +522,9 @@ public class TabAtosOutorgaControlador implements Initializable {
 
 	public void modularBotoes () {
 
+		cbTipoDocumento.setDisable(true);
+		cbTipoDocumento.setValue(null);
+		
 		tfDocumento.setDisable(true);
 		tfSEI.setDisable(true);
 		tfProcessoSEI.setDisable(true);
@@ -540,7 +541,10 @@ public class TabAtosOutorgaControlador implements Initializable {
 	}
 
 	public void habilitarDocumento () {
-
+		
+		cbTipoDocumento.setDisable(false);
+		cbTipoDocumento.setValue(null);
+		
 		tfDocumento.setText("");
 		tfSEI.setText("");
 		tfProcessoSEI.setText("");
@@ -548,7 +552,7 @@ public class TabAtosOutorgaControlador implements Initializable {
 		dpDataCriacao.getEditor().clear();
 		dpDataDistribuicao.getEditor().clear();
 		dpDataRecebimento.getEditor().clear();
-
+		
 		dpDataCriacao.setDisable(false);
 		dpDataDistribuicao.setDisable(false);
 		dpDataRecebimento.setDisable(false);
@@ -562,6 +566,7 @@ public class TabAtosOutorgaControlador implements Initializable {
 		btnEditar.setDisable(true);
 		btnExcluir.setDisable(true);
 		btnNovo.setDisable(true);
+		
 
 	}
 	
@@ -889,6 +894,8 @@ public class TabAtosOutorgaControlador implements Initializable {
 				Documento doc = (Documento) newValue;
 
 				if (doc == null) {
+					
+					cbTipoDocumento.setValue(null);
 
 					tfDocumento.setText("");
 					tfSEI.setText("");
@@ -913,6 +920,8 @@ public class TabAtosOutorgaControlador implements Initializable {
 					setEndereco(doc.getDocEnderecoFK());
 
 					// preencher os campos //
+					
+					cbTipoDocumento.setValue(doc.getDocTipo());
 					tfDocumento.setText(doc.getDocNumeracao());
 					tfSEI.setText(doc.getDocSEI());
 					tfProcessoSEI.setText(doc.getDocProcesso());
@@ -951,14 +960,9 @@ public class TabAtosOutorgaControlador implements Initializable {
 					}
 					
 					tvObsListInterferencia.clear();
-					
-					//System.out.println(endereco.getEndID());
-					
-					
-					EnderecoDao endDao = new EnderecoDao();
-					
+	
 					//Endereco end = endDao.obterEnderecoPorID (doc.getDocEnderecoFK().getEndID());
-					Endereco end = endDao.obterEnderecoPorID(doc.getDocEnderecoFK().getEndID());
+					Endereco end = new EnderecoDao().obterEnderecoPorID(doc.getDocEnderecoFK().getEndID());
 					
 					endereco = end;
 					
@@ -967,7 +971,7 @@ public class TabAtosOutorgaControlador implements Initializable {
 					List<Interferencia> interList = end.getInterferencias();
 					
 					cbObsListInterferencia.addAll(interList);
-				
+					
 					// Limpar a tableView Interferencia
 					//obsListInterferencia.clear();
 

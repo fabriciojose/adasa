@@ -181,7 +181,7 @@ public class MalaDiretaUnica {
 				try { docHtml.select(strTagsDocumento[i]).prepend(strDocumento[i]);} catch (Exception e) {docHtml.select(strTagsDocumento[i]).prepend("");};
 			}
 		
-			}
+			} // fim if doc null
 			
 			
 			finSubReq = new FinalidadeRequerida();
@@ -259,8 +259,6 @@ public class MalaDiretaUnica {
 		 * dados do endereco do empreendimento
 		 */
 
-		//if (endereco.getEndLogradouro() != null) {
-		
 		Endereco endereco =  ((Endereco)listaMalaDireta.get(0)[0][1]);
 
 			String strTagsEndereco [] = {

@@ -35,6 +35,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import principal.Alerta;
@@ -222,6 +223,15 @@ public class TelaProcessoControlador implements Initializable {
 
 	  Componentes comPersistencia = new Componentes();
 	  comPersistencia.popularTela(componentesPersistencia, prefSizeWHeLayXY, pPrincipal);
+	  
+	  /*
+		 * Buscar apenas clicando no enter do teclado
+		 */
+		tfPesquisar.setOnKeyReleased(event -> {
+			if (event.getCode() == KeyCode.ENTER){
+				btnPesquisar.fire();
+			}
+		});
 
 	  tcNumeroProcesso.setCellValueFactory(new PropertyValueFactory<Processo, String>("proSEI"));
 	  tcDataCriacao.setCellValueFactory(new PropertyValueFactory<Processo, String>("proDataCriacao"));

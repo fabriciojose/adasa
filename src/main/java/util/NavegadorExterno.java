@@ -101,34 +101,25 @@ public class NavegadorExterno {
 
 		btnBrowser.setOnAction((event) -> {
 
-			if (strWebDriver == null) {
+			r = new Registro();
+			List<String> strList = null;
 
-				System.out.println(strWebDriver == null);
+			try {
 
-				r = new Registro();
-				List<String> strList = null;
+				strList = r.lerRegistro();
 
-				try {
-
-					strList = r.lerRegistro();
-
-					for (String s : strList) {
-						System.out.println("strings " + s);
-					}
-
-				} catch (IOException e2) {
-
-					e2.printStackTrace();
+				for (String s : strList) {
+					System.out.println("bnt browser strings " + s);
 				}
 
-				if(strList.size() != 0) {
-					strWebDriver = strList.get(0);
-				}
+			} catch (IOException e2) {
 
-				System.out.println(strWebDriver);
+				e2.printStackTrace();
+			}
 
-			} // fim if strWebDriver == null
-
+			strWebDriver = "";
+			
+			strWebDriver = strList.get(0);
 
 			System.setProperty("webdriver.chrome.driver", strWebDriver);
 
@@ -149,46 +140,55 @@ public class NavegadorExterno {
 		btnWebDriver.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent e) {
-
-				r = new Registro();
+				
+				Registro rLer = new Registro();
 				List<String> strList = null;
 
 				try {
-					strList = r.lerRegistro();
+
+					strList = rLer.lerRegistro();
+
+					for (String s : strList) {
+						System.out.println("bnt Navegador - loop leitura strings  " + s);
+					}
+
 				} catch (IOException e2) {
 
 					e2.printStackTrace();
 				}
 
-				if(strList.size() != 0) {
-					strWebDriver = strList.get(1);
+				// para escolher o arquivo  no computador
+				FileChooser fileChooser = new FileChooser();
+				fileChooser.setTitle("Selecione o Web Driver");
+				fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("EXE" , "*.exe"));        
+				File file = fileChooser.showOpenDialog(null);
+
+				strWebDriver = file.toString();
+				
+				//  link do diretorio do web driver 0;  link com diretorio do arquivo excel 1;
+				strList.set(0, strWebDriver);
+				
+				
+				System.out.println("btn navegador strLIst " + strList.get(0));
+
+				for (String s : strList) {
+					System.out.println("btn navegador - loop string mudada " + s);
 				}
 
-				if (strWebDriver == null) {
+				Registro rSalvar = new Registro();
 
-					// para escolher o arquivo  no computador
-					FileChooser fileChooser = new FileChooser();
-					fileChooser.setTitle("Selecione o Web Driver");
-					fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("EXE" , "*.exe"));        
-					File file = fileChooser.showOpenDialog(null);
+				try {
+					rSalvar.salvarRegistro(strList);
+				} catch (URISyntaxException e1) {
 
-					strWebDriver = file.toString();
+					e1.printStackTrace();
+				} catch (IOException e1) {
 
-					r = new Registro();
-
-					try {
-						r.salvarRegistro(strWebDriver);
-
-					} catch (URISyntaxException e1) {
-
-						e1.printStackTrace();
-					} catch (IOException e1) {
-
-						e1.printStackTrace();
-					}
-
-
+					e1.printStackTrace();
 				}
+				
+			
+
 			}
 
 

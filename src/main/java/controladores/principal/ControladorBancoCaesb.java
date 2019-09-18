@@ -20,6 +20,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import principal.Componentes;
@@ -168,6 +169,15 @@ public class ControladorBancoCaesb implements Initializable {
 
 		com = new Componentes();
 		com.popularTela(listNodesPersistencia, prefSizeWHeLayXY, p1);
+		
+		/*
+		 * Buscar apenas clicando no enter do teclado
+		 */
+		tfPesquisar.setOnKeyReleased(event -> {
+			if (event.getCode() == KeyCode.ENTER){
+				btnPesquisar.fire();
+			}
+		});
 		
 	}
 

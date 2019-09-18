@@ -208,7 +208,8 @@ public class TabEnderecoControlador implements Initializable {
 			// adicionar o poligono do croqui endereco
 			
 			System.out.println("btn salvar strCroquiEndereco " + strCroquiEndereco);
-			if (strCroquiEndereco != null) {
+			
+			if (! strCroquiEndereco.equals(null)) {
 				end.setEndCroqui(new PoligonoCroqui().obterPoligonoCroqui(strCroquiEndereco));
 			}
 		
@@ -322,7 +323,7 @@ public class TabEnderecoControlador implements Initializable {
 					
 					System.out.println("btn editar strCroquiEndereco " + strCroquiEndereco);
 					
-					if (strCroquiEndereco != null) {
+					if (! strCroquiEndereco.equals(null)) {
 						end.setEndCroqui(new PoligonoCroqui().obterPoligonoCroqui (strCroquiEndereco));
 					}
 		

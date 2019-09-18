@@ -40,6 +40,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import principal.Alerta;
@@ -306,9 +307,19 @@ public class TelaUsuarioControlador implements Initializable {
 		    	{95.0,25.0,735.0,18.0},
 		    	
 		    };
-	    	
+		    
+		   	
 	com = new Componentes();
     com.popularTela(componentesPersistencia, prefSizeWHeLayXY, pPrincipal);
+    
+    /*
+	 * Buscar apenas clicando no enter do teclado
+	 */
+	tfPesquisar.setOnKeyReleased(event -> {
+		if (event.getCode() == KeyCode.ENTER){
+			btnPesquisar.fire();
+		}
+	});
     
 			    
 	pTelaUsuario.getChildren().addAll(pPrincipal);

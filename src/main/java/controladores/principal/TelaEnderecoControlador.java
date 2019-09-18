@@ -36,6 +36,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
@@ -355,6 +356,15 @@ public class TelaEnderecoControlador implements Initializable {
 
 		com = new Componentes();
 		com.popularTela(componentesPersistencia, prefSizeWHeLayXY, pPrincipal);
+		
+		/*
+		 * Buscar apenas clicando no enter do teclado
+		 */
+		tfPesquisar.setOnKeyReleased(event -> {
+			if (event.getCode() == KeyCode.ENTER){
+				btnPesquisar.fire();
+			}
+		});
 
 
 		tcLogradouro.setPrefWidth(375);

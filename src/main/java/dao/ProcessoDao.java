@@ -8,10 +8,14 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.exception.ConstraintViolationException;
 import org.hibernate.sql.JoinType;
 
 import entidades.HibernateUtil;
 import entidades.Processo;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import principal.Alerta;
 
 public class ProcessoDao {
 	
@@ -19,7 +23,20 @@ public class ProcessoDao {
 	  
     Session s = HibernateUtil.getSessionFactory().openSession();
     s.beginTransaction();
-    s.save(pro);
+    
+    
+    try {
+    	s.save(pro);
+	}
+	
+	catch (ConstraintViolationException e ) {
+		System.out.println("salvar documento " + e);
+		
+		Alerta a = new Alerta();
+		a.alertar(new Alert(Alert.AlertType.INFORMATION, "Número do Processo Principal duplicado!!!", new ButtonType[] { ButtonType.OK }));
+	}
+    
+    
     s.getTransaction().commit();
     s.flush();
     s.close();

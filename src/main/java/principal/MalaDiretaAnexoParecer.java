@@ -1,6 +1,7 @@
 package principal;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,6 +15,7 @@ import entidades.GetterAndSetter;
 import entidades.Interferencia;
 import entidades.Subterranea;
 import entidades.Usuario;
+import util.FormatadorCPFCNPJ;
 
 public class MalaDiretaAnexoParecer {
 	
@@ -191,6 +193,8 @@ public class MalaDiretaAnexoParecer {
 			);
 
 	
+	// formatador de cpf e cnpj
+	FormatadorCPFCNPJ ccFormato = new FormatadorCPFCNPJ();
 	
 	public MalaDiretaAnexoParecer (List<Object[][]> listMalaDireta, String strAnexoParecer, String strTabela1, String strTabela2) {
 		
@@ -226,8 +230,10 @@ public class MalaDiretaAnexoParecer {
 		 //* <us_cpfcnpj_tag></us_cpfcnpj_tag>
 
 		try { docHtml.select("us_nome_tag").prepend(((Usuario)listMalaDireta.get(in)[0][1]).getUsNome());} catch (Exception e) {docHtml.select("us_nome_tag").prepend("");};
-			
-		try { docHtml.select("us_cpfcnpj_tag").prepend(((Usuario)listMalaDireta.get(in)[0][1]).getUsCPFCNPJ());} catch (Exception e) {docHtml.select("us_cpfcnpj_tag").prepend("");};
+	
+		// formatador de cpf e cnpj - ccFormato (tipo pessoa - fisica ou jurica e cpf ou cnpj )	
+		try { docHtml.select("us_cpfcnpj_tag").prepend(ccFormato.formatCnpj(((Usuario)listMalaDireta.get(0)[0][1]).getUsTipo(),((Usuario)listMalaDireta.get(0)[0][1]).getUsCPFCNPJ()));} 
+			catch (Exception e) {docHtml.select("us_cpfcnpj_tag").prepend("");};
 		
 		// <end_log_tag></end_log_tag>
 			
@@ -314,14 +320,14 @@ public class MalaDiretaAnexoParecer {
 					}
 					
 					// horas dia
-					try {int_t_horas_dia = Integer.parseInt(gs.callGetter(f, listVariaveisVazaoHoraAutorizadas.get(i)));} 
+					try {int_t_horas_dia = Integer.parseInt(	gs.callGetter(f, listVariaveisVazaoHoraAutorizadas.get(i))	);} 
 						catch (Exception e ) {
 						int_t_horas_dia = 0;
 						
 					}
 					
 					// dias por mes
-					try {int_t_dias_mes = Integer.parseInt((gs.callGetter(f,listVariaveisTempoAutorizadas.get(i))));} 
+					try {int_t_dias_mes = Integer.parseInt(		gs.callGetter(f,listVariaveisTempoAutorizadas.get(i))	);} 
 						catch (Exception e ) {
 						int_t_dias_mes = 0;
 						//System.out.println("dbl_q_metros_hora zero ");
@@ -333,7 +339,7 @@ public class MalaDiretaAnexoParecer {
 						catch (Exception e) {docHtmlTabelasLimitesOutorgados.select(q_litros_hora_tag[i]).prepend("");};
 					
 					// metros hora m/h
-					try { docHtmlTabelasLimitesOutorgados.select(q_metros_hora_tag [i]).prepend(  String.valueOf(dbl_q_metros_hora) .replaceAll(",00", "") );} 
+					try { docHtmlTabelasLimitesOutorgados.select(q_metros_hora_tag [i]).prepend(  df.format(	dbl_q_metros_hora ) .replaceAll(",00", "") );} 
 					
 						catch (Exception e) {docHtmlTabelasLimitesOutorgados.select(q_metros_hora_tag[i]).prepend("");};
 					
@@ -343,7 +349,7 @@ public class MalaDiretaAnexoParecer {
 						catch (Exception e) {docHtmlTabelasLimitesOutorgados.select(t_horas_dia_tag[i]).prepend("");};
 					
 					// metros cubicos dia m/d	
-					try { docHtmlTabelasLimitesOutorgados.select(q_metros_dia_tag[i]).prepend( String.format("%.0f", dbl_q_metros_hora*int_t_horas_dia).replaceAll(",00", "") );} 
+					try { docHtmlTabelasLimitesOutorgados.select(q_metros_dia_tag[i]).prepend( df.format(		 dbl_q_metros_hora*int_t_horas_dia).replaceAll(",00", "") );} 
 					
 						catch (Exception e) {docHtmlTabelasLimitesOutorgados.select(q_metros_dia_tag[i]).prepend("");};
 							
@@ -353,7 +359,7 @@ public class MalaDiretaAnexoParecer {
 						catch (Exception e) {docHtmlTabelasLimitesOutorgados.select(t_dias_mes_tag[i]).prepend("");};
 						
 						
-					try { docHtmlTabelasLimitesOutorgados.select(q_metros_mes_tag [i]).prepend( String.format("%.0f", dbl_q_metros_hora*int_t_horas_dia*int_t_dias_mes) .replaceAll(",00", ""));} 
+					try { docHtmlTabelasLimitesOutorgados.select(q_metros_mes_tag [i]).prepend( df.format(		 dbl_q_metros_hora*int_t_horas_dia*int_t_dias_mes) .replaceAll(",00", ""));} 
 			
 						catch (Exception e) {docHtmlTabelasLimitesOutorgados.select(q_metros_mes_tag[i]).prepend("");};
 						

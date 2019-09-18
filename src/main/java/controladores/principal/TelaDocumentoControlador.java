@@ -240,6 +240,16 @@ public class TelaDocumentoControlador implements Initializable {
   		com = new Componentes();
   		com.popularTela(componentesPersistencia, prefSizeWHeLayXY, pPrincipal);
 
+  		
+  		/*
+		 * Buscar apenas clicando no enter do teclado
+		 */
+		tfPesquisar.setOnKeyReleased(event -> {
+			if (event.getCode() == KeyCode.ENTER){
+				btnPesquisar.fire();
+			}
+		});
+		
 
   		tcTipo.setCellValueFactory(new PropertyValueFactory<Documento, String>("docTipo"));
   		tcNumeracao.setCellValueFactory(new PropertyValueFactory<Documento, String>("docNumeracao"));

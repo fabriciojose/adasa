@@ -69,5 +69,10 @@ public class Principal extends Application{
         stage.show();
 	
 	}
+	
+	
+	/*
+	 * 18/09/2019 - melhorias nos pareceres e atos
+	 */
 
 }
