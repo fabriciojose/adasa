@@ -1,6 +1,8 @@
 package controladores.principal;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.Properties;
 
 import controladores.modelosHTML.ControladorModelosHTML;
 import de.jensd.fx.glyphs.GlyphsDude;
@@ -39,6 +41,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import mapas.GoogleMap;
 import principal.ListasComboBox;
+import util.Registro;
 
 /** Casse controlador da classe principal, onde serao chamados as telas necessarias para os cadastros
  * 
@@ -213,6 +216,9 @@ public class ControladorPrincipal {
 				AnchorPane.setLeftAnchor(pWebMap , 0.0);
 				AnchorPane.setRightAnchor(pWebMap , 0.0);
 				AnchorPane.setBottomAnchor(pWebMap, 0.0);
+				
+				// inicializa o estilo do mapa de acordo com o que ler no arquivo properties
+				apPrincipal.getStylesheets().add(estilizarMapa());
 
 			}
 
@@ -298,9 +304,11 @@ public class ControladorPrincipal {
 
 		apPrincipal.getChildren().addAll( pWebMap, tpLateralEsquera, tpLateralDireita, pSuperior,spCentroTabPanes, spConversorCoordenadas);
 
-		apPrincipal.getStylesheets().add("/css/principal_mapa_azul.css");
 
+
+		
 	}
+	
 	/** Metodo de inicializacao do conversor de coordenadas
 	 * 
 	 */
@@ -1169,34 +1177,34 @@ public class ControladorPrincipal {
 
 		btnRetroMap.setLayoutX(103.0);
 		btnRetroMap.setLayoutY(216.0);
+		
+		btnBlueMap.setOnAction((ActionEvent evt)->{
+			//googleMaps.mudarEstiloMapa(2);
+			apPrincipal.getStylesheets().clear();
+			apPrincipal.getStylesheets().add(estilizarMapa(0));
+
+		});	 
 
 		btnNightMap.setOnAction((ActionEvent evt)->{
-			googleMaps.mudarEstiloMapa(1);
+			//googleMaps.mudarEstiloMapa(1);
 			apPrincipal.getStylesheets().clear();
-			apPrincipal.getStylesheets().add("/css/principal_mapa_escuro.css");
+			apPrincipal.getStylesheets().add(estilizarMapa(1));
 
 
 		});	
 
-		btnBlueMap.setOnAction((ActionEvent evt)->{
-			googleMaps.mudarEstiloMapa(2);
-			apPrincipal.getStylesheets().clear();
-			apPrincipal.getStylesheets().add("/css/principal_mapa_azul.css");
-
-		});	 
-
 		btnGreenMap.setOnAction((ActionEvent evt)->{
-			googleMaps.mudarEstiloMapa(3);
+			//googleMaps.mudarEstiloMapa(3);
 
 			apPrincipal.getStylesheets().clear();
-			apPrincipal.getStylesheets().add("/css/principal_mapa_verde.css");
+			apPrincipal.getStylesheets().add(estilizarMapa(2));
 
 		});	    
 		btnRetroMap.setOnAction((ActionEvent evt)->{
-			googleMaps.mudarEstiloMapa(4);
+			//googleMaps.mudarEstiloMapa(4);
 
 			apPrincipal.getStylesheets().clear();
-			apPrincipal.getStylesheets().add("/css/principal_mapa_salmao.css");
+			apPrincipal.getStylesheets().add(estilizarMapa(3));
 		});	    	
 
 
@@ -1348,6 +1356,112 @@ public class ControladorPrincipal {
 			}
 		});
 
+	}  // fim metodo copiarCoord
+	
+	
+	String strEstiloMapa [] = new String [] {
+		"/css/principal_mapa_azul.css", // 0
+		"/css/principal_mapa_escuro.css",
+		"/css/principal_mapa_verde.css",
+		"/css/principal_mapa_salmao.css", //3
+			
+	};
+	
+	public String estilizarMapa (int intEstiloMapa) {
+		
+		Registro registro = new Registro();
+		
+		String strEstiloCSS = null;
+		
+		Properties prop = new Properties();
+		
+		try {
+			prop = registro.lerRegistro();
+			
+			strEstiloCSS = prop.getProperty("strEstiloCSS");
+			googleMaps.mudarEstiloMapa(intEstiloMapa+1);
+			
+		} catch (Exception e1) {
+			
+			strEstiloCSS = strEstiloMapa[intEstiloMapa];
+			googleMaps.mudarEstiloMapa(intEstiloMapa+1);
+			
+		}
+		
+		try {
+			
+			prop.setProperty("strEstiloCSS", strEstiloMapa[intEstiloMapa]);
+			
+			registro.salvarRegistro(prop);
+			
+			strEstiloCSS = prop.getProperty("strEstiloCSS");
+			
+			System.out.println("primeiro segundo try");
+			
+		} catch (URISyntaxException e3) {
+
+			e3.printStackTrace();
+		} catch (IOException e3) {
+
+			e3.printStackTrace();
+		}
+		
+		System.out.println("metodo mudar estilo  mapa (" + (intEstiloMapa) + ") "  + strEstiloCSS + " mapa " + (intEstiloMapa+1));
+		
+		return strEstiloCSS;
+		
+	}
+	
+	
+	public String estilizarMapa () {
+		
+		Registro registro = new Registro();
+		
+		String strEstiloCSS = null;
+		
+		Properties prop = new Properties();
+	
+			try {
+				
+				prop = registro.lerRegistro();
+				
+				strEstiloCSS = prop.getProperty("strEstiloCSS");
+				
+				/*
+				 * comparar a string strEstiloCSS com a array strEstiloMapa e escolher o mapa correto de visualizacao
+				 */
+
+				if (strEstiloCSS.equals(strEstiloMapa [0])) {
+					googleMaps.mudarEstiloMapa(1);
+				} 
+				
+				else if (strEstiloCSS.equals(strEstiloMapa [1])) {
+					googleMaps.mudarEstiloMapa(2);
+				}
+				
+			
+				else if (strEstiloCSS.equals(strEstiloMapa [2])) {
+					googleMaps.mudarEstiloMapa(3);
+				}
+				else {
+					googleMaps.mudarEstiloMapa(4);
+				}
+				
+				
+			} catch (IOException e) {
+				
+			
+				e.printStackTrace();
+				
+				
+				strEstiloCSS = strEstiloMapa[0];
+				
+				
+			}
+			
+		System.out.println("metodo mudar estilo  mapa () "  + strEstiloCSS );
+		
+		return strEstiloCSS;
 	}
 
 }

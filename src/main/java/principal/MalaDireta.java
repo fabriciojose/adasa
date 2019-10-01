@@ -11,6 +11,7 @@ import java.util.Locale;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
 import entidades.Documento;
 import entidades.Endereco;
@@ -213,7 +214,10 @@ public class MalaDireta {
 		
 			for (int i  = 0; i<strPosicoesUsuario.length; i++) {
 
-				try { docHtml.select(strPosicoesUsuario[i]).prepend(strUsuario[i]);} 
+				try { docHtml.select(strPosicoesUsuario[i]).prepend(strUsuario[i]);
+			
+				
+				} 
 				catch (Exception e) {docHtml.select(strPosicoesUsuario[i]).prepend("");
 
 				};

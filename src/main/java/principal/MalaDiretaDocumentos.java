@@ -7,8 +7,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.net.io.SocketOutputStream;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
 import entidades.Documento;
 import entidades.Endereco;
@@ -100,6 +102,9 @@ public class MalaDiretaDocumentos {
 	
 	DecimalFormat df = new DecimalFormat("#,##0.00"); 
 	
+	//Elements do Jsoup para retirar tags desnecessarias do html criado
+	Elements elem;
+	
 	// formatador de cpf e cnpj
 	FormatadorCPFCNPJ ccFormato = new FormatadorCPFCNPJ();
 
@@ -115,8 +120,6 @@ public class MalaDiretaDocumentos {
 		this.documento = documento;
 		this.listaMalaDireta = listaMalaDireta;
 		
-		System.out.println(documento.getDocSEI() + " e " + documento.getDocNumeracao());
-
 	}
 
 	FinalidadeRequerida finSubReq;
@@ -297,23 +300,76 @@ public class MalaDiretaDocumentos {
 		
 		
 		for (int i  = 0; i<strTagsDocumento.length; i++) {
-			try { docHtml.select(strTagsDocumento[i]).prepend(strDocumento[i]);} 
-				catch (Exception e) {docHtml.select(strTagsDocumento[i]).prepend("");};
+			try { docHtml.select(strTagsDocumento[i]).prepend(strDocumento[i]);
+			
+			// limpar o html de tags desnecessarias
+			elem = docHtml.select(strTagsDocumento[i]);
+			elem.tagName("span");
+			
+			} 
+				catch (Exception e) {docHtml.select(strTagsDocumento[i]).prepend("");
+				
+				// limpar o html de tags desnecessarias
+				elem = docHtml.select(strTagsDocumento[i]);
+				elem.tagName("span");
+				};
 		}
+	
 		
 		for (int i  = 0; i<strTagsInterferencia.length; i++) {
-			try { docHtml.select(strTagsInterferencia[i]).prepend(strInterferencia[i]);} 
-				catch (Exception e) {docHtml.select(strTagsInterferencia[i]).prepend("");};
+			try { docHtml.select(strTagsInterferencia[i]).prepend(strInterferencia[i]);
+
+			// limpar o html de tags desnecessarias
+						elem = docHtml.select(strTagsInterferencia[i]);
+						elem.tagName("span");
+			
+			} 
+				catch (Exception e) {docHtml.select(strTagsInterferencia[i]).prepend("");
+				
+				
+				// limpar o html de tags desnecessarias
+				elem = docHtml.select(strTagsInterferencia[i]);
+				elem.tagName("span");
+				
+				
+				};
 		}
+	
 		
 		for (int i  = 0; i<strTagsUsuario.length; i++) {
-			try { docHtml.select(strTagsUsuario[i]).prepend(strUsuario[i]);} 
-				catch (Exception e) {docHtml.select(strTagsUsuario[i]).prepend("");};
+			try { docHtml.select(strTagsUsuario[i]).prepend(strUsuario[i]);
+			
+			// limpar o html de tags desnecessarias
+			elem = docHtml.select(strTagsUsuario[i]);
+			elem.tagName("span");
+			
+			} 
+				catch (Exception e) {docHtml.select(strTagsUsuario[i]).prepend("");
+				
+				
+				// limpar o html de tags desnecessarias
+				elem = docHtml.select(strTagsUsuario[i]);
+				elem.tagName("span");
+				
+				};
 		}
 		
 		for (int i  = 0; i<strTagsEnderecoEmpreendimento.length; i++) {
-			try { docHtml.select(strTagsEnderecoEmpreendimento[i]).prepend(strEnderecoEmpreendimento[i]);} 
-				catch (Exception e) {docHtml.select(strTagsEnderecoEmpreendimento[i]).prepend("");};
+			try { docHtml.select(strTagsEnderecoEmpreendimento[i]).prepend(strEnderecoEmpreendimento[i]);
+			// limpar o html de tags desnecessarias
+						elem = docHtml.select(strTagsEnderecoEmpreendimento[i]);
+						elem.tagName("span");
+			
+			
+			} 
+				catch (Exception e) {docHtml.select(strTagsEnderecoEmpreendimento[i]).prepend("");
+				
+				
+				// limpar o html de tags desnecessarias
+				elem = docHtml.select(strTagsEnderecoEmpreendimento[i]);
+				elem.tagName("span");
+				
+				};
 		}
 		
 		GetterAndSetter gs  = new GetterAndSetter();
@@ -325,13 +381,17 @@ public class MalaDiretaDocumentos {
 				
         		for (int i = 0; i<5; i++) {
 				
+        			try { docHtml.select("finalidades_tag").append(gs.callGetter(f, listVariaveisFinalidadesAutorizadas.get(i)) + ", ");
         			
-        			try { docHtml.select("finalidades_tag").prepend(gs.callGetter(f, listVariaveisFinalidadesAutorizadas.get(i)) + ", ");} 
-        			catch (Exception e) {docHtml.select("finalidades_tag").prepend("");};
-					
+        			} catch (Exception e) {	docHtml.select("finalidades_tag").prepend("");	};
+        		
 				}
         	}
 		} // fim for finalidade
+		
+		// limpar o html de tags desnecessarias
+		elem = docHtml.select("finalidades_tag");
+		elem.tagName("span");
 		
 		
 		// dados documento
@@ -366,7 +426,7 @@ public class MalaDiretaDocumentos {
 
 		} // fim if documento null
 
-
+		
 		String html = new String ();
 
 		html = docHtml.toString();
@@ -544,7 +604,6 @@ public class MalaDiretaDocumentos {
 					// QUANTIDADE
 					for (int a = 0; a<5; a++) {
 
-						System.out.println("quantidade md documentos " + gs.callGetter(finSup,listVariaveisQuantidades.get(a)));
 						try{	strTable.append("<p>" + df.format(		Double.parseDouble(		(gs.callGetter(finSup,listVariaveisQuantidades.get(a))))).replaceAll(",00", "") + "</p>");
 						} catch (Exception e) {strTable.append("<p>" + "" + "</p>");};
 						}
@@ -570,8 +629,6 @@ public class MalaDiretaDocumentos {
 					break;
 				} // fim while
 
-				//System.out.println(listaMalaDireta.get(i)[0][ii].getClass().getName());
-
 			}
 
 			strTable.append("</tr>");
@@ -581,6 +638,10 @@ public class MalaDiretaDocumentos {
 		strTable.append("</tbody></table>");
 
 		docHtml.select(strTag).append(String.valueOf(strTable));
+		
+		// limpar o html de tags desnecessarias
+		elem = docHtml.select(strTag);
+		elem.tagName("span");
 
 	} // fim metodo inserirfinalidade
 	
@@ -646,10 +707,21 @@ public class MalaDiretaDocumentos {
 						if (fSub.getClass().getName() == "entidades.FinalidadeAutorizada") {
 							
 							finSub = fSub;
-						
+				
 							// Trazer o a vazao em abril e horas de captacao em abril para o parecer individual
 							docHtml.select("litros_hora_abr_tag").append( df.format( ((FinalidadeAutorizada) fSub).getFaQHoraAbr() ).replaceAll(",00", "") );
+						
+							// limpar o html de tags desnecessarias
+							elem = docHtml.select("litros_hora_abr_tag");
+							elem.tagName("span");
+						
+						
 							docHtml.select("listros_dia_abr_tag").append( df.format( ((FinalidadeAutorizada) fSub).getFaQDiaAbr()).replaceAll(",00", "") );
+							
+							// limpar o html de tags desnecessarias
+							elem =  docHtml.select("listros_dia_abr_tag");
+							elem.tagName("span");
+							
 
 						} else {
 							 f = (FinalidadeRequerida) fSub;
@@ -787,8 +859,6 @@ public class MalaDiretaDocumentos {
 					break;
 				} // fim while
 
-				//System.out.println(listaMalaDireta.get(i)[0][ii].getClass().getName());
-
 			}
 
 			strTable.append("</tr>");
@@ -798,6 +868,15 @@ public class MalaDiretaDocumentos {
 		strTable.append("</tbody></table>");
 
 		docHtml.select(strTag).append(String.valueOf(strTable));
+		
+		// limpar o html de tags desnecessarias
+		elem = docHtml.select(strTag);
+		elem.tagName("span");
+		
+		// a tag title confunde o navegador retirando a tag table  de lugar, entao e preciso retirar a tag title
+		elem = docHtml.select("title");
+		elem.tagName("span");
+				
 		
 		// tempo litros dia litros_hora_abr_tag listros_dia_abr_tag inter_subsistema_tag 
 		

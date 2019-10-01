@@ -127,7 +127,7 @@ public class ControladorNavegacao implements Initializable {
 	    
         btnGoogle.setOnAction((ActionEvent evt)->{
         	
-        	link = "https://www.w3schools.com/";
+        	link = "http://treinamento3.sei.df.gov.br/sip/login.php?sigla_orgao_sistema=GDF&sigla_sistema=SEI";
         	navegarWeb (link);
         	
         });
@@ -176,15 +176,25 @@ public class ControladorNavegacao implements Initializable {
         
         });	
         
-        
+        /*
+         * Mostrar em uma listview todos os documentos capturados na parte superior esquerda do sei
+         * 
+         * 	--------------------------------------------------------------------
+         * |	00197-00000573/2018-10      	|								|
+         * |		Requerimento 5154170 	   	|								|
+         * |		Termo de Abertura 5387339  	|								|
+         * |		Parecer 					|								|
+         * ---------------------------------------------------------------------
+         * |									|								|
+         * 	--------------------------------------------------------------------
+         */
         btnMostarDocumentosSEI.setOnAction((ActionEvent evt)->{
         	
-        	System.out.println("btn mostar");
+        	
           	
         	int int_numero_documentos = (int) webView.getEngine().executeScript("doc.length");
           	
           	ObservableList<String> documentos = FXCollections.observableArrayList();
-          	
           	
           	for (int i = 0; i < int_numero_documentos; i++ ) {
           		
@@ -243,6 +253,9 @@ public class ControladorNavegacao implements Initializable {
 	ComboBox<String> cbUsuarios;
 	Button btnAnexo;
 	
+	Button btnCapturaHTML;
+	Button btnInsereHTML;
+	
 	public void inicializarBotoesPopUp (){
 		
 		btnAtoAdministrativo = new Button("ATO ADMINISTRATIVO");
@@ -250,13 +263,15 @@ public class ControladorNavegacao implements Initializable {
 		cbUsuarios.setItems(obsListUsuariosMalaDireta);
 		
 		btnAnexo = new Button("ANEXO");
+		btnCapturaHTML = new Button("CAPTURAR");
+		btnInsereHTML = new Button("INSERIR");
 		
 		
 		//String strHTML = "'<b>Hello World</b>'";
 		
 		/*
 		 * @String strHTML no formato "'<p>Hello World'"
-		 * @ var x - captura o iframe de edição, no caso do requer
+		 * @ var x - captura o iframe de edição, no caso do requerimento de outorga
 		 * @ var y - recebe contentDocument de x e muda texto  no iframe
 		 */
 		
@@ -284,21 +299,46 @@ public class ControladorNavegacao implements Initializable {
             	
         			//-- imprimir o relatório ou tn no editor do SEI --//
             		webViewPopUp.getEngine().executeScript(
-            				"y.body.getElementsByTagName('anexo_parecer_tag')[0].innerHTML = " + strAnexo + ";"
+            				"y.body.lastElementChild.innerHTML = " + strAnexo + ";"
 	            			);
 					
             }
         });
 		
 		
-		// <anexo_parecer_tag><anexo_parecer_tag>
+		btnCapturaHTML.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+            	
+            	strParecerCapturado = (String) webViewPopUp.getEngine().executeScript("document.getElementsByTagName('iframe')[2].contentDocument.body.innerHTML");
+       
+            }
+        });
 		
+		
+		btnInsereHTML.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+            	
+            	
+            	strParecerCapturado = strParecerCapturado.replace("\"", "'");
+            	strParecerCapturado = strParecerCapturado.replace("\n", "");
+
+            	strParecerCapturado =  "\"" + strParecerCapturado + "\"";
+     
+        			//-- imprimir o relatório ou tn no editor do SEI --//
+            		webViewPopUp.getEngine().executeScript(
+            				"document.getElementsByTagName('iframe')[2].contentDocument.body.innerHTML = " + strParecerCapturado + ";"
+	            			);
+					
+            }
+        });
 		
 		
 		
 	}
 	
 	String link;
+	
+	String strParecerCapturado = "";
 	
 	// selecionar qual anexo ira para o parecer coletivo
 	int int_interferencia_selecionada = 0;
@@ -343,13 +383,16 @@ public class ControladorNavegacao implements Initializable {
 			    	
 			    	inicializarBotoesPopUp ();
 			    	
+			    	btnAtoAdministrativo.setPrefSize(300, 30);
+			    	cbUsuarios.setPrefSize(600, 30);
+			    	btnAnexo.setPrefSize(200, 30);
+			    	btnCapturaHTML.setPrefSize(200, 30);
+			    	btnInsereHTML.setPrefSize(200, 30);
 			    	
-			    	HBox hbPopUp = new HBox(btnAtoAdministrativo, cbUsuarios, btnAnexo);
+			    	HBox hbPopUp = new HBox(btnAtoAdministrativo, cbUsuarios, btnAnexo, btnCapturaHTML, btnInsereHTML);
 			    	
 			    	hbPopUp.setPrefSize(900, 30);
-			    	btnAtoAdministrativo.setPrefSize(200, 30);
-			    	cbUsuarios.setPrefSize(750, 30);
-			    	btnAnexo.setPrefSize(200, 30);
+			    	
 			    	
 			    	cbUsuarios.getSelectionModel().selectedIndexProperty().addListener(new
 			 	            ChangeListener<Number>() {

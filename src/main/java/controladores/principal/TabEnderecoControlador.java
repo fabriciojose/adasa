@@ -207,9 +207,7 @@ public class TabEnderecoControlador implements Initializable {
 			
 			// adicionar o poligono do croqui endereco
 			
-			System.out.println("btn salvar strCroquiEndereco " + strCroquiEndereco);
-			
-			if (! strCroquiEndereco.equals(null)) {
+			if (! strCroquiEndereco.equals("")) {
 				end.setEndCroqui(new PoligonoCroqui().obterPoligonoCroqui(strCroquiEndereco));
 			}
 		
@@ -233,7 +231,7 @@ public class TabEnderecoControlador implements Initializable {
 					endDao.salvarEndereco(end); //solução para recuperar o id do endereço
 					endDao.mergeEndereco(end); // assim adiciona o id end na demanda dem
 			
-				strCroquiEndereco = null;
+				strCroquiEndereco = "";
 				
 				
 				// levar o endereco salvo para a tabinterferencia //	
@@ -320,10 +318,9 @@ public class TabEnderecoControlador implements Initializable {
 					p.setSRID(4674);
 						
 					end.setEndGeom(p);
+				
 					
-					System.out.println("btn editar strCroquiEndereco " + strCroquiEndereco);
-					
-					if (! strCroquiEndereco.equals(null)) {
+					if (! strCroquiEndereco.equals("")) {
 						end.setEndCroqui(new PoligonoCroqui().obterPoligonoCroqui (strCroquiEndereco));
 					}
 		
@@ -356,7 +353,7 @@ public class TabEnderecoControlador implements Initializable {
 				
 						enderecoDao.mergeEndereco(end);
 						
-					strCroquiEndereco = null;
+					strCroquiEndereco = "";
 						
 					// levar o endereco salvo para a tabinterferencia //	
 					
@@ -502,7 +499,7 @@ public class TabEnderecoControlador implements Initializable {
 	
 	public static TabEnderecoControlador tabEnderecoControlador;
 	
-	String strCroquiEndereco;
+	String strCroquiEndereco = "";
 	
 	/**
 	 * 
@@ -513,9 +510,7 @@ public class TabEnderecoControlador implements Initializable {
 	public void capturarCroquiEndereco (String strCroquiEndereco) {
 		
 		this.strCroquiEndereco = strCroquiEndereco;
-		
-		System.out.println(strCroquiEndereco);
-		
+	
 	}
 	  
 	/* array de posicoes prefWidth prefHeight Layout Y e X */
@@ -960,7 +955,7 @@ public class TabEnderecoControlador implements Initializable {
 					googleMapsShape.limparMapa();
 					
 					// limpar a string com as coordenadas da shape
-					strCroquiEndereco = null;
+					strCroquiEndereco = "";
 	
 				}
 			});
@@ -1224,8 +1219,7 @@ public class TabEnderecoControlador implements Initializable {
 					/* caso não haja demanda relacionada ao endereco, setar demanda vazia */
 					if (end.getDocumentos().size() == 0) {
 						setDocumento (null);
-						
-						System.out.println("lista de demandas size " + end.getDocumentos().size());
+			
 					}
 					
 					/* havendo demandas, setar uma delas no lblDemanda */
@@ -1269,23 +1263,16 @@ public class TabEnderecoControlador implements Initializable {
 					// mostrar o poligono do endereco se houver
 					
 					if (end.getEndCroqui() != null) {
-						
-						System.out.println("setar poligono");
-						
-						PoligonoCroqui pol = new PoligonoCroqui();
-						
+		
 						try {
-							
-							//pol.setarPoligono (end, googleMapsShape);
-							
-							 
-					    	 googleMaps.setarPoligono(pol.setarPoligono(end));
+							PoligonoCroqui pol = new PoligonoCroqui();
+							googleMaps.setarPoligono(pol.setarPoligono(end));
 							
 						} catch (Exception e) {
 							
 						}
 						
-					} // fim if getEndCroqui
+					} // fim if getEndCroqui !=null
 					
 					// copiar número sei da demanda ao selecionar //
 					Clipboard clip = Clipboard.getSystemClipboard();

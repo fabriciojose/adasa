@@ -5,15 +5,14 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
-import entidades.Usuario;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -101,26 +100,21 @@ public class NavegadorExterno {
 
 		btnBrowser.setOnAction((event) -> {
 
-			r = new Registro();
-			List<String> strList = null;
-
-			try {
-
-				strList = r.lerRegistro();
-
-				for (String s : strList) {
-					System.out.println("bnt browser strings " + s);
-				}
-
-			} catch (IOException e2) {
-
-				e2.printStackTrace();
-			}
-
-			strWebDriver = "";
+			Registro registro = new Registro();
 			
-			strWebDriver = strList.get(0);
-
+			//String strWebDriver = null;
+			
+			Properties prop = new Properties();
+			
+			try {
+				prop = registro.lerRegistro();
+				
+				strWebDriver = prop.getProperty("strWebDriver");
+			
+			} catch (Exception e1) {
+				
+			}
+		
 			System.setProperty("webdriver.chrome.driver", strWebDriver);
 
 			ChromeOptions options = new ChromeOptions();
@@ -141,55 +135,61 @@ public class NavegadorExterno {
 
 			public void handle(ActionEvent e) {
 				
-				Registro rLer = new Registro();
-				List<String> strList = null;
-
+				Registro registro = new Registro();
+				
+				String strArquivoWebDriver = null;
+				
+				Properties prop = new Properties();
+				
 				try {
-
-					strList = rLer.lerRegistro();
-
-					for (String s : strList) {
-						System.out.println("bnt Navegador - loop leitura strings  " + s);
+					prop = registro.lerRegistro();
+			
+					
+				} catch (Exception e1) {
+			
+					try {
+						registro.salvarRegistro(prop);
+					} catch (URISyntaxException e2) {
+				
+						e1.printStackTrace();
+					} catch (IOException e2) {
+				
+						e1.printStackTrace();
 					}
-
-				} catch (IOException e2) {
-
-					e2.printStackTrace();
+					
+					System.out.println("salvar webdriver ");
+					
 				}
-
-				// para escolher o arquivo  no computador
+		
+				// para escolher o arquivo no computador
 				FileChooser fileChooser = new FileChooser();
-				fileChooser.setTitle("Selecione o Web Driver");
-				fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("EXE" , "*.exe"));        
+				fileChooser.setTitle("Selecione o arquivo excel");
+				fileChooser.getExtensionFilters()
+						.add(new FileChooser.ExtensionFilter("EXE" , "*.exe"));
 				File file = fileChooser.showOpenDialog(null);
-
-				strWebDriver = file.toString();
 				
+
 				//  link do diretorio do web driver 0;  link com diretorio do arquivo excel 1;
-				strList.set(0, strWebDriver);
-				
-				
-				System.out.println("btn navegador strLIst " + strList.get(0));
-
-				for (String s : strList) {
-					System.out.println("btn navegador - loop string mudada " + s);
-				}
+				strArquivoWebDriver = file.toString();
+			
+				prop.setProperty("strWebDriver", strArquivoWebDriver);
 
 				Registro rSalvar = new Registro();
 
 				try {
-					rSalvar.salvarRegistro(strList);
-				} catch (URISyntaxException e1) {
+					rSalvar.salvarRegistro(prop);
+					
+				} catch (URISyntaxException e3) {
 
-					e1.printStackTrace();
-				} catch (IOException e1) {
+					e3.printStackTrace();
+				} catch (IOException e3) {
 
-					e1.printStackTrace();
+					e3.printStackTrace();
 				}
-				
-			
+
 
 			}
+
 
 
 		}); // fim btnWebBrowser
@@ -277,6 +277,11 @@ public class NavegadorExterno {
         });
 
 	}
+	
+	
+	// endereco da pasta onde está o link do webdriver chrome
+	String strArquivoWebDriver = "";
+		
 	
 	public void setarStringHTML (String strHTML) {
 		this.strHTML = strHTML;

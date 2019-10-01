@@ -14,36 +14,29 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import dao.DocumentoDao;
-import dao.EnderecoDao;
 import dao.ModelosDao;
 import entidades.Documento;
 import entidades.Endereco;
 import entidades.Finalidade;
-import entidades.FinalidadeAutorizada;
-import entidades.FinalidadeRequerida;
 import entidades.GetterAndSetter;
 import entidades.Interferencia;
 import entidades.ModelosHTML;
 import entidades.NotaTecnica;
 import entidades.Parecer;
 import entidades.Subterranea;
-import entidades.Superficial;
 import entidades.Usuario;
 import javafx.animation.TranslateTransition;
 import javafx.beans.property.SimpleStringProperty;
@@ -1012,55 +1005,36 @@ public class TabParecerControlador implements Initializable {
 		btnExcel.setOnAction(new EventHandler<ActionEvent>() {
 			@Override public void handle(ActionEvent e) {
 
-				/*
-				Registro r = new Registro();
-				List<String> strList = null;
-
+				Registro registro = new Registro();
+				
+				String strArquivoExcel = null;
+				
+				Properties prop = new Properties();
+				
 				try {
-
-					strList = r.lerRegistro();
-
-					for (String s : strList) {
-						System.out.println("bnt excel - loop for String s \n" + s);
-					}
-
-				} catch (IOException e2) {
-
-					e2.printStackTrace();
+					prop = registro.lerRegistro();
+					
+					strArquivoExcel = prop.getProperty("strExcel");
+				
+				} catch (Exception e1) {
+					
 				}
-				*/
-				
-				// para escolher o arquivo no computador
-				FileChooser fileChooser = new FileChooser();
-				fileChooser.setTitle("Selecione o arquivo excel");
-				fileChooser.getExtensionFilters()
-						.add(new FileChooser.ExtensionFilter("XLS", "*.xls", "*.xlsm", "*.xlsx"));
-				File file = fileChooser.showOpenDialog(null);
-				
-
-				//  link do diretorio do web driver 0;  link com diretorio do arquivo excel 1;
-				//strList.set(1, file.toString());
-		
-				//strLocalArquivoExcel = strList.get(1);
-				
-				strLocalArquivoExcel = file.toString();
-				
-				System.out.println("btn  excel  - local arquivo excel \n" + strLocalArquivoExcel);
+			
 				
 				// Uma string nao pode ficar c:local\excel.xlsm - tem que mudar para duas barras invertidas c:local\\excel.xlsm
 				//strLocalArquivoExcel = strLocalArquivoExcel.replaceAll("/[\"]/g", "\\");
 
 				// cortar o endereco completo do arquivo excel e capturar o endereco da pasta somente
-				String [] str = file.toString().split("\\\\");
+				String [] str = strArquivoExcel.toString().split("\\\\");
 			
-				strLocalPastaArquivoExcel = "";
+				strPastaArquivoExcel = "";
 				
 				// capturar o endereco da pasta do arquivo excel
 				for (int i=0;i<str.length-1;i++) {
-					strLocalPastaArquivoExcel = strLocalPastaArquivoExcel + str[i] + "\\\\";
+					strPastaArquivoExcel = strPastaArquivoExcel + str[i] + "\\\\";
 				}
 				
-				System.out.println("btn excel - local pasta \n" + strLocalPastaArquivoExcel);
+				System.out.println("btn excel - local pasta: " + strPastaArquivoExcel);
 				
 				// data e hora da criacao do documento excel
 				String strTempoAtual = Timestamp.valueOf((LocalDateTime.now())).toString();
@@ -1071,7 +1045,7 @@ public class TabParecerControlador implements Initializable {
 				XSSFWorkbook workbook;
 
 				try {
-					workbook = (XSSFWorkbook)WorkbookFactory.create(new FileInputStream(strLocalArquivoExcel));
+					workbook = (XSSFWorkbook)WorkbookFactory.create(new FileInputStream(strArquivoExcel));
 
 					Sheet sheetOutorgas = workbook.getSheetAt(0);
 
@@ -1167,10 +1141,10 @@ public class TabParecerControlador implements Initializable {
 					}
 
 
-					System.out.println("hora de salvar excel local pasta \n " + strLocalPastaArquivoExcel);
+					System.out.println("hora de salvar excel local pasta : " + strPastaArquivoExcel);
 					// Nomear o excel gerado como: Parecer Numero (123456) Data(20190512) .xslm
 					fileOutput = new FileOutputStream(
-							strLocalPastaArquivoExcel 
+							strPastaArquivoExcel 
 							+ "Parecer-" 
 							+ documento.getDocSEI()
 							+ "-"
@@ -1202,46 +1176,56 @@ public class TabParecerControlador implements Initializable {
 			@Override
 			public void handle(ActionEvent e) {
 
-				Registro rLer = new Registro();
-				List<String> strList = null;
+				Registro registro = new Registro();
+				
+				//String strArquivoExcel = null;
+				
+				Properties prop = new Properties();
+				
+				try {
+					prop = registro.lerRegistro();
+			
+					
+				} catch (Exception e1) {
+			
+					try {
+						registro.salvarRegistro(prop);
+					} catch (URISyntaxException e2) {
+				
+						e1.printStackTrace();
+					} catch (IOException e2) {
+				
+						e1.printStackTrace();
+					}
+					
+					System.out.println("salvar excel ");
+					
+				}
+		
+				// para escolher o arquivo no computador
+				FileChooser fileChooser = new FileChooser();
+				fileChooser.setTitle("Selecione o arquivo excel");
+				fileChooser.getExtensionFilters()
+						.add(new FileChooser.ExtensionFilter("XLS", "*.xls", "*.xlsm", "*.xlsx"));
+				File file = fileChooser.showOpenDialog(null);
+				
+
+				//  link do diretorio do web driver 0;  link com diretorio do arquivo excel 1;
+				strArquivoExcel = file.toString();
+				
+				prop.setProperty("strExcel", strArquivoExcel);
+
+				Registro rSalvar = new Registro();
 
 				try {
-
-					strList = rLer.lerRegistro();
+					rSalvar.salvarRegistro(prop);
 					
-					// para escolher o arquivo no computador
-					FileChooser fileChooser = new FileChooser();
-					fileChooser.setTitle("Selecione o arquivo excel");
-					fileChooser.getExtensionFilters()
-							.add(new FileChooser.ExtensionFilter("XLS", "*.xls", "*.xlsm", "*.xlsx"));
-					File file = fileChooser.showOpenDialog(null);
-					
+				} catch (URISyntaxException e3) {
 
-					//  link do diretorio do web driver 0;  link com diretorio do arquivo excel 1;
-					strList.set(1, file.toString());
-					
-					System.out.println("btnLocalExcel strLink " + strList.get(1));
+					e3.printStackTrace();
+				} catch (IOException e3) {
 
-					for (String s : strList) {
-						System.out.println("btnLocalExcel - loop string mudada " + s);
-					}
-					
-					Registro rSalvar = new Registro();
-
-					try {
-						rSalvar.salvarRegistro(strList);
-					} catch (URISyntaxException e1) {
-
-						e1.printStackTrace();
-					} catch (IOException e1) {
-
-						e1.printStackTrace();
-					}
-					
-
-				} catch (IOException e2) {
-
-					e2.printStackTrace();
+					e3.printStackTrace();
 				}
 
 
@@ -1263,10 +1247,10 @@ public class TabParecerControlador implements Initializable {
 	
 	
 	// endereco da pasta onde está o arquivo excel, nao pode ser null
-	String strLocalPastaArquivoExcel = "";
+	String strPastaArquivoExcel = "";
 	
 	// endereco completo do arquivo excel, precisa ser null para a condicional no comeco do btnExcel
-	String strLocalArquivoExcel = null;
+	String strArquivoExcel = null;
 	
 	
 	public void habilitarDocumento () {

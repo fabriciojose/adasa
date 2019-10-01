@@ -7,14 +7,18 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import dao.DocumentoDao;
 import dao.EnderecoDao;
 import dao.ModelosDao;
 import entidades.Documento;
 import entidades.Endereco;
+import entidades.Finalidade;
+import entidades.FinalidadeAutorizada;
 import entidades.Interferencia;
 import entidades.ModelosHTML;
 import javafx.animation.TranslateTransition;
@@ -123,6 +127,7 @@ public class TabAtosOutorgaControlador implements Initializable {
 
 	}
 	
+
 
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
@@ -413,13 +418,9 @@ public class TabAtosOutorgaControlador implements Initializable {
 					obsListModelosHTML.clear();
 					
 					for (ModelosHTML m : listaModelosHTML) {
-						
-						System.out.println("aqui");
-						
+
 						if (m.getModTipoInterferencia().equals(newValue.getInterTipoInterferenciaFK().getTipoInterDescricao())) {
-							
-							System.out.println("tipo inter " + m.getModTipoInterferencia() == newValue.getInterTipoInterferenciaFK().getTipoInterDescricao());
-							
+		
 							obsListModelosHTML.add(m);
 						}
 					}
@@ -488,7 +489,7 @@ public class TabAtosOutorgaControlador implements Initializable {
 		
 		DocumentoDao docDao = new DocumentoDao();
 
-		List<Documento> docList = docDao.listarDocumentos(strPesquisa);
+		List<Documento> docList = docDao.listarAtosOutorga(strPesquisa);
 
 		if (!obsList.isEmpty()) {
 			obsList.clear();
@@ -640,6 +641,7 @@ public class TabAtosOutorgaControlador implements Initializable {
 				
 				// capturar a tabela que sera colocada dentro do modelo html selecionado, pode ser varias interferencias em um modelo, entao varias tabelas
 				String modeloTabelaLimitesOutorgados = listaModelosHTML.get(3).getModConteudo();
+			
 				
 				if (documento.getDocProcessoFK() == null) {
 					Alerta a = new Alerta ();
@@ -960,18 +962,13 @@ public class TabAtosOutorgaControlador implements Initializable {
 					}
 					
 					tvObsListInterferencia.clear();
+					
+					// adicionar o list dentro de um hashset para nao repetir valores
+					List<Interferencia> interList = new ArrayList<Interferencia>(new HashSet<Interferencia>(doc.getDocEnderecoFK().getInterferencias())); 
 	
-					//Endereco end = endDao.obterEnderecoPorID (doc.getDocEnderecoFK().getEndID());
-					Endereco end = new EnderecoDao().obterEnderecoPorID(doc.getDocEnderecoFK().getEndID());
-					
-					endereco = end;
-					
-					System.out.println(end.getEndUsuarioFK().getUsNome());
-					
-					List<Interferencia> interList = end.getInterferencias();
 					
 					cbObsListInterferencia.addAll(interList);
-					
+				
 					// Limpar a tableView Interferencia
 					//obsListInterferencia.clear();
 
