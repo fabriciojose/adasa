@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.net.io.SocketOutputStream;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -162,7 +161,9 @@ public class MalaDiretaDocumentos {
 				"inter_prof_tag",
 				"inter_nivel_est_tag",
 				"inter_niv_din_tag",
-				"inter_vazao_tag"
+				"inter_vazao_tag",
+				"inter_vazao_teste_tag",
+				"inter_vazao_subsistema_tag"
 				
 		};
 		
@@ -246,8 +247,9 @@ public class MalaDiretaDocumentos {
 				((Subterranea)listaMalaDireta.get(0)[0][2]).getSubProfundidade(),
 				((Subterranea)listaMalaDireta.get(0)[0][2]).getSubEstatico(),
 				((Subterranea)listaMalaDireta.get(0)[0][2]).getSubDinamico(),
-				df.format((((Subterranea) listaMalaDireta.get(0)[0][2])).getSubVazaoPoco()) .replaceAll(",00", ""),
-				
+				df.format((((Subterranea) listaMalaDireta.get(0)[0][2])).getSubVazaoOutorgada()) .replaceAll(",00", ""),
+				((Subterranea)listaMalaDireta.get(0)[0][2]).getSubVazaoTeste(),
+				((Subterranea)listaMalaDireta.get(0)[0][2]).getSubVazaoSubsistema(),
 				
 
 		};

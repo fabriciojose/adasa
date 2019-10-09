@@ -11,7 +11,6 @@ import java.util.ResourceBundle;
 
 import dao.InterferenciaDao;
 import entidades.Endereco;
-import entidades.Finalidade;
 import entidades.Interferencia;
 import entidades.SituacaoProcesso;
 import entidades.Subterranea;
@@ -137,6 +136,8 @@ public class TabInterferenciaControlador  implements Initializable{
 		// limpar campos
 		cbTipoOutorga.getSelectionModel().clearSelection();
 		cbSubtipoOutorga.getSelectionModel().clearSelection();
+		subtipoOutorga.setSubtipoOutorgaID(5);
+		
 		cbTipoAto.getSelectionModel().clearSelection();
 		cbSituacao.getSelectionModel().clearSelection();
 		
@@ -180,12 +181,8 @@ public class TabInterferenciaControlador  implements Initializable{
 					sub.setInterTipoInterferenciaFK(tipoInterferencia);
 
 					sub.setInterTipoOutorgaFK(tipoOutorga);
-					
-					System.out.println("subtipo outorga - bnt salvar " + subtipoOutorga.getSubtipoOutorgaID() + " e desc " + subtipoOutorga.getSubtipoOutorgaDescricao());
-					
+				
 					sub.setInterSubtipoOutorgaFK(subtipoOutorga);
-					
-					
 					
 					sub.setInterTipoAtoFK(tipoAto);
 					sub.setInterSituacaoProcessoFK(situacaoProcesso);
@@ -242,9 +239,21 @@ public class TabInterferenciaControlador  implements Initializable{
 
 					Alerta a = new Alerta ();
 					a.alertar(new Alert(Alert.AlertType.ERROR, "Informe o Local de Captação e se há Caesb!!!", ButtonType.OK));
+					}
+					
+					else if (sup.getSupLocalCaptacaoFK() == null 	||
+								sup.getSupFormaCaptacaoFK() == null 	||
+									sup.getSupMetodoIrrigacaoFK() == null  	||
+										sup.getSupBarramento() == null			||
+											sup.getSupCaesb() == null
+							) {
 
+						Alerta a = new Alerta ();
+						a.alertar(new Alert(Alert.AlertType.ERROR,"Informe: Local de Captação, Forma de Captação, Método de Irrigação, Barramento e "
+								+ "se a área é atendida pela Caesb()!!!", ButtonType.OK));
+					
 				} else {
-
+			
 					sup.setInterTipoInterferenciaFK(tipoInterferencia);
 					sup.setInterTipoOutorgaFK(tipoOutorga);
 					sup.setInterSubtipoOutorgaFK(subtipoOutorga);
@@ -293,7 +302,7 @@ public class TabInterferenciaControlador  implements Initializable{
 			else {
 
 				Interferencia inter = new Interferencia();
-
+		
 				inter.setInterTipoInterferenciaFK(tipoInterferencia);
 				inter.setInterTipoOutorgaFK(tipoOutorga);
 				inter.setInterSubtipoOutorgaFK(subtipoOutorga);
@@ -356,7 +365,6 @@ public class TabInterferenciaControlador  implements Initializable{
 			cbTipoAto.setDisable(false);
 			cbSituacao.setDisable(false);
 
-
 			dpDataPublicacao.setDisable(false);
 			dpDataVencimento.setDisable(false);
 			tfNumeroAto.setDisable(false);
@@ -386,6 +394,7 @@ public class TabInterferenciaControlador  implements Initializable{
 					sub.setInterTipoInterferenciaFK(tipoInterferencia);
 
 					sub.setInterTipoOutorgaFK(tipoOutorga);
+					
 					sub.setInterSubtipoOutorgaFK(subtipoOutorga);
 					sub.setInterTipoAtoFK(tipoAto);
 					sub.setInterSituacaoProcessoFK(situacaoProcesso);
@@ -414,12 +423,10 @@ public class TabInterferenciaControlador  implements Initializable{
 
 					if (sub.getInterEnderecoFK() == null) {
 						
-						System.out.println("endereco vazio " + sub.getInterEnderecoFK());
 						sub.setInterEnderecoFK(endereco);
 						
 					}
 					
-
 					InterferenciaDao interferenciaDao = new InterferenciaDao ();
 
 					// merge subterranea //
@@ -456,6 +463,7 @@ public class TabInterferenciaControlador  implements Initializable{
 					sup.setInterTipoInterferenciaFK(tipoInterferencia);
 
 					sup.setInterTipoOutorgaFK(tipoOutorga);
+				
 					sup.setInterSubtipoOutorgaFK(subtipoOutorga);
 					sup.setInterTipoAtoFK(tipoAto);
 					sup.setInterSituacaoProcessoFK(situacaoProcesso);
@@ -484,16 +492,9 @@ public class TabInterferenciaControlador  implements Initializable{
 					sup.setInterEnderecoFK(endereco);
 
 					InterferenciaDao interferenciaDao = new InterferenciaDao ();
-					
-					for (Finalidade f : sup.getFinalidades()) {
-						System.out.println(f.getFinID());
-					}
-					
-
+				
 					// merge superficial e canal //
 					interferenciaDao.mergeInterferencia(sup);
-
-					//interferencia.setIntSupFK(sup);
 
 					obsList.remove(sup);
 					obsList.add(sup);
@@ -615,7 +616,6 @@ public class TabInterferenciaControlador  implements Initializable{
 	BorderPane bp1 = new BorderPane();
 	BorderPane bp2 = new BorderPane();
 	ScrollPane sp = new ScrollPane();
-	//Pane pMapa = new Pane();
 
 	/* array de posicoes prefWidth prefHeight Layout Y e X */
 	Double prefSizeWHeLayXY [][];
@@ -722,7 +722,7 @@ public class TabInterferenciaControlador  implements Initializable{
 					Number value, Number new_value) {
 
 				tipoInterferencia.setTipoInterID((Integer) new_value + 1);
-				System.out.println("id " + tipoInterferencia.getTipoInterID() + " descrição " + tipoInterferencia.getTipoInterDescricao());
+				//System.out.println("id " + tipoInterferencia.getTipoInterID() + " descrição " + tipoInterferencia.getTipoInterDescricao());
 				
 				try {
 					abrirTabs(tipoInterferencia.getTipoInterID());
@@ -767,6 +767,8 @@ public class TabInterferenciaControlador  implements Initializable{
 					Number value, Number new_value) {
 
 				subtipoOutorga.setSubtipoOutorgaID((Integer )new_value + 1);
+				if (subtipoOutorga.getSubtipoOutorgaID() == 0) 
+					subtipoOutorga.setSubtipoOutorgaID(5);
 
 			}
 		});
@@ -857,6 +859,7 @@ public class TabInterferenciaControlador  implements Initializable{
 			@Override
 			public void handle(ActionEvent event) {
 				cancelarInterferencia();
+				subtipoOutorga.setSubtipoOutorgaID(5);
 			}
 		});
 
@@ -879,7 +882,6 @@ public class TabInterferenciaControlador  implements Initializable{
 					ControladorPrincipal.capturarGoogleMaps().setMapCenter(endereco.getEndDDLatitude().toString(), endereco.getEndDDLongitude().toString());
 				}
 
-				//System.out.println("ir para as coordenadas");
 			}
 		});
 
@@ -1348,8 +1350,7 @@ public class TabInterferenciaControlador  implements Initializable{
 	    	
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/principal/TelaEndereco.fxml"));
 				loader.setRoot(p);
-				
-				//System.out.println(" tela interferencia intTablView"  + intTableView);
+			
 					// TabDocumento = 0 TabInterferencia = 1
 					loader.setController(telaEnderecoControlador = new TelaEnderecoControlador(this));
 		

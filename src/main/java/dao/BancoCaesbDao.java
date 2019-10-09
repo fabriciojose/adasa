@@ -9,7 +9,6 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Restrictions;
 
-import entidades.BancoAccess;
 import entidades.BancoCaesb;
 import entidades.HibernateUtil;
 

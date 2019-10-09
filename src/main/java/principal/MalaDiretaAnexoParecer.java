@@ -1,7 +1,6 @@
 package principal;
 
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -286,7 +285,7 @@ public class MalaDiretaAnexoParecer {
         		for (int i = 0; i<5; i++) {
 				
         			
-        			try { docHtml.select("finalidades_tag").prepend(gs.callGetter(f, listVariaveisFinalidadesAutorizadas.get(i)) + ", ");
+        			try { docHtml.select("finalidades_tag").append((gs.callGetter(f, listVariaveisFinalidadesAutorizadas.get(i)) + ", ").toLowerCase());
         			
         			
         			} 
@@ -375,7 +374,41 @@ public class MalaDiretaAnexoParecer {
 			
 			
 			};
-		try { docHtml.select("inter_vazao_tag").prepend(df.format(((Subterranea)listMalaDireta.get(in)[0][2]).getSubVazaoPoco()).replaceAll(",00", ""));
+			
+			// vazao teste
+			try { docHtml.select("inter_vazao_teste_tag").prepend(((Subterranea)listMalaDireta.get(in)[0][2]).getSubVazaoTeste());
+			
+			elem = docHtml.select("inter_vazao_teste_tag");
+			elem.tagName("span");
+			
+			
+			} 
+				catch (Exception e) {docHtml.select("inter_vazao_teste_tag").prepend("");
+				
+				elem = docHtml.select("inter_vazao_teste_tag");
+				elem.tagName("span");
+				
+				
+				};
+				
+				// vazao subsistema
+				try { docHtml.select("inter_vazao_subsistema_tag").prepend(((Subterranea)listMalaDireta.get(in)[0][2]).getSubVazaoSubsistema());
+				
+				elem = docHtml.select("inter_vazao_subsistema_tag");
+				elem.tagName("span");
+				
+				
+				} 
+					catch (Exception e) {docHtml.select("inter_vazao_subsistema_tag").prepend("");
+					
+					elem = docHtml.select("inter_vazao_subsistema_tag");
+					elem.tagName("span");
+					
+					
+					};
+					
+		// vazao outorgada	
+		try { docHtml.select("inter_vazao_tag").prepend(df.format(((Subterranea)listMalaDireta.get(in)[0][2]).getSubVazaoOutorgada()).replaceAll(",00", ""));
 		
 		elem = docHtml.select("inter_vazao_tag");
 		elem.tagName("span");
@@ -466,7 +499,7 @@ public class MalaDiretaAnexoParecer {
 		
 					
 					//metro cubicos hora
-					try {dbl_q_metros_hora = (((Subterranea) listMalaDireta.get(in)[0][2]).getSubVazaoPoco())/1000;} 
+					try {dbl_q_metros_hora = (((Subterranea) listMalaDireta.get(in)[0][2]).getSubVazaoOutorgada())/1000;} 
 						catch (Exception e ) {
 						dbl_q_metros_hora = 0.0;
 					
@@ -487,7 +520,7 @@ public class MalaDiretaAnexoParecer {
 					}
 				
 					// litros hora l/h
-					try { docHtmlTabelasLimitesOutorgados.select(q_litros_hora_tag [i]).prepend(df.format((((Subterranea) listMalaDireta.get(in)[0][2])).getSubVazaoPoco()) .replaceAll(",00", ""));
+					try { docHtmlTabelasLimitesOutorgados.select(q_litros_hora_tag [i]).prepend(df.format((((Subterranea) listMalaDireta.get(in)[0][2])).getSubVazaoOutorgada()) .replaceAll(",00", ""));
 					
 					elem = docHtmlTabelasLimitesOutorgados.select(q_litros_hora_tag [i]);
 					elem.tagName("span");

@@ -8,11 +8,13 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
+import controladores.principal.TabUsuarioControlador;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -31,8 +33,7 @@ public class NavegadorExterno {
 
 	Pane pNavegadorExterno;
 	
-	Button btnBrowser;
-	Button bntDocumentoHTML;
+	Button btnBrowser, btnAtoAdministrativo, btnAtoAdministrativoAnexo, btnCapturaHTML, btnInsereHTML, btnWebDriver;
 
 	ObservableList<Integer> obsListIframe = FXCollections
 			.observableArrayList(0,1,2);
@@ -40,9 +41,6 @@ public class NavegadorExterno {
 
 	ComboBox<String> cbUsuarios;
 	
-	Button btnDocumentoAnexo;
-	Button btnWebDriver;
-
 	Componentes com;
 	ArrayList<Node> listaDeComponentes;
 	Double prefSizeWHeLayXY [][];
@@ -51,8 +49,8 @@ public class NavegadorExterno {
 	Registro r;
 
 	// Navegador Externo
-	WebDriver driver;
-
+	//static TabUsuarioControlador tabUs;
+	
 	String strHTML;
 	
 	Pane p1;
@@ -68,11 +66,16 @@ public class NavegadorExterno {
 		listaDeComponentes.add(pNavegadorExterno = new Pane());
 
 		listaDeComponentes.add(btnBrowser = new Button("Chrome"));
-		listaDeComponentes.add(bntDocumentoHTML = new Button("Inserir"));
+		listaDeComponentes.add(btnAtoAdministrativo = new Button("Inserir"));
 		listaDeComponentes.add(cbIframe = new ComboBox<Integer>(obsListIframe));
 		listaDeComponentes.add(cbUsuarios = new ComboBox<String>(this.obsListUsuariosMalaDireta));
-		listaDeComponentes.add(btnDocumentoAnexo = new Button("Anexo"));
-		listaDeComponentes.add(btnWebDriver = new Button("Driver"));
+		listaDeComponentes.add(btnAtoAdministrativoAnexo = new Button("Anexo"));
+		
+		listaDeComponentes.add(btnCapturaHTML = new Button("Capturar"));
+		listaDeComponentes.add(btnInsereHTML = new Button("Inserir"));
+		
+		
+		listaDeComponentes.add(btnWebDriver = new Button("..."));
 		
 		// Layout do Pane layoutX,layoutY
 
@@ -80,12 +83,15 @@ public class NavegadorExterno {
 
 			{930.0,70.0,layoutX,layoutY},
 		
-			{70.0,25.0,5.0,20.0},
-			{70.0,25.0,88.0,20.0},
-			{70.0,25.0,163.0,20.0},
-			{530.0,25.0,238.0,20.0},
-			{70.0,25.0,773.0,20.0},
-			{60.0,15.0,865.0,20.0},
+			{70.0,25.0,5.0,23.0},
+			{70.0,25.0,85.0,23.0},
+			{70.0,25.0,165.0,23.0},
+			{400.0,25.0,245.0,23.0},
+			{70.0,25.0,655.0,23.0},
+			{70.0,25.0,735.0,23.0},
+			{70.0,25.0,815.0,23.0},
+			{30.0,15.0,895.0,23.0},
+			
 		}; 
 
 		//posicao do pane 25.0,772.0},
@@ -101,9 +107,7 @@ public class NavegadorExterno {
 		btnBrowser.setOnAction((event) -> {
 
 			Registro registro = new Registro();
-			
-			//String strWebDriver = null;
-			
+
 			Properties prop = new Properties();
 			
 			try {
@@ -122,9 +126,17 @@ public class NavegadorExterno {
 			options.addArguments("--disable-infobars");
 			options.addArguments("start-maximized");
 
-			driver = new ChromeDriver(options);
+			TabUsuarioControlador.webDriver = new ChromeDriver(options);
 
-			driver.navigate().to("https://sei.df.gov.br/sip/login.php?sigla_orgao_sistema=GDF&sigla_sistema=SEI");
+			TabUsuarioControlador.webDriver.navigate().to("https://sei.df.gov.br/sip/login.php?sigla_orgao_sistema=GDF&sigla_sistema=SEI");
+			
+			 
+			TabUsuarioControlador.webDriver.findElement(By.id("selOrgao")).sendKeys("a");
+            
+			//TabUsuarioControlador.webDriver.findElement(By.id("txtUsuario")).sendKeys("fabricio.barrozo");;
+			//TabUsuarioControlador.webDriver.findElement(By.id("pwdSenha")).sendKeys("");
+           
+			//TabUsuarioControlador.webDriver.findElement(By.id("sbmLogin")).click();
 
 
 		}); // btnBrowser
@@ -157,7 +169,7 @@ public class NavegadorExterno {
 						e1.printStackTrace();
 					}
 					
-					System.out.println("salvar webdriver ");
+					//System.out.println("salvar webdriver ");
 					
 				}
 		
@@ -195,9 +207,9 @@ public class NavegadorExterno {
 		}); // fim btnWebBrowser
 
 
-		bntDocumentoHTML.setOnAction((event) -> {
+		btnAtoAdministrativo.setOnAction((event) -> {
 
-			Set<String> s1 = driver.getWindowHandles();
+			Set<String> s1 = TabUsuarioControlador.webDriver.getWindowHandles();
 
 			List<String> strList = new ArrayList<>();
 
@@ -205,13 +217,13 @@ public class NavegadorExterno {
 				strList.add(s);
 			}
 
-			driver.switchTo().window(strList.get(1));
+			TabUsuarioControlador.webDriver.switchTo().window(strList.get(1));
 
-			JavascriptExecutor js = (JavascriptExecutor) driver;
+			JavascriptExecutor js = (JavascriptExecutor) TabUsuarioControlador.webDriver;
 
-			System.out.println("cbiframe value " + cbIframe.getValue());
+			//System.out.println("cbiframe value " + cbIframe.getValue());
 
-			System.out.println(strHTML);
+			//System.out.println(strHTML);
 
 			// retirar todas as haspas duplas "
 			strHTML = strHTML.replace("\"", "");
@@ -236,22 +248,21 @@ public class NavegadorExterno {
  	    });
 		
 		
-		btnDocumentoAnexo.setOnAction(new EventHandler<ActionEvent>() {
+		btnAtoAdministrativoAnexo.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
             	
             	MalaDiretaAnexoParecer anexo = new MalaDiretaAnexoParecer(listMalaDireta, strAnexoParecer, strTabela1, strTabela2);
             	String strAnexo = anexo.criarAnexoParecer(int_interferencia_selecionada);
             	
-            	System.out.println("anexo criar anexo " + strAnexo);
+            	//System.out.println("anexo criar anexo " + strAnexo);
             	
-
     			// retirar todas as haspas duplas "
             	strAnexo = strAnexo.replace("\"", "");
     			// trocar todas a haspa simples ' por haspas duplas "
             	strAnexo = strAnexo.replace("'", "\"");
           
             	
-            	Set<String> s1 = driver.getWindowHandles();
+            	Set<String> s1 = TabUsuarioControlador.webDriver.getWindowHandles();
 
     			List<String> strList = new ArrayList<>();
 
@@ -259,29 +270,86 @@ public class NavegadorExterno {
     				strList.add(s);
     			}
 
-    			driver.switchTo().window(strList.get(1));
+    			TabUsuarioControlador.webDriver.switchTo().window(strList.get(1));
 
-    			JavascriptExecutor js = (JavascriptExecutor) driver;
+    			JavascriptExecutor js = (JavascriptExecutor) TabUsuarioControlador.webDriver;
     			
-    			//driver.findElements(By.tagName("anexo_parecer_tag")).get(0).sendKeys("<b>bola</b>");
-            	
-    			// var a = document.getElementsByTagName('iframe')[2];
-    			// var b = a.contentDocument.getElementsByTagName('anexo_parecer_tag')[0].innerHTML = '<b>bula</b>';
-    			
+    			//System.out.println(strAnexo);
     			
         		//-- imprimir o relatório ou tn no editor do SEI --//
-    			js.executeScript("var a = document.getElementsByTagName('iframe')['"+cbIframe.getValue()+"'];"
-    					+ "var b = a.contentDocument.getElementsByTagName('anexo_parecer_tag')[0].innerHTML = '"+ strAnexo +"';");
+    			js.executeScript("document.getElementsByTagName('iframe')[2].contentDocument.body.lastElementChild.innerHTML = '" + strAnexo + "';");
 					
             }
         });
+		
+		
+		/**
+		 * Capturar o ato editado e inserir em outros locais necessarios
+		 */
+		btnCapturaHTML.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+            	
+            	Set<String> s1 = TabUsuarioControlador.webDriver.getWindowHandles();
+
+    			List<String> strList = new ArrayList<>();
+
+    			for (String s : s1) {
+    				strList.add(s);
+    			}
+    			
+    			TabUsuarioControlador.webDriver.switchTo().window(strList.get(1));
+            	
+            	JavascriptExecutor js = (JavascriptExecutor) TabUsuarioControlador.webDriver;
+            
+            	strParecerCapturado = (String) js.executeScript("return document.getElementsByTagName('iframe')['"+cbIframe.getValue()+"'].contentDocument.body.innerHTML.toString()");
+            	
+            }
+        });
+		
+		/**
+		 * Inserir o ato capturado onde  for necessario. O tecnico edita um parecer e quer inseri-lo em outros documentos
+		 */
+		btnInsereHTML.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+            	
+            	strParecerCapturado = strParecerCapturado.replace("\"", "'");
+            	strParecerCapturado = strParecerCapturado.replace("\n", "");
+
+            	strParecerCapturado =  "\"" + strParecerCapturado + "\"";
+            	
+            	Set<String> s1 = TabUsuarioControlador.webDriver.getWindowHandles();
+
+    			List<String> strList = new ArrayList<>();
+
+    			for (String s : s1) {
+    				strList.add(s);
+    			}
+
+    			TabUsuarioControlador.webDriver.switchTo().window(strList.get(1));
+            	
+            	
+            	JavascriptExecutor js = (JavascriptExecutor) TabUsuarioControlador.webDriver;
+                
+            	js.executeScript("document.getElementsByTagName('iframe')[2].contentDocument.body.innerHTML = " + strParecerCapturado + ";");
+     
+            	/*
+        			//-- imprimir o relatório ou tn no editor do SEI --//
+            		webViewPopUp.getEngine().executeScript(
+            				"document.getElementsByTagName('iframe')[2].contentDocument.body.innerHTML = " + strParecerCapturado + ";"
+	            			);
+					
+					*/
+            }
+        });
+		
+		
 
 	}
 	
 	
 	// endereco da pasta onde está o link do webdriver chrome
 	String strArquivoWebDriver = "";
-		
+	String strParecerCapturado = "";
 	
 	public void setarStringHTML (String strHTML) {
 		this.strHTML = strHTML;

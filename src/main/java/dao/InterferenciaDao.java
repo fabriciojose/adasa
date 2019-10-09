@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Criteria;
-import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Disjunction;
@@ -20,7 +20,14 @@ public class InterferenciaDao {
 		
 		Session s = HibernateUtil.getSessionFactory().openSession();
 		s.beginTransaction();
+		
+		try {
 		s.save(interferencia);
+		}
+		catch (HibernateException e ) {
+			e.printStackTrace();
+		}
+		
 		s.getTransaction().commit();
 		s.close();
 		

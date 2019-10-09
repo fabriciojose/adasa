@@ -81,7 +81,7 @@ public class TesteCriacaoAtosOutorga extends Application {
 		
 		sub.setInterDDLatitude(-15.000);
 		sub.setInterDDLongitude(-47.0);
-		sub.setSubVazaoPoco(600.0);
+		sub.setSubVazaoOutorgada(600.0);
 		
 		sub.getFinalidades().add(finAut);	
 		

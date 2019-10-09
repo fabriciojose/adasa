@@ -23,7 +23,7 @@ public class FormatadorCPFCNPJ {
 				
 				strMascara = mascara.valueToString(strCPFCNPJ.replaceAll("\\D",""));
 				
-		        System.out.println("CPF : " + strMascara );
+		       // System.out.println("CPF : " + strMascara );
 		        
 		        
 		    } catch (ParseException ex) {
@@ -44,7 +44,7 @@ public class FormatadorCPFCNPJ {
 				
 				strMascara = mascara.valueToString(strCPFCNPJ.replaceAll("\\D",""));
 				
-		        System.out.println("CNPJ : " +strMascara);
+		       // System.out.println("CNPJ : " +strMascara);
 		        
 		        
 		    } catch (ParseException ex) {

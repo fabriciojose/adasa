@@ -659,10 +659,8 @@ public class ControladorPrincipal {
 			 * preencher os combobox das tabelas relacionadas
 			 */
 			if (listasComboBox == null) {
-				System.out.println("lista combobox ! null");
 				listasComboBox = new ListasComboBox();
 					listasComboBox.preencherListasComboBox();
-					
 			}
 
 			if (pAtendimento == null) {
@@ -732,7 +730,6 @@ public class ControladorPrincipal {
 		btnOutorga.setOnAction((ActionEvent evt)->{
 			
 			if (listasComboBox == null) {
-				System.out.println("lista combobox ! null");
 				listasComboBox = new ListasComboBox();
 					listasComboBox.preencherListasComboBox();
 					
@@ -821,7 +818,6 @@ public class ControladorPrincipal {
 			 * preencher os combobox das tabelas relacionadas
 			 */
 			if (listasComboBox == null) {
-				System.out.println("lista combobox ! null");
 				listasComboBox = new ListasComboBox();
 					listasComboBox.preencherListasComboBox();
 					
@@ -1371,7 +1367,7 @@ public class ControladorPrincipal {
 		
 		Registro registro = new Registro();
 		
-		String strEstiloCSS = null;
+		String strEstiloCSS = "/css/principal_mapa_azul.css";
 		
 		Properties prop = new Properties();
 		
@@ -1396,8 +1392,6 @@ public class ControladorPrincipal {
 			
 			strEstiloCSS = prop.getProperty("strEstiloCSS");
 			
-			System.out.println("primeiro segundo try");
-			
 		} catch (URISyntaxException e3) {
 
 			e3.printStackTrace();
@@ -1405,9 +1399,7 @@ public class ControladorPrincipal {
 
 			e3.printStackTrace();
 		}
-		
-		System.out.println("metodo mudar estilo  mapa (" + (intEstiloMapa) + ") "  + strEstiloCSS + " mapa " + (intEstiloMapa+1));
-		
+
 		return strEstiloCSS;
 		
 	}
@@ -1417,7 +1409,7 @@ public class ControladorPrincipal {
 		
 		Registro registro = new Registro();
 		
-		String strEstiloCSS = null;
+		String strEstiloCSS = "/css/principal_mapa_azul.css";
 		
 		Properties prop = new Properties();
 	
@@ -1458,9 +1450,7 @@ public class ControladorPrincipal {
 				
 				
 			}
-			
-		System.out.println("metodo mudar estilo  mapa () "  + strEstiloCSS );
-		
+
 		return strEstiloCSS;
 	}
 

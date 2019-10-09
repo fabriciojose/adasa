@@ -170,6 +170,7 @@ public class EnderecoDao {
 		s.close();
 		return list;
 	}
+
 	
 	@SuppressWarnings("unchecked")
 	public List<Object> listarObjeto(Object o) {
@@ -179,13 +180,14 @@ public class EnderecoDao {
 		Session s = HibernateUtil.getSessionFactory().openSession();
 		
 		s.beginTransaction();
-		
+	
 		Criteria crit = s.createCriteria(o.getClass(), "obj");
 
 		list = crit.list();
-		
+
 		s.getTransaction().commit();
 		s.close();
+
 		return list;
 	}
 	

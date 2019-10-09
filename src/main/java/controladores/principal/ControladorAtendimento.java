@@ -3,6 +3,7 @@ package controladores.principal;
 import java.io.IOException;
 
 import entidades.Documento;
+import entidades.Endereco;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Tab;
@@ -49,6 +50,13 @@ public class ControladorAtendimento {
 		tabEndCon.setDocumento(doc);
 	}
 	
+	public void setEndereco(Endereco end) {
+		
+		tabInterCon.setEndereco(end);
+		tabUsCon.setEndereco(end);
+
+	}
+
 	@FXML 
     private void initialize() {
 		

@@ -49,8 +49,6 @@ public class UnidadeHidrografica implements Serializable{
 	@Fetch(FetchMode.SUBSELECT) 
 	private List<Interferencia> interferencias = new ArrayList<Interferencia>();
 	
-
-	
 	public Geometry getShape() {
 		return Shape;
 	}

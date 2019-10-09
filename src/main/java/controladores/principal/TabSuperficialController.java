@@ -142,7 +142,7 @@ public class TabSuperficialController implements Initializable{
 
 			if (f.getClass().getName() == "entidades.FinalidadeRequerida") {
 				fr = (FinalidadeRequerida) f;
-				System.out.println("sub - finalidade requerida ID " + fr.getFinID());
+				//System.out.println("sub - finalidade requerida ID " + fr.getFinID());
 			}
 
 		}
@@ -167,7 +167,7 @@ public class TabSuperficialController implements Initializable{
 
 			if (f.getClass().getName() == "entidades.FinalidadeAutorizada") {
 				fa = (FinalidadeAutorizada) f;
-				System.out.println("sub - finalidade autorizada ID " + fa.getFinID());
+				//System.out.println("sub - finalidade autorizada ID " + fa.getFinID());
 			}
 
 		}
@@ -226,7 +226,7 @@ public class TabSuperficialController implements Initializable{
 
 					if (f.getClass().getName() == "entidades.FinalidadeRequerida") {
 						fr = (FinalidadeRequerida) f;
-						System.out.println("sub - finalidade id " + fr.getFinID());
+						//System.out.println("sub - finalidade id " + fr.getFinID());
 					}
 
 				}
@@ -243,8 +243,6 @@ public class TabSuperficialController implements Initializable{
 				
 				fr.setFinInterferenciaFK(sup);
 
-				System.out.println("tab SUB antes do iterator " + sup.getFinalidades().size());
-
 				Iterator<Finalidade> it;
 
 				for (it = sup.getFinalidades().iterator(); it.hasNext();)
@@ -252,7 +250,7 @@ public class TabSuperficialController implements Initializable{
 					Finalidade f = (Finalidade) it.next();
 					if (f.getFinID() == fr.getFinID()) {
 						it.remove();
-						System.out.println("TABSUPERFICIAL - finalidade já existente? Iterator " + ( f.getFinID() == fr.getFinID()));
+						//System.out.println("TABSUPERFICIAL - finalidade já existente? Iterator " + ( f.getFinID() == fr.getFinID()));
 					}
 				}
 		
@@ -266,7 +264,7 @@ public class TabSuperficialController implements Initializable{
 
 					if (f.getClass().getName() == "entidades.FinalidadeAutorizada") {
 						fa = (FinalidadeAutorizada) f;
-						System.out.println("SUP - finalidade id - autorizada " + fr.getFinID());
+						//System.out.println("SUP - finalidade id - autorizada " + fr.getFinID());
 					}
 
 				}
@@ -283,7 +281,6 @@ public class TabSuperficialController implements Initializable{
 				
 				fa.setFinInterferenciaFK(sup);
 
-				System.out.println("tab SUP antes do iterator " + sup.getFinalidades().size());
 
 				Iterator<Finalidade> itAut;
 
@@ -292,7 +289,7 @@ public class TabSuperficialController implements Initializable{
 					Finalidade f = (Finalidade) itAut.next();
 					if (f.getFinID() == fa.getFinID()) {
 						itAut.remove();
-						System.out.println("TabSUPERFICIAL - finalidade autorizada já existente? Iterator " + ( f.getFinID() == fa.getFinID()));
+						//System.out.println("TabSUPERFICIAL - finalidade autorizada já existente? Iterator " + ( f.getFinID() == fa.getFinID()));
 					}
 				}
 			
@@ -328,8 +325,7 @@ public class TabSuperficialController implements Initializable{
 					Number old_value, Number new_value) {
 
 				bacia_hidrografica.setBaciaID((Integer) new_value + 1); 
-				//System.out.println("bacia hidrografica id " + bacia_hidrografica.getBaciaID());
-
+				
 			}
 		});
 		
@@ -339,7 +335,7 @@ public class TabSuperficialController implements Initializable{
     	(ObservableValue<? extends String> observable, String old_value, String new_value) ->
 
     		bacia_hidrografica.setBaciaNome(new_value)
-    		//System.out.println("bacia hidrografica nome " + new_value)
+    		
     	);
 
 		cbUnidadeHidrografica.getSelectionModel().selectedIndexProperty().addListener(new
@@ -1244,24 +1240,17 @@ public class TabSuperficialController implements Initializable{
 
 		p.setSRID(4674);
 
-		BaciasHidrograficasDao bacias = new BaciasHidrograficasDao();
-		List<BaciasHidrograficas> listBacias = bacias.listarBaciasHidrograficas("");
-
-		UnidadeHidrograficaDao uhs = new UnidadeHidrograficaDao();
-		List<UnidadeHidrografica> listUnidades = uhs.listarUnidadesHidrograficas("");
-
-		for (BaciasHidrograficas b : listBacias) {
+		for (BaciasHidrograficas b : ListasComboBox.listaBaciasHidrograficas) {
 
 			if (p.intersects(b.getBaciaShape())) {
 
 				cbBaciaHidrografica.setValue(String.valueOf(b.getBaciaNome()));
 
-				//System.out.println("nome da bacia " + b.getBaciaNome() );
 			}
 
 		} // fim loop bacias hidrograficas
 
-		for (UnidadeHidrografica u : listUnidades) {
+		for (UnidadeHidrografica u : ListasComboBox.listaUnidadesHidrograficas) {
 
 
 			if (p.intersects(u.getShape())) {

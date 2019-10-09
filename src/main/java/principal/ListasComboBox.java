@@ -1,8 +1,11 @@
 package principal;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import dao.BaciasHidrograficasDao;
 import dao.EnderecoDao;
+import dao.UnidadeHidrograficaDao;
 import entidades.BaciasHidrograficas;
 import entidades.FormaCaptacao;
 import entidades.GetterAndSetter;
@@ -42,24 +45,6 @@ public class ListasComboBox {
 	public static ObservableList<String> obsListTipoPoco = FXCollections.observableArrayList();
 	public static ObservableList<String> obsListSubsistema = FXCollections.observableArrayList();
 
-	
-	RA regiaoAdministrativa = new RA();
-	TipoInterferencia tipoInterferencia = new TipoInterferencia();
-	TipoOutorga tipoOutorga = new TipoOutorga();
-	SubtipoOutorga subtipoOutorga = new SubtipoOutorga();
-	TipoAto tipoAto = new TipoAto();
-	SituacaoProcesso situacaoProcesso = new SituacaoProcesso();
-	
-	BaciasHidrograficas baciasHidrograficas = new  BaciasHidrograficas();
-	UnidadeHidrografica unidadeHidrografica = new UnidadeHidrografica();
-	LocalCaptacao localCaptacao = new LocalCaptacao();
-	FormaCaptacao formaCaptacao = new FormaCaptacao();
-	MetodoIrrigacao metodoIrrigacao = new MetodoIrrigacao();
-	
-	TipoPoco tipo_poco = new TipoPoco();
-	SubSistema subsistema = new SubSistema();
-	
-	
 	String [] variaveis = {
 			
 			"raNome",
@@ -80,12 +65,17 @@ public class ListasComboBox {
 			
 			};
 	
+	
+	public static List<BaciasHidrograficas> listaBaciasHidrograficas;
+	public static List<UnidadeHidrografica> listaUnidadesHidrograficas;
+
 	@SuppressWarnings("unchecked")
 	public void preencherListasComboBox () {
 		
 		ArrayList<ArrayList<Object>> arrayObjetos = new ArrayList<ArrayList<Object>>();
 			
 			ArrayList<Object> listObservableList = new ArrayList<>();
+			
 				listObservableList.add(obsListRA);
 				listObservableList.add(obsListTipoInterferencia);
 				listObservableList.add(obsListTipoOutorga);
@@ -93,7 +83,7 @@ public class ListasComboBox {
 				listObservableList.add(obsListTipoAto);
 				listObservableList.add(obsListSituacao);
 				
-				listObservableList.add(obsListBacia);
+				listObservableList.add(obsListBacia); // 6 bacias
 				listObservableList.add(obsListUH);
 				listObservableList.add(obsListLocalCaptacao);
 				listObservableList.add(obsListFormaCaptacao);
@@ -102,29 +92,27 @@ public class ListasComboBox {
 				listObservableList.add(obsListTipoPoco);
 				listObservableList.add(obsListSubsistema);
 				
-			
-				
 			ArrayList<Object> listEntidades = new ArrayList<>();
-				listEntidades.add(regiaoAdministrativa);
-				listEntidades.add(tipoInterferencia);
-				listEntidades.add(tipoOutorga);
-				listEntidades.add(subtipoOutorga);
-				listEntidades.add(tipoAto);
-				listEntidades.add(situacaoProcesso);
+			
+				listEntidades.add(new RA());
+				listEntidades.add(new TipoInterferencia());
+				listEntidades.add(new TipoOutorga());
+				listEntidades.add(new SubtipoOutorga());
+				listEntidades.add(new TipoAto());
+				listEntidades.add(new SituacaoProcesso());
 				
-				listEntidades.add(baciasHidrograficas);
-				listEntidades.add(unidadeHidrografica);
-				listEntidades.add(localCaptacao);
-				listEntidades.add(formaCaptacao);
-				listEntidades.add(metodoIrrigacao);
+				listEntidades.add(new BaciasHidrograficas()); // 6
+				listEntidades.add(new UnidadeHidrografica());
+				listEntidades.add(new LocalCaptacao());
+				listEntidades.add(new FormaCaptacao());
+				listEntidades.add(new MetodoIrrigacao());
 				
-				listEntidades.add(tipo_poco);
-				listEntidades.add(subsistema);
+				listEntidades.add(new TipoPoco());
+				listEntidades.add(new SubSistema());
 				
+				arrayObjetos.add(listObservableList);
 	
-						arrayObjetos.add(listObservableList);
-	
-						arrayObjetos.add(listEntidades);
+				arrayObjetos.add(listEntidades);
 			
 			for (int i = 0; i<arrayObjetos.get(0).size(); i++)	 {		
 		
@@ -134,26 +122,23 @@ public class ListasComboBox {
 				}
 				
 			
-			list = (ArrayList<Object>) endDao.listarObjeto(arrayObjetos.get(1).get(i));
+				list = (ArrayList<Object>) endDao.listarObjeto(arrayObjetos.get(1).get(i));
+
+				GetterAndSetter gs  = new GetterAndSetter();
 			
-			GetterAndSetter gs  = new GetterAndSetter();
-			
-			for (Object o: list) {
-	
-				((ObservableList<String>)arrayObjetos.get(0).get(i)).add(gs.callGetter(o, variaveis[i]));
-				
-			}
+				for (Object o: list) {
+		
+					((ObservableList<String>)arrayObjetos.get(0).get(i)).add(gs.callGetter(o, variaveis[i]));
+					
+				} // fim loop for Object o
 		
 			
-			}
+			} // fim loop for arrayObjetos
 			
-			/*
-			for (String s: obsListRA) {
-				System.out.println(s);
-			}
-			*/
+			// inicializar tambem depois unidades hidrograficas e subsistemas
+			listaBaciasHidrograficas = new BaciasHidrograficasDao().listarBaciasHidrograficas("");
+			listaUnidadesHidrograficas = new UnidadeHidrograficaDao().listarUnidadesHidrograficas("");
 			
-		
 	}
 	
 }

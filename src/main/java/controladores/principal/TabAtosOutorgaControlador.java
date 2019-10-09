@@ -58,6 +58,7 @@ import principal.Alerta;
 import principal.Componentes;
 import principal.FormatoData;
 import principal.MalaDiretaAtosOutorga;
+import util.NavegadorExterno;
 
 public class TabAtosOutorgaControlador implements Initializable {
 
@@ -111,6 +112,8 @@ public class TabAtosOutorgaControlador implements Initializable {
 	ControladorOutorga controladorOutorga;
 	ControladorAtendimento controladorAtendimento;
 	ControladorFiscalizacao controladorFiscalizacao;
+	
+	NavegadorExterno navExt;
 
 	public TabAtosOutorgaControlador (ControladorOutorga controladorOutorga) {
 		this.controladorOutorga = controladorOutorga;
@@ -394,6 +397,11 @@ public class TabAtosOutorgaControlador implements Initializable {
 		com = new Componentes();
 		com.popularTela(componentesInterferencia, prefSizeWHeLayXY, p1);
 		
+		// inicializar navegador externo
+		navExt = new NavegadorExterno(p1);
+		
+		navExt.inicializarNavegadorExterno(25.0, 795.0);
+		
 		
 		cbInterferencia.setConverter(new StringConverter<Interferencia>() {
 
@@ -652,13 +660,19 @@ public class TabAtosOutorgaControlador implements Initializable {
 				
 				String strHTML = mlDoc.criarAtoOutorga();
 				
-				try { ControladorNavegacao.conNav.setHTML(strHTML); } 
-				
+				try { ControladorNavegacao.conNav.setHTML(strHTML); 
+				} 
 					catch (Exception ee) {
 
-					Alerta a = new Alerta ();
-					a.alertar(new Alert(Alert.AlertType.ERROR, "Inicialize o navegador SEI !!!", ButtonType.OK));
+						Alerta a = new Alerta ();
+						a.alertar(new Alert(Alert.AlertType.ERROR, "Inicialize o navegador SEI !!!", ButtonType.OK));
 					} // fim catch
+				
+				
+				navExt.setarStringHTML(strHTML);
+				
+				//so e necessario no parecer
+				//navExt.setObjetosAnexo(listaMalaDireta, obsListUsuariosMalaDireta, strAnexoParecer, strTabela1, strTabela2);
 				
 			} // fim metodo handle
 		

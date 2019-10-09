@@ -887,6 +887,7 @@ public class TabParecerControlador implements Initializable {
 		
 		ObservableList<String> obsListUsuariosMalaDireta = FXCollections.observableArrayList();
 
+		
 		// inicializar tela usuario
 		btnParecer.setOnAction(new EventHandler<ActionEvent>() {
 			@Override public void handle(ActionEvent e) {
@@ -897,22 +898,16 @@ public class TabParecerControlador implements Initializable {
 				// criar a mala direta
 				MalaDiretaDocumentos mlDoc = new MalaDiretaDocumentos(modeloHTML, documento, listaMalaDireta);
 				String strHTML = mlDoc.criarDocumento();
-				
-				System.out.println("html parecer");
-				System.out.println(strHTML);
-				
-				// setar o html do documento no navagador externo
-				navExt.setarStringHTML(strHTML);
-				
+			
 				// setar no navegador o html desejado
 				try { 
 					
 					ControladorNavegacao.conNav.setHTML(strHTML);
 				
-					String strAnexoParecer = listaModelosHTML.get(6).getModConteudo();
+					strAnexoParecer = listaModelosHTML.get(6).getModConteudo();
 				
-					String strTabela1 = listaModelosHTML.get(7).getModConteudo();
-					String strTabela2 = listaModelosHTML.get(3).getModConteudo();
+					strTabela1 = listaModelosHTML.get(7).getModConteudo();
+					strTabela2 = listaModelosHTML.get(3).getModConteudo();
 				
 					strAnexoParecer = strAnexoParecer.replace("\"", "'");
 					strAnexoParecer = strAnexoParecer.replace("\n", "");
@@ -934,11 +929,8 @@ public class TabParecerControlador implements Initializable {
 					//System.out.println(((Usuario)listaMalaDireta.get(i)[0][1]).getUsNome());
 					
 				}
-			
+		
 				ControladorNavegacao.conNav.setObjetosAnexo(listaMalaDireta, obsListUsuariosMalaDireta, strAnexoParecer, strTabela1, strTabela2);
-				
-				navExt.setObjetosAnexo(listaMalaDireta, obsListUsuariosMalaDireta, strAnexoParecer, strTabela1, strTabela2);
-				
 				
 				} catch (Exception ee) {
 
@@ -947,6 +939,11 @@ public class TabParecerControlador implements Initializable {
 				}
 				
 
+				// setar o html do documento no navagador externo
+				navExt.setarStringHTML(strHTML);
+				
+				navExt.setObjetosAnexo(listaMalaDireta, obsListUsuariosMalaDireta, strAnexoParecer, strTabela1, strTabela2);
+				
 			}
 
 		});
@@ -968,10 +965,10 @@ public class TabParecerControlador implements Initializable {
 		btnRemoveInterferenciaMalaDireta.setOnAction(new EventHandler<ActionEvent>() {
 			@Override public void handle(ActionEvent e) {
 				
-				System.out.println(listaMalaDireta.size());
+				//System.out.println(listaMalaDireta.size());
 				
 				for (int i=0; i<listaMalaDireta.size();i++) {
-					System.out.println(i +  ": " + listaMalaDireta.get(i));
+					//System.out.println(i +  ": " + listaMalaDireta.get(i));
 				}
 				
 				if(listaMalaDireta.size()>0) {
@@ -979,7 +976,7 @@ public class TabParecerControlador implements Initializable {
 				}
 				
 				for (int i=0; i<listaMalaDireta.size();i++) {
-					System.out.println(i +  ": " + listaMalaDireta.get(i));
+					//System.out.println(i +  ": " + listaMalaDireta.get(i));
 				}
 			
 			}
@@ -1034,7 +1031,7 @@ public class TabParecerControlador implements Initializable {
 					strPastaArquivoExcel = strPastaArquivoExcel + str[i] + "\\\\";
 				}
 				
-				System.out.println("btn excel - local pasta: " + strPastaArquivoExcel);
+				//System.out.println("btn excel - local pasta: " + strPastaArquivoExcel);
 				
 				// data e hora da criacao do documento excel
 				String strTempoAtual = Timestamp.valueOf((LocalDateTime.now())).toString();
@@ -1075,7 +1072,7 @@ public class TabParecerControlador implements Initializable {
 						Cell cellInterferenciaLatitude = row.getCell(10);
 						cellInterferenciaLatitude.setCellValue(((Interferencia)listaMalaDireta.get(i)[0][2]).getInterDDLatitude());	
 
-						System.out.println("latitude " + ((Interferencia)listaMalaDireta.get(i)[0][2]).getInterDDLatitude());
+						//System.out.println("latitude " + ((Interferencia)listaMalaDireta.get(i)[0][2]).getInterDDLatitude());
 
 						Cell cellInterferenciaLongitude= row.getCell(11);
 						cellInterferenciaLongitude.setCellValue(((Interferencia)listaMalaDireta.get(i)[0][2]).getInterDDLongitude());
@@ -1093,7 +1090,7 @@ public class TabParecerControlador implements Initializable {
 								for (int ii = 41; ii<53; ii++) {
 
 									Cell c = row.getCell(ii);
-									c.setCellValue( 	(((Subterranea)listaMalaDireta.get(i)[0][2]).getSubVazaoPoco()	 ));
+									c.setCellValue( 	(((Subterranea)listaMalaDireta.get(i)[0][2]).getSubVazaoOutorgada()	 ));
 
 
 								}
@@ -1141,7 +1138,7 @@ public class TabParecerControlador implements Initializable {
 					}
 
 
-					System.out.println("hora de salvar excel local pasta : " + strPastaArquivoExcel);
+					//System.out.println("hora de salvar excel local pasta : " + strPastaArquivoExcel);
 					// Nomear o excel gerado como: Parecer Numero (123456) Data(20190512) .xslm
 					fileOutput = new FileOutputStream(
 							strPastaArquivoExcel 
@@ -1245,6 +1242,10 @@ public class TabParecerControlador implements Initializable {
 	   
 	}
 	
+	/*
+	 * Strings necessarias para a criacao do parecer
+	 */
+	String strAnexoParecer, strTabela1, strTabela2 = "";
 	
 	// endereco da pasta onde está o arquivo excel, nao pode ser null
 	String strPastaArquivoExcel = "";

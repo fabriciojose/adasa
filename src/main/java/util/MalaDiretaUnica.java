@@ -476,7 +476,7 @@ public class MalaDiretaUnica {
 			
 			String vazaoPoco = "";
 			// tentar imprimir o valor
-			try { vazaoPoco = 	df.format(	((Subterranea) interferencia).getSubVazaoPoco()	).replaceAll(",00", "")  ;} 
+			try { vazaoPoco = 	df.format(	((Subterranea) interferencia).getSubVazaoOutorgada()	).replaceAll(",00", "")  ;} 
 			// ou imprime vazio
 			catch (Exception e) {vazaoPoco = "0";};
 

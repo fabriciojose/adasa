@@ -68,8 +68,6 @@ public class TabEnderecoControlador implements Initializable {
 	Demanda demanda;
 	Endereco endereco = new Endereco();
 
-
-
 	Documento documento = new  Documento();
 	
 	public void setDocumento (Documento documento)  {
@@ -1207,11 +1205,11 @@ public class TabEnderecoControlador implements Initializable {
 					}
 					
 					if (controladorFiscalizacao != null) {
-						controladorOutorga.setEndereco(end);
+						controladorFiscalizacao.setEndereco(end);
 					}
 					
 					if (controladorAtendimento != null) {
-						controladorOutorga.setEndereco(end);
+						controladorAtendimento.setEndereco(end);
 					}
 					
 					

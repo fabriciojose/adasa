@@ -251,7 +251,7 @@ public class ControladorNavegacao implements Initializable {
 	
 	Button btnAtoAdministrativo;
 	ComboBox<String> cbUsuarios;
-	Button btnAnexo;
+	Button btnAtoAdministrativoAnexo;
 	
 	Button btnCapturaHTML;
 	Button btnInsereHTML;
@@ -262,34 +262,29 @@ public class ControladorNavegacao implements Initializable {
 		cbUsuarios = new ComboBox<>();
 		cbUsuarios.setItems(obsListUsuariosMalaDireta);
 		
-		btnAnexo = new Button("ANEXO");
+		btnAtoAdministrativoAnexo = new Button("ANEXO");
 		btnCapturaHTML = new Button("CAPTURAR");
 		btnInsereHTML = new Button("INSERIR");
 		
 		
-		//String strHTML = "'<b>Hello World</b>'";
-		
-		/*
-		 * @String strHTML no formato "'<p>Hello World'"
-		 * @ var x - captura o iframe de edição, no caso do requerimento de outorga
-		 * @ var y - recebe contentDocument de x e muda texto  no iframe
+		/**
+		 *	Inserir ato adiministrativo (Documento) no iframe 2 do editor html do sei
 		 */
-		
 		btnAtoAdministrativo.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
             	
         			//-- imprimir o relatório ou tn no editor do SEI --//
             		webViewPopUp.getEngine().executeScript(
-	            				"var x = document.getElementsByTagName('iframe')[2];"
-	            			+ 	"var y = x.contentDocument;" 
-	            			+ 	"y.body.innerHTML = " + strHTML + ";"
+	            				"document.getElementsByTagName('iframe')[2].contentDocument.body.innerHTML = " + strHTML + ";"
 	            			);
 					
             }
         });
 		
-		
-		btnAnexo.setOnAction(new EventHandler<ActionEvent>() {
+		/**
+		 * Inserir o anexo do ato administrativo (Parecer Coletivo) no editor HTML do sei quando este estiver preenchido com o parecer
+		 */
+		btnAtoAdministrativoAnexo.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
             	
             	
@@ -299,13 +294,15 @@ public class ControladorNavegacao implements Initializable {
             	
         			//-- imprimir o relatório ou tn no editor do SEI --//
             		webViewPopUp.getEngine().executeScript(
-            				"y.body.lastElementChild.innerHTML = " + strAnexo + ";"
+            				"document.getElementsByTagName('iframe')[2].contentDocument.body.lastElementChild.innerHTML = " + strAnexo + ";"
 	            			);
 					
             }
         });
 		
-		
+		/**
+		 * Capturar o ato editado e inserir em outros locais necessarios
+		 */
 		btnCapturaHTML.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
             	
@@ -314,7 +311,9 @@ public class ControladorNavegacao implements Initializable {
             }
         });
 		
-		
+		/**
+		 * Inserir o ato capturado onde  for necessario. O tecnico edita um parecer e quer inseri-lo em outros documentos
+		 */
 		btnInsereHTML.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
             	
@@ -385,11 +384,11 @@ public class ControladorNavegacao implements Initializable {
 			    	
 			    	btnAtoAdministrativo.setPrefSize(300, 30);
 			    	cbUsuarios.setPrefSize(600, 30);
-			    	btnAnexo.setPrefSize(200, 30);
+			    	btnAtoAdministrativoAnexo.setPrefSize(200, 30);
 			    	btnCapturaHTML.setPrefSize(200, 30);
 			    	btnInsereHTML.setPrefSize(200, 30);
 			    	
-			    	HBox hbPopUp = new HBox(btnAtoAdministrativo, cbUsuarios, btnAnexo, btnCapturaHTML, btnInsereHTML);
+			    	HBox hbPopUp = new HBox(btnAtoAdministrativo, cbUsuarios, btnAtoAdministrativoAnexo, btnCapturaHTML, btnInsereHTML);
 			    	
 			    	hbPopUp.setPrefSize(900, 30);
 			    	
@@ -402,9 +401,8 @@ public class ControladorNavegacao implements Initializable {
 			 	    		if ( (Integer) new_value !=  -1)
 			 	    		int_interferencia_selecionada = (int) new_value;
 			 	    		
-			 	    		System.out.println("interferencia seleciondada " + int_interferencia_selecionada);
+			 	    		//System.out.println("interferencia seleciondada " + int_interferencia_selecionada);
 			 	    	
-			 	    		
 			             }
 			 	    });
 			    	

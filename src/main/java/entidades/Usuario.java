@@ -41,7 +41,7 @@ public class Usuario implements Serializable {
 	@Column (name = "us_Tipo", columnDefinition="varchar(8)")
 	private String usTipo;
 	
-	@Column (name = "us_Nome", columnDefinition="varchar(80)")
+	@Column (name = "us_Nome", columnDefinition="varchar(150)")
 	private String usNome;
 	
 	@Column (name = "us_CPF_CNPJ", columnDefinition="varchar(20)")

@@ -71,5 +71,6 @@
             <Button layoutX="265.0" layoutY="250.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="400.0" text="GERAR ATO" />
          </children>
       </Pane>
+      <Pane layoutX="25.0" layoutY="795.0" prefHeight="60.0" prefWidth="930.0" />
    </children>
 </Pane>

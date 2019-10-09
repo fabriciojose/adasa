@@ -244,15 +244,8 @@ public class MalaDiretaAtosOutorga {
 		
 		String strTipoPoco = null;
 		
-		System.out.println("list inter 0 nome " + listInterferencia.get(0).getClass().getName());
-		
-		System.out.println("list inter 0 nome " + listInterferencia.get(0).getInterTipoInterferenciaFK().getTipoInterDescricao());
-		
-		
-		System.out.println("sub descricao " + ((Subterranea) listInterferencia.get(0)).getSubTipoPocoFK().getTipoPocoDescricao());
-	
 		if ( listInterferencia.get(0).getClass().getName().equals("entidades.Subterranea")) {
-			strTipoPoco = ((Subterranea) listInterferencia.get(0)).getSubTipoPocoFK().getTipoPocoDescricao();
+			strTipoPoco = ((Subterranea) listInterferencia.get(0)).getSubTipoPocoFK().getTipoPocoDescricao().toLowerCase();
 		}
 	
 		String strUsuario [] = {
@@ -295,7 +288,7 @@ public class MalaDiretaAtosOutorga {
 		String strTagsEnderecoEmpreendimento [] = {
 
 				"end_log_tag", // <end_log_tag></end_log_tag>
-				"end_ra_tag",  // <end_ra_tag></end_ra_tag>
+				"end_ra_tag",  // <end_ra_tag></end_ra_tag>      no parecer individua end_empreendimento_logradouro_tag end_empreendimento_ra_tag
 				"end_cep_tag",  // <end_cep_tag></end_cep_tag>
 
 		};
@@ -345,10 +338,9 @@ public class MalaDiretaAtosOutorga {
 
 			}
 
-
 		}
 
-		docHtml.select("finalidades_tag").append(String.valueOf(strFinalidades));
+		docHtml.select("finalidades_tag").append(String.valueOf(strFinalidades).toLowerCase());
 
 		// limpar o html de tags desnecessarias
 		elem =  docHtml.select("finalidades_tag");
@@ -429,7 +421,7 @@ public class MalaDiretaAtosOutorga {
 						for (int i = 0; i<12; i++) {
 
 
-							try {dbl_q_metros_hora = ((Subterranea) inter).getSubVazaoPoco()/1000;} catch (Exception e ) {
+							try {dbl_q_metros_hora = ((Subterranea) inter).getSubVazaoOutorgada()/1000;} catch (Exception e ) {
 								dbl_q_metros_hora = 0.0;
 
 							}
@@ -448,7 +440,7 @@ public class MalaDiretaAtosOutorga {
 							try { docHTMLModeloTabelaLimitesOutorgados.select(q_litros_hora_tag [i]).prepend(
 
 									// formatar 1000.50 para 1.000,50 e retirar zeros irrelevantes como ,00 - 15.00 fica 15
-									df.format(	((Subterranea) inter).getSubVazaoPoco()	).replaceAll(",00", "")	);
+									df.format(	((Subterranea) inter).getSubVazaoOutorgada()	).replaceAll(",00", "")	);
 
 							} 
 

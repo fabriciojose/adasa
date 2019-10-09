@@ -24,10 +24,15 @@ public class Subterranea extends Interferencia {
 	@Column (name="sub_Dinamico", columnDefinition="varchar(20)")
 	private String subDinamico;  // em metros
 
+	@Column (name="sub_Vazao_Teste",columnDefinition="varchar(20)")
+	private String subVazaoTeste;  
 	
-	@Column (name="sub_Vazao_Poco")
-	private Double subVazaoPoco;  // em l/h - litros por hora
-
+	@Column (name="sub_Vazao_Subsistema",columnDefinition="varchar(20)")
+	private String subVazaoSubsistema;
+	
+	@Column (name="sub_Vazao_Outorgada")
+	private Double subVazaoOutorgada;  // em l/h - litros por hora
+	
 	@Column (name="sub_Profundidade",columnDefinition="varchar(20)")
 	private String subProfundidade;  // em metros
 
@@ -107,14 +112,30 @@ public class Subterranea extends Interferencia {
 		this.subTipoPocoFK = subTipoPocoFK;
 	}
 
-	public Double getSubVazaoPoco() {
-		return subVazaoPoco;
+	public String getSubVazaoTeste() {
+		return subVazaoTeste;
 	}
 
-	public void setSubVazaoPoco(Double subVazaoPoco) {
-		this.subVazaoPoco = subVazaoPoco;
+	public void setSubVazaoTeste(String subVazaoTeste) {
+		this.subVazaoTeste = subVazaoTeste;
 	}
-	
+
+	public String getSubVazaoSubsistema() {
+		return subVazaoSubsistema;
+	}
+
+	public void setSubVazaoSubsistema(String subVazaoSubsistema) {
+		this.subVazaoSubsistema = subVazaoSubsistema;
+	}
+
+	public Double getSubVazaoOutorgada() {
+		return subVazaoOutorgada;
+	}
+
+	public void setSubVazaoOutorgada(Double subVazaoOutorgada) {
+		this.subVazaoOutorgada = subVazaoOutorgada;
+	}
+
 	
 
 

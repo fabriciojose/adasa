@@ -159,9 +159,7 @@ public class GoogleMap extends Parent {
 	    }
 	    
 	    public void handle(String typeCoordinate, String ddLatLon, String dmsLatLon, String utmLatLon) {
-	    	
-	    	System.out.println(typeCoordinate);
-	    	
+
 	    	if (typeCoordinate.equals(" DD ")) {
 	    		ControladorPrincipal.lblCoord1.setText(dmsLatLon);
 				ControladorPrincipal.lblCoord2.setText(utmLatLon);
@@ -182,28 +180,7 @@ public class GoogleMap extends Parent {
 	    // capturar evendo de manipulacao do mapa em javascritp, adiquirir o poligono  (croqui) do endereco
 	    public void handleShapeEndereco(String strShapeEndereco) {
 	    	
-	    	//TabEnderecoControlador.controladorOutorga.capturarCroquiEndereco(strCroquiEndereco);
-	    	
 	    	TabEnderecoControlador.tabEnderecoControlador.capturarCroquiEndereco(strShapeEndereco);
-	    	
-	    	
-	    	String [] arrayLatLon = strShapeEndereco.split(";");
-	    	
-	    	
-	    	for (String s : arrayLatLon) {
-	    		System.out.println("s " + s);
-	    	}
-	    	
-	    	
-	    	// capturar o primeiro ponto do poligono e repetir no final
-		    String [] strPoligonoUltimoPonto;
-
-		 		strPoligonoUltimoPonto = arrayLatLon[1].split(",");
-		 		
-		 	for (String ss : strPoligonoUltimoPonto) {
-		 		System.out.println(" ss " + ss);
-		 	}
-	    	
 	    	
 	    }
  
@@ -219,9 +196,7 @@ public class GoogleMap extends Parent {
 	    public void setCoords(String lat, String lon) {
 	    	this.lat = lat;
 	    	this.lon = lon;
-	    	
-	    	//System.out.println("lat e lon para cadastros " + this.lat + "," + this.lon);
-	    	
+
 	    }
 
 	    public void convDD (String typeCoord, String lat, String lon) {

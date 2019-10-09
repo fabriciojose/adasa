@@ -6,11 +6,13 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="70.0" prefWidth="930.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Button layoutX="5.0" layoutY="20.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" text="Chrome" />
-      <Button layoutX="88.0" layoutY="20.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" text="Inserir" />
-      <ComboBox layoutX="163.0" layoutY="20.0" prefHeight="25.0" prefWidth="70.0" />
-      <ComboBox layoutX="238.0" layoutY="20.0" prefHeight="25.0" prefWidth="530.0" />
-      <Button layoutX="773.0" layoutY="20.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" text="Anexo" />
-      <Button layoutX="865.0" layoutY="20.0" mnemonicParsing="false" prefHeight="15.0" prefWidth="60.0" text="Driver" />
+      <Button layoutX="5.0" layoutY="23.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" text="Chrome" />
+      <Button layoutX="85.0" layoutY="23.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" text="Inserir" />
+      <ComboBox layoutX="165.0" layoutY="23.0" prefHeight="25.0" prefWidth="70.0" />
+      <ComboBox layoutX="245.0" layoutY="23.0" prefHeight="25.0" prefWidth="400.0" />
+      <Button layoutX="655.0" layoutY="23.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" text="Anexo" />
+      <Button layoutX="735.0" layoutY="23.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" text="Capturar" />
+      <Button layoutX="815.0" layoutY="23.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" text="Inserir" />
+      <Button layoutX="895.0" layoutY="23.0" mnemonicParsing="false" prefHeight="15.0" prefWidth="30.0" text="..." />
    </children>
 </Pane>

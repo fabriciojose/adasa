@@ -1,3 +1,0 @@
-Failed to execute goal org.apache.maven.plugins:maven-assembly-plugin:2.2-beta-5:single (default) on project com.adasa.srh: Failed to create assembly: 
-Error creating assembly archive jar-with-dependencies: 
-Problem creating jar: invalid LOC header (bad signature) -> [Help 1]

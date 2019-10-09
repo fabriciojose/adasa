@@ -1,17 +1,14 @@
 package principal;
 
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 
 import entidades.Documento;
 import entidades.Endereco;
@@ -445,7 +442,7 @@ public class MalaDireta {
 			
 			String strVazaoPoco = "";
 			// tentar imprimir o valor
-			try { strVazaoPoco = 	df.format(	((Subterranea) interferencia).getSubVazaoPoco()	).replaceAll(",00", "")  ;} 
+			try { strVazaoPoco = 	df.format(	((Subterranea) interferencia).getSubVazaoOutorgada()	).replaceAll(",00", "")  ;} 
 			// ou imprime vazio
 			catch (Exception e) {strVazaoPoco = "0";};
 

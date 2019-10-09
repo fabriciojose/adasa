@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -102,14 +103,17 @@ public class TabSubterraneaController implements Initializable {
 		
 		sub.setSubCaesb(cbSubCaesb.getValue());
 		
+		sub.setSubVazaoTeste(tfVazaoTeste.getText());
+		sub.setSubVazaoSubsistema(tfVazaoSubsistema.getText());
+		
 		// se o textfield estiver vazaio, seta 0.0
-		if ( tfVazaoPoco.getText().isEmpty() ) { 
-			sub.setSubVazaoPoco(0.0);
+		if ( tfVazaoOutorgada.getText().isEmpty() ) { 
+			sub.setSubVazaoOutorgada(0.0);
 		// se nao, tente formatar			
 		} else {
-			try {sub.setSubVazaoPoco(Double.parseDouble(df.parseObject(tfVazaoPoco.getText()).toString()));
+			try {sub.setSubVazaoOutorgada(Double.parseDouble(df.parseObject(tfVazaoOutorgada.getText()).toString()));
 			} catch (Exception e) {
-				sub.setSubVazaoPoco(0.0);
+				sub.setSubVazaoOutorgada(0.0);
 			}
 			
 		}
@@ -133,7 +137,7 @@ public class TabSubterraneaController implements Initializable {
 
 			if (f.getClass().getName() == "entidades.FinalidadeRequerida") {
 				fr = (FinalidadeRequerida) f;
-				System.out.println("sub - finalidade requerida ID " + fr.getFinID());
+				//System.out.println("sub - finalidade requerida ID " + fr.getFinID());
 			}
 
 		}
@@ -158,7 +162,7 @@ public class TabSubterraneaController implements Initializable {
 
 			if (f.getClass().getName() == "entidades.FinalidadeAutorizada") {
 				fa = (FinalidadeAutorizada) f;
-				System.out.println("sub - finalidade autorizada ID " + fa.getFinID());
+				//System.out.println("sub - finalidade autorizada ID " + fa.getFinID());
 			}
 
 		}
@@ -192,11 +196,14 @@ public class TabSubterraneaController implements Initializable {
 		cbSubsistema.setValue(sub.getSubSubSistemaFK().getSubDescricao());
 
 		cbSubCaesb.setValue(sub.getSubCaesb());
+		
+		tfVazaoTeste.setText(sub.getSubVazaoTeste());
+		tfVazaoSubsistema.setText(sub.getSubVazaoSubsistema());
 	
 		// tentar imprimir o valor
-		try {tfVazaoPoco.setText( df.format(	 sub.getSubVazaoPoco()	) .replaceAll(",00", "")		 );} 
+		try {tfVazaoOutorgada.setText( df.format(	 sub.getSubVazaoOutorgada()	) .replaceAll(",00", "")		 );} 
 		// ou imprime vazio
-		catch (Exception e) {tfVazaoPoco.setText(""); };
+		catch (Exception e) {tfVazaoOutorgada.setText(""); };
 		
 		tfEstatico.setText(sub.getSubEstatico());
 		tfDinamico.setText(sub.getSubDinamico());
@@ -216,7 +223,7 @@ public class TabSubterraneaController implements Initializable {
 
 			if (f.getClass().getName() == "entidades.FinalidadeRequerida") {
 				fr = (FinalidadeRequerida) f;
-				System.out.println("sub - finalidade id " + fr.getFinID());
+				//System.out.println("sub - finalidade id " + fr.getFinID());
 			}
 
 		}
@@ -233,7 +240,7 @@ public class TabSubterraneaController implements Initializable {
 		
 		fr.setFinInterferenciaFK(sub);
 
-		System.out.println("tab SUB antes do iterator " + sub.getFinalidades().size());
+		//System.out.println("tab SUB antes do iterator " + sub.getFinalidades().size());
 
 		Iterator<Finalidade> it;
 
@@ -242,14 +249,14 @@ public class TabSubterraneaController implements Initializable {
 			Finalidade f = (Finalidade) it.next();
 			if (f.getFinID() == fr.getFinID()) {
 				it.remove();
-				System.out.println("TabSubterranea - finalidade já existente? Iterator " + ( f.getFinID() == fr.getFinID()));
+				//System.out.println("TabSubterranea - finalidade já existente? Iterator " + ( f.getFinID() == fr.getFinID()));
 			}
 		}
-		System.out.println("tab SUB depois antes de adicionar fr " + sub.getFinalidades().size());
+		//System.out.println("tab SUB depois antes de adicionar fr " + sub.getFinalidades().size());
 
 		sub.getFinalidades().add(fr);
 
-		System.out.println("tab SUB depois " + sub.getFinalidades().size());
+		//System.out.println("tab SUB depois " + sub.getFinalidades().size());
 		
 		
 		// FINALIDADES AUTORIZADAS
@@ -259,7 +266,7 @@ public class TabSubterraneaController implements Initializable {
 
 			if (f.getClass().getName() == "entidades.FinalidadeAutorizada") {
 				fa = (FinalidadeAutorizada) f;
-				System.out.println("sub - finalidade id - autorizada " + fr.getFinID());
+				//System.out.println("sub - finalidade id - autorizada " + fr.getFinID());
 			}
 
 		}
@@ -276,7 +283,7 @@ public class TabSubterraneaController implements Initializable {
 		
 		fa.setFinInterferenciaFK(sub);
 
-		System.out.println("tab SUB antes do iterator " + sub.getFinalidades().size());
+		//System.out.println("tab SUB antes do iterator " + sub.getFinalidades().size());
 
 		Iterator<Finalidade> itAut;
 
@@ -285,14 +292,14 @@ public class TabSubterraneaController implements Initializable {
 			Finalidade f = (Finalidade) itAut.next();
 			if (f.getFinID() == fa.getFinID()) {
 				itAut.remove();
-				System.out.println("TabSubterranea - finalidade autorizada já existente? Iterator " + ( f.getFinID() == fa.getFinID()));
+				//System.out.println("TabSubterranea - finalidade autorizada já existente? Iterator " + ( f.getFinID() == fa.getFinID()));
 			}
 		}
-		System.out.println("tab SUB depois antes de adicionar fa " + sub.getFinalidades().size());
+		//System.out.println("tab SUB depois antes de adicionar fa " + sub.getFinalidades().size());
 
 		sub.getFinalidades().add(fa);
 
-		System.out.println("tab SUB depois finalida autorizada " + sub.getFinalidades().size());
+		//System.out.println("tab SUB depois finalida autorizada " + sub.getFinalidades().size());
 		
 		this.subterranea = sub;	
 
@@ -464,8 +471,7 @@ public class TabSubterraneaController implements Initializable {
 					Number value, Number new_value) {
 
 				subsistema.setSubID((Integer) new_value + 1);
-				//System.out.println("sub = subisistema id " + subsistema.getSubID());
-
+				
 			}
 		});
 		
@@ -549,7 +555,7 @@ public class TabSubterraneaController implements Initializable {
 	ComboBox<String> cbSubsistema;	
 	ComboBox<String> cbSubCaesb;
 
-	TextField tfVazaoPoco;
+	TextField tfVazaoSubsistema, tfVazaoTeste, tfVazaoOutorgada;
 	TextField tfEstatico;
 	TextField tfDinamico;
 	TextField tfProfundidade;
@@ -622,8 +628,15 @@ public class TabSubterraneaController implements Initializable {
 		listaComponentes.add(new Label ("Área atendida (Caesb): "));
 		listaComponentes.add(cbSubCaesb = new ComboBox<>());
 
-		listaComponentes.add(new Label ("Vazão (L/h): "));
-		listaComponentes.add(tfVazaoPoco = new TextField());
+		listaComponentes.add(new Label ("Vazão Subsistema (L/h): "));
+		listaComponentes.add(tfVazaoSubsistema = new TextField());
+		
+		listaComponentes.add(new Label ("Vazão Teste (L/h): "));
+		listaComponentes.add(tfVazaoTeste = new TextField());
+		
+		listaComponentes.add(new Label ("Vazão Outorgada (L/h): "));
+		listaComponentes.add(tfVazaoOutorgada = new TextField());
+		
 		listaComponentes.add(new Label ("Nível Estático (m): "));
 		listaComponentes.add(tfEstatico = new TextField());
 		listaComponentes.add(new Label ("Nível Dinâmico (m): "));
@@ -635,38 +648,42 @@ public class TabSubterraneaController implements Initializable {
 
 		Double  prefSizeWHeLayXY  [][] = { 
 				{910.0,170.0,21.0,0.0},
-				{95.0,30.0,165.0,5.0},
-				{140.0,30.0,260.0,5.0},
-				{95.0,30.0,410.0,5.0},
-				{140.0,30.0,505.0,5.0},
-				{25.0,25.0,657.0,8.0},
-				{160.0,30.0,34.0,35.0},
-				{160.0,30.0,34.0,65.0},
-				{60.0,30.0,204.0,35.0},
-				{60.0,30.0,204.0,65.0},
-				{150.0,30.0,274.0,35.0},
-				{150.0,30.0,274.0,65.0},
-				{150.0,30.0,434.0,35.0},
-				{150.0,30.0,434.0,65.0},
-				{150.0,30.0,594.0,35.0},
-				{150.0,30.0,594.0,65.0},
-				{120.0,30.0,754.0,35.0},
-				{120.0,30.0,754.0,65.0},
-				{120.0,30.0,172.0,95.0},
-				{120.0,30.0,172.0,125.0},
-				{125.0,30.0,302.0,95.0},
-				{125.0,30.0,301.0,125.0},
-				{120.0,30.0,436.0,95.0},
-				{120.0,30.0,436.0,125.0},
-				{130.0,30.0,565.0,95.0},
-				{130.0,30.0,565.0,125.0},
+				{95.0,30.0,166.0,5.0},
+				{140.0,30.0,261.0,5.0},
+				{95.0,30.0,411.0,5.0},
+				{140.0,30.0,506.0,5.0},
+				{25.0,25.0,658.0,8.0},
+				{160.0,30.0,20.0,33.0},
+				{160.0,30.0,20.0,63.0},
+				{60.0,30.0,190.0,33.0},
+				{60.0,30.0,190.0,63.0},
+				{150.0,30.0,260.0,33.0},
+				{150.0,30.0,260.0,63.0},
+				{150.0,30.0,420.0,33.0},
+				{150.0,30.0,420.0,63.0},
+				{150.0,30.0,580.0,33.0},
+				{150.0,30.0,580.0,63.0},
+				{150.0,30.0,740.0,33.0},
+				{140.0,30.0,740.0,63.0},
+				{140.0,30.0,20.0,93.0},
+				{140.0,30.0,20.0,123.0},
+				{140.0,30.0,170.0,93.0},
+				{140.0,30.0,170.0,123.0},
+				{120.0,30.0,357.0,93.0},
+				{120.0,30.0,357.0,123.0},
+				{125.0,30.0,487.0,93.0},
+				{125.0,30.0,486.0,123.0},
+				{120.0,30.0,621.0,93.0},
+				{120.0,30.0,621.0,123.0},
+				{130.0,30.0,750.0,93.0},
+				{130.0,30.0,750.0,123.0},
 		};
 
 		com = new Componentes();
 		com.popularTela(listaComponentes, prefSizeWHeLayXY, pSubterranea);
 		
 		
-		tfVazaoPoco.lengthProperty().addListener(new ChangeListener<Number>() {
+		tfVazaoOutorgada.lengthProperty().addListener(new ChangeListener<Number>() {
 
 			@Override
 			public void changed(ObservableValue<? extends Number> observable,
@@ -674,17 +691,17 @@ public class TabSubterraneaController implements Initializable {
 
 				if (newValue.intValue() > oldValue.intValue()) {
 					// Check if the new character is greater than LIMIT
-					if (tfVazaoPoco.getText().length() >= 0) {
+					if (tfVazaoOutorgada.getText().length() >= 0) {
 
 						/*  Nao permitir letras - variavel double, somente numeros com ponto ou virgula
 						 */
-						if ( tfVazaoPoco.getText().matches("(.*)[a-zA-Z](.*)") == true ) {
+						if ( tfVazaoOutorgada.getText().matches("(.*)[a-zA-Z](.*)") == true ) {
 							// buscar letras entre os numeros
 							Alerta a = new Alerta ();
 							a.alertar(new Alert(Alert.AlertType.ERROR, "Somente números!!!", ButtonType.OK));
 
 							// retirar caracter errado, como letra, virgula etc
-							tfVazaoPoco.setText(tfVazaoPoco.getText().substring(0, tfVazaoPoco.getText().length() - 1));
+							tfVazaoOutorgada.setText(tfVazaoOutorgada.getText().substring(0, tfVazaoOutorgada.getText().length() - 1));
 
 						}
 
@@ -1327,24 +1344,17 @@ public class TabSubterraneaController implements Initializable {
 
 		p.setSRID(4674);
 
-		BaciasHidrograficasDao bacias = new BaciasHidrograficasDao();
-		List<BaciasHidrograficas> listBacias = bacias.listarBaciasHidrograficas("");
-
-		UnidadeHidrograficaDao uhs = new UnidadeHidrograficaDao();
-		List<UnidadeHidrografica> listUnidades = uhs.listarUnidadesHidrograficas("");
-
-		for (BaciasHidrograficas b : listBacias) {
+		for (BaciasHidrograficas b : ListasComboBox.listaBaciasHidrograficas) {
 
 			if (p.intersects(b.getBaciaShape())) {
 
 				cbBaciaHidrografica.setValue(String.valueOf(b.getBaciaNome()));
 
-				//System.out.println("nome da bacia " + b.getBaciaNome() );
 			}
 
 		} // fim loop bacias hidrograficas
 
-		for (UnidadeHidrografica u : listUnidades) {
+		for (UnidadeHidrografica u : ListasComboBox.listaUnidadesHidrograficas) {
 
 
 			if (p.intersects(u.getShape())) {
@@ -1355,6 +1365,7 @@ public class TabSubterraneaController implements Initializable {
 			}
 
 		} // fim loop unidades hidrograficas
+		
 
 	} // fim metodo capturar coordenadas
 

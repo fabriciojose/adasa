@@ -12,7 +12,6 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.hibernate.exception.ConstraintViolationException;
 import org.openqa.selenium.WebDriver;
 
 import dao.ModelosDao;
@@ -21,7 +20,6 @@ import entidades.BancoAccess;
 import entidades.Endereco;
 import entidades.Interferencia;
 import entidades.ModelosHTML;
-import entidades.Subterranea;
 import entidades.Usuario;
 import javafx.animation.TranslateTransition;
 import javafx.beans.value.ChangeListener;
@@ -83,6 +81,9 @@ public class TabUsuarioControlador implements Initializable {
 	Usuario usuario = new Usuario();
 	Endereco endereco = new Endereco ();
 	Interferencia interferencia = new Interferencia();
+	
+	// Driver do Navegador Externo
+	public static WebDriver webDriver;
 
 	public void setEndereco (Endereco endereco) {
 
@@ -238,11 +239,6 @@ public class TabUsuarioControlador implements Initializable {
 				// na lista de endereco que  pertence ao usuario adiciona o endereco em questao
 				us.getEnderecos().add(end);
 
-				// aquii
-				for(Interferencia i:  end.getInterferencias()) {
-					System.out.println(" interferencias - btn salvar " + i.getInterDDLatitude());
-				}
-
 				UsuarioDao  usDao = new UsuarioDao();
 
 				usDao.salvarUsuario(us);
@@ -340,7 +336,6 @@ public class TabUsuarioControlador implements Initializable {
 					
 					us.setUsDataAtualizacao(Timestamp.valueOf((LocalDateTime.now())));
 	
-					System.out.println("bnt editar - tabUsuario" + endereco.getEndDDLatitude());
 					Endereco end = new Endereco();
 					// captura um endereco relacionado
 					end = endereco;
@@ -348,20 +343,6 @@ public class TabUsuarioControlador implements Initializable {
 					end.setEndUsuarioFK(us);
 					// adiciona este endereco no setEnderecos do usuario
 					us.getEnderecos().add(end);
-	
-	
-					for(Endereco e : us.getEnderecos()) {
-						System.out.println("enderecos do usuario depois de editar: "  + e.getEndLogradouro());
-					}
-	
-					/*
-				// para não dar repeticao de objetos //
-				for (int i = 0 ; i < us.getEnderecos().size(); i++) {
-					if (us.getEnderecos().hashCode(i) == (end.getEndID())) {
-						us.getEnderecos().remove(us.getEnderecos().hashCode(i));
-					}
-				}
-					 */
 	
 					UsuarioDao usDao = new UsuarioDao();
 	
@@ -452,10 +433,8 @@ public class TabUsuarioControlador implements Initializable {
 
 	public void imprimirEnderecoEmpreendimento () {
 
-		int count = 0;
-
 		if (checkEnderecoEmpreendimento.isSelected()) {
-			count ++;
+
 			try{tfLogradouro.setText(endereco.getEndLogradouro());}catch (Exception e) {tfLogradouro.setText(null);};
 			try{cbRA.setValue(endereco.getEndRAFK().getRaNome());}catch (Exception e) {cbRA.setValue(null);};
 			try{tfCEP.setText(endereco.getEndCEP());}catch (Exception e) {tfCEP.setText(null);};
@@ -463,7 +442,7 @@ public class TabUsuarioControlador implements Initializable {
 			try{cbUF.setValue(endereco.getEndUF());}catch (Exception e) {cbUF.setValue(null);};
 
 		}
-		System.out.println("check box usuario - endereço: " + count);
+
 	}
 
 	@FXML Pane pUsuario;
@@ -749,9 +728,7 @@ public class TabUsuarioControlador implements Initializable {
 						if ( strCPFCNPJ.length() == 11 ) {
 						
 							try {
-								
-								System.out.println("tf valor formatado " + ccFormato.formatCnpj(cbTipoPessoa.getValue(), tfCPFCNPJ.getText()));
-								
+							
 								tfCPFCNPJ.setText(ccFormato.formatCnpj(cbTipoPessoa.getValue(), tfCPFCNPJ.getText())
 												
 							);
@@ -1613,9 +1590,7 @@ public class TabUsuarioControlador implements Initializable {
 					if (! us.getEnderecos().isEmpty()) {
 
 						for(Endereco e: setEnderecos) {
-							System.out.println("set<Endereco> " + e.getEndLogradouro());
-
-
+					
 							obsListEnderecoEmpreendimento.add(e);
 							/*
 							 * para atualizar o endereço com qualquer um dos  relacionados

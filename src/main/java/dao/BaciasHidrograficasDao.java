@@ -9,6 +9,7 @@ import org.hibernate.criterion.Restrictions;
 
 import entidades.BaciasHidrograficas;
 import entidades.HibernateUtil;
+import entidades.SubSistema;
 
 public class BaciasHidrograficasDao {
 	
@@ -47,6 +48,29 @@ public class BaciasHidrograficasDao {
 		s.close();
 		return list;
 	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public List<SubSistema> listarSubsistema (String strPesquisa) {
+		
+		List<SubSistema> list = new ArrayList<SubSistema>();
+		
+		Session s = HibernateUtil.getSessionFactory().openSession();
+		
+		s.beginTransaction();
+		
+		Criteria crit = s.createCriteria(SubSistema.class, "subsistema");
+		
+		crit.add(Restrictions.like("subDescricao", '%' + strPesquisa + '%'))
+		.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		
+		list = crit.list();
+
+		s.getTransaction().commit();
+		s.close();
+		return list;
+	}
+	
 	
 
 }

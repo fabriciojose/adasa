@@ -97,8 +97,6 @@ public class TabDocumentoControlador implements Initializable {
 	}
 
 	public void salvarDocumento ()	{
-		
-		System.out.println("comeco bnt salvar documento ");
 
 			if ((tfSEI.getText().isEmpty()) || 
 					(tfProcesso.getText().isEmpty()))
@@ -162,9 +160,7 @@ public class TabDocumentoControlador implements Initializable {
 					}
 
 			} // fim else
-			
-			System.out.println("fim bnt salvar");
-
+		
 	}
 
 	public void editarDocumento ()	{
@@ -244,7 +240,6 @@ public class TabDocumentoControlador implements Initializable {
 
 		} // fim else
 
-		System.out.println("fim editar");
 	}
 
 	public void excluirDocumento ()	{
@@ -629,8 +624,7 @@ public class TabDocumentoControlador implements Initializable {
 	        public void handle(ActionEvent event) {
 	        	
 	        	googleMaps.limparMapa();
-	        	System.out.println("bnt limpa mapa clicado");
-	      
+	
 	        }
 		 });
 
@@ -711,8 +705,6 @@ public class TabDocumentoControlador implements Initializable {
 
 			Pane p = new Pane();
 
-			//System.out.println("intControlador na tab Demanda " + intControlador);
-			//telaProCon = new TelaProcessoControlador();
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/principal/TelaProcesso.fxml"));
 			loader.setRoot(p);
 			loader.setController(telaProcessoControlador = new TelaProcessoControlador(this));
@@ -862,22 +854,21 @@ public class TabDocumentoControlador implements Initializable {
 
 					if (doc.getDocDataDistribuicao() == null) {
 						dpDataDistribuicao.setValue(null);
-						System.out.println("selecionar documento data dist set null " );
-
+		
 					} else {
 						Date dataDis = doc.getDocDataDistribuicao();
 						dpDataDistribuicao.setValue(dataDis.toLocalDate());
-						System.out.println("selecionar data distribuicao " + dataDis.toLocalDate());
+			
 					}
 
 					if (doc.getDocDataRecebimento() == null) {
 						dpDataRecebimento.setValue(null);
-						System.out.println("selecionar documento data recebi set null " );
+			
 					} else {
 
 						Date dataRec = doc.getDocDataRecebimento();
 						dpDataRecebimento.setValue(dataRec.toLocalDate());
-						System.out.println("selecionar documento data recebi " + dataRec.toLocalDate());
+				
 					}
 
 					// preencher dados do endereco
