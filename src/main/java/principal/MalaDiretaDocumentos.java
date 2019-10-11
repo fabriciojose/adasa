@@ -383,7 +383,7 @@ public class MalaDiretaDocumentos {
 				
         		for (int i = 0; i<5; i++) {
 				
-        			try { docHtml.select("finalidades_tag").append(gs.callGetter(f, listVariaveisFinalidadesAutorizadas.get(i)) + ", ");
+        			try { docHtml.select("finalidades_tag").append((gs.callGetter(f, listVariaveisFinalidadesAutorizadas.get(i)) + ", ").toLowerCase());
         			
         			} catch (Exception e) {	docHtml.select("finalidades_tag").prepend("");	};
         		

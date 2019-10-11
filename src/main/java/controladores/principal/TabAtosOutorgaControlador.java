@@ -10,15 +10,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Set;
 
 import dao.DocumentoDao;
-import dao.EnderecoDao;
 import dao.ModelosDao;
 import entidades.Documento;
 import entidades.Endereco;
-import entidades.Finalidade;
-import entidades.FinalidadeAutorizada;
 import entidades.Interferencia;
 import entidades.ModelosHTML;
 import javafx.animation.TranslateTransition;

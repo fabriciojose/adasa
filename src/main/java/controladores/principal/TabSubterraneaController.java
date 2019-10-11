@@ -6,16 +6,12 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 
-import dao.BaciasHidrograficasDao;
-import dao.UnidadeHidrograficaDao;
 import entidades.BaciasHidrograficas;
 import entidades.Finalidade;
 import entidades.FinalidadeAutorizada;
