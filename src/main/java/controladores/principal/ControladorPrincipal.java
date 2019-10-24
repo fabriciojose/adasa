@@ -66,14 +66,8 @@ public class ControladorPrincipal {
 	Button btnGreenMap;
 	Button btnRetroMap;
 
-	CheckBox checkBacia;
-	CheckBox checkRiodDF;
-	CheckBox checkRiosUniao;
-	CheckBox checkFraturado;
-	CheckBox checkPoroso;
-	CheckBox checkUTM;
-	CheckBox checkTrafego;
-
+	CheckBox checkBacia, checkUnidadesHidrograficas, checkRiodDF, checkRiosUniao, checkFraturado, checkPoroso, checkUTM, checkTrafego;
+	
 	TabPane tpLateralDireita = new TabPane();
 	TabPane tpLateralEsquera = new TabPane();
 
@@ -1225,6 +1219,7 @@ public class ControladorPrincipal {
 		btnHybrid.getStyleClass().add("button-lateral");
 
 		checkBacia = new CheckBox("Bacias");
+		checkUnidadesHidrograficas = new CheckBox("Unidades Hid");
 		checkRiodDF  = new CheckBox("Rios do DF");
 		checkRiosUniao  = new CheckBox("Rios da União");
 		checkFraturado  = new CheckBox("Fraturado");
@@ -1238,28 +1233,31 @@ public class ControladorPrincipal {
 		pCheck.setLayoutY(10.0);
 
 		pCheck.setStyle("-fx-background-color: white;");
-		pCheck.getChildren().addAll(checkBacia, checkRiodDF, checkRiosUniao,  checkFraturado, checkPoroso,checkUTM, checkTrafego);
+		pCheck.getChildren().addAll(checkBacia, checkUnidadesHidrograficas, checkRiodDF, checkRiosUniao,  checkFraturado, checkPoroso,checkUTM, checkTrafego);
 
 		checkBacia.setLayoutX(5.0);
 		checkBacia.setLayoutY(15.0);
 
+		checkUnidadesHidrograficas.setLayoutX(5.0);
+		checkUnidadesHidrograficas.setLayoutY(40.0);
+
 		checkRiodDF.setLayoutX(5.0);
-		checkRiodDF.setLayoutY(40.0);
+		checkRiodDF.setLayoutY(65.0);
 
 		checkRiosUniao.setLayoutX(5.0);
-		checkRiosUniao.setLayoutY(65.0);
+		checkRiosUniao.setLayoutY(90.0);
 
 		checkFraturado.setLayoutX(5.0);
-		checkFraturado.setLayoutY(90.0);
+		checkFraturado.setLayoutY(115.0);
 
 		checkPoroso.setLayoutX(5.0);
-		checkPoroso.setLayoutY(115.0);
+		checkPoroso.setLayoutY(140.0);
 
 		checkUTM.setLayoutX(5.0);
-		checkUTM.setLayoutY(140.0);
-
+		checkUTM.setLayoutY(165.0);
+		
 		checkTrafego.setLayoutX(5.0);
-		checkTrafego.setLayoutY(165.0);
+		checkTrafego.setLayoutY(190.0);
 
 
 		Text iconMap1 = GlyphsDude.createIcon(FontAwesomeIcon.MAP, "20px");
@@ -1285,27 +1283,48 @@ public class ControladorPrincipal {
 		tabLD2.setContent(pLD2);
 
 		checkBacia.setOnAction((ActionEvent evt)->{
-			googleMaps.openShape(6);
+			//googleMaps.openShape(6);
+			
+			System.out.println(checkBacia.isSelected());
+			googleMaps.abrirShape(checkBacia.isSelected(), "geoJsonBacias", "shapeBacias", "map");
+			
+			
+		});
+		
+		
+		checkUnidadesHidrograficas.setOnAction((ActionEvent evt)->{
+			
+			googleMaps.abrirShape(checkUnidadesHidrograficas.isSelected(), "geoJsonUnidadesHidrograficas", "shapeUnidadesHidrograficas", "map");
+			
 		});
 
 		checkRiodDF.setOnAction((ActionEvent evt)->{ 
+			
 			googleMaps.openShape(1);
 		});
 
 		checkRiosUniao.setOnAction((ActionEvent evt)->{
 			googleMaps.openShape(4);
+		
+			
 		});
 
 		checkFraturado.setOnAction((ActionEvent evt)->{
-			googleMaps.openShape(2);
+			
+			googleMaps.abrirShape(checkFraturado.isSelected(), "geoJsonFraturado", "shapeFraturado", "map");
 		});
 
+		
 		checkPoroso.setOnAction((ActionEvent evt)->{
-			googleMaps.openShape(3);
+			
+			googleMaps.abrirShape(checkPoroso.isSelected(), "geoJsonFreatico", "shapeFreatico", "map");
+			
+			
 		});
 
 		checkUTM.setOnAction((ActionEvent evt)->{
 			googleMaps.openShape(5);
+			
 		});
 
 		checkTrafego.setOnAction((ActionEvent evt)->{

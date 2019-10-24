@@ -1,15 +1,38 @@
 package StringDoubleParse;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
+import java.util.Locale;
 
 import entidades.Subterranea;
 
 public class StringDoubleParse {
 
 	public static void main(String[] args) {
+	
+		
+		String[] array = { "0.80000001","0.30000001","0.5","7.5","9","12.5","6.5","33","4.5","3.5"};
+		
+		Locale Local = new Locale("pt","BR"); 
+		
+		
+		DecimalFormat df = new DecimalFormat("#,##0.00"); 
+		
+		//DecimalFormat df = new DecimalFormat("#,##0.00"); 
+		
+		for(int i = 0; i<array.length;i++) {
+			
+			Double d = Double.valueOf(array[i])*1000;
+			
+			System.out.println(d);
+			
+			System.out.println(df.format(d).replace(",00", ""));
+			
+			
+		}
 
-
+		/*
 		DecimalFormat df = new DecimalFormat("#,##0.00");  
 		
 		
@@ -27,6 +50,7 @@ public class StringDoubleParse {
 			}
 			//System.out.println(Double.parseDouble(s));
 		}
+		*/
 
 	}
 	

@@ -34,6 +34,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -96,6 +97,7 @@ public class TabSubterraneaController implements Initializable {
 		sub.setInterUHFK(unidade_hidrografica);
 		sub.setSubTipoPocoFK(tipo_poco);
 		sub.setSubSubSistemaFK(subsistema);
+		sub.setSubCod_plan(tfCod_plan.getText());
 		
 		sub.setSubCaesb(cbSubCaesb.getValue());
 		
@@ -190,6 +192,8 @@ public class TabSubterraneaController implements Initializable {
 
 		cbTipoPoco.setValue(sub.getSubTipoPocoFK().getTipoPocoDescricao());
 		cbSubsistema.setValue(sub.getSubSubSistemaFK().getSubDescricao());
+		
+		tfCod_plan.setText(sub.getSubCod_plan());
 
 		cbSubCaesb.setValue(sub.getSubCaesb());
 		
@@ -446,7 +450,17 @@ public class TabSubterraneaController implements Initializable {
 					Number value, Number new_value) {
 
 				tipo_poco.setTipoPocoID((Integer) new_value + 1); 
-				//System.out.println("sub = itipo poco id " + tipo_poco.getTipoPocoID());
+				System.out.println("sub = itipo poco id " + tipo_poco.getTipoPocoID() + "e descricao " + tipo_poco.getTipoPocoDescricao());
+				
+				if (tipo_poco.getTipoPocoDescricao().equals("Tubular")) {
+					System.out.println("tubular");
+					ControladorPrincipal.googleMaps.buscarPropriedadeShape(true, "geoJsonFraturado", "shapeFraturado", "null", tfLatitude.getText(), tfLongitude.getText());
+					
+				} else {
+					System.out.println("manual");
+					ControladorPrincipal.googleMaps.buscarPropriedadeShape(true, "geoJsonFreatico", "shapeFreatico", "null", tfLatitude.getText(), tfLongitude.getText());
+					
+				}
 
 			}
 		});
@@ -467,6 +481,7 @@ public class TabSubterraneaController implements Initializable {
 					Number value, Number new_value) {
 
 				subsistema.setSubID((Integer) new_value + 1);
+				//System.out.println("listener subsistema " + subsistema.getSubID() + " e des " + subsistema.getSubDescricao());
 				
 			}
 		});
@@ -540,21 +555,15 @@ public class TabSubterraneaController implements Initializable {
 
 	Pane pDadosSubterranea;
 
-	TextField tfLatitude;
-	TextField tfLongitude;
+	TextField tfLatitude, tfLongitude;
 
 	Button btnLatLon;
 
-	ComboBox<String> cbBaciaHidrografica;
-	ComboBox<String> cbUnidadeHidrografica;
-	ComboBox<String> cbTipoPoco;
-	ComboBox<String> cbSubsistema;	
-	ComboBox<String> cbSubCaesb;
+	ComboBox<String> cbBaciaHidrografica, cbUnidadeHidrografica, cbTipoPoco, cbSubsistema, cbSubCaesb;
 
-	TextField tfVazaoSubsistema, tfVazaoTeste, tfVazaoOutorgada;
-	TextField tfEstatico;
-	TextField tfDinamico;
-	TextField tfProfundidade;
+	TextField tfCod_plan, tfVazaoSubsistema, tfVazaoTeste, tfVazaoOutorgada;
+	TextField tfEstatico, tfDinamico, tfProfundidade;
+	CheckBox cbAut;
 
 	DatePicker dpDataOperacao;
 
@@ -617,10 +626,15 @@ public class TabSubterraneaController implements Initializable {
 		listaComponentes.add(cbBaciaHidrografica = new ComboBox<>());
 		listaComponentes.add(new Label ("UH: "));
 		listaComponentes.add(cbUnidadeHidrografica = new ComboBox<>());
+		
+		listaComponentes.add(cbAut = new CheckBox("Aut."));
+		
 		listaComponentes.add(new Label ("Tipo de Poço: "));
 		listaComponentes.add(cbTipoPoco = new ComboBox<>());
 		listaComponentes.add(new Label ("Subsistema: "));
 		listaComponentes.add(cbSubsistema = new ComboBox<>());
+		listaComponentes.add(new Label ("Código: "));
+		listaComponentes.add(tfCod_plan = new TextField());
 		listaComponentes.add(new Label ("Área atendida (Caesb): "));
 		listaComponentes.add(cbSubCaesb = new ComboBox<>());
 
@@ -637,42 +651,46 @@ public class TabSubterraneaController implements Initializable {
 		listaComponentes.add(tfEstatico = new TextField());
 		listaComponentes.add(new Label ("Nível Dinâmico (m): "));
 		listaComponentes.add(tfDinamico = new TextField());
-		listaComponentes.add(new Label ("Profundidade (m): "));
+		listaComponentes.add(new Label ("Prof. (m): "));
 		listaComponentes.add(tfProfundidade = new TextField());
 		listaComponentes.add(new Label ("Em operação desde: "));
 		listaComponentes.add(dpDataOperacao = new DatePicker());
 
 		Double  prefSizeWHeLayXY  [][] = { 
-				{910.0,170.0,21.0,0.0},
+				
+				{950.0,170.0,0.0,0.0},
 				{95.0,30.0,166.0,5.0},
 				{140.0,30.0,261.0,5.0},
 				{95.0,30.0,411.0,5.0},
 				{140.0,30.0,506.0,5.0},
 				{25.0,25.0,658.0,8.0},
-				{160.0,30.0,20.0,33.0},
-				{160.0,30.0,20.0,63.0},
-				{60.0,30.0,190.0,33.0},
-				{60.0,30.0,190.0,63.0},
-				{150.0,30.0,260.0,33.0},
-				{150.0,30.0,260.0,63.0},
-				{150.0,30.0,420.0,33.0},
-				{150.0,30.0,420.0,63.0},
-				{150.0,30.0,580.0,33.0},
-				{150.0,30.0,580.0,63.0},
-				{150.0,30.0,740.0,33.0},
-				{140.0,30.0,740.0,63.0},
-				{140.0,30.0,20.0,93.0},
-				{140.0,30.0,20.0,123.0},
-				{140.0,30.0,170.0,93.0},
-				{140.0,30.0,170.0,123.0},
-				{120.0,30.0,357.0,93.0},
-				{120.0,30.0,357.0,123.0},
-				{125.0,30.0,487.0,93.0},
-				{125.0,30.0,486.0,123.0},
-				{120.0,30.0,621.0,93.0},
-				{120.0,30.0,621.0,123.0},
-				{130.0,30.0,750.0,93.0},
-				{130.0,30.0,750.0,123.0},
+				{160.0,30.0,18.0,33.0},
+				{160.0,30.0,18.0,63.0},
+				{60.0,30.0,188.0,33.0},
+				{60.0,30.0,188.0,63.0},
+				{50.0,17.0,258.0,70.0},
+				{150.0,30.0,317.0,33.0},
+				{150.0,30.0,317.0,63.0},
+				{150.0,30.0,477.0,33.0},
+				{150.0,30.0,477.0,63.0},
+				{140.0,30.0,637.0,33.0},
+				{140.0,30.0,637.0,63.0},
+				{150.0,30.0,787.0,33.0},
+				{150.0,30.0,787.0,63.0},
+				{150.0,30.0,15.0,94.0},
+				{150.0,30.0,15.0,124.0},
+				{140.0,30.0,168.0,93.0},
+				{140.0,30.0,175.0,123.0},
+				{140.0,30.0,325.0,93.0},
+				{140.0,30.0,325.0,123.0},
+				{110.0,30.0,475.0,93.0},
+				{110.0,30.0,475.0,123.0},
+				{120.0,30.0,596.0,93.0},
+				{120.0,30.0,595.0,123.0},
+				{70.0,30.0,725.0,93.0},
+				{70.0,30.0,725.0,123.0},
+				{130.0,30.0,805.0,93.0},
+				{130.0,30.0,805.0,123.0},
 		};
 
 		com = new Componentes();
@@ -1311,9 +1329,7 @@ public class TabSubterraneaController implements Initializable {
 			public void handle(ActionEvent event) {
 
 				capturarCoordenadas();
-
-
-
+				
 			}
 		});
 		
@@ -1357,14 +1373,44 @@ public class TabSubterraneaController implements Initializable {
 
 				cbUnidadeHidrografica.setValue(String.valueOf(u.getUhCodigo()));
 
-				//System.out.println("nome da uh " + u.getUhNome() );
 			}
 
 		} // fim loop unidades hidrograficas
 		
-
+		
 	} // fim metodo capturar coordenadas
 
+	public void retornarCodigoSubsistema (String strSubsistema, String strCodigoSubsistema, String strVazaoMedia) {
+		
+		Double d = Double.valueOf(strVazaoMedia)*1000;
+		
+		df.format(d).replace(",00", "");
+		
+		if (cbAut.isSelected()) {
+			
+			ListasComboBox.obsListSubsistema.forEach(item -> {
+				
+				if (item.replace(" ", "").equals(strSubsistema.toUpperCase())) {
+					
+					cbSubsistema.setValue(item);
+				
+				}
+					
+		    });
+			
+			
+			tfCod_plan.setText(strCodigoSubsistema);
+			tfVazaoSubsistema.setText(df.format(d).replace(",00", ""));
+			
+			cbAut.setSelected(false);
+			
+		}
+		
+		
+		
+		
+		
+	}
 }
 
 

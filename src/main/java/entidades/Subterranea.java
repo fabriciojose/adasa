@@ -35,6 +35,10 @@ public class Subterranea extends Interferencia {
 	
 	@Column (name="sub_Profundidade",columnDefinition="varchar(20)")
 	private String subProfundidade;  // em metros
+	
+	@Column (name="sub_Cod_plan",columnDefinition="varchar(20)")
+	private String subCod_plan;  // em metros
+	
 
 	@Basic
 	@Column (name="sub_Data_Operacao")
@@ -136,8 +140,13 @@ public class Subterranea extends Interferencia {
 		this.subVazaoOutorgada = subVazaoOutorgada;
 	}
 
+	public String getSubCod_plan() {
+		return subCod_plan;
+	}
+
+	public void setSubCod_plan(String subCod_plan) {
+		this.subCod_plan = subCod_plan;
+	}
+
 	
-
-
-
 }

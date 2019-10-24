@@ -5,8 +5,33 @@ var markers = [];
 var layers = [];
 var linhas = []; // para alocar as polylines que ligam os marcadores endereço interferencia
 
+/**
+ * leitor provisorio de json, utiliza uma tab input no index html que le uma variavel (var = bacias, p. ex) com o conteudo json
+ */
+var geoJsonBacias = JSON.parse(bacias);
+var geoJsonUnidadesHidrograficas = JSON.parse(unidades);
+var geoJsonFraturado = JSON.parse(fraturado);
+var geoJsonFreatico = JSON.parse(freatico);
+var geoJsonSuperficial = JSON.parse(superficial);
 
-function initAutocomplete() {
+/*
+  poligono, infoWindow e as propriedades do poligono
+  */
+ var polygon, infoWindow, propsPolygon;
+ var infoWidowsArray = [];
+
+ 
+/**
+ * colecao de poligonos e multipoligonos com suas propriedades (por ex. polygon.properties.Cod_plan)
+ */
+var shapeBacias = [];
+var shapeUnidadesHidrograficas = [];
+var shapeFraturado = [];
+var shapeFreatico = [];
+
+ 
+
+function initialize() {
 
 	var defLatLng = new google.maps.LatLng(-1, -47);
 		/* centralizar o mapa no retangulo do DF = (-15.790631073109617, -47.74939032660592);
@@ -45,7 +70,8 @@ function initAutocomplete() {
 	// ouvinte para  obter  as coordenadas do local clicado no  mapa //
 	google.maps.event.addListener(map, 'click', getCoordClick);
 
-	
+
+
   //-- inicializar as variaveis de shapes --//
   layers[0] = new google.maps.KmlLayer('https://sites.google.com/site/shapeskmlkmz/Unidades_Hidrograficas_70.kmz',{ preserveViewport: true });
 
@@ -62,6 +88,10 @@ function initAutocomplete() {
   layers[6] = new google.maps.KmlLayer('https://sites.google.com/site/shapeskmlkmz/baciasHidrograficas.kmz',{ preserveViewport: true });
    
   layers[7] = new google.maps.TrafficLayer();
-  
+
+
+  google.maps.event.addDomListener(window, 'load', initialize);
+
 }
+
 

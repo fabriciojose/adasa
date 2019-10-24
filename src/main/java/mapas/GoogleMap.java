@@ -5,6 +5,8 @@ import com.sun.javafx.webkit.WebConsoleListener;
 
 import controladores.principal.ControladorPrincipal;
 import controladores.principal.TabEnderecoControlador;
+import controladores.principal.TabInterferenciaControlador;
+import controladores.principal.TabSubterraneaController;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -95,7 +97,7 @@ public class GoogleMap extends Parent {
 	                {
 	                    ready = true;
 	                }
-	                System.out.println(" initMap funcionando");
+	               // System.out.println(" initMap funcionando");
 	            }
 	        });
 	    }
@@ -114,10 +116,10 @@ public class GoogleMap extends Parent {
 	                    
 	                    doc.setMember("app", GoogleMap.this);
 	                    
-	                    doc.setMember("appShapeEndereco", GoogleMap.this);
+	                    //doc.setMember("appShapeEndereco", GoogleMap.this);
 	                }
 	               
-	                System.out.println(" initComunicantion funcionando");
+	               // System.out.println(" initComunicantion funcionando");
 	            }
 	        });
 	    } 
@@ -129,7 +131,7 @@ public class GoogleMap extends Parent {
 	            doc.eval(str);
 	             }
 	        	catch (JSException js){ 
-	            System.out.println("nao ready execao de leitura javascript " + js);
+	            //System.out.println("nao ready execao de leitura javascript " + js);
 	        	}
 	        }
 	        else {
@@ -147,12 +149,13 @@ public class GoogleMap extends Parent {
 	                       
 	                    }
 	                   
-		                System.out.println(" invokeJS funcionando");
+		               // System.out.println(" invokeJS funcionando");
 	                }
 	            });
 	            
 	        }
 	    }
+	    
 	    
 	    public void setOnMapLatLngChanged(EventHandler<MapEvent> eventHandler) {
 	        onMapLatLngChanged = eventHandler;
@@ -182,6 +185,8 @@ public class GoogleMap extends Parent {
 	    	
 	    	TabEnderecoControlador.tabEnderecoControlador.capturarCroquiEndereco(strShapeEndereco);
 	    	
+	    	System.out.println(strShapeEndereco);
+	    	
 	    }
  
 	    public void setAllCoords(String dd, String dms, String utm) {
@@ -190,12 +195,12 @@ public class GoogleMap extends Parent {
 	    	ControladorPrincipal.lblDMS.setText(dms);
 	    	ControladorPrincipal.lblUTM.setText(utm);
 	    	
-	    	//System.out.println(dd + " e " + dms + " e " + utm);
 	    }
 	    
 	    public void setCoords(String lat, String lon) {
 	    	this.lat = lat;
 	    	this.lon = lon;
+	    
 
 	    }
 
@@ -232,9 +237,6 @@ public class GoogleMap extends Parent {
 	    										+ "\');"); 
 	    	
 	    }
-	    
-	    
-	    
 	    
 	    
 	    public void setZoomIn() {
@@ -334,6 +336,32 @@ public class GoogleMap extends Parent {
 	    	invokeJS("setarLinhaOuShape(" + b + ")");
 	    	
 	    }
+	    
+	    /**
+	     * abrir shapes como bacias hidrograficas, unidades hidrograficas etc
+	     * @param strJson
+	     * @param strShape
+	     */
+	    public void abrirShape (Boolean checkBox, String strJson, String strShape, String map ) {
+	    	
+	    	invokeJS("abrirShape("+checkBox+","+strJson+","+strShape+","+map+")");
+	    	
+	    }
+	    
+	    public void buscarPropriedadeShape (Boolean checkBox, String strJson, String strShape, String map , String lat, String lng) {
+	 
+	    	invokeJS("buscarPropriedadeShape("+checkBox+","+strJson+","+strShape+","+map+","+lat+","+lng+")");
+	    	
+	    }
+	    
+	    public void retornarCodigoSubsistema (String strSubsistema, String strCodigoSubsistema, String strVazaoMedia) {
+	    	
+	    	System.out.println("classe google map metodo retornar codigo sub");
+
+	    	TabSubterraneaController.tabSubCon.retornarCodigoSubsistema (strSubsistema, strCodigoSubsistema, strVazaoMedia);
+	    	
+	    }
+
 	    
 	    public ReadOnlyDoubleProperty widthProperty() {
 	        return webView.widthProperty();

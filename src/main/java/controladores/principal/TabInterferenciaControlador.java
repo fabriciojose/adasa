@@ -60,6 +60,10 @@ public class TabInterferenciaControlador  implements Initializable{
 
 	Endereco endereco = new Endereco ();
 	Interferencia interferencia = new Interferencia();
+	
+	
+	public static TabInterferenciaControlador tabInterferenciaControlador;
+	
 
 	/**
 	 * Setar o endereco na TabInterferencia
@@ -1140,6 +1144,7 @@ public class TabInterferenciaControlador  implements Initializable{
 		}
 
 	}
+	
 
 	// --- método para listar interferencias --- //
 	public void listarInterferencias (String strPesquisa) {

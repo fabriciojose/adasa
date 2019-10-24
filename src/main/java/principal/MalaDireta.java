@@ -123,7 +123,7 @@ public class MalaDireta {
 
 		GetterAndSetter gs  = new GetterAndSetter();
 
-		Document docHtml = null;DecimalFormat df = new DecimalFormat("#,##0.00"); 
+		Document docHtml = null;
 
 		docHtml = Jsoup.parse(htmlRel, "UTF-8").clone();
 

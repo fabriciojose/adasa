@@ -24,6 +24,7 @@ public class Principal extends Application{
 		 */
 	    public static void main(String[] args) {
 	        Application.launch(args);
+	        
 	    }
 	    
 	    /** 
@@ -33,6 +34,8 @@ public class Principal extends Application{
 	      
 	        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/principal/TelaLogin.fxml"));
 	        rootNode = fxmlLoader.load();
+	        
+	        
 	        
 	    }
 

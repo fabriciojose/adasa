@@ -58,7 +58,7 @@ public class LoginControlador implements Initializable {
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 		
-		// create a tabpane 
+		
         TabPane tabpane = new TabPane(); 
   
             Tab tabLogin = new Tab("   Login    "); 
