@@ -162,7 +162,7 @@ public class GoogleMap extends Parent {
 	    }
 	    
 	    public void handle(String typeCoordinate, String ddLatLon, String dmsLatLon, String utmLatLon) {
-
+	  
 	    	if (typeCoordinate.equals(" DD ")) {
 	    		ControladorPrincipal.lblCoord1.setText(dmsLatLon);
 				ControladorPrincipal.lblCoord2.setText(utmLatLon);
@@ -190,6 +190,8 @@ public class GoogleMap extends Parent {
 	    }
  
 	    public void setAllCoords(String dd, String dms, String utm) {
+	    	
+	    	System.out.println("metodo setAllCoords chamado");
 	    	
 	    	ControladorPrincipal.lblDD.setText(dd);
 	    	ControladorPrincipal.lblDMS.setText(dms);

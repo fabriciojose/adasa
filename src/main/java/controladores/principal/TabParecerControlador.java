@@ -1123,6 +1123,11 @@ public class TabParecerControlador implements Initializable {
 
 
 						} //fim for finalidade
+						
+						
+						// Data de Recebimento do Requerimento
+						Cell cellCodigo = row.getCell(114);
+						cellCodigo.setCellValue(((Subterranea)listaMalaDireta.get(i)[0][2]).getSubCod_plan());
 
 						// Data de Recebimento do Requerimento
 						Cell cellDataRequerimento = row.getCell(121);
@@ -1195,7 +1200,7 @@ public class TabParecerControlador implements Initializable {
 						e1.printStackTrace();
 					}
 					
-					System.out.println("salvar excel ");
+					//System.out.println("salvar excel ");
 					
 				}
 		

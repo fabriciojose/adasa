@@ -35,8 +35,6 @@ public class Principal extends Application{
 	        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/principal/TelaLogin.fxml"));
 	        rootNode = fxmlLoader.load();
 	        
-	        
-	        
 	    }
 
 	    /** 

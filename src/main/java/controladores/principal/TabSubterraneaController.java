@@ -42,6 +42,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import principal.Alerta;
@@ -443,56 +444,83 @@ public class TabSubterraneaController implements Initializable {
     		unidade_hidrografica.setUhCodigo(Integer.parseInt(new_value))
     	//System.out.println("sub = uh código " + new_value)
     	);
+		
+		/**
+		 * mudar o valor da string strOnMouse para MOUSE_PRESSED caso o combobox cbTipo seja clicado
+		 */
+		cbTipoPoco.setOnMousePressed(new EventHandler<MouseEvent>(){
 
+	          @Override
+	          public void handle(MouseEvent m) {
+	        
+	        	  strOnMouse = m.getEventType().toString();
+	        	
+	          }
+
+	      });
+
+		/**
+		 * Adicinar valor do id (tp_ID) ao objeto tipo_poco e, caso a strOnMouse seja igual a MOUSE_PRESSED, chamar metodo buscarPropriedadeShape()
+		 */
 		cbTipoPoco.getSelectionModel().selectedIndexProperty().addListener(new
 				ChangeListener<Number>() {
 			public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
 					Number value, Number new_value) {
 
 				tipo_poco.setTipoPocoID((Integer) new_value + 1); 
-				System.out.println("sub = itipo poco id " + tipo_poco.getTipoPocoID() + "e descricao " + tipo_poco.getTipoPocoDescricao());
 				
-				if (tipo_poco.getTipoPocoDescricao().equals("Tubular")) {
-					System.out.println("tubular");
-					ControladorPrincipal.googleMaps.buscarPropriedadeShape(true, "geoJsonFraturado", "shapeFraturado", "null", tfLatitude.getText(), tfLongitude.getText());
+				if (strOnMouse.equals("MOUSE_PRESSED")) {
 					
-				} else {
-					System.out.println("manual");
-					ControladorPrincipal.googleMaps.buscarPropriedadeShape(true, "geoJsonFreatico", "shapeFreatico", "null", tfLatitude.getText(), tfLongitude.getText());
+
+					if (tipo_poco.getTipoPocoDescricao().equals("Tubular")) {
+						ControladorPrincipal.googleMaps.buscarPropriedadeShape(true, "geoJsonFraturado", "shapeFraturado", "null", tfLatitude.getText(), tfLongitude.getText());
+						
+					} else {
+						ControladorPrincipal.googleMaps.buscarPropriedadeShape(true, "geoJsonFreatico", "shapeFreatico", "null", tfLatitude.getText(), tfLongitude.getText());
+						
+					}
+					
+					strOnMouse = "";;
 					
 				}
-
+	
 			}
 		});
 		
-		
+		/**
+		 * adicionar valor tp_Descricao ao objeto tipo_poco
+		 */
 		cbTipoPoco.getSelectionModel()
     	.selectedItemProperty()
     	.addListener( 
     	(ObservableValue<? extends String> observable, String old_value, String new_value) ->
     
     	 tipo_poco.setTipoPocoDescricao(new_value)
-    	//System.out.println("sub = tipo poco descricao " + new_value)
+   
     	);
 
+		/**
+		 * adicionar valor do id ao objeto subsistema
+		 */
 		cbSubsistema.getSelectionModel().selectedIndexProperty().addListener(new
 				ChangeListener<Number>() {
 			public void changed(@SuppressWarnings("rawtypes") ObservableValue ov,
 					Number value, Number new_value) {
 
 				subsistema.setSubID((Integer) new_value + 1);
-				//System.out.println("listener subsistema " + subsistema.getSubID() + " e des " + subsistema.getSubDescricao());
 				
 			}
 		});
-		
+		/**
+		 * adicionar valor ao objeto susbisistema (ss_descricao_)
+		 */
 		cbSubsistema.getSelectionModel()
     	.selectedItemProperty()
     	.addListener( 
     	(ObservableValue<? extends String> observable, String old_value, String new_value) ->
     
     		subsistema.setSubDescricao(new_value)
-    	//System.out.println("sub = subisistema descricao " + new_value)
+ 
     	);
 		
 		tfEstatico.lengthProperty().addListener(new ChangeListener<Number>() {
@@ -612,6 +640,9 @@ public class TabSubterraneaController implements Initializable {
 	Button btnCapturaFinalidadeRequerida;
 	
 	int intContadorBtnCapFin = 0;
+	
+	String strOnMouse = "";
+	
 
 	public void inicializarComponentes () {
 
@@ -626,9 +657,7 @@ public class TabSubterraneaController implements Initializable {
 		listaComponentes.add(cbBaciaHidrografica = new ComboBox<>());
 		listaComponentes.add(new Label ("UH: "));
 		listaComponentes.add(cbUnidadeHidrografica = new ComboBox<>());
-		
-		listaComponentes.add(cbAut = new CheckBox("Aut."));
-		
+
 		listaComponentes.add(new Label ("Tipo de Poço: "));
 		listaComponentes.add(cbTipoPoco = new ComboBox<>());
 		listaComponentes.add(new Label ("Subsistema: "));
@@ -664,19 +693,18 @@ public class TabSubterraneaController implements Initializable {
 				{95.0,30.0,411.0,5.0},
 				{140.0,30.0,506.0,5.0},
 				{25.0,25.0,658.0,8.0},
-				{160.0,30.0,18.0,33.0},
-				{160.0,30.0,18.0,63.0},
-				{60.0,30.0,188.0,33.0},
-				{60.0,30.0,188.0,63.0},
-				{50.0,17.0,258.0,70.0},
-				{150.0,30.0,317.0,33.0},
-				{150.0,30.0,317.0,63.0},
-				{150.0,30.0,477.0,33.0},
-				{150.0,30.0,477.0,63.0},
-				{140.0,30.0,637.0,33.0},
-				{140.0,30.0,637.0,63.0},
-				{150.0,30.0,787.0,33.0},
-				{150.0,30.0,787.0,63.0},
+				{160.0,30.0,46.0,33.0},
+				{160.0,30.0,46.0,63.0},
+				{60.0,30.0,216.0,33.0},
+				{60.0,30.0,216.0,63.0},
+				{150.0,30.0,285.0,33.0},
+				{150.0,30.0,285.0,63.0},
+				{150.0,30.0,445.0,33.0},
+				{150.0,30.0,445.0,63.0},
+				{140.0,30.0,605.0,33.0},
+				{140.0,30.0,605.0,63.0},
+				{150.0,30.0,755.0,33.0},
+				{150.0,30.0,755.0,63.0},
 				{150.0,30.0,15.0,94.0},
 				{150.0,30.0,15.0,124.0},
 				{140.0,30.0,168.0,93.0},
@@ -879,8 +907,8 @@ public class TabSubterraneaController implements Initializable {
 			}
 		});
 		
-
 	}
+
 	
 	// contador de cliques no botao btnListCalMeses[0]
 	int c, d, e = 0;
@@ -1333,6 +1361,8 @@ public class TabSubterraneaController implements Initializable {
 			}
 		});
 		
+		
+		
 
 	} // fim inicializarFinalidades
 
@@ -1385,9 +1415,7 @@ public class TabSubterraneaController implements Initializable {
 		Double d = Double.valueOf(strVazaoMedia)*1000;
 		
 		df.format(d).replace(",00", "");
-		
-		if (cbAut.isSelected()) {
-			
+	
 			ListasComboBox.obsListSubsistema.forEach(item -> {
 				
 				if (item.replace(" ", "").equals(strSubsistema.toUpperCase())) {
@@ -1402,15 +1430,9 @@ public class TabSubterraneaController implements Initializable {
 			tfCod_plan.setText(strCodigoSubsistema);
 			tfVazaoSubsistema.setText(df.format(d).replace(",00", ""));
 			
-			cbAut.setSelected(false);
-			
-		}
-		
-		
-		
-		
 		
 	}
+	
 }
 
 

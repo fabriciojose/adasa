@@ -245,7 +245,7 @@ public class MalaDiretaAnexoParecer {
 		};
 	
 		// formatador de cpf e cnpj - ccFormato (tipo pessoa - fisica ou jurica e cpf ou cnpj )	
-		try { docHtml.select("us_cpfcnpj_tag").prepend(ccFormato.formatCnpj(((Usuario)listMalaDireta.get(0)[0][1]).getUsTipo(),((Usuario)listMalaDireta.get(0)[0][1]).getUsCPFCNPJ()));
+		try { docHtml.select("us_cpfcnpj_tag").prepend(ccFormato.formatCnpj(((Usuario)listMalaDireta.get(in)[0][1]).getUsTipo(),((Usuario)listMalaDireta.get(in)[0][1]).getUsCPFCNPJ()));
 		
 		// limpar o html de tags desnecessarias
 					elem = docHtml.select("us_cpfcnpj_tag");
@@ -258,10 +258,17 @@ public class MalaDiretaAnexoParecer {
 			elem = docHtml.select("us_cpfcnpj_tag");
 			elem.tagName("span");
 			};
+
 		
-		// <end_log_tag></end_log_tag>
-			
-		try { docHtml.select("end_log_tag").prepend(((Endereco)listMalaDireta.get(in)[0][3]).getEndLogradouro());
+		/*
+		 * Logradouro (Tabela Endereco) concatenando Regiao Adminstrativa (Tabela Endereco) e " - Distrito Federal"
+		 */
+		try { docHtml.select("end_log_tag").prepend( 	
+				((Endereco)listMalaDireta.get(in)[0][3]).getEndLogradouro() 
+				+ ", " 
+				+ ((Endereco)listMalaDireta.get(in)[0][3]).getEndRAFK().getRaNome()	
+				+ " - Distrito Federal."	
+				);
 	
 		elem = docHtml.select("end_log_tag");
 		elem.tagName("span");
