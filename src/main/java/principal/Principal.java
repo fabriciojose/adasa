@@ -12,6 +12,10 @@ import javafx.stage.Stage;
  * @version 1.0
  *
  */
+
+/*
+ * backup antes de fazer reinstalação do eclipse 
+ */
 public class Principal extends Application{
 	
 	// teste
