@@ -31,7 +31,7 @@ public class UsuarioDao {
 			System.out.println("salvar usuario " + e);
 			
 			Alerta a = new Alerta();
-			a.alertar(new Alert(Alert.AlertType.INFORMATION, "Número SEI duplicado!!!", new ButtonType[] { ButtonType.OK }));
+			a.alertar(new Alert(Alert.AlertType.INFORMATION, "CPF ou CNPJ duplicado!!!", new ButtonType[] { ButtonType.OK }));
 			
 		}
 		

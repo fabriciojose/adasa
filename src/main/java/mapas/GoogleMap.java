@@ -5,7 +5,6 @@ import com.sun.javafx.webkit.WebConsoleListener;
 
 import controladores.principal.ControladorPrincipal;
 import controladores.principal.TabEnderecoControlador;
-import controladores.principal.TabInterferenciaControlador;
 import controladores.principal.TabSubterraneaController;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.value.ChangeListener;
@@ -190,9 +189,7 @@ public class GoogleMap extends Parent {
 	    }
  
 	    public void setAllCoords(String dd, String dms, String utm) {
-	    	
-	    	System.out.println("metodo setAllCoords chamado");
-	    	
+
 	    	ControladorPrincipal.lblDD.setText(dd);
 	    	ControladorPrincipal.lblDMS.setText(dms);
 	    	ControladorPrincipal.lblUTM.setText(utm);
@@ -349,7 +346,15 @@ public class GoogleMap extends Parent {
 	    	invokeJS("abrirShape("+checkBox+","+strJson+","+strShape+","+map+")");
 	    	
 	    }
-	    
+	    /**
+	     * 
+	     * @param checkBox
+	     * @param strJson
+	     * @param strShape
+	     * @param map
+	     * @param lat
+	     * @param lng
+	     */
 	    public void buscarPropriedadeShape (Boolean checkBox, String strJson, String strShape, String map , String lat, String lng) {
 	 
 	    	invokeJS("buscarPropriedadeShape("+checkBox+","+strJson+","+strShape+","+map+","+lat+","+lng+")");
@@ -358,13 +363,10 @@ public class GoogleMap extends Parent {
 	    
 	    public void retornarCodigoSubsistema (String strSubsistema, String strCodigoSubsistema, String strVazaoMedia) {
 	    	
-	    	System.out.println("classe google map metodo retornar codigo sub");
-
 	    	TabSubterraneaController.tabSubCon.retornarCodigoSubsistema (strSubsistema, strCodigoSubsistema, strVazaoMedia);
 	    	
 	    }
 
-	    
 	    public ReadOnlyDoubleProperty widthProperty() {
 	        return webView.widthProperty();
 	    }

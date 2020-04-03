@@ -70,8 +70,6 @@ function initialize() {
 	// ouvinte para  obter  as coordenadas do local clicado no  mapa //
 	google.maps.event.addListener(map, 'click', getCoordClick);
 
-
-
   //-- inicializar as variaveis de shapes --//
   layers[0] = new google.maps.KmlLayer('https://sites.google.com/site/shapeskmlkmz/Unidades_Hidrograficas_70.kmz',{ preserveViewport: true });
 

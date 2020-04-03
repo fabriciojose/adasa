@@ -219,6 +219,69 @@ public class FinalidadeRequerida extends Finalidade {
 
 	@Column (name="fr_Tempo_Cap_Dez")
 	private int frTempoCapDez;
+	
+	public FinalidadeRequerida () {
+		
+	}
+	
+	
+	
+
+	public FinalidadeRequerida(String frFinalidade1, String frSubfinalidade1, Double frQuantidade1, Double frConsumo1,
+			Double frVazao1, Double frVazaoTotal, Double frQDiaJan, int frQHoraJan, int frTempoCapJan, Double frQDiaFev,
+			int frQHoraFev, int frTempoCapFev, Double frQDiaMar, int frQHoraMar, int frTempoCapMar, Double frQDiaAbr,
+			int frQHoraAbr, int frTempoCapAbr, Double frQDiaMai, int frQHoraMai, int frTempoCapMai, Double frQDiaJun,
+			int frQHoraJun, int frTempoCapJun, Double frQDiaJul, int frQHoraJul, int frTempoCapJul, Double frQDiaAgo,
+			int frQHoraAgo, int frTempoCapAgo, Double frQDiaSet, int frQHoraSet, int frTempoCapSet, Double frQDiaOut,
+			int frQHoraOut, int frTempoCapOut, Double frQDiaNov, int frQHoraNov, int frTempoCapNov, Double frQDiaDez,
+			int frQHoraDez, int frTempoCapDez) {
+		super();
+		this.frFinalidade1 = frFinalidade1;
+		this.frSubfinalidade1 = frSubfinalidade1;
+		this.frQuantidade1 = frQuantidade1;
+		this.frConsumo1 = frConsumo1;
+		this.frVazao1 = frVazao1;
+		this.frVazaoTotal = frVazaoTotal;
+		this.frQDiaJan = frQDiaJan;
+		this.frQHoraJan = frQHoraJan;
+		this.frTempoCapJan = frTempoCapJan;
+		this.frQDiaFev = frQDiaFev;
+		this.frQHoraFev = frQHoraFev;
+		this.frTempoCapFev = frTempoCapFev;
+		this.frQDiaMar = frQDiaMar;
+		this.frQHoraMar = frQHoraMar;
+		this.frTempoCapMar = frTempoCapMar;
+		this.frQDiaAbr = frQDiaAbr;
+		this.frQHoraAbr = frQHoraAbr;
+		this.frTempoCapAbr = frTempoCapAbr;
+		this.frQDiaMai = frQDiaMai;
+		this.frQHoraMai = frQHoraMai;
+		this.frTempoCapMai = frTempoCapMai;
+		this.frQDiaJun = frQDiaJun;
+		this.frQHoraJun = frQHoraJun;
+		this.frTempoCapJun = frTempoCapJun;
+		this.frQDiaJul = frQDiaJul;
+		this.frQHoraJul = frQHoraJul;
+		this.frTempoCapJul = frTempoCapJul;
+		this.frQDiaAgo = frQDiaAgo;
+		this.frQHoraAgo = frQHoraAgo;
+		this.frTempoCapAgo = frTempoCapAgo;
+		this.frQDiaSet = frQDiaSet;
+		this.frQHoraSet = frQHoraSet;
+		this.frTempoCapSet = frTempoCapSet;
+		this.frQDiaOut = frQDiaOut;
+		this.frQHoraOut = frQHoraOut;
+		this.frTempoCapOut = frTempoCapOut;
+		this.frQDiaNov = frQDiaNov;
+		this.frQHoraNov = frQHoraNov;
+		this.frTempoCapNov = frTempoCapNov;
+		this.frQDiaDez = frQDiaDez;
+		this.frQHoraDez = frQHoraDez;
+		this.frTempoCapDez = frTempoCapDez;
+	}
+
+
+
 
 	public String getFrFinalidade1() {
 		return frFinalidade1;

@@ -37,10 +37,18 @@ public class TipoInterferencia implements Serializable {
 	private List<Interferencia> interferencias = new ArrayList<Interferencia>();
 
 	//CONSTRUTOR PADRÃO
-		public TipoInterferencia () {
+	public TipoInterferencia () {
 			
-		}
+	}
 		
+	public TipoInterferencia(int tipoInterID, String tipoInterDescricao) {
+		super();
+		this.tipoInterID = tipoInterID;
+		this.tipoInterDescricao = tipoInterDescricao;
+	}
+
+
+
 	public int getTipoInterID() {
 		return tipoInterID;
 	}

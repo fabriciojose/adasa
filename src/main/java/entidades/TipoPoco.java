@@ -45,6 +45,15 @@ public class TipoPoco implements Serializable  {
 	}
 
 
+
+	public TipoPoco(int tipoPocoID, String tipoPocoDescricao) {
+		super();
+		this.tipoPocoID = tipoPocoID;
+		this.tipoPocoDescricao = tipoPocoDescricao;
+	}
+
+
+
 	public int getTipoPocoID() {
 		return tipoPocoID;
 	}

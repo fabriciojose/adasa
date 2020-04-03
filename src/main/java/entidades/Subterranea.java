@@ -1,5 +1,7 @@
 package entidades;
 
+import java.sql.Date;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -39,7 +41,6 @@ public class Subterranea extends Interferencia {
 	@Column (name="sub_Cod_plan",columnDefinition="varchar(20)")
 	private String subCod_plan;  // em metros
 	
-
 	@Basic
 	@Column (name="sub_Data_Operacao")
 	private java.sql.Date subDataOperacao;
@@ -55,6 +56,25 @@ public class Subterranea extends Interferencia {
 	public Subterranea () {
 
 	}
+	
+	public Subterranea(String subCaesb, String subEstatico, String subDinamico, String subVazaoTeste,
+			String subVazaoSubsistema, Double subVazaoOutorgada, String subProfundidade, String subCod_plan,
+			Date subDataOperacao, TipoPoco subTipoPocoFK, SubSistema subSubSistemaFK) {
+		super();
+		this.subCaesb = subCaesb;
+		this.subEstatico = subEstatico;
+		this.subDinamico = subDinamico;
+		this.subVazaoTeste = subVazaoTeste;
+		this.subVazaoSubsistema = subVazaoSubsistema;
+		this.subVazaoOutorgada = subVazaoOutorgada;
+		this.subProfundidade = subProfundidade;
+		this.subCod_plan = subCod_plan;
+		this.subDataOperacao = subDataOperacao;
+		this.subTipoPocoFK = subTipoPocoFK;
+		this.subSubSistemaFK = subSubSistemaFK;
+	}
+
+
 
 	//-- getters and setters --//
 	public SubSistema getSubSubSistemaFK() {
@@ -148,5 +168,16 @@ public class Subterranea extends Interferencia {
 		this.subCod_plan = subCod_plan;
 	}
 
+	@Override
+	public String toString() {
+		return "Subterranea [subCaesb=" + subCaesb + ", subEstatico=" + subEstatico + ", subDinamico=" + subDinamico
+				+ ", subVazaoTeste=" + subVazaoTeste + ", subVazaoSubsistema=" + subVazaoSubsistema
+				+ ", subVazaoOutorgada=" + subVazaoOutorgada + ", subProfundidade=" + subProfundidade + ", subCod_plan="
+				+ subCod_plan + ", subDataOperacao=" + subDataOperacao + ", subTipoPocoFK={" + subTipoPocoFK.getTipoPocoID()
+				+ subTipoPocoFK.getTipoPocoDescricao() + "}, subSubSistemaFK={" + subSubSistemaFK.getSubID() + "," +  subSubSistemaFK.getSubDescricao() + "}]";
+	}
+
+	
+	
 	
 }

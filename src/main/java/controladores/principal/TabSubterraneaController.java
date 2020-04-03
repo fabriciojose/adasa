@@ -127,7 +127,13 @@ public class TabSubterraneaController implements Initializable {
 			sub.setSubDataOperacao(null);}
 		else {
 
-			sub.setSubDataOperacao(Date.valueOf(dpDataOperacao.getValue()));}
+			sub.setSubDataOperacao(Date.valueOf(dpDataOperacao.getValue()));
+			
+			System.out.println(dpDataOperacao.getValue());
+			
+			System.out.println(Date.valueOf(dpDataOperacao.getValue()));
+			
+		}
 		
 		// FINALIDADE REQUERIDA //
 		FinalidadeRequerida fr = new FinalidadeRequerida();
@@ -1411,26 +1417,26 @@ public class TabSubterraneaController implements Initializable {
 	} // fim metodo capturar coordenadas
 
 	public void retornarCodigoSubsistema (String strSubsistema, String strCodigoSubsistema, String strVazaoMedia) {
-		
-		Double d = Double.valueOf(strVazaoMedia)*1000;
-		
-		df.format(d).replace(",00", "");
+		/*converter vazao em m³ para litros*/
+		Double dblVazao = Double.valueOf(strVazaoMedia)*1000;
+		/*formatar 1000.0 como 1.000,00 e retirar virgula e retirar valores decimais (,00)*/
+		df.format(dblVazao).replace(",00", "");
 	
+			/*comparar strSubsistema com a lista de subsistemas e preencher o combobox cbSubsistema*/
 			ListasComboBox.obsListSubsistema.forEach(item -> {
-				
-				if (item.replace(" ", "").equals(strSubsistema.toUpperCase())) {
+			
+				/* replace: retirar o hifem do subsistema bambuí (Bambuí­) sem ele vem 007_03_Bambuí­*/
+				if (item.replace(" ", "").equals(strSubsistema.toUpperCase().replaceAll("­", ""))) {
 					
 					cbSubsistema.setValue(item);
-				
 				}
 					
 		    });
+			/* replace: retirar o hifem do subsistema bambuí - sem ele vem 007_03_Bambuí­*/
+			tfCod_plan.setText(strCodigoSubsistema.replaceAll("­", ""));
+			/*retirar casas decimais  1.000,00 = 1.000*/
+			tfVazaoSubsistema.setText(df.format(dblVazao).replace(",00", ""));
 			
-			
-			tfCod_plan.setText(strCodigoSubsistema);
-			tfVazaoSubsistema.setText(df.format(d).replace(",00", ""));
-			
-		
 	}
 	
 }

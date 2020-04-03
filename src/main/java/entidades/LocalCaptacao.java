@@ -40,6 +40,14 @@ public class LocalCaptacao implements Serializable {
 		
 	}
 
+
+	public LocalCaptacao(int localCatacaoID, String localCaptacaoDescricao) {
+		super();
+		this.localCatacaoID = localCatacaoID;
+		this.localCaptacaoDescricao = localCaptacaoDescricao;
+	}
+
+
 	public int getLocalCatacaoID() {
 		return localCatacaoID;
 	}

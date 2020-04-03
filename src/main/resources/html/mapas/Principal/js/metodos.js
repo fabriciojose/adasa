@@ -187,7 +187,7 @@ function buscarPropriedadeShape(checBox, json, shape, map, latitude, longitude) 
 				if (polygon.properties.Hidrogeo == null) {
 					// freatico
 					app.retornarCodigoSubsistema(polygon.properties.Sistema, polygon.properties.Cod_plan, polygon.properties.Q_media);
-
+					
 				} else {
 					// fraturadp
 					app.retornarCodigoSubsistema(polygon.properties.Hidrogeo, polygon.properties.Cod_plan, polygon.properties.Vazão);

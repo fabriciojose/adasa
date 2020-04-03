@@ -51,6 +51,13 @@ public class SubtipoOutorga implements Serializable {
 	    }
 
 
+		
+		public SubtipoOutorga(int subtipoOutorgaID, String subtipoOutorgaDescricao) {
+			super();
+			this.subtipoOutorgaID = subtipoOutorgaID;
+			this.subtipoOutorgaDescricao = subtipoOutorgaDescricao;
+		}
+
 		public int getSubtipoOutorgaID() {
 			return subtipoOutorgaID;
 		}

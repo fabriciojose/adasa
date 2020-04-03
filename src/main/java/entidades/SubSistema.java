@@ -43,7 +43,17 @@ public class SubSistema {
 		public SubSistema () {
 			
 		}
-	
+		
+	public SubSistema(int subID, String subDescricao) {
+		super();
+		this.subID = subID;
+		this.subDescricao = subDescricao;
+	}
+
+
+
+
+
 	public int getSubID() {
 		return subID;
 	}

@@ -42,7 +42,11 @@ public class MetodoIrrigacao implements Serializable  {
 		
 	}
 
-
+	public MetodoIrrigacao(int metodoIrrigacaoID, String metodoIrrigacaoDescricao) {
+		super();
+		this.metodoIrrigacaoID = metodoIrrigacaoID;
+		this.metodoIrrigacaoDescricao = metodoIrrigacaoDescricao;
+	}
 
 	public int getMetodoIrrigacaoID() {
 		return metodoIrrigacaoID;

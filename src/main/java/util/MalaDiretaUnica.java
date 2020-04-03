@@ -10,6 +10,8 @@ import java.util.List;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import com.google.gson.Gson;
+
 import entidades.Documento;
 import entidades.Endereco;
 import entidades.Finalidade;
@@ -17,8 +19,10 @@ import entidades.FinalidadeAutorizada;
 import entidades.FinalidadeRequerida;
 import entidades.GetterAndSetter;
 import entidades.Interferencia;
+import entidades.SubSistema;
 import entidades.Subterranea;
 import entidades.Superficial;
+import entidades.TipoPoco;
 import entidades.Usuario;
 
 public class MalaDiretaUnica {
@@ -128,7 +132,7 @@ public class MalaDiretaUnica {
 	FinalidadeAutorizada finSupAut;
 	
 	public String criarDocumento () {
-
+		
 		GetterAndSetter gs  = new GetterAndSetter();
 
 		Document docHtml = null;
@@ -212,6 +216,7 @@ public class MalaDiretaUnica {
 		}
 
 		Usuario usuario = ((Usuario)listaMalaDireta.get(0)[0][3]);
+		
 
 		String strTagsUsuario [] = {
 						
@@ -296,14 +301,50 @@ public class MalaDiretaUnica {
 		 */
 		
 		Interferencia interferencia = ((Interferencia)listaMalaDireta.get(0)[0][2]);
-
+		
+		
+		// inter_tipo_outorga_LOW_tag inter_tipo_outorga_UPPER_tag
 		// imprimir Outorga, ou se o subtipo outorga for modificacao, renovacao, imprimir Modificacao de Outorga
-		if (interferencia.getInterSubtipoOutorgaFK().getSubtipoOutorgaDescricao().equals("")) {
-			strSubtipoETipoOutorga = interferencia.getInterTipoOutorgaFK().getTipoOutorgaDescricao();
-			} else {
-				strSubtipoETipoOutorga = interferencia.getInterSubtipoOutorgaFK().getSubtipoOutorgaDescricao()  + " de " 
-						+ interferencia.getInterTipoOutorgaFK().getTipoOutorgaDescricao(); 
-		} // fim if subtipo e tipo outorga
+		
+		
+		String strTipo = interferencia.getInterTipoOutorgaFK().getTipoOutorgaDescricao();
+		String strSubTipo = interferencia.getInterSubtipoOutorgaFK().getSubtipoOutorgaDescricao();
+		String strTipoUPPERCASE = "";
+		String strSubTipoLOWERCASE = "";
+		
+		if (strSubTipo.equals("")) {
+			
+			if (interferencia.getInterTipoOutorgaFK().getTipoOutorgaDescricao().equals("Outorga")) {
+				
+				strTipoUPPERCASE 	= strTipo.toUpperCase() + " DE DIREITO DE USO DE ÁGUA SUBTERRÂNEA";
+				strSubTipoLOWERCASE = strTipo.toLowerCase() + " de direito de uso de recursos hídricos";
+			}
+			else if (interferencia.getInterTipoOutorgaFK().getTipoOutorgaDescricao().equals("Registro")) {
+				strTipoUPPERCASE 	= strTipo.toUpperCase() + " DE DIREITO DE USO DE ÁGUA SUBTERRÂNEA";
+				strSubTipoLOWERCASE = strTipo.toLowerCase() + " de uso";
+			}
+			else {
+				strTipoUPPERCASE 	= strTipo.toUpperCase() + " PARA PERFURAÇÃO DE POÇO";
+				strSubTipoLOWERCASE = strTipo.toLowerCase() + " para perfuração";
+			}
+			
+		} else {
+			
+			if (interferencia.getInterTipoOutorgaFK().getTipoOutorgaDescricao().equals("Outorga")) {
+				
+				strTipoUPPERCASE 	= strSubTipo.toUpperCase() + " DE " + strTipo.toUpperCase() + " DE DIREITO DE USO DE ÁGUA SUBTERRÂNEA";
+				strSubTipoLOWERCASE = strSubTipo.toLowerCase() + " de " + strTipo.toLowerCase() + " de direito de uso de recursos hídricos";
+
+			}
+			else if (interferencia.getInterTipoOutorgaFK().getTipoOutorgaDescricao().equals("Registro")) {
+				strTipoUPPERCASE 	= strSubTipo.toUpperCase() + " DE " + strTipo.toUpperCase() + " DE DIREITO DE USO DE ÁGUA SUBTERRÂNEA";
+				strSubTipoLOWERCASE = strSubTipo.toLowerCase() + " de " + strTipo.toLowerCase() + " de uso";
+			}
+			else {
+				strTipoUPPERCASE 	= strSubTipo.toUpperCase() + " DE " + strTipo.toUpperCase() + " PARA PERFURAÇÃO DE POÇO";
+				strSubTipoLOWERCASE = strSubTipo.toLowerCase() + " de " + strTipo.toLowerCase() + " para perfuração de poço";
+			}
+		}
 		
 		
 		// SUPERFICIAL //
@@ -316,7 +357,7 @@ public class MalaDiretaUnica {
 
 				if (f.getClass().getName() == "entidades.FinalidadeRequerida") {
 					fr = (FinalidadeRequerida) f;
-					System.out.println("MALA DIRETA superfi - finalidade requerida ID " + fr.getFinID());
+					//System.out.println("MALA DIRETA superfi - finalidade requerida ID " + fr.getFinID());
 				}
 
 			}
@@ -347,10 +388,10 @@ public class MalaDiretaUnica {
 
 			}
 
-
 			String strTagsRequerimentoSuperificial  [] = {
 
-					"inter_tipo_outorga_tag", //1
+					"inter_tipo_outorga_UPPER_tag", //1
+					"inter_tipo_outorga_LOW_tag",
 					"inter_lat_tag", 
 					"inter_lon_tag",
 
@@ -375,11 +416,11 @@ public class MalaDiretaUnica {
 			}
 			catch (Exception e) {strDataOperação = null;
 			};
-			
-			
+		
 			String strInterferenciaSuperficial [] = {
 
-					strSubtipoETipoOutorga ,  //1
+					strTipoUPPERCASE ,  // REQUERIMENTO DE OUTORGA...
+					strSubTipoLOWERCASE ,  // solicitar outorga de direito
 					interferencia.getInterDDLatitude().toString() + ",",
 					interferencia.getInterDDLongitude().toString(),
 
@@ -456,7 +497,8 @@ public class MalaDiretaUnica {
 
 			String strPosicoesRequerimentoSubterranea  [] = {
 
-					"inter_tipo_outorga_tag", 
+					"inter_tipo_outorga_UPPER_tag", //1
+					"inter_tipo_outorga_LOW_tag",
 					"inter_tipo_poco_tag", //  <inter_tipo_poco_tag></inter_tipo_poco_tag>
 					"inter_caesb_tag", 
 					"inter_vazao_tag", 
@@ -481,7 +523,9 @@ public class MalaDiretaUnica {
 			catch (Exception e) {vazaoPoco = "0";};
 
 			String strInterferenciaSubterranea [] = {
-					strSubtipoETipoOutorga , 
+					
+					strTipoUPPERCASE ,  // REQUERIMENTO DE OUTORGA...
+					strSubTipoLOWERCASE ,  // solicitar outorga de direito
 					((Subterranea) interferencia).getSubTipoPocoFK().getTipoPocoDescricao(), 
 					((Subterranea) interferencia).getSubCaesb(),
 					vazaoPoco,
@@ -585,7 +629,7 @@ public class MalaDiretaUnica {
 				.append("</td><td colspan='1' width='20%'>Total:")              // total
 				.append(listaVazoesCadastradas.get(i));
 
-				System.out.println(strAbasHum);
+				//System.out.println(strAbasHum);
 
 				try { docHtml.select("abast_hum_tag").prepend(String.valueOf(strAbasHum));} 
 				catch (Exception e) {docHtml.select("abast_hum_tag").prepend("erro");};
@@ -613,7 +657,7 @@ public class MalaDiretaUnica {
 				.append("</td><td colspan='1'>Consumo:&nbsp;")                    // consumo
 				.append(listaConsumosCadastrados.get(i));
 
-				System.out.println(strCriacaoAnimais);
+				//System.out.println(strCriacaoAnimais);
 
 				try { docHtml.select("cria_anim_tag").prepend(String.valueOf(strCriacaoAnimais));} 
 				catch (Exception e) {docHtml.select("cria_anim_tag").prepend("erro");};
@@ -700,6 +744,41 @@ public class MalaDiretaUnica {
 				catch (Exception e) {docHtml.select("uso_ind_tag").prepend("erro");};
 
 				break;	
+				
+			case "Aquicultura": 
+			case "Piscicultura": 
+
+				/*
+				 * unir tags html e informacoes do banco para  preencher o formulario 'requerimento de outorga'
+				 */
+
+				StringBuilder strUsoAquicultura = new StringBuilder();
+
+				strUsoAquicultura
+				.append("<strong style='font-style: italic; font-size: 12px;'>- "+ listaFinalidadesCadastradas.get(i).toUpperCase() + "</strong>")		
+				.append(" <table border='1' cellspacing='0' style='width: 800px;'>")
+				.append("	<tbody>")
+				.append("		<tr>")
+				.append("			<td colspan='1'>Existe lan&ccedil;amento de efluentes&nbsp; &nbsp; &nbsp; Sim&nbsp;&nbsp;<input type='checkbox' />&nbsp; &nbsp; N&atilde;o&nbsp;&nbsp;<input type='checkbox' /></td>")
+				.append("			<td colspan='3'><input type='checkbox' /> <label> Revestido</label>&nbsp; &nbsp; &nbsp; &nbsp;<input type='checkbox' /> <label> N&atilde;o Revestido</label></td>")
+				.append("		</tr>")
+				.append("		<tr>")
+				.append("		<td colspan='2'>Produto:&nbsp;"+ listaSubfinalidadesCadastradas.get(i) +"</td>")
+				.append("		<td rowspan='3' width='20%'><span style='text-align: justify;'>Total:&nbsp; " + listaVazoesCadastradas.get(i) + "</span></td>")
+				.append("		</tr>")
+				.append("		<tr>")
+				.append("			<td colspan='1'>Quantidade:&nbsp;"+ listaQuantidadesCadastradas.get(i) +"</td>")
+				.append("			<td colspan='1'>Consumo:&nbsp; " + listaConsumosCadastrados.get(i) + "</td>")
+				.append("		</tr>")
+				.append("	</tbody>")
+				.append(" </table>");
+
+
+				try { docHtml.select("uso_ind_tag").prepend(String.valueOf(strUsoAquicultura));} 
+				catch (Exception e) {docHtml.select("uso_ind_tag").prepend("erro");};
+
+				break;		
+				
 
 			default: 
 
@@ -719,7 +798,7 @@ public class MalaDiretaUnica {
 				.append(listaSubfinalidadesCadastradas.get(i))
 				.append("</td><td rowspan='3' width='20%'><span style='text-align: justify;'>Total:&nbsp;") // total
 				.append(listaVazoesCadastradas.get(i))
-				.append("</span></td></tr><tr><td colspan='1'>Produ&ccedil;&atilde;o:&nbsp;&nbsp;") // producao
+				.append("</span></td></tr><tr><td colspan='1'>Quantidade:&nbsp;") // quantidade
 				.append(listaQuantidadesCadastradas.get(i))
 				.append("</td><td colspan='1'>Consumo:&nbsp;") // consumo
 				.append(listaConsumosCadastrados.get(i))
@@ -893,7 +972,7 @@ public class MalaDiretaUnica {
 					// QUANTIDADE
 					for (int a = 0; a<5; a++) {
 
-						System.out.println("quantidade md documentos " + gs.callGetter(finSup,listVariaveisQuantidades.get(a)));
+						//System.out.println("quantidade md documentos " + gs.callGetter(finSup,listVariaveisQuantidades.get(a)));
 						try{	strTable.append("<p>" + df.format(		Double.parseDouble(		(gs.callGetter(finSup,listVariaveisQuantidades.get(a))))).replaceAll(",00", "") + "</p>");
 						} catch (Exception e) {strTable.append("<p>" + "" + "</p>");};
 						}
@@ -1140,7 +1219,8 @@ public class MalaDiretaUnica {
 		strTable.append("</tbody></table>");
 
 		docHtml.select(strTagFinalidadeAutorizada).append(String.valueOf(strTable));
-
+		
+		
 	} // fim metodo inserirfinalidade
 	
 

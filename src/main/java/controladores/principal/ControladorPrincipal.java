@@ -18,6 +18,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -38,6 +39,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafx.util.Duration;
 import mapas.GoogleMap;
 import principal.ListasComboBox;
@@ -129,11 +131,8 @@ public class ControladorPrincipal {
 	TranslateTransition baixarTabPaneOutorga;
 	TranslateTransition subirTabPaneOutorga;
 	
-	
-
 	TranslateTransition ttBaixaBancoAccess;
 	TranslateTransition ttSobeBancoAccess;
-	
 	
 	ListasComboBox listasComboBox;
 	
@@ -995,14 +994,29 @@ public class ControladorPrincipal {
 			}
 
 			Scene scene = new Scene(pEndereco);
-			Stage stage = new Stage(); // StageStyle.UTILITY - tirei para ver como fica, se aparece o minimizar
+			Stage stage = new Stage();
+			
+			/*abrir na  tela em que o usuario colocou o stage, caso tenha sido em uma segunda tela ele abrira na segunda tela*/
+			Window w =  btnHome.getScene().getWindow();
+			
+	            stage.setX(w.getX() + w.getWidth()/5);
+	            stage.setY(w.getY() + w.getHeight()/7);
+	   
 			stage.setWidth(1177);
 			stage.setHeight(800);
 			stage.setScene(scene);
 			stage.setMaximized(false);
 			stage.setResizable(false);
 			stage.setAlwaysOnTop(true); 
+			
+			stage.xProperty().addListener((obs, oldVal, newVal) -> {
+			     System.out.println("x do stage " + newVal);
+			});
+			
+			
 			stage.show();
+			
+			System.out.println("stage " + stage.getX());
 
 		});
 		
@@ -1445,12 +1459,10 @@ public class ControladorPrincipal {
 				if (strEstiloCSS.equals(strEstiloMapa [0])) {
 					googleMaps.mudarEstiloMapa(1);
 				} 
-				
 				else if (strEstiloCSS.equals(strEstiloMapa [1])) {
 					googleMaps.mudarEstiloMapa(2);
 				}
 				
-			
 				else if (strEstiloCSS.equals(strEstiloMapa [2])) {
 					googleMaps.mudarEstiloMapa(3);
 				}
@@ -1458,18 +1470,11 @@ public class ControladorPrincipal {
 					googleMaps.mudarEstiloMapa(4);
 				}
 				
-				
 			} catch (IOException e) {
-				
-			
 				e.printStackTrace();
-				
-				
 				strEstiloCSS = strEstiloMapa[0];
 				
-				
 			}
-
 		return strEstiloCSS;
 	}
 

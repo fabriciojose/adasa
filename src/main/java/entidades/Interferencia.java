@@ -119,6 +119,17 @@ public class Interferencia implements Serializable {
 	public Interferencia (Endereco interEnderecoFK) {
 		this.interEnderecoFK = interEnderecoFK;
 	}
+	
+	public Interferencia(int interID, TipoInterferencia interTipoInterferenciaFK, TipoOutorga interTipoOutorgaFK,
+			SubtipoOutorga interSubtipoOutorgaFK, Double interDDLatitude, Double interDDLongitude) {
+		super();
+		this.interID = interID;
+		this.interTipoInterferenciaFK = interTipoInterferenciaFK;
+		this.interTipoOutorgaFK = interTipoOutorgaFK;
+		this.interSubtipoOutorgaFK = interSubtipoOutorgaFK;
+		this.interDDLatitude = interDDLatitude;
+		this.interDDLongitude = interDDLongitude;
+	}
 
 	public int getInterID() {
 		return interID;
@@ -271,6 +282,20 @@ public class Interferencia implements Serializable {
 
 	public void setFinalidades(Set<Finalidade> finalidades) {
 		this.finalidades = finalidades;
+	}
+
+	@Override
+	public String toString() {
+		return "Interferencia [interID=" + interID + ", interEnderecoFK=" + interEnderecoFK.getEndLogradouro()
+				+ ", interTipoInterferenciaFK=" + interTipoInterferenciaFK.getTipoInterDescricao() + ", interBaciaFK=" + interBaciaFK.getBaciaNome()
+				+ ", interUHFK=" + interUHFK.getUhCodigo() + ", interSituacaoProcessoFK=" + interSituacaoProcessoFK.getSituacaoProcessoDescricao()
+				+ ", interTipoAtoFK=" + interTipoAtoFK.getTipoAtoDescricao() + ", interTipoOutorgaFK=" + interTipoOutorgaFK.getTipoOutorgaDescricao()
+				+ ", interSubtipoOutorgaFK=" + interSubtipoOutorgaFK.getSubtipoOutorgaDescricao() + ", finalidades=" + finalidades
+				+ ", interDDLatitude=" + interDDLatitude + ", interDDLongitude=" + interDDLongitude + ", interGeom="
+				+ interGeom + ", intAtualizacao=" + intAtualizacao + ", interDataVencimento=" + interDataVencimento
+				+ ", interDataPublicacao=" + interDataPublicacao + ", interNumeroAto=" + interNumeroAto
+				+ ", interProcRenovacao=" + interProcRenovacao + ", interDespachoRenovacao=" + interDespachoRenovacao
+				+ "]";
 	}
 	
 	

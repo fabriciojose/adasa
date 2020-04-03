@@ -193,13 +193,17 @@ public class LoginControlador implements Initializable {
 
 	                } catch (IOException ex) {
 	                    System.err.println(ex.getMessage());
+	                    System.out.println(ex);
 	                }
 				 
 				}
 				
 				else {
 					
-					System.out.println("não encontrado login não sucedido");
+					Alerta a = new Alerta ();
+					a.alertar(new Alert(Alert.AlertType.CONFIRMATION, "Login não encontrado!!!", ButtonType.OK));
+					
+					
 				}
 
 			}

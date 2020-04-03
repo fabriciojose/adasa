@@ -9,9 +9,6 @@
 if (typeof module!='undefined' && module.exports) var LatLon = require('../WebContent/js/latlon-ellipsoidal.js'); // ≡ import LatLon from 'latlon-ellipsoidal.js'
 /* eslint indent:warn */
 
-
-console.log("utm lido");
-
 /**
  * Convert between Universal Transverse Mercator coordinates and WGS 84 latitude/longitude points.
  *

@@ -42,6 +42,13 @@ public class FormaCaptacao implements Serializable {
 	}
 
 
+	public FormaCaptacao(int formaCaptacaoID, String formaCaptacaoDescricao) {
+		super();
+		this.formaCaptacaoID = formaCaptacaoID;
+		this.formaCaptacaoDescricao = formaCaptacaoDescricao;
+	}
+
+
 	public int getFormaCaptacaoID() {
 		return formaCaptacaoID;
 	}

@@ -28,6 +28,15 @@ public class TipoOutorga implements Serializable  {
 	}
 
 
+
+	public TipoOutorga(int tipoOutorgaID, String tipoOutorgaDescricao) {
+		super();
+		this.tipoOutorgaID = tipoOutorgaID;
+		this.tipoOutorgaDescricao = tipoOutorgaDescricao;
+	}
+
+
+
 	public int getTipoOutorgaID() {
 		return tipoOutorgaID;
 	}

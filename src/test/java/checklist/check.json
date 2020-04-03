@@ -1,0 +1,7 @@
+{
+  "clTipoOutorga": "Outorga",
+  "clSubtipoOutorga": "",
+  "clItens": [
+    "\u003ctr\u003e\u003ctd colspan\u003d\u00275\u0027\u003eI . Requerimento de Outorga de Direito de Uso de \u0026Aacute;gua Subterr\u0026acirc;nea preenchido e assinado \u003cspan style\u003d\u0027text-align: justify;\u0027\u003e\u003cend_empreendimento_ra_tag\u003e\u003c/end_empreendimento_ra_tag\u003e\u003c/span\u003e\u003c/td\u003e\u003ctd style\u003d\u0027text-align: center;vertical-align: middle;\u0027\u003e\u003cinput style\u003d\u0027width: 20px;height: 20px;\u0027 type\u003d\u0027checkbox\u0027 /\u003e\u003c/td\u003e\u003c/tr\u003e"
+  ]
+}

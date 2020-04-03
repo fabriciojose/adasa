@@ -1,5 +1,7 @@
 package entidades;
 
+import java.sql.Date;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -55,8 +57,30 @@ public class Superficial extends Interferencia {
 	private MetodoIrrigacao supMetodoIrrigacaoFK; //-- () canal () rio () reservatório () lago natural () nascente
 
 	public Superficial (){
-
 	}
+	
+	
+
+	public Superficial(String supMarcaBomba, String supPotenciaBomba, String supAreaIrrigada,
+			String supAreaContribuicao, String supAreaPropriedade, Date supDataOperacao, String supCaesb,
+			String supBarramento, String supCorpoHidrico, FormaCaptacao supFormaCaptacaoFK,
+			LocalCaptacao supLocalCaptacaoFK, MetodoIrrigacao supMetodoIrrigacaoFK) {
+		super();
+		this.supMarcaBomba = supMarcaBomba;
+		this.supPotenciaBomba = supPotenciaBomba;
+		this.supAreaIrrigada = supAreaIrrigada;
+		this.supAreaContribuicao = supAreaContribuicao;
+		this.supAreaPropriedade = supAreaPropriedade;
+		this.supDataOperacao = supDataOperacao;
+		this.supCaesb = supCaesb;
+		this.supBarramento = supBarramento;
+		this.supCorpoHidrico = supCorpoHidrico;
+		this.supFormaCaptacaoFK = supFormaCaptacaoFK;
+		this.supLocalCaptacaoFK = supLocalCaptacaoFK;
+		this.supMetodoIrrigacaoFK = supMetodoIrrigacaoFK;
+	}
+
+
 
 	//-- getters and setters --//
 	public java.sql.Date getSupDataOperacao() {

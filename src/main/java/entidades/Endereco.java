@@ -105,6 +105,29 @@ public class Endereco implements Serializable{
 		
 	}
 	
+	
+	
+	public Endereco(int endID, String endLogradouro, String endCEP, String endCidade, String endUF,
+			Double endDDLatitude, Double endDDLongitude, RA endRAFK) {
+		super();
+		this.endID = endID;
+		this.endLogradouro = endLogradouro;
+		this.endCEP = endCEP;
+		this.endCidade = endCidade;
+		this.endUF = endUF;
+		this.endDDLatitude = endDDLatitude;
+		this.endDDLongitude = endDDLongitude;
+		this.endRAFK = endRAFK;
+	}
+
+	public Endereco(int endID, String endLogradouro) {
+		super();
+		this.endID = endID;
+		this.endLogradouro = endLogradouro;
+	}
+
+
+
 	//-- construtor padrao -- //
 	public Endereco (String endLogradouro, String endCEP, String endCidade, String endUF, Double endDDLatitude, Double endDDLongitude) {
 	

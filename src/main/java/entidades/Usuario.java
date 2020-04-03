@@ -85,14 +85,29 @@ public class Usuario implements Serializable {
 	private java.sql.Timestamp usDataAtualizacao;
 	
 	//-- construtor padrão --//
-	
-	
-
 	public Usuario () {
-		
 	}
 	
-	
+	public Usuario(int usID, String usTipo, String usNome, String usCPFCNPJ,
+			String usLogadouro, String usRA, String usCidade, String usEstado, String usCEP, String usTelefone,
+			String usCelular, String usEmail, String usRepresentante, String usRepresentanteTelefone) {
+		super();
+		this.usID = usID;
+		this.usTipo = usTipo;
+		this.usNome = usNome;
+		this.usCPFCNPJ = usCPFCNPJ;
+		this.usLogadouro = usLogadouro;
+		this.usRA = usRA;
+		this.usCidade = usCidade;
+		this.usEstado = usEstado;
+		this.usCEP = usCEP;
+		this.usTelefone = usTelefone;
+		this.usCelular = usCelular;
+		this.usEmail = usEmail;
+		this.usRepresentante = usRepresentante;
+		this.usRepresentanteTelefone = usRepresentanteTelefone;
+	}
+
 	public int getUsID() {
 		return usID;
 	}

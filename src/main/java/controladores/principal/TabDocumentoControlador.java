@@ -128,14 +128,11 @@ public class TabDocumentoControlador implements Initializable {
 	
 					doc.setDocDataAtualizacao(Timestamp.valueOf(LocalDateTime.now()));
 	
-					
 					try {
 						
 						DocumentoDao docDao = new DocumentoDao();
 					
 						docDao.salvarDocumento(doc);
-						
-						
 						
 						if (controladorOutorga != null) {
 							controladorOutorga.setDocumento(doc);
